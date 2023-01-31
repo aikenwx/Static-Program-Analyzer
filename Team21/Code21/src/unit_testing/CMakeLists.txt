@@ -4,3 +4,7 @@ add_executable(unit_testing ${srcs})
 
 target_link_libraries(unit_testing spa)
 
+find_package(Catch2 REQUIRED)
+include(CTest)
+include(Catch)
+catch_discover_tests(unit_testing)

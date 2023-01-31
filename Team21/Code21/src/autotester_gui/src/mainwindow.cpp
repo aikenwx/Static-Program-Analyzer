@@ -34,7 +34,7 @@ void MainWindow::btnLoad_clicked() {
 	if (!file.open(QIODevice::ReadOnly))
 		return;
 	QString m_fileContents = file.readAll();
-	ui->txtCodeEditor->document()->setPlainText(m_fileContents);	
+	ui->txtCodeEditor->document()->setPlainText(m_fileContents);
 	wrapper->parse(src_name.toStdString());
 }
 

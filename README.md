@@ -1,8 +1,8 @@
 # Team 00
 
 > Please fill in this Readme with the required information, and delete this box.
-> 
-> 1. Note that if you are using the `Windows Startup SPA Solution`, your target environment must be using `Microsoft Visual Studio Enterprise 2019`. 
+>
+> 1. Note that if you are using the `Windows Startup SPA Solution`, your target environment must be using `Microsoft Visual Studio Enterprise 2019`.
 >   If you are using `Cross-platform Startup SPA Solution`, you will need to decide on your target environment (see [Wiki](https://github.com/nus-cs3203/project-wiki/wiki/Version-Control-System-and-Code-Repository)).
 >   Then, please enter the appropriate information below, giving details on the full toolchain (ie. OS, cmake and make versions.)
 > 2. The `.gitigore` is already pre-configured, note that the included libraries files (ie. `Team00/Code00/lib`) must accompany this repository and not to be removed from the repository.

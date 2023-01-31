@@ -47,8 +47,6 @@ jobs:
           cmake -Bbuild -H$GITHUB_WORKSPACE/Team21/Code21 \
                 -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-                -DCMAKE_CXX_EXTENSIONS=OFF \
-                -DCATCH_DEVELOPMENT_BUILD=ON \
                 ${{matrix.cmake_configurations}} \
                 -G Ninja
 

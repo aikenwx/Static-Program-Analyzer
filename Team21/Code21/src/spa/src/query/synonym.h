@@ -16,7 +16,7 @@ class Synonym {
 		static bool isValidSynonym(std::string syn);
 
 		bool operator==(const Synonym& anotherSyn) const {
-			return synonym == anotherSyn.getSynonym();
+			return synonym == anotherSyn.synonym;
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, Synonym const& syn) {

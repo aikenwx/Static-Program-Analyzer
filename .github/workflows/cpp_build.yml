@@ -34,7 +34,7 @@ jobs:
 
       - name: Prepare environment (Ubuntu)
         if: matrix.platform == 'ubuntu-latest'
-        run: sudo apt-get install -y ninja-build catch2 ${{matrix.other_pkgs}}
+        run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
 
       - name: Configure build
         working-directory: ${{runner.workspace}}

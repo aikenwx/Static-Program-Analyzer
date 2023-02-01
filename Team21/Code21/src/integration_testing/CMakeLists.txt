@@ -4,7 +4,6 @@ add_executable(integration_testing ${srcs})
 
 target_link_libraries(integration_testing spa)
 
-find_package(Catch2 REQUIRED)
 include(CTest)
 include(Catch)
 catch_discover_tests(integration_testing)

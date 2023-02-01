@@ -1,0 +1,62 @@
+name: C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - cxx: clang++-14
+            platform: ubuntu-latest
+            build_type: Debug
+            other_pkgs: clang-14
+            std: 17
+            cmake_configurations:
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@main
+
+      - name: Set up repository
+        uses: actions/checkout@main
+        with:
+          ref: master
+
+      - name: Merge to master
+        run: git checkout --progress --force ${{ github.sha }}
+
+      - name: Run repository-wide tests
+        if: runner.os == 'Linux'
+        working-directory:  ${{ github.workspace }}/.github
+        run: ./run-checks.sh
+
+      - name: Prepare environment (Ubuntu)
+        if: matrix.platform == 'ubuntu-latest'
+        run: sudo apt-get install -y ninja-build catch2 ${{matrix.other_pkgs}}
+
+      - name: Configure build
+        working-directory: ${{runner.workspace}}
+        env:
+          CXX: ${{matrix.cxx}}
+          CXXFLAGS: ${{matrix.cxxflags}}
+        # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
+        #       This is important
+        run: |
+          cmake -Bbuild -H$GITHUB_WORKSPACE/Team21/Code21 \
+                -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+                -DCMAKE_CXX_STANDARD=${{matrix.std}} \
+                ${{matrix.cmake_configurations}} \
+                -G Ninja
+
+      - name: Build tests + project
+        working-directory: ${{runner.workspace}}/build
+        run: ninja
+
+      - name: Run tests
+        env:
+            CTEST_OUTPUT_ON_FAILURE: 1
+        working-directory: ${{runner.workspace}}/build
+        # Hardcode 2 cores we know are there
+        run: ctest -C ${{matrix.build_type}} -j 2

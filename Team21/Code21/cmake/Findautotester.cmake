@@ -14,13 +14,13 @@ include(FindPackageHandleStandardArgs)
 #find_path(AUTOTESTER_INCLUDE_DIR autotester.h
 #    PATHS ${AUTOTESTER_LIBRARYDIR}/include)
 
-find_library(AUTOTESTER_LIBRARY_DEBUG autotester 
+find_library(AUTOTESTER_LIBRARY_DEBUG autotester
     PATHS ${AUTOTESTER_ROOT}/debug
     PATH_SUFFIXES
         lib
         lib64)
 
-find_library(AUTOTESTER_LIBRARY_RELEASE autotester 
+find_library(AUTOTESTER_LIBRARY_RELEASE autotester
     PATHS ${AUTOTESTER_ROOT}/release
     PATH_SUFFIXES
         lib
@@ -39,4 +39,3 @@ if(AUTOTESTER_FOUND)
 
     set(AUTOTESTER_LIBRARIES ${AUTOTESTER_LIBRARY})
 endif()
-

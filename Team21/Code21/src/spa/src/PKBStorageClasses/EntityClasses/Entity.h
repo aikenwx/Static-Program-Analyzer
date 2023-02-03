@@ -16,7 +16,7 @@ class Entity {
 public:
     virtual std::string getEntityValue() = 0;
 
-    virtual bool equals(Entity* otherEntity) = 0;
+    virtual bool equals(Entity *otherEntity) = 0;
 };
 
 #endif

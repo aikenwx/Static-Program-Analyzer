@@ -1,7 +1,7 @@
 #include "WhileStatement.h"
 
 
-WhileStatement::WhileStatement(int statementNumber)  {
+WhileStatement::WhileStatement(int statementNumber) {
     Statement::statementNumber = statementNumber;
 }
 

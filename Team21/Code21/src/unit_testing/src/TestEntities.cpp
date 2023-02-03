@@ -14,7 +14,7 @@
 #include "catch.hpp"
 using namespace std;
 
-TEST_CASE("Entities instantiate") {
+TEST_CASE("Entities can instantiate") {
     PrintStatement* printStatement = new PrintStatement(2);
     ReadStatement* readStatement = new ReadStatement(3);
     AssignStatement* assignStatement = new AssignStatement(4);

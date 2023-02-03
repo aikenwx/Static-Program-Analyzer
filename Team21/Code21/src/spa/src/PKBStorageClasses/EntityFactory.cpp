@@ -1,6 +1,8 @@
 //
 // Created by Aiken Wong on 3/2/23.
 //
+#include <stdexcept>
+
 #include "EntityFactory.h"
 #include "EntityClasses/AssignStatement.h"
 #include "EntityClasses/CallStatement.h"

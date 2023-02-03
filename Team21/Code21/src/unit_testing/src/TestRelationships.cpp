@@ -1,4 +1,8 @@
 
+#include <stdexcept>
+
+#include "catch.hpp"
+
 #include "PKBStorageClasses/EntityClasses/PrintStatement.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -12,9 +16,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 
-
-#include "catch.hpp"
-using namespace std;
 
 TEST_CASE("Relationships can instantiate") {
     PrintStatement* printStatement = new PrintStatement(2);

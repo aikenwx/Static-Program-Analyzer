@@ -1,8 +1,10 @@
 //
 // Created by Aiken Wong on 3/2/23.
 //
+#include <stdexcept>
 
 #include "UsesRelationship.h"
+
 bool UsesRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->user->equals(entity);
 }

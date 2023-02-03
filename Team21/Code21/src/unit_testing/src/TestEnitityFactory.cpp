@@ -1,6 +1,6 @@
-#include "catch.hpp"
-using namespace std;
+#include <stdexcept>
 
+#include "catch.hpp"
 
 #include "PKBStorageClasses/EntityFactory.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -135,18 +135,18 @@ TEST_CASE("EntityFactory can create a Constant") {
 
 TEST_CASE("Invalid Constant throws exception") {
     EntityFactory* entityFactory = new EntityFactory();
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CONSTANT, "constant"), invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CONSTANT, "constant"), std::invalid_argument);
     delete entityFactory;
 }
 
 TEST_CASE("Invalid Statements throws exception") {
     EntityFactory* entityFactory = new EntityFactory();
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::ASSIGN_STATEMENT, "assign"), invalid_argument);
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::PRINT_STATEMENT, "print"), invalid_argument);
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::READ_STATEMENT, "read"), invalid_argument);
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CALL_STATEMENT, "call"), invalid_argument);
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::WHILE_STATEMENT, "while"), invalid_argument);
-    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::IF_STATEMENT, "if"), invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::ASSIGN_STATEMENT, "assign"), std::invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::PRINT_STATEMENT, "print"), std::invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::READ_STATEMENT, "read"), std::invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CALL_STATEMENT, "call"), std::invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::WHILE_STATEMENT, "while"), std::invalid_argument);
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::IF_STATEMENT, "if"), std::invalid_argument);
 
     delete entityFactory;
 }

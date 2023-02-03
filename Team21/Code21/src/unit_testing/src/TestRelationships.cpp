@@ -33,7 +33,7 @@ TEST_CASE("Relationships can instantiate") {
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
-    
+
     delete printStatement;
     delete readStatement;
     delete assignStatement;
@@ -64,7 +64,7 @@ TEST_CASE("Relationships contain the correct left entity") {
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
-    
+
     delete printStatement;
     delete readStatement;
     delete assignStatement;
@@ -95,7 +95,7 @@ TEST_CASE("Relationships contain the correct right entity") {
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
-    
+
     delete printStatement;
     delete readStatement;
     delete assignStatement;
@@ -126,7 +126,7 @@ TEST_CASE("Relationships contain the wrong left entity") {
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
-    
+
     delete printStatement;
     delete readStatement;
     delete assignStatement;
@@ -157,7 +157,7 @@ TEST_CASE("Relationships contain the wrong right entity") {
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
-    
+
     delete printStatement;
     delete readStatement;
     delete assignStatement;

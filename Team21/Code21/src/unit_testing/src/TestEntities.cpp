@@ -108,7 +108,6 @@ TEST_CASE("Entities can be compared") {
     Constant* constant2 = new Constant(1);
     Constant* constant3 = new Constant(2);
 
-
     REQUIRE(printStatement->equals(printStatement));
     REQUIRE(readStatement->equals(readStatement));
     REQUIRE(assignStatement->equals(assignStatement));
@@ -147,8 +146,7 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(!printStatement->equals(variable));
     REQUIRE(!variable->equals(constant));
     REQUIRE(!constant->equals(procedure));
-    REQUIRE(!procedure->equals(assignStatement));
-    
+    REQUIRE(!procedure->equals(assignStatement)); 
 
     delete printStatement;
     delete readStatement;
@@ -159,5 +157,4 @@ TEST_CASE("Entities can be compared") {
     delete procedure;
     delete variable;
     delete constant;
-    
 }

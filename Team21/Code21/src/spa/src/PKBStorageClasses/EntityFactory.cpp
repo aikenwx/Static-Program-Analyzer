@@ -16,7 +16,7 @@
 Entity *EntityFactory::createEntity(EntityType entityType, std::string entityValue) {
 
     checkForValidInput(entityType, InputType::STRING);
-    
+
     switch (entityType) {
         case EntityType::PROCEDURE:
             return new Procedure(entityValue);

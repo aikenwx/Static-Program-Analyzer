@@ -95,7 +95,7 @@ TEST_CASE("Parent relationship with non statement entities") {
     Constant* constant = new Constant(1);
 
     REQUIRE_THROWS(relationshipFactory->createRelationship(RelationshipType::PARENT, variable, constant));
-    
+
     delete relationshipFactory;
     delete constant;
     delete variable;

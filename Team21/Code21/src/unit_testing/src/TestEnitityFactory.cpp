@@ -24,7 +24,7 @@ TEST_CASE("EntityFactory can create an AssignmentStatement") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::ASSIGN_STATEMENT, 1);
     AssignStatement *expectedEntity = new AssignStatement(1);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -37,7 +37,7 @@ TEST_CASE("EntityFactory can create a PrintStatement") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::PRINT_STATEMENT, 1);
     PrintStatement *expectedEntity = new PrintStatement(1);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -50,7 +50,7 @@ TEST_CASE("EntityFactory can create a ReadStatement") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::READ_STATEMENT, 1);
     ReadStatement *expectedEntity = new ReadStatement(1);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -63,7 +63,7 @@ TEST_CASE("EntityFactory can create a CallStatement") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::CALL_STATEMENT, 1);
     CallStatement *expectedEntity = new CallStatement(1);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -76,7 +76,7 @@ TEST_CASE("EntityFactory can create a WhileStatement") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::WHILE_STATEMENT, 1);
     WhileStatement *expectedEntity = new WhileStatement(1);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -101,7 +101,7 @@ TEST_CASE("EntityFactory can create a Procedure") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::PROCEDURE, "procedure");
     Procedure *expectedEntity = new Procedure("procedure");
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -114,7 +114,7 @@ TEST_CASE("EntityFactory can create a Variable") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::VARIABLE, "variable");
     Variable *expectedEntity = new Variable("variable");
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -126,7 +126,7 @@ TEST_CASE("EntityFactory can create a Constant") {
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::CONSTANT, 5);
     Constant *expectedEntity = new Constant(5);
-    
+
     REQUIRE(expectedEntity->equals(actualEntity));
     delete entityFactory;
     delete expectedEntity;
@@ -147,7 +147,7 @@ TEST_CASE("Invalid Statements throws exception") {
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CALL_STATEMENT, "call"), invalid_argument);
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::WHILE_STATEMENT, "while"), invalid_argument);
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::IF_STATEMENT, "if"), invalid_argument);
-    
+
     delete entityFactory;
 }
 

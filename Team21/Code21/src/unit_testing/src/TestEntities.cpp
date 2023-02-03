@@ -146,7 +146,7 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(!printStatement->equals(variable));
     REQUIRE(!variable->equals(constant));
     REQUIRE(!constant->equals(procedure));
-    REQUIRE(!procedure->equals(assignStatement)); 
+    REQUIRE(!procedure->equals(assignStatement));
 
     delete printStatement;
     delete readStatement;

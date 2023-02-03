@@ -9,6 +9,8 @@ public:
     virtual bool containsEntityOnLeftHand(Entity *entity) = 0;
 
     virtual bool containsEntityOnRightHand(Entity *entity) = 0;
+
+    virtual ~Relationship() = default;
 };
 
 

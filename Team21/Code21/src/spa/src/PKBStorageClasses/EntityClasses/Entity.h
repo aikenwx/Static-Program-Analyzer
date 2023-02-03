@@ -17,6 +17,9 @@ public:
     virtual std::string getEntityValue() = 0;
 
     virtual bool equals(Entity *otherEntity) = 0;
+
+    virtual ~Entity() = default;
 };
+
 
 #endif

@@ -4,8 +4,6 @@
 #include "Statement.h"
 
 class ReadStatement : public Statement {
-private:
-    int statementNumber;
 public:
     bool equals(Entity *otherEntity) override;
 

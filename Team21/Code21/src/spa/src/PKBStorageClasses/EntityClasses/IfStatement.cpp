@@ -2,7 +2,7 @@
 
 
 IfStatement::IfStatement(int statementNumber) {
-    this->statementNumber = statementNumber;
+    Statement::statementNumber = statementNumber;
 }
 
 bool IfStatement::equals(Entity *otherEntity) {

@@ -1,8 +1,7 @@
 #include "ReadStatement.h"
 
 ReadStatement::ReadStatement(int statementNumber)  {
-    this->statementNumber = statementNumber;
-
+    Statement::statementNumber = statementNumber;
 }
 
 bool ReadStatement::equals(Entity *otherEntity) {

@@ -5,8 +5,6 @@
 #include "Statement.h"
 
 class PrintStatement : public Statement {
-private:
-    int statementNumber;
 public:
     bool equals(Entity *otherEntity) override;
 

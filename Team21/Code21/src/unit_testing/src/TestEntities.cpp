@@ -1,11 +1,15 @@
 
-#include "PrintStatement.h"
-#include "WhileStatement.h"
-#include "IfStatement.h"
-#include "CallStatement.h"
-#include "AssignStatement.h"
-#include "ReadStatement.h"
-#include "Entity.h"
+#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
+#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
+#include "PKBStorageClasses/EntityClasses/CallStatement.h"
+#include "PKBStorageClasses/EntityClasses/AssignStatement.h"
+#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
+#include "PKBStorageClasses/EntityClasses/Entity.h"
+#include "PKBStorageClasses/EntityClasses/Procedure.h"
+#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/EntityClasses/Constant.h"
+
 
 #include "catch.hpp"
 using namespace std;
@@ -17,6 +21,10 @@ TEST_CASE("Entities instantiate") {
     CallStatement* callStatement = new CallStatement(5);
     WhileStatement* whileStatement = new WhileStatement(6);
     IfStatement* ifStatement = new IfStatement(7);
+    Procedure* procedure = new Procedure("procedure");
+    Variable* variable = new Variable("variable");
+    Constant* constant = new Constant(1);
+
 
     delete printStatement;
     delete readStatement;
@@ -24,6 +32,9 @@ TEST_CASE("Entities instantiate") {
     delete callStatement;
     delete whileStatement;
     delete ifStatement;
+    delete procedure;
+    delete variable;
+    delete constant;
 }
 
 TEST_CASE("Entities retrieve their stored values") {
@@ -33,6 +44,10 @@ TEST_CASE("Entities retrieve their stored values") {
     CallStatement* callStatement = new CallStatement(5);
     WhileStatement* whileStatement = new WhileStatement(6);
     IfStatement* ifStatement = new IfStatement(7);
+    Procedure* procedure = new Procedure("procedure");
+    Variable* variable = new Variable("variable");
+    Constant* constant = new Constant(1);
+
 
     REQUIRE(printStatement->getEntityValue() == "2");
     REQUIRE(readStatement->getEntityValue() == "3");
@@ -40,6 +55,9 @@ TEST_CASE("Entities retrieve their stored values") {
     REQUIRE(callStatement->getEntityValue() == "5");
     REQUIRE(whileStatement->getEntityValue() == "6");
     REQUIRE(ifStatement->getEntityValue() == "7");
+    REQUIRE(procedure->getEntityValue() == "procedure");
+    REQUIRE(variable->getEntityValue() == "variable");
+    REQUIRE(constant->getEntityValue() == "1");
 
 
     delete printStatement;
@@ -48,6 +66,9 @@ TEST_CASE("Entities retrieve their stored values") {
     delete callStatement;
     delete whileStatement;
     delete ifStatement;
+    delete procedure;
+    delete variable;
+    delete constant;
 }
 
 TEST_CASE("Entities can be compared") {
@@ -75,12 +96,28 @@ TEST_CASE("Entities can be compared") {
     IfStatement* ifStatement2 = new IfStatement(7);
     IfStatement* ifStatement3 = new IfStatement(8);
 
+    Variable* variable = new Variable("variable");
+    Variable* variable2 = new Variable("variable");
+    Variable* variable3 = new Variable("variable2");
+
+    Procedure* procedure = new Procedure("procedure");
+    Procedure* procedure2 = new Procedure("procedure");
+    Procedure* procedure3 = new Procedure("procedure2");
+
+    Constant* constant = new Constant(1);
+    Constant* constant2 = new Constant(1);
+    Constant* constant3 = new Constant(2);
+
+
     REQUIRE(printStatement->equals(printStatement));
     REQUIRE(readStatement->equals(readStatement));
     REQUIRE(assignStatement->equals(assignStatement));
     REQUIRE(callStatement->equals(callStatement));
     REQUIRE(whileStatement->equals(whileStatement));
     REQUIRE(ifStatement->equals(ifStatement));
+    REQUIRE(procedure->equals(procedure));
+    REQUIRE(variable->equals(variable));
+    REQUIRE(constant->equals(constant));
 
     REQUIRE(printStatement->equals(printStatement2));
     REQUIRE(readStatement->equals(readStatement2));
@@ -88,6 +125,9 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(callStatement->equals(callStatement2));
     REQUIRE(whileStatement->equals(whileStatement2));
     REQUIRE(ifStatement->equals(ifStatement2));
+    REQUIRE(procedure->equals(procedure2));
+    REQUIRE(variable->equals(variable2));
+    REQUIRE(constant->equals(constant2));
 
     REQUIRE(!printStatement->equals(printStatement3));
     REQUIRE(!readStatement->equals(readStatement3));
@@ -95,6 +135,20 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(!callStatement->equals(callStatement3));
     REQUIRE(!whileStatement->equals(whileStatement3));
     REQUIRE(!ifStatement->equals(ifStatement3));
+    REQUIRE(!procedure->equals(procedure3));
+    REQUIRE(!variable->equals(variable3));
+    REQUIRE(!constant->equals(constant3));
+
+    REQUIRE(!printStatement->equals(readStatement));
+    REQUIRE(!assignStatement->equals(callStatement));
+    REQUIRE(!callStatement->equals(whileStatement));
+    REQUIRE(!whileStatement->equals(ifStatement));
+    REQUIRE(!ifStatement->equals(printStatement));
+    REQUIRE(!printStatement->equals(variable));
+    REQUIRE(!variable->equals(constant));
+    REQUIRE(!constant->equals(procedure));
+    REQUIRE(!procedure->equals(assignStatement));
+    
 
     delete printStatement;
     delete readStatement;
@@ -102,4 +156,8 @@ TEST_CASE("Entities can be compared") {
     delete callStatement;
     delete whileStatement;
     delete ifStatement;
+    delete procedure;
+    delete variable;
+    delete constant;
+    
 }

@@ -4,7 +4,7 @@
 #include "Statement.h"
 
 std::string Statement::getEntityValue() {
-return std::to_string(this->statementNumber);
+return std::to_string(statementNumber);
 };
 //
 //Statement::Statement(int statementNumber) {

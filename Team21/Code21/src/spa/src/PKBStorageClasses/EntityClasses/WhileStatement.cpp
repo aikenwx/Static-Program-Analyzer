@@ -2,7 +2,7 @@
 
 
 WhileStatement::WhileStatement(int statementNumber)  {
-    this->statementNumber = statementNumber;
+    Statement::statementNumber = statementNumber;
 }
 
 bool WhileStatement::equals(Entity *otherEntity) {

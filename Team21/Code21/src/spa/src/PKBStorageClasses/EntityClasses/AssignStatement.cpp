@@ -2,7 +2,7 @@
 
 
 AssignStatement::AssignStatement(int statementNumber) {
-    this->statementNumber=statementNumber;
+    Statement::statementNumber = statementNumber;
 }
 
 bool AssignStatement::equals(Entity *otherEntity) {

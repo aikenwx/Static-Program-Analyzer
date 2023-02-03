@@ -6,8 +6,6 @@
 
 
 class WhileStatement : public Statement {
-private:
-    int statementNumber;
 public:
     bool equals(Entity *otherEntity) override;
 

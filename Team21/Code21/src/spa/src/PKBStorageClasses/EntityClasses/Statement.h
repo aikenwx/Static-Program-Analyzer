@@ -7,7 +7,7 @@
 
 class Statement : public Entity {
 
-private:
+protected:
     int statementNumber;
 public:
     virtual bool equals(Entity* otherEntity) override = 0;

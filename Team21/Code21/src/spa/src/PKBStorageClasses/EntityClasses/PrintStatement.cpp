@@ -1,8 +1,7 @@
 #include "PrintStatement.h"
 
 PrintStatement::PrintStatement(int statementNumber) {
-    this->statementNumber = statementNumber;
-
+    Statement::statementNumber = statementNumber;
 }
 
 bool PrintStatement::equals(Entity *otherEntity) {

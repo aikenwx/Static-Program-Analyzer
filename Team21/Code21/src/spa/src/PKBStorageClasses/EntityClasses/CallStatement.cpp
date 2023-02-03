@@ -2,7 +2,7 @@
 
 
 CallStatement::CallStatement(int statementNumber) {
-    this->statementNumber = statementNumber;
+    Statement::statementNumber = statementNumber;
 }
 
 

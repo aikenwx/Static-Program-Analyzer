@@ -20,6 +20,6 @@ enum class DesignEntity {
 };
 
 DesignEntity getDesignEntity(std::string& deString);
-std::string getString(DesignEntity designEntity);
+std::string getStringFromDE(DesignEntity designEntity);
 
 }

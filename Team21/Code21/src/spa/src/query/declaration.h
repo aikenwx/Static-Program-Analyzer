@@ -26,7 +26,7 @@ class Declaration {
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, Declaration const& declaration) {
-			os << getString(declaration.design_entity) << " " << declaration.synonym;
+			os << getStringFromDE(declaration.design_entity) << " " << declaration.synonym;
 			return os;
 		}
 
@@ -41,6 +41,7 @@ class Declaration {
 					return std::make_optional<Declaration>(decl_list[i]);
 				}
 			}
+			
 			return std::nullopt;
 		}
 };

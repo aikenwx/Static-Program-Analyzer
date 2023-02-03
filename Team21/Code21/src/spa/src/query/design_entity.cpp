@@ -2,7 +2,6 @@
 #include "query/query_exceptions.h"
 
 #include <stdexcept>
-
 #include <map>
 
 namespace qps {
@@ -42,7 +41,7 @@ DesignEntity getDesignEntity(std::string& deString) {
 	}
 }
 
-std::string getString(DesignEntity designEntity) {
+std::string getStringFromDE(DesignEntity designEntity) {
 	return designEntityStringMap.at(designEntity);
 }
 

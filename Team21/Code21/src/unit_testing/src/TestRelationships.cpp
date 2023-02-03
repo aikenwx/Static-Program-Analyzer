@@ -165,3 +165,23 @@ TEST_CASE("Relationships contain the wrong right entity") {
     delete procedure;
     delete variable;
 }
+
+TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Statement as LHS throws an exception") {
+    Variable* variable = new Variable("variable");
+    Variable* variable2 = new Variable("variable2");
+
+    REQUIRE_THROWS_AS(new ModifiesRelationship(variable2, variable), std::invalid_argument);
+
+    delete variable2;
+    delete variable;
+}
+
+TEST_CASE("Instantiating a UsesRelationship with a non-Procedure or non-Statement as LHS entity throws an exception") {
+    Variable* variable = new Variable("variable");
+    Variable* variable2 = new Variable("variable2");
+
+    REQUIRE_THROWS_AS(new UsesRelationship(variable2, variable), std::invalid_argument);
+
+    delete variable2;
+    delete variable;
+}

@@ -22,6 +22,11 @@ public:
     bool containsEntityOnRightHand(Entity *entity) override;
 
     RelationshipType getRelationshipType() override;
+
+    Entity* getLeftHandEntity() override;
+
+    Entity* getRightHandEntity() override;
+
 };
 
 

@@ -27,3 +27,12 @@ ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedV
 RelationshipType ModifiesRelationship::getRelationshipType() {
     return RelationshipType::MODIFIES;
 }
+
+Entity* ModifiesRelationship::getLeftHandEntity() {
+    return this->modifier;
+}
+
+Entity* ModifiesRelationship::getRightHandEntity() {
+    return this->modifiedVariable;
+}
+

@@ -27,3 +27,11 @@ UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) {
 RelationshipType UsesRelationship::getRelationshipType() {
     return RelationshipType::USES;
 }
+
+Entity* UsesRelationship::getLeftHandEntity() {
+    return this->user;
+}
+
+Entity* UsesRelationship::getRightHandEntity() {
+    return this->usedVariable;
+}

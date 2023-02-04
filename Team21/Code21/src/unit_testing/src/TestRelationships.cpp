@@ -18,17 +18,17 @@
 
 
 TEST_CASE("Relationships can instantiate") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    WhileStatement* whileStatement = new WhileStatement(4);
-    AssignStatement* assignStatement = new AssignStatement(5);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    WhileStatement *whileStatement = new WhileStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(5);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
 
-    ParentRelationship* parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    UsesRelationship* usesRelationship = new UsesRelationship(procedure, variable);
-    ModifiesRelationship* modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    FollowsRelationship* followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
+    UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
+    ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
+    FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
     delete parentRelationship;
     delete usesRelationship;
@@ -44,17 +44,17 @@ TEST_CASE("Relationships can instantiate") {
 }
 
 TEST_CASE("Relationships contain the correct left entity") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    WhileStatement* whileStatement = new WhileStatement(4);
-    AssignStatement* assignStatement = new AssignStatement(5);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    WhileStatement *whileStatement = new WhileStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(5);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
 
-    ParentRelationship* parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    UsesRelationship* usesRelationship = new UsesRelationship(procedure, variable);
-    ModifiesRelationship* modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    FollowsRelationship* followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
+    UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
+    ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
+    FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
     REQUIRE(parentRelationship->containsEntityOnLeftHand(whileStatement));
     REQUIRE(usesRelationship->containsEntityOnLeftHand(procedure));
@@ -75,17 +75,17 @@ TEST_CASE("Relationships contain the correct left entity") {
 }
 
 TEST_CASE("Relationships contain the correct right entity") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    WhileStatement* whileStatement = new WhileStatement(4);
-    AssignStatement* assignStatement = new AssignStatement(5);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    WhileStatement *whileStatement = new WhileStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(5);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
 
-    ParentRelationship* parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    UsesRelationship* usesRelationship = new UsesRelationship(procedure, variable);
-    ModifiesRelationship* modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    FollowsRelationship* followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
+    UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
+    ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
+    FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
     REQUIRE(parentRelationship->containsEntityOnRightHand(assignStatement));
     REQUIRE(usesRelationship->containsEntityOnRightHand(variable));
@@ -106,17 +106,17 @@ TEST_CASE("Relationships contain the correct right entity") {
 }
 
 TEST_CASE("Relationships contain the wrong left entity") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    WhileStatement* whileStatement = new WhileStatement(4);
-    AssignStatement* assignStatement = new AssignStatement(5);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    WhileStatement *whileStatement = new WhileStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(5);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
 
-    ParentRelationship* parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    UsesRelationship* usesRelationship = new UsesRelationship(procedure, variable);
-    ModifiesRelationship* modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    FollowsRelationship* followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
+    UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
+    ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
+    FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
     REQUIRE(!parentRelationship->containsEntityOnLeftHand(assignStatement));
     REQUIRE(!usesRelationship->containsEntityOnLeftHand(variable));
@@ -137,17 +137,17 @@ TEST_CASE("Relationships contain the wrong left entity") {
 }
 
 TEST_CASE("Relationships contain the wrong right entity") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    WhileStatement* whileStatement = new WhileStatement(4);
-    AssignStatement* assignStatement = new AssignStatement(5);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    WhileStatement *whileStatement = new WhileStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(5);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
 
-    ParentRelationship* parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    UsesRelationship* usesRelationship = new UsesRelationship(procedure, variable);
-    ModifiesRelationship* modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    FollowsRelationship* followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
+    UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
+    ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
+    FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
     REQUIRE(!parentRelationship->containsEntityOnRightHand(whileStatement));
     REQUIRE(!usesRelationship->containsEntityOnRightHand(procedure));
@@ -168,8 +168,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
 }
 
 TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Statement as LHS throws an exception") {
-    Variable* variable = new Variable("variable");
-    Variable* variable2 = new Variable("variable2");
+    Variable *variable = new Variable("variable");
+    Variable *variable2 = new Variable("variable2");
 
     REQUIRE_THROWS_AS(new ModifiesRelationship(variable2, variable), std::invalid_argument);
 
@@ -178,8 +178,8 @@ TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Stat
 }
 
 TEST_CASE("Instantiating a UsesRelationship with a non-Procedure or non-Statement as LHS entity throws an exception") {
-    Variable* variable = new Variable("variable");
-    Variable* variable2 = new Variable("variable2");
+    Variable *variable = new Variable("variable");
+    Variable *variable2 = new Variable("variable2");
 
     REQUIRE_THROWS_AS(new UsesRelationship(variable2, variable), std::invalid_argument);
 

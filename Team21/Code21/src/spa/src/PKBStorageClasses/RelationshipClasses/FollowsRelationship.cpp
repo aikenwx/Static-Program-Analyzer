@@ -20,3 +20,12 @@ FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement
 RelationshipType FollowsRelationship::getRelationshipType() {
     return RelationshipType::FOLLOWS;
 }
+
+Entity* FollowsRelationship::getLeftHandEntity() {
+    return this->followedStatement;
+}
+
+Entity* FollowsRelationship::getRightHandEntity() {
+    return this->followerStatement;
+}
+

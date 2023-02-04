@@ -12,18 +12,19 @@
 
 
 #include "catch.hpp"
+
 using namespace std;
 
 TEST_CASE("Entities can instantiate") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    AssignStatement* assignStatement = new AssignStatement(4);
-    CallStatement* callStatement = new CallStatement(5);
-    WhileStatement* whileStatement = new WhileStatement(6);
-    IfStatement* ifStatement = new IfStatement(7);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
-    Constant* constant = new Constant(1);
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    AssignStatement *assignStatement = new AssignStatement(4);
+    CallStatement *callStatement = new CallStatement(5);
+    WhileStatement *whileStatement = new WhileStatement(6);
+    IfStatement *ifStatement = new IfStatement(7);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
+    Constant *constant = new Constant(1);
 
 
     delete printStatement;
@@ -38,15 +39,15 @@ TEST_CASE("Entities can instantiate") {
 }
 
 TEST_CASE("Entities retrieve their stored values") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    ReadStatement* readStatement = new ReadStatement(3);
-    AssignStatement* assignStatement = new AssignStatement(4);
-    CallStatement* callStatement = new CallStatement(5);
-    WhileStatement* whileStatement = new WhileStatement(6);
-    IfStatement* ifStatement = new IfStatement(7);
-    Procedure* procedure = new Procedure("procedure");
-    Variable* variable = new Variable("variable");
-    Constant* constant = new Constant(1);
+    PrintStatement *printStatement = new PrintStatement(2);
+    ReadStatement *readStatement = new ReadStatement(3);
+    AssignStatement *assignStatement = new AssignStatement(4);
+    CallStatement *callStatement = new CallStatement(5);
+    WhileStatement *whileStatement = new WhileStatement(6);
+    IfStatement *ifStatement = new IfStatement(7);
+    Procedure *procedure = new Procedure("procedure");
+    Variable *variable = new Variable("variable");
+    Constant *constant = new Constant(1);
 
 
     REQUIRE(printStatement->getEntityValue() == "2");
@@ -72,41 +73,41 @@ TEST_CASE("Entities retrieve their stored values") {
 }
 
 TEST_CASE("Entities can be compared") {
-    PrintStatement* printStatement = new PrintStatement(2);
-    PrintStatement* printStatement2 = new PrintStatement(2);
-    PrintStatement* printStatement3 = new PrintStatement(3);
+    PrintStatement *printStatement = new PrintStatement(2);
+    PrintStatement *printStatement2 = new PrintStatement(2);
+    PrintStatement *printStatement3 = new PrintStatement(3);
 
-    ReadStatement* readStatement = new ReadStatement(3);
-    ReadStatement* readStatement2 = new ReadStatement(3);
-    ReadStatement* readStatement3 = new ReadStatement(4);
+    ReadStatement *readStatement = new ReadStatement(3);
+    ReadStatement *readStatement2 = new ReadStatement(3);
+    ReadStatement *readStatement3 = new ReadStatement(4);
 
-    AssignStatement* assignStatement = new AssignStatement(4);
-    AssignStatement* assignStatement2 = new AssignStatement(4);
-    AssignStatement* assignStatement3 = new AssignStatement(5);
+    AssignStatement *assignStatement = new AssignStatement(4);
+    AssignStatement *assignStatement2 = new AssignStatement(4);
+    AssignStatement *assignStatement3 = new AssignStatement(5);
 
-    CallStatement* callStatement = new CallStatement(5);
-    CallStatement* callStatement2 = new CallStatement(5);
-    CallStatement* callStatement3 = new CallStatement(6);
+    CallStatement *callStatement = new CallStatement(5);
+    CallStatement *callStatement2 = new CallStatement(5);
+    CallStatement *callStatement3 = new CallStatement(6);
 
-    WhileStatement* whileStatement = new WhileStatement(6);
-    WhileStatement* whileStatement2 = new WhileStatement(6);
-    WhileStatement* whileStatement3 = new WhileStatement(7);
+    WhileStatement *whileStatement = new WhileStatement(6);
+    WhileStatement *whileStatement2 = new WhileStatement(6);
+    WhileStatement *whileStatement3 = new WhileStatement(7);
 
-    IfStatement* ifStatement = new IfStatement(7);
-    IfStatement* ifStatement2 = new IfStatement(7);
-    IfStatement* ifStatement3 = new IfStatement(8);
+    IfStatement *ifStatement = new IfStatement(7);
+    IfStatement *ifStatement2 = new IfStatement(7);
+    IfStatement *ifStatement3 = new IfStatement(8);
 
-    Variable* variable = new Variable("variable");
-    Variable* variable2 = new Variable("variable");
-    Variable* variable3 = new Variable("variable2");
+    Variable *variable = new Variable("variable");
+    Variable *variable2 = new Variable("variable");
+    Variable *variable3 = new Variable("variable2");
 
-    Procedure* procedure = new Procedure("procedure");
-    Procedure* procedure2 = new Procedure("procedure");
-    Procedure* procedure3 = new Procedure("procedure2");
+    Procedure *procedure = new Procedure("procedure");
+    Procedure *procedure2 = new Procedure("procedure");
+    Procedure *procedure3 = new Procedure("procedure2");
 
-    Constant* constant = new Constant(1);
-    Constant* constant2 = new Constant(1);
-    Constant* constant3 = new Constant(2);
+    Constant *constant = new Constant(1);
+    Constant *constant2 = new Constant(1);
+    Constant *constant3 = new Constant(2);
 
     REQUIRE(printStatement->equals(printStatement));
     REQUIRE(readStatement->equals(readStatement));

@@ -20,3 +20,11 @@ ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *ch
 RelationshipType ParentRelationship::getRelationshipType() {
     return RelationshipType::PARENT;
 }
+
+Entity* ParentRelationship::getLeftHandEntity() {
+    return this->parentStatement;
+}
+
+Entity* ParentRelationship::getRightHandEntity() {
+    return this->childStatement;
+}

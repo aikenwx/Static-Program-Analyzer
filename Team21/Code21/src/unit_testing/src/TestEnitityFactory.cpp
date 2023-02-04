@@ -15,12 +15,12 @@
 
 
 TEST_CASE("EntityFactory can instantiate") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
     delete entityFactory;
 }
 
 TEST_CASE("EntityFactory can create an AssignmentStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::ASSIGN_STATEMENT, 1);
     AssignStatement *expectedEntity = new AssignStatement(1);
@@ -33,7 +33,7 @@ TEST_CASE("EntityFactory can create an AssignmentStatement") {
 }
 
 TEST_CASE("EntityFactory can create a PrintStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::PRINT_STATEMENT, 1);
     PrintStatement *expectedEntity = new PrintStatement(1);
@@ -46,7 +46,7 @@ TEST_CASE("EntityFactory can create a PrintStatement") {
 }
 
 TEST_CASE("EntityFactory can create a ReadStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::READ_STATEMENT, 1);
     ReadStatement *expectedEntity = new ReadStatement(1);
@@ -59,7 +59,7 @@ TEST_CASE("EntityFactory can create a ReadStatement") {
 }
 
 TEST_CASE("EntityFactory can create a CallStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::CALL_STATEMENT, 1);
     CallStatement *expectedEntity = new CallStatement(1);
@@ -72,7 +72,7 @@ TEST_CASE("EntityFactory can create a CallStatement") {
 }
 
 TEST_CASE("EntityFactory can create a WhileStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::WHILE_STATEMENT, 1);
     WhileStatement *expectedEntity = new WhileStatement(1);
@@ -85,7 +85,7 @@ TEST_CASE("EntityFactory can create a WhileStatement") {
 }
 
 TEST_CASE("EntityFactory can create an IfStatement") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::IF_STATEMENT, 1);
     IfStatement *expectedEntity = new IfStatement(1);
@@ -97,7 +97,7 @@ TEST_CASE("EntityFactory can create an IfStatement") {
 }
 
 TEST_CASE("EntityFactory can create a Procedure") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::PROCEDURE, "procedure");
     Procedure *expectedEntity = new Procedure("procedure");
@@ -110,7 +110,7 @@ TEST_CASE("EntityFactory can create a Procedure") {
 }
 
 TEST_CASE("EntityFactory can create a Variable") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::VARIABLE, "variable");
     Variable *expectedEntity = new Variable("variable");
@@ -122,7 +122,7 @@ TEST_CASE("EntityFactory can create a Variable") {
 }
 
 TEST_CASE("EntityFactory can create a Constant") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
 
     Entity *actualEntity = entityFactory->createEntity(EntityType::CONSTANT, 5);
     Constant *expectedEntity = new Constant(5);
@@ -134,13 +134,13 @@ TEST_CASE("EntityFactory can create a Constant") {
 }
 
 TEST_CASE("Invalid Constant throws exception") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::CONSTANT, "constant"), std::invalid_argument);
     delete entityFactory;
 }
 
 TEST_CASE("Invalid Statements throws exception") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::ASSIGN_STATEMENT, "assign"), std::invalid_argument);
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::PRINT_STATEMENT, "print"), std::invalid_argument);
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::READ_STATEMENT, "read"), std::invalid_argument);
@@ -152,13 +152,13 @@ TEST_CASE("Invalid Statements throws exception") {
 }
 
 TEST_CASE("Invalid Procedure throws exception") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::PROCEDURE, 1), std::invalid_argument);
     delete entityFactory;
 }
 
 TEST_CASE("Invalid Variable throws exception") {
-    EntityFactory* entityFactory = new EntityFactory();
+    EntityFactory *entityFactory = new EntityFactory();
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::VARIABLE, 1), std::invalid_argument);
     delete entityFactory;
 }

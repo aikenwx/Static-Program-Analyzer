@@ -20,6 +20,10 @@ public:
     virtual bool containsEntityOnRightHand(Entity *entity) = 0;
 
     virtual RelationshipType getRelationshipType() = 0;
+
+    virtual Entity *getLeftHandEntity() = 0;
+
+    virtual Entity *getRightHandEntity() = 0;
 };
 
 

@@ -10,10 +10,9 @@ class Statement : public Entity {
 protected:
     int statementNumber;
 public:
-    virtual bool equals(Entity *otherEntity) override = 0;
-
     std::string getEntityValue() override;
 
+    virtual EntityType getEntityType() override = 0;
 };
 
 #endif

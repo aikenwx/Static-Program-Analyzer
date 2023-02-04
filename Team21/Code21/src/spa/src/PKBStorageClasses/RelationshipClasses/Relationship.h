@@ -4,13 +4,22 @@
 #include "../EntityClasses/AssignStatement.h"
 #include "../EntityClasses/Procedure.h"
 
+enum RelationshipType {
+    MODIFIES = 0,
+    USES = 1,
+    PARENT = 2,
+    FOLLOWS = 3,
+};
+
 class Relationship {
 public:
+    virtual ~Relationship() = default;
+
     virtual bool containsEntityOnLeftHand(Entity *entity) = 0;
 
     virtual bool containsEntityOnRightHand(Entity *entity) = 0;
 
-    virtual ~Relationship() = default;
+    virtual RelationshipType getRelationshipType() = 0;
 };
 
 

@@ -20,6 +20,8 @@ public:
     bool containsEntityOnLeftHand(Entity *entity) override;
 
     bool containsEntityOnRightHand(Entity *entity) override;
+
+    RelationshipType getRelationshipType() override;
 };
 
 

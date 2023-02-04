@@ -18,6 +18,7 @@ public:
     FollowsRelationship(Statement *followedStatement, Statement *followerStatement);
     bool containsEntityOnLeftHand(Entity *entity) override;
     bool containsEntityOnRightHand(Entity *entity) override;
+    RelationshipType getRelationshipType() override;
 };
 
 

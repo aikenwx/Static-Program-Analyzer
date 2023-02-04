@@ -16,3 +16,7 @@ ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *ch
     this->childStatement = childStatement;
     this->parentStatement = parentStatement;
 }
+
+RelationshipType ParentRelationship::getRelationshipType() {
+    return RelationshipType::PARENT;
+}

@@ -8,9 +8,6 @@ std::string Procedure::getEntityValue() {
     return this->procedureName;
 }
 
-bool Procedure::equals(Entity *otherEntity) {
-    if (dynamic_cast<Procedure *>(otherEntity) != nullptr) {
-        return dynamic_cast<Procedure *>(otherEntity)->procedureName == this->procedureName;
-    }
-    return false;
+EntityType Procedure::getEntityType() {
+    return EntityType::PROCEDURE;
 }

@@ -15,9 +15,9 @@ private:
 public:
     Constant(int constantValue);
 
-    std::string getEntityValue();
+    std::string getEntityValue() override;
 
-    bool equals(Entity* otherEntity);
+    EntityType getEntityType() override;
 };
 
 

@@ -7,9 +7,9 @@
 
 class IfStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     IfStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 #endif

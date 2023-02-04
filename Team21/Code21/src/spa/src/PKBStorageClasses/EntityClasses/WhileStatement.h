@@ -7,9 +7,9 @@
 
 class WhileStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     WhileStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 #endif

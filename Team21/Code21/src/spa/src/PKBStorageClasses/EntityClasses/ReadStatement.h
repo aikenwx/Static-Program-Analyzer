@@ -5,9 +5,9 @@
 
 class ReadStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     ReadStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 

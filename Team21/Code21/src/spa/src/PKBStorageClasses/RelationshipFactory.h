@@ -11,13 +11,6 @@
 #include "RelationshipClasses/FollowsRelationship.h"
 #include "EntityClasses/Entity.h"
 
-enum RelationshipType {
-    MODIFIES = 0,
-    USES = 1,
-    PARENT = 2,
-    FOLLOWS = 3,
-};
-
 class RelationshipFactory {
 public:
     RelationshipFactory();

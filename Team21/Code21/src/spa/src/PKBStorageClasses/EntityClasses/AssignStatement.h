@@ -7,9 +7,9 @@
 
 class AssignStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     AssignStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 #endif

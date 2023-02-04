@@ -17,6 +17,8 @@ public:
     ParentRelationship(Statement *parentStatement, Statement *childStatement);
     bool containsEntityOnLeftHand(Entity *entity) override;
     bool containsEntityOnRightHand(Entity *entity) override;
+
+    RelationshipType getRelationshipType() override;
 };
 
 

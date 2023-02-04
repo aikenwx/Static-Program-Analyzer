@@ -7,9 +7,9 @@
 
 class CallStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     CallStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 #endif

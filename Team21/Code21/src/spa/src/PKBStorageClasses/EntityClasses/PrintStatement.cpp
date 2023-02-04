@@ -4,11 +4,8 @@ PrintStatement::PrintStatement(int statementNumber) {
     Statement::statementNumber = statementNumber;
 }
 
-bool PrintStatement::equals(Entity *otherEntity) {
-    if (dynamic_cast<PrintStatement *>(otherEntity) != nullptr) {
-        return dynamic_cast<PrintStatement *>(otherEntity)->statementNumber == this->statementNumber;
-    }
-    return false;
+EntityType PrintStatement::getEntityType() {
+    return EntityType::PRINT_STATEMENT;
 }
 
 

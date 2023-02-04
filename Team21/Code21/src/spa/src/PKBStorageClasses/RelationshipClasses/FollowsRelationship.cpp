@@ -16,3 +16,7 @@ FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement
     this->followedStatement = followedStatement;
     this->followerStatement = followerStatement;
 }
+
+RelationshipType FollowsRelationship::getRelationshipType() {
+    return RelationshipType::FOLLOWS;
+}

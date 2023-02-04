@@ -53,12 +53,8 @@ Entity *EntityFactory::createEntity(EntityType entityType, int entityValue) {
     }
 }
 
-bool EntityFactory::isStatement(EntityType entityType) {
-    return entityType >= EntityType::ASSIGN_STATEMENT && entityType <= EntityType::WHILE_STATEMENT;
-}
-
 void EntityFactory::checkForValidInput(EntityType entityType, InputType inputType) {
-    if (isStatement(entityType) && inputType != InputType::INTEGER) {
+    if (Entity::isStatementType(entityType) && inputType != InputType::INTEGER) {
         throw(std::invalid_argument("Statement entity type requires integer input"));
     } else if (entityType == EntityType::CONSTANT && inputType != InputType::INTEGER) {
         throw(std::invalid_argument("Constant entity type requires integer input"));

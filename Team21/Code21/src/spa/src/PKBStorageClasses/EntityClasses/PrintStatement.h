@@ -6,9 +6,9 @@
 
 class PrintStatement : public Statement {
 public:
-    bool equals(Entity *otherEntity) override;
-
     PrintStatement(int statementNumber);
+
+    EntityType getEntityType() override;
 };
 
 #endif

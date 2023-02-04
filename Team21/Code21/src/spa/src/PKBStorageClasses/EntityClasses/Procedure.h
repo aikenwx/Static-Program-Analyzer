@@ -15,9 +15,9 @@ private:
 public:
     Procedure(std::string variableValue);
 
-    std::string getEntityValue();
+    std::string getEntityValue() override;
 
-    bool equals(Entity* otherEntity);
+    EntityType getEntityType() override;
 };
 
 

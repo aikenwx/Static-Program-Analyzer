@@ -16,10 +16,14 @@ bool ModifiesRelationship::containsEntityOnRightHand(Entity *entity) {
 ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedVariable) {
 
     // modifier can only be Statement or Procedure
-    if (dynamic_cast<Statement *>(modifier) == nullptr && dynamic_cast<Procedure *>(modifier) == nullptr) {
-        throw std::invalid_argument("user can only be Statement or Procedure");
+    if (!Entity::isStatementType(modifier->getEntityType()) && modifier->getEntityType() != EntityType::PROCEDURE) {
+        throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
     }
 
     this->modifier = modifier;
     this->modifiedVariable = modifiedVariable;
+}
+
+RelationshipType ModifiesRelationship::getRelationshipType() {
+    return RelationshipType::MODIFIES;
 }

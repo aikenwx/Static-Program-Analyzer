@@ -7,18 +7,30 @@
 
 #include <string>
 
-//enum EntityType {
-//    ASSIGN = 0, READ = 1, PRINT = 2, CALL = 3, WHILE = 4, IF = 5, VARIABLE = 6, PROCEDURE = 7, CONSTANT = 8
-//};
+enum EntityType {
+    ASSIGN_STATEMENT = 0,
+    CALL_STATEMENT = 1,
+    IF_STATEMENT = 2,
+    PRINT_STATEMENT = 3,
+    READ_STATEMENT = 4,
+    WHILE_STATEMENT = 5,
+    CONSTANT = 6,
+    VARIABLE = 7,
+    PROCEDURE = 8,
+};
 
 class Entity {
 
 public:
     virtual std::string getEntityValue() = 0;
 
-    virtual bool equals(Entity *otherEntity) = 0;
-
     virtual ~Entity() = default;
+
+    virtual EntityType getEntityType() = 0;
+
+    bool equals(Entity *otherEntity);
+
+    static bool isStatementType(EntityType entityType);
 };
 
 

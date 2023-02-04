@@ -12,9 +12,8 @@ std::string Variable::getEntityValue() {
     return this->variableName;
 }
 
-bool Variable::equals(Entity *otherEntity) {
-    if (dynamic_cast<Variable *>(otherEntity) != nullptr) {
-        return dynamic_cast<Variable *>(otherEntity)->variableName == this->variableName;
-    }
-    return false;
+
+EntityType Variable::getEntityType() {
+    return EntityType::VARIABLE;
 }
+

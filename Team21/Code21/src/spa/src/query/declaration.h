@@ -41,7 +41,6 @@ class Declaration {
 					return std::make_optional<Declaration>(decl_list[i]);
 				}
 			}
-			
 			return std::nullopt;
 		}
 };

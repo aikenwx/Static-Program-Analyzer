@@ -2,9 +2,9 @@
 
 namespace qps {
 
-	Expression::Expression(bool isPartial_, std::string expression_) 
+	Expression::Expression(bool isPartial_, std::string expression_)
 		: isPartial{ isPartial_ }, expression{ expression_ } {}
-	
+
 	bool Expression::isExpressionPartial() {
 		return isPartial;
 	}

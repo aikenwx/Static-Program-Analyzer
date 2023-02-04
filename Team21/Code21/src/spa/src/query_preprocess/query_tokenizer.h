@@ -1,17 +1,26 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace qps {
 
 class QueryTokenizer {
 	private:
-		std::string currentStr; //Current String for QueryLexer
+		std::string queryString;
+		int currentIndex;
+		std::string currentString; //Current String for QueryTokenizer
+		std::vector<std::string> tokens;
 
+		char peek();
+		char next();
+		bool isEnd();
+		void readPhrase();
+		void readNumber();
+
+		
 	public:
 		QueryTokenizer(std::string source);
-
-		bool dummyTokenize(int num);
-
+		std::vector<std::string> tokenize();
 };
 }

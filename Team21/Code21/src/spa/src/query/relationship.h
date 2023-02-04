@@ -21,3 +21,4 @@ Relationship getRelationship(std::string&);
 std::string getStringFromRelationship(Relationship);
 
 }
+

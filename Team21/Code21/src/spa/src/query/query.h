@@ -26,3 +26,4 @@ class Query {
 		Declaration getSelectClause();
 };
 }
+

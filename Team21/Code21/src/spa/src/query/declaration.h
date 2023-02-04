@@ -31,11 +31,12 @@ class Declaration {
 		}
 
 
-		static std::optional<Declaration> Declaration::findDeclarationWithSynonym(std::vector<Declaration>& decl_list, Synonym& synonym) {
-			return findDeclarationWithString(decl_list, synonym.getSynonym());
+		static std::optional<Declaration> findDeclarationWithSynonym(std::vector<Declaration>& decl_list, Synonym& synonym) {
+			std::string synonym_ = synonym.getSynonym();
+			return findDeclarationWithString(decl_list, synonym_);
 		}
 
-		static std::optional<Declaration> Declaration::findDeclarationWithString(std::vector<Declaration>& decl_list, std::string& syn_string) {
+		static std::optional<Declaration> findDeclarationWithString(std::vector<Declaration>& decl_list, std::string& syn_string) {
 			for (int i = 0; i < decl_list.size(); i++) {
 				if (decl_list[i].getSynonym().getSynonym() == syn_string) {
 					return std::make_optional<Declaration>(decl_list[i]);

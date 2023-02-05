@@ -11,6 +11,9 @@ const std::string DivideToken::getValue() { return "/"; };
 
 const DivideToken* DivideToken::createToken(std::string str) {
   assert(str == "/");
-  return new DivideToken();
+  if (instance_ == nullptr) instance_ = new DivideToken();
+  return instance_;
 };
+
+DivideToken* DivideToken::instance_ = nullptr;
 }  // namespace token

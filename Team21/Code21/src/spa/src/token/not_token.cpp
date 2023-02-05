@@ -11,6 +11,9 @@ const std::string NotToken::getValue() { return "!"; };
 
 const NotToken* NotToken::createToken(std::string str) {
   assert(str == "!");
-  return new NotToken();
+  if (instance_ == nullptr) instance_ = new NotToken();
+  return instance_;
 };
+
+NotToken* NotToken::instance_ = nullptr;
 }  // namespace token

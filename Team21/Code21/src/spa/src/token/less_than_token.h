@@ -9,6 +9,7 @@ class LessThanToken : public SymbolToken {
  public:
   static const LessThanToken* createToken(std::string);
   const std::string getValue() override;
+
  private:
   LessThanToken();
   static LessThanToken* instance_;

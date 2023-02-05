@@ -10,6 +10,9 @@ const std::string GreaterThanToken::getValue() { return ">"; };
 
 const GreaterThanToken* GreaterThanToken::createToken(std::string str) {
   assert(str == ">");
-  return new GreaterThanToken();
+  if (instance_ == nullptr) instance_ = new GreaterThanToken();
+  return instance_;
 };
+
+GreaterThanToken* GreaterThanToken::instance_ = nullptr;
 }  // namespace token

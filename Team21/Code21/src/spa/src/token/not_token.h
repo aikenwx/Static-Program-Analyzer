@@ -9,6 +9,7 @@ class NotToken : public SymbolToken {
  public:
   static const NotToken* createToken(std::string);
   const std::string getValue() override;
+
  private:
   NotToken();
   static NotToken* instance_;

@@ -9,6 +9,7 @@ class NotEqualToken : public SymbolToken {
  public:
   static const NotEqualToken* createToken(std::string);
   const std::string getValue() override;
+
  private:
   NotEqualToken();
   static NotEqualToken* instance_;

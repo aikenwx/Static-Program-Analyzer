@@ -11,7 +11,9 @@ const std::string EqualToken::getValue() { return "=="; };
 
 const EqualToken* EqualToken::createToken(std::string str) {
   assert(str == "==");
-  return new EqualToken();
+  if (instance_ == nullptr) instance_ = new EqualToken();
+  return instance_;
 };
 
+EqualToken* EqualToken::instance_ = nullptr;
 }  // namespace token

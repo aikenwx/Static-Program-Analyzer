@@ -11,6 +11,9 @@ const std::string AndToken::getValue() { return "&&"; };
 
 const AndToken* AndToken::createToken(std::string str) {
   assert(str == "&&");
-  return new AndToken();
+  if (instance_ == nullptr) instance_ = new AndToken();
+  return instance_;
 };
+
+AndToken* AndToken::instance_ = nullptr;
 }  // namespace token

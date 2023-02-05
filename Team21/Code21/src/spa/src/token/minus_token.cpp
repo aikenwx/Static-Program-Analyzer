@@ -10,6 +10,9 @@ const std::string MinusToken::getValue() { return "-"; };
 
 const MinusToken* MinusToken::createToken(std::string str) {
   assert(str == "-");
-  return new MinusToken();
+  if (instance_ == nullptr) instance_ = new MinusToken();
+  return instance_;
 };
+
+MinusToken* MinusToken::instance_ = nullptr;
 }  // namespace token

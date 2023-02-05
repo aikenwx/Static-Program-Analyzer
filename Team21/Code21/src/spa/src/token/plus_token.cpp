@@ -1,15 +1,19 @@
-#include <assert.h>
-#include <string>
-
 #include "plus_token.h"
 
-namespace token {
-PlusToken::PlusToken() {}
+#include <assert.h>
 
-const std::string PlusToken::getValue() { return "+"; }
+#include <string>
+
+namespace token {
+PlusToken::PlusToken(){};
+
+const std::string PlusToken::getValue() { return "+"; };
 
 const PlusToken* PlusToken::createToken(std::string str) {
   assert(str == "+");
-  return new PlusToken();
-}
+  if (instance_ == nullptr) instance_ = new PlusToken();
+  return instance_;
+};
+
+PlusToken* PlusToken::instance_ = nullptr;
 }  // namespace token

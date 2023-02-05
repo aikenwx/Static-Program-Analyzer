@@ -9,6 +9,7 @@ class RightBraceToken : public SymbolToken {
  public:
   static const RightBraceToken* createToken(std::string);
   const std::string getValue() override;
+
  private:
   RightBraceToken();
   static RightBraceToken* instance_;

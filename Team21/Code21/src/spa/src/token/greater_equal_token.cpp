@@ -10,6 +10,9 @@ const std::string GreaterEqualToken::getValue() { return ">="; };
 
 const GreaterEqualToken* GreaterEqualToken::createToken(std::string str) {
   assert(str == ">=");
-  return new GreaterEqualToken();
+  if (instance_ == nullptr) instance_ = new GreaterEqualToken();
+  return instance_;
 };
+
+GreaterEqualToken* GreaterEqualToken::instance_ = nullptr;
 }  // namespace token

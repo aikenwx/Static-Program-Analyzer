@@ -11,6 +11,9 @@ const std::string OrToken::getValue() { return "||"; };
 
 const OrToken* OrToken::createToken(std::string str) {
   assert(str == "||");
-  return new OrToken();
+  if (instance_ == nullptr) instance_ = new OrToken();
+  return instance_;
 };
+
+OrToken* OrToken::instance_ = nullptr;
 }  // namespace token

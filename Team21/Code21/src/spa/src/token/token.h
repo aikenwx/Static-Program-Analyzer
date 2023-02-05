@@ -11,6 +11,7 @@ class Token {
 class SymbolToken : public Token {
  public:
   void operator=(const SymbolToken&) = delete;
+
  private:
   static SymbolToken* instance_;
 };

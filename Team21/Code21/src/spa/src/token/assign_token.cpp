@@ -11,6 +11,9 @@ const std::string AssignToken::getValue() { return "="; };
 
 const AssignToken* AssignToken::createToken(std::string str) {
   assert(str == "=");
-  return new AssignToken();
+  if (instance_ == nullptr) instance_ = new AssignToken();
+  return instance_;
 };
+
+AssignToken* AssignToken::instance_ = nullptr;
 }  // namespace token

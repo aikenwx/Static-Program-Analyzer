@@ -11,6 +11,9 @@ const std::string LessThanToken::getValue() { return "<"; };
 
 const LessThanToken* LessThanToken::createToken(std::string str) {
   assert(str == "<");
-  return new LessThanToken();
+  if (instance_ == nullptr) instance_ = new LessThanToken();
+  return instance_;
 };
+
+LessThanToken* LessThanToken::instance_ = nullptr;
 }  // namespace token

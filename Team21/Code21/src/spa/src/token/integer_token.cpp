@@ -14,7 +14,7 @@ IntegerToken::IntegerToken(std::string value) { this->value = value; }
 const std::string IntegerToken::getValue() { return this->value; }
 
 const IntegerToken* IntegerToken::createToken(std::string str) {
-  assert(util::is_integer(str)); // invariant: length > 0, all digits
+  assert(util::is_integer(str));  // invariant: length > 0, all digits
   if (str[0] == '0' && str.length() > 1) {
     throw exceptions::SyntaxError("Non-zero integer cannot start with 0");
   }

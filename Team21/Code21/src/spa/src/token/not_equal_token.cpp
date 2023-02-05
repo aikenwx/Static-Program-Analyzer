@@ -11,7 +11,9 @@ const std::string NotEqualToken::getValue() { return "!="; };
 
 const NotEqualToken* NotEqualToken::createToken(std::string str) {
   assert(str == "!=");
-  return new NotEqualToken();
+  if (instance_ == nullptr) instance_ = new NotEqualToken();
+  return instance_;
 };
 
-} // namespace token
+NotEqualToken* NotEqualToken::instance_ = nullptr;
+}  // namespace token

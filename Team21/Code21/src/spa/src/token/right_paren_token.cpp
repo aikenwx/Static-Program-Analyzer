@@ -11,6 +11,9 @@ const std::string RightParenToken::getValue() { return ")"; };
 
 const RightParenToken* RightParenToken::createToken(std::string str) {
   assert(str == ")");
-  return new RightParenToken();
+  if (instance_ == nullptr) instance_ = new RightParenToken();
+  return instance_;
 };
+
+RightParenToken* RightParenToken::instance_ = nullptr;
 }  // namespace token

@@ -1,7 +1,7 @@
 #pragma once
 #include "i_node.h"
 
-enum SymbolType {
+enum class SymbolType {
   kAnd,
   kAssign,
   kDivide,

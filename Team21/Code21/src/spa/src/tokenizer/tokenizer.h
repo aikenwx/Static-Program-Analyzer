@@ -11,6 +11,6 @@ class Tokenizer {
   void operator=(const Tokenizer&) = delete;
 
  private:
-  static Tokenizer* instance_;  
+  static Tokenizer* instance_;
 };
 }  // namespace tokenizer

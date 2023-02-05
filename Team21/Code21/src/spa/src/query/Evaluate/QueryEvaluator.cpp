@@ -1,6 +1,6 @@
 /* need to include all the depedencies from evaluator clauses.Below are pseudo for now.
 May have to change how entire thing works depending on how ClauseEvaluatorFactory works. Does it create special evaluators just
-from looking at query object? So like it should create type per situation based on query and its clauses? So it calls constraintsSolver?*/ 
+from looking at query object? So like it should create type per situation based on query and its clauses? So it calls constraintsSolver?*/
 #include <iostream>
 
 #include "query/Clause/ClauseEvaluatorFactory.h"

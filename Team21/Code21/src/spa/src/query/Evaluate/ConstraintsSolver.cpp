@@ -10,12 +10,10 @@
 
 // to be added. Not very sure how to implement this.
 namespace qps {
-	
+
 	ClauseResult ConstraintsSolver::solve(const Query& query) {
-		
 	}
 
 	ClauseResult ConstraintsSolver::suchThatAssignPatternClauseResult(const Query& query) {
-
 	}
 }

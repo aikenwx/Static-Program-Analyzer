@@ -17,7 +17,7 @@ enum class Relationship {
 	ModifiesP,
 };
 
-Relationship getRelationshipFromString(std::string& reString);
+Relationship getRelationshipFromString(std::string reString);
 std::string getStringFromRelationship(Relationship relationship);
 
 }

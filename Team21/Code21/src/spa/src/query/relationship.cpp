@@ -32,7 +32,7 @@ std::map<std::string, Relationship> relationshipMap{ {
 	{"Modifies(P)", Relationship::ModifiesP},
 } };
 
-Relationship getRelationshipFromString(std::string& reString) {
+Relationship getRelationshipFromString(std::string reString) {
 	try {
 		return relationshipMap.at(reString);
 	}

@@ -33,7 +33,10 @@ public:
 
     std::vector<Entity *> *getEntitiesByType(EntityType entityType);
 
+private:
+    void initialiseVectorForIndexIfNotExist(EntityType entityType);
 
+    std::vector<Entity *> *getAllStatements();
 };
 
 #endif //SPA_ENTITYMANAGER_H

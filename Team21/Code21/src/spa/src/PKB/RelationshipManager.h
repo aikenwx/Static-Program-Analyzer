@@ -23,7 +23,18 @@ public:
 
     void storeRelationship(Relationship *relationship);
 
-    std::vector<Relationship *> *getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType, EntityType rightHandEntityType);
+    std::vector<Relationship *> *
+    getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
+                            EntityType rightHandEntityType);
+
+
+
+private:
+    void initialiseVectorForIndexIfNotExist(std::string hashkey);
+
+    std::vector<std::string> *getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
+                                                                                    EntityType leftHandEntityType,
+                                                                                    EntityType rightHandEntityType);
 
 };
 

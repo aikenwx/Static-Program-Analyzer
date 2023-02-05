@@ -2,6 +2,13 @@
 #include "catch.hpp"
 
 #include "PKB/EntityManager.h"
+#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
+#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
+#include "PKBStorageClasses/EntityClasses/AssignStatement.h"
+#include "PKBStorageClasses/EntityClasses/CallStatement.h"
+#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
+#include "PKBStorageClasses/EntityClasses/Procedure.h"
 
 TEST_CASE("EntityManager Instantiates") {
     EntityManager *entityManager = new EntityManager();
@@ -136,4 +143,81 @@ TEST_CASE("EntityManager can retrieve multiple entities of multiple types") {
     delete entities;
     delete entities2;
     delete entities3;
+}
+
+TEST_CASE("EntityManager can retrieve all Statements") {
+    // store all statements
+    EntityManager *entityManager = new EntityManager();
+    ReadStatement *readStatement1 = new ReadStatement(1);
+    ReadStatement *readStatement2 = new ReadStatement(2);
+    PrintStatement *printStatement1 = new PrintStatement(3);
+    PrintStatement *printStatement2 = new PrintStatement(4);
+    AssignStatement *assignStatement1 = new AssignStatement(5);
+    AssignStatement *assignStatement2 = new AssignStatement(6);
+    CallStatement *callStatement1 = new CallStatement(7);
+    CallStatement *callStatement2 = new CallStatement(8);
+    WhileStatement *whileStatement1 = new WhileStatement(9);
+    WhileStatement *whileStatement2 = new WhileStatement(10);
+    IfStatement *ifStatement1 = new IfStatement(11);
+    IfStatement *ifStatement2 = new IfStatement(12);
+    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure("procedure");
+
+    entityManager->storeEntity(readStatement1);
+    entityManager->storeEntity(readStatement2);
+    entityManager->storeEntity(printStatement1);
+    entityManager->storeEntity(printStatement2);
+    entityManager->storeEntity(assignStatement1);
+    entityManager->storeEntity(assignStatement2);
+    entityManager->storeEntity(callStatement1);
+    entityManager->storeEntity(callStatement2);
+    entityManager->storeEntity(whileStatement1);
+    entityManager->storeEntity(whileStatement2);
+    entityManager->storeEntity(ifStatement1);
+    entityManager->storeEntity(ifStatement2);
+    entityManager->storeEntity(variable);
+    entityManager->storeEntity(procedure);
+
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
+
+    REQUIRE(entities->size() == 12);
+
+    for (Entity *entity: *entities) {
+        bool isStatement = entity->getEntityType() == EntityType::READ_STATEMENT ||
+                           entity->getEntityType() == EntityType::PRINT_STATEMENT ||
+                           entity->getEntityType() == EntityType::ASSIGN_STATEMENT ||
+                           entity->getEntityType() == EntityType::CALL_STATEMENT ||
+                           entity->getEntityType() == EntityType::WHILE_STATEMENT ||
+                           entity->getEntityType() == EntityType::IF_STATEMENT;
+
+        REQUIRE(isStatement);
+    }
+
+    delete entityManager;
+    delete readStatement1;
+    delete readStatement2;
+    delete printStatement1;
+    delete printStatement2;
+    delete assignStatement1;
+    delete assignStatement2;
+    delete callStatement1;
+    delete callStatement2;
+    delete whileStatement1;
+    delete whileStatement2;
+    delete ifStatement1;
+    delete ifStatement2;
+    delete variable;
+    delete procedure;
+    delete entities;
+}
+
+TEST_CASE("Retrieving statements from empty EntityManager returns empty vector") {
+    EntityManager *entityManager = new EntityManager();
+
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
+
+    REQUIRE(entities->size() == 0);
+
+    delete entityManager;
+    delete entities;
 }

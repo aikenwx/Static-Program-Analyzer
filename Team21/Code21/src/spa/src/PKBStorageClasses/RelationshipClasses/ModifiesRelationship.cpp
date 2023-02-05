@@ -28,11 +28,11 @@ RelationshipType ModifiesRelationship::getRelationshipType() {
     return RelationshipType::MODIFIES;
 }
 
-Entity* ModifiesRelationship::getLeftHandEntity() {
+Entity *ModifiesRelationship::getLeftHandEntity() {
     return this->modifier;
 }
 
-Entity* ModifiesRelationship::getRightHandEntity() {
+Entity *ModifiesRelationship::getRightHandEntity() {
     return this->modifiedVariable;
 }
 

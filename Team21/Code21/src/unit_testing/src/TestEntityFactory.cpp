@@ -162,3 +162,9 @@ TEST_CASE("Invalid Variable throws exception") {
     REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::VARIABLE, 1), std::invalid_argument);
     delete entityFactory;
 }
+
+TEST_CASE("Trying to create statement throws exception") {
+    EntityFactory *entityFactory = new EntityFactory();
+    REQUIRE_THROWS_AS(entityFactory->createEntity(EntityType::STATEMENT, 1), std::invalid_argument);
+    delete entityFactory;
+}

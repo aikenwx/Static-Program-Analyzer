@@ -6,6 +6,7 @@
 #define SPA_ENTITY_H
 
 #include <string>
+#include <vector>
 
 enum EntityType {
     ASSIGN_STATEMENT = 0,
@@ -17,9 +18,14 @@ enum EntityType {
     CONSTANT = 6,
     VARIABLE = 7,
     PROCEDURE = 8,
+    STATEMENT = 9,
 };
 
+
+
 class Entity {
+public:
+    static std::vector<EntityType> statementTypes;
 
 public:
     virtual std::string getEntityValue() = 0;

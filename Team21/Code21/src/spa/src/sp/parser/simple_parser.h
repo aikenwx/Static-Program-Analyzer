@@ -11,7 +11,7 @@ class SimpleParser : public IParser {
 private:
   std::vector<ast::INode *> stack;
   std::vector<token::Token *>::iterator lookahead;
-
+  
   ast::AST *Parse(std::vector<token::Token *> input) override;
   void Shift();
   void Reduce();

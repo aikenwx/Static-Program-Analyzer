@@ -27,7 +27,7 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
       Shift();
       continue;
     }
-
+    
     while (Check()) {
 
     }

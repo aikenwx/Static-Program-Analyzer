@@ -9,3 +9,5 @@ class IParser {
 public:
 };
 }
+  virtual AST *parse(std::vector<token::Token *> input) = 0;
+};

@@ -10,7 +10,7 @@ class SimpleParser : public IParser {
 private:
   std::vector<INode *> stack;
   std::vector<token::Token *>::iterator lookahead;
-  
+
   AST *SimpleParser::parse(std::vector<token::Token *> input) override;
   void shift();
   void reduce();

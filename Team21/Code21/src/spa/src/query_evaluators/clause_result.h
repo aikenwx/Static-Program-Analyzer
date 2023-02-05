@@ -30,4 +30,3 @@ class ClauseResult {
   SynonymIdx synonym_idx_;
 };
 } // qps
-

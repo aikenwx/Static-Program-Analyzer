@@ -31,7 +31,7 @@ AST *SimpleParser::parse(std::vector<token::Token *> input) {
 
     }
   }
-  return &AST();
+  return new AST();
 }
 
 void SimpleParser::shift() {
@@ -79,7 +79,7 @@ bool SimpleParser::check() {
       // Pr <- P;
       ProcedureNode *p = (ProcedureNode *) stack.back();
       stack.pop_back();
-      ProgramNode *pr = &ProgramNode();
+      ProgramNode *pr = new ProgramNode();
       pr->addProcedure(p);
       stack.push_back(pr);
       return true;
@@ -100,7 +100,7 @@ bool SimpleParser::check() {
       // S+ <- S
       StatementNode *s = (StatementNode *) stack.back();
       stack.pop_back();
-      StatementListNode *sl = &StatementListNode();
+      StatementListNode *sl = new StatementListNode();
       sl->addStatement(s);
       stack.push_back(sl);
       return true;
@@ -111,7 +111,7 @@ bool SimpleParser::check() {
       // V <- N
       NameNode *n = (NameNode *) stack.back();
       stack.pop_back();
-      VariableNode *v = &VariableNode(n->getName());
+      VariableNode *v = new VariableNode(n->getName());
       stack.push_back(v);
       return true;
     }
@@ -129,7 +129,7 @@ bool SimpleParser::check() {
       NameNode *n = (NameNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
-      ProcedureNode *p = &ProcedureNode(n->getName(), sl);
+      ProcedureNode *p = new ProcedureNode(n->getName(), sl);
       stack.push_back(p);
       return true;
     } else if (instance_of<VariableNode>(*i)
@@ -138,7 +138,7 @@ bool SimpleParser::check() {
       VariableNode *v = (VariableNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
-      ReadNode *r = &ReadNode(v);
+      ReadNode *r = new ReadNode(v);
       stack.push_back(r);
       return true;
     } else if (!instance_of<token::IdentifierToken>(*lookahead)
@@ -147,7 +147,7 @@ bool SimpleParser::check() {
       // N <- id
       IdentifierNode *id = (IdentifierNode *) stack.back();
       stack.pop_back();
-      NameNode *n = &NameNode(id->getValue());
+      NameNode *n = new NameNode(id->getValue());
       stack.push_back(n);
       return true;
     }

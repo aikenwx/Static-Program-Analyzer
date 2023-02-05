@@ -6,7 +6,7 @@
 namespace tokenizer {
 class Tokenizer {
  public:
-  virtual std::vector<token::Token*> parse(const std::string& program) = 0;
+  virtual std::vector<token::Token*> tokenize(const std::string& program) = 0;
   static Tokenizer* getInstance();
   void operator=(const Tokenizer&) = delete;
 

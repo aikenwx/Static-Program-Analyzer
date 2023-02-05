@@ -7,7 +7,7 @@
 namespace tokenizer {
 class SimpleTokenizer : public Tokenizer {
  public:
-  std::vector<token::Token*> parse(const std::string& program) override;
+  std::vector<token::Token*> tokenize(const std::string& program) override;
   static SimpleTokenizer* getInstance();
  private:
   SimpleTokenizer();

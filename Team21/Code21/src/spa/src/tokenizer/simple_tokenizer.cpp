@@ -8,7 +8,7 @@
 #include "../token_factory/simple_token_factory.h"
 
 namespace tokenizer {
-std::vector<token::Token*> SimpleTokenizer::parse(const std::string& program) {
+std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program) {
   token_factory::SimpleTokenFactory* factory =
       token_factory::SimpleTokenFactory::getInstance();
   std::vector<token::Token*> tokens;

@@ -178,7 +178,7 @@ procedure computeCentroid {
   tokenizer::SimpleTokenizer* tokenizer =
       tokenizer::SimpleTokenizer::getInstance();
 
-  std::vector<token::Token*> tokens = tokenizer->parse(program);
+  std::vector<token::Token*> tokens = tokenizer->tokenize(program);
   auto mapTokenToString = [](token::Token* token) { return token->getValue(); };
   std::vector<std::string> tokenStrings(tokens.size());
   std::transform(tokens.begin(), tokens.end(), tokenStrings.begin(),

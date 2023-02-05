@@ -4,7 +4,7 @@
 #include "tokenizer/simple_tokenizer.h"
 
 namespace tokenizer {
-TEST_CASE("testy test") {
+TEST_CASE("Tokenizer can tokenize a simple program", "[tokenizer]") {
   std::string program = R"(procedure main {
     flag = 0;
     call computeCentroid;

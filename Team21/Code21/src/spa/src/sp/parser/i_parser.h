@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "sp/ast/AST.h"
-#include "token/Token.h"
+#include "sp/ast/ast.h"
+#include "token/token.h"
 
 class IParser {
 public:

@@ -8,8 +8,6 @@ class ProcedureNode : public NamedNode {
 public:
   ProcedureNode(std::string name, StatementListNode *statements);
 
-  ProcedureNode() = default;
-
   StatementListNode *GetStatements();
 
 private:

@@ -6,7 +6,6 @@
 namespace qps {
 
     bool QuotedIdentifier::isValidId(std::string id) {
-        //trim(id)
         return std::regex_match(id, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"));
     }
 

@@ -32,7 +32,7 @@ std::map<std::string, DesignEntity> designEntityMap{ {
 	{"procedure", DesignEntity::PROCEDURE},
 } };
 
-DesignEntity getDesignEntity(std::string& deString) {
+DesignEntity getDesignEntityFromString(std::string& deString) {
 	try {
 		return designEntityMap.at(deString);
 	}

@@ -13,16 +13,17 @@ namespace qps {
 class Query {
 	private:
 		std::vector<Declaration>& declarations;
-		SuchThatClause suchThatClause;
-		PatternClause patternClause;
+		std::vector<SuchThatClause>& suchThatClause;
+		std::vector<PatternClause>& patternClause;
 		Declaration selectClause;
 
 	public:
-		Query(std::vector<Declaration>& declarations_, SuchThatClause suchThatClause_,
-			PatternClause patternClause_, Declaration selectClause_);
+		Query(std::vector<Declaration>& declarations_, std::vector<SuchThatClause>& suchThatClause_,
+			std::vector<PatternClause>& patternClause_, Declaration selectClause_);
+		Query(Declaration selectClause_);
 		std::vector<Declaration>& getDeclarations();
-		SuchThatClause getSuchThatClause();
-		PatternClause getPatternClause();
+		std::vector<SuchThatClause>& getSuchThatClause();
+		std::vector<PatternClause>& getPatternClause();
 		Declaration getSelectClause();
 };
 }

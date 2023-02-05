@@ -2,25 +2,32 @@
 
 #include <vector>
 #include <string>
+#include <unordered_set>
+#include <unordered_map>
 
-#include "query/declaration.h"
+#include "query/synonym.h"
 
 namespace qps {
 
 class ClauseResult {
-  using Declarations = std::vector<Declaration>;
+
+  using Synonyms = std::vector<Synonym>;
   using Result = std::vector<std::string>;
   using Results = std::vector<Result>;
+  using SynonymIdx = std::unordered_map<std::string, int>;
+  using ResultSet = std::unordered_set<std::string>;
+
  public:
-  ClauseResult(Declarations declarations);
-  Declarations GetDeclarations() const;
+  ClauseResult(Synonyms synonyms);
+  Synonyms GetSynonyms() const;
   Results GetResults() const;
   void AddResult(Result result);
+  ResultSet Extract(Synonym synonym);
 
  private:
-  Declarations declarations_;
+  Synonyms synonyms_;
   Results results_;
-
+  SynonymIdx synonym_idx_;
 };
-
 } // qps
+

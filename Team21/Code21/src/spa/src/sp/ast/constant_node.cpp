@@ -1,4 +1,4 @@
-#include "ConstantNode.h"
+#include "constant_node.h"
 
 ConstantNode::ConstantNode(int value) {
   this->value = value;

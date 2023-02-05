@@ -1,11 +1,9 @@
 #pragma once
 
-#include "INode.h"
+#include "i_node.h"
 
 class BinaryOperationNode : public INode {
 private:
   INode left;
   INode right;
-
-public:
 };

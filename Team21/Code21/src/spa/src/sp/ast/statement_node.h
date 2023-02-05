@@ -1,6 +1,6 @@
 #pragma once
 
-#include "INode.h"
+#include "i_node.h"
 
 class StatementNode : public INode {
 

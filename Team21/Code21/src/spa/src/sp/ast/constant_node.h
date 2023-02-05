@@ -1,13 +1,14 @@
 #pragma once
 
-#include "INode.h"
+#include "i_node.h"
 
 class ConstantNode : public INode {
-private:
-  int value;
 public:
   ConstantNode(int value);
 
   void execute();
   int getValue();
+
+private:
+  int value;
 };

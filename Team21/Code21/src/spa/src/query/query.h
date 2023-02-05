@@ -20,7 +20,6 @@ class Query {
 	public:
 		Query(std::vector<Declaration>& declarations_, std::vector<SuchThatClause>& suchThatClause_,
 			std::vector<PatternClause>& patternClause_, Declaration selectClause_);
-		Query(Declaration selectClause_);
 		std::vector<Declaration>& getDeclarations();
 		std::vector<SuchThatClause>& getSuchThatClause();
 		std::vector<PatternClause>& getPatternClause();

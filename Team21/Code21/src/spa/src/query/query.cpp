@@ -7,12 +7,6 @@ namespace qps {
 		: declarations{ declarations_ }, suchThatClause{suchThatClause_},
 		patternClause{ patternClause_ }, selectClause{ selectClause_ } {}
 
-	Query::Query(Declaration selectClause_)
-		: declarations( std::vector<Declaration>() ),
-		suchThatClause( std::vector<SuchThatClause>() ),
-		patternClause( std::vector<PatternClause>() ),
-		selectClause( selectClause_ ) {}
-
 	std::vector<Declaration>& Query::getDeclarations() {
 		return declarations;
 	}

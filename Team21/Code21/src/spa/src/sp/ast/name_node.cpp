@@ -1,5 +1,5 @@
 #include "name_node.h"
 
-void NameNode::execute() {
-  return;
-}
+//void NameNode::execute() {
+//  return;
+//}

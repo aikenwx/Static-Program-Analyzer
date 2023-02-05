@@ -4,8 +4,8 @@
 
 class AST {
 public:
-  INode GetRoot();
+  INode *GetRoot();
 
 private:
-  INode root;
+  INode *root;
 };

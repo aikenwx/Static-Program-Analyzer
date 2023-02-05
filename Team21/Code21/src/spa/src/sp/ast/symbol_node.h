@@ -1,16 +1,6 @@
 #pragma once
 #include "i_node.h"
 
-class SymbolNode : public INode {
-public:
-  SymbolNode(SymbolType type);
-
-  SymbolType getType();
-
-private:
-  SymbolType type;
-};
-
 enum SymbolType {
   kAnd,
   kAssign,
@@ -32,4 +22,14 @@ enum SymbolType {
   kRightBrace,
   kRightParen,
   kSemicolon
+};
+
+class SymbolNode : public INode {
+public:
+  SymbolNode(SymbolType type);
+
+  SymbolType getType();
+
+private:
+  SymbolType type;
 };

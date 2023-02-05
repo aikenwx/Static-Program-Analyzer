@@ -5,5 +5,5 @@ class VariableNode : public NamedNode {
 public:
   using NamedNode::NamedNode;
 
-  void execute() override;
+  //void execute() override;
 };

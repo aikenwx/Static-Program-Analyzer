@@ -8,6 +8,6 @@ public:
 
   std::string getName();
 
-private:
+protected:
   std::string name;
 };

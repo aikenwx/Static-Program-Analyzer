@@ -2,7 +2,7 @@
 
 class INode {
 public:
-  virtual void execute() = 0;
+  //virtual void execute() = 0;
 
   /*
     Method for accepting visitors

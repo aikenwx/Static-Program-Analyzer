@@ -4,6 +4,6 @@
 
 class BinaryOperationNode : public INode {
 private:
-  INode left;
-  INode right;
+  INode *left;
+  INode *right;
 };

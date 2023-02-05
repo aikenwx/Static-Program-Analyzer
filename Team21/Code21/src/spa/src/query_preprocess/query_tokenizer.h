@@ -18,7 +18,6 @@ class QueryTokenizer {
 		void readPhrase();
 		void readNumber();
 
-		
 	public:
 		QueryTokenizer(std::string source);
 		std::vector<std::string> tokenize();

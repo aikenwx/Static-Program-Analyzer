@@ -37,7 +37,7 @@ namespace qps {
 	bool QueryParser::isSameToken(std::string str) {
 		return (peek() == str);
 	}
-	
+
 	bool QueryParser::assertNextToken(std::string str) {
 		if (isSameToken(str)) {
 			return true;
@@ -90,7 +90,6 @@ namespace qps {
 			}
 		}
 		return Expression(isPartial, expression);
-	
 	}
 
 	bool QueryParser::parseDeclaration() {

@@ -7,6 +7,7 @@
 #include "query/such_that_clause.h"
 #include "query/declaration.h"
 #include "query_evaluators/query_evaluator.h"
+#include "query_evaluators/QPS.h"
 #include "PopulatePKBHelper.h"
 
 using Data = std::unordered_map<qps::DesignEntity, std::unordered_set<std::string>>;
@@ -43,6 +44,13 @@ std::unordered_set<std::string> RunSuchThat(qps::DesignEntity entity_type, std::
   qps::QueryEvaluator evaluator(query);
   auto var_result = evaluator.evaluateQuery(*pkb);
   return var_result;
+}
+
+std::unordered_set<std::string> RunQuery(std::string query_str, QueryFacade &pkb) {
+  std::list<std::string> results;
+  qps::QPS::evaluate(query_str, results, pkb);
+  std::unordered_set<std::string> result_set(results.begin(), results.end());
+  return result_set;
 }
 
 //Sample program
@@ -133,7 +141,7 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   }
 }
 
-TEST_CASE("QPS can retrieve design entities") {
+TEST_CASE("QPS parse and can retrieve design entities") {
   Data data;
   data[qps::DesignEntity::VARIABLE] = {"x", "y", "z", "a"};
   data[qps::DesignEntity::CONSTANT] = {"20", "0", "1000", "-99"};
@@ -150,48 +158,42 @@ TEST_CASE("QPS can retrieve design entities") {
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
   SECTION("QPS can retrieve variables") {
-    auto res = RunSelect(qps::DesignEntity::VARIABLE, "v", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::VARIABLE]);
+    REQUIRE(RunQuery("variable h; Select h", *pkb_querier) == data[qps::DesignEntity::VARIABLE]);
+    REQUIRE(RunQuery("variable v; Select v", *pkb_querier) == data[qps::DesignEntity::VARIABLE]);
+
   }
 
   SECTION("QPS can retrieve constants") {
-    auto res = RunSelect(qps::DesignEntity::CONSTANT, "c", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::CONSTANT]);
+    REQUIRE(RunQuery("constant c; Select c", *pkb_querier) == data[qps::DesignEntity::CONSTANT]);
   }
 
   SECTION("QPS can retrieve assignments") {
-    auto res = RunSelect(qps::DesignEntity::ASSIGN, "a", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::ASSIGN]);
+    REQUIRE(RunQuery("assign a; Select a", *pkb_querier) == data[qps::DesignEntity::ASSIGN]);
   }
 
   SECTION("QPS can retrieve prints") {
-    auto res = RunSelect(qps::DesignEntity::PRINT, "p", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::PRINT]);
+    REQUIRE(RunQuery("print p; Select p", *pkb_querier) == data[qps::DesignEntity::PRINT]);
   }
 
   SECTION("QPS can retrieve ifs") {
-    auto res = RunSelect(qps::DesignEntity::IF, "f", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::IF]);
+    REQUIRE(RunQuery("if ifs; Select ifs", *pkb_querier) == data[qps::DesignEntity::IF]);
   }
 
   SECTION("QPS can retrieve whiles") {
-    auto res = RunSelect(qps::DesignEntity::WHILE, "w", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::WHILE]);
+    REQUIRE(RunQuery("while whiles; Select whiles", *pkb_querier) == data[qps::DesignEntity::WHILE]);
   }
 
   SECTION("QPS can retrieve calls") {
-    auto res = RunSelect(qps::DesignEntity::CALL, "c", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::CALL]);
+    REQUIRE(RunQuery("call calls; Select calls", *pkb_querier) == data[qps::DesignEntity::CALL]);
   }
 
   SECTION("QPS can retrieve procedures") {
-    auto res = RunSelect(qps::DesignEntity::PROCEDURE, "p", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::PROCEDURE]);
+    REQUIRE(RunQuery("procedure procs; Select procs", *pkb_querier) == data[qps::DesignEntity::PROCEDURE]);
   }
 
   SECTION("QPS can retrieve reads") {
-    auto res = RunSelect(qps::DesignEntity::READ, "r", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::READ]);
+    REQUIRE(RunQuery("read r; Select r", *pkb_querier) == data[qps::DesignEntity::READ]);
+
   }
 
   SECTION("QPS can retrieve statements") {
@@ -203,7 +205,6 @@ TEST_CASE("QPS can retrieve design entities") {
     stmts.insert(data[qps::DesignEntity::WHILE].begin(), data[qps::DesignEntity::WHILE].end());
     stmts.insert(data[qps::DesignEntity::CALL].begin(), data[qps::DesignEntity::CALL].end());
 
-    auto res = RunSelect(qps::DesignEntity::STMT, "r", pkb_querier);
-    REQUIRE(res == stmts);
+    REQUIRE(RunQuery("stmt s; Select s", *pkb_querier) == stmts);
   }
 }

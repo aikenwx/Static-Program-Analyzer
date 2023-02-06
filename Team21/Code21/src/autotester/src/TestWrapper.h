@@ -8,6 +8,8 @@
 // include your other headers here
 #include "AbstractWrapper.h"
 
+#include "PKB/PKB.h"
+
 class TestWrapper : public AbstractWrapper {
  public:
   // default constructor
@@ -20,7 +22,9 @@ class TestWrapper : public AbstractWrapper {
   virtual void parse(std::string filename);
 
   // method for evaluating a query
-  virtual void evaluate(std::string query, std::list<std::string>& results);
+  virtual void evaluate(std::string query, std::list<std::string> &results);
+ private:
+  PKB pkb_;
 };
 
 #endif

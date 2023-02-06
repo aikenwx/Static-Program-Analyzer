@@ -83,7 +83,7 @@ EntityType SuchThatEvaluator::FindEntityType(Synonym &syn) {
   if (decl) {
     return ClauseEvaluator::DesignEntityToEntityType(decl.value().getDesignEntity());
   } else {
-    throw QueryException("Synonym in clause not in query declaration");
+    throw std::invalid_argument("Synonym in clause not in query declaration");
   }
 }
 

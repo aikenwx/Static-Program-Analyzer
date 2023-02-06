@@ -2,8 +2,9 @@ namespace util {
   /*
 * Taken from https://www.tutorialspoint.com/cplusplus-equivalent-of-instanceof
 */
-  template<typename Base, typename T>
-  inline bool instance_of(const T* ptr) {
-    return dynamic_cast<const Base*>(ptr) != nullptr;
-  }
+// Creates symbol not found error, very strange
+  //template<typename Base, typename T>
+  //bool instance_of(T* ptr) {
+  //  return dynamic_cast<Base*>(ptr);
+  //}
 }

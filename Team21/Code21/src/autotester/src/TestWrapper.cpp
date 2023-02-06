@@ -10,9 +10,20 @@
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/traverse.h"
+#include "sp/rel/const_relationship.h"
+#include "sp/rel/var_relationship.h"
+#include "sp/rel/proc_relationship.h"
+#include "sp/rel/stmt_relationship.h"
+#include "sp/rel/follows_stmt_stmt_relationship.h"
+#include "sp/rel/modifies_proc_var_relationship.h"
+#include "sp/rel/modifies_stmt_var_relationship.h"
+#include "sp/rel/parent_stmt_stmt_relationship.h"
+#include "sp/rel/uses_proc_var_relationship.h"
+#include "sp/rel/uses_stmt_var_relationship.h"
 #include "sp/parser/simple_parser.h"
 #include "token/token.h"
 #include "tokenizer/simple_tokenizer.h"
+#include "util/instance_of.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
@@ -69,10 +80,45 @@ void TestWrapper::parse(std::string filename) {
   // TODO
 
   // put AST entities into PKB
-  // TODO
+  for (auto& rel : astElemRelationships) {
+    // pretty nasty, but it'll work for now
+    if (util::instance_of<rel::PrintStmtRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::ReadStmtRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::ConstRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::ProcRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::VarRelationship>(&rel)) {
+      // TODO
+    }
+  }
 
   // put relationships into PKB
-  // TODO
+  for (auto& rel : followsRelationships) {
+    // TODO
+  }
+
+  for (auto& rel : parentRelationships) {
+    // TODO
+  }
+
+  for (auto& rel : modifiesRelationships) {
+    if (util::instance_of<rel::ModifiesProcVarRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(&rel)) {
+      // TODO
+    }
+  }
+
+  for (auto& rel : usesRelationships) {
+    if (util::instance_of<rel::UsesProcVarRelationship>(&rel)) {
+      // TODO
+    } else if (util::instance_of<rel::UsesStmtVarRelationship>(&rel)) {
+      // TODO
+    }
+  }
 }
 
 // method to evaluating a query

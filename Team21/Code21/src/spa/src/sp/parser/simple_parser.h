@@ -9,15 +9,15 @@
 namespace parser {
 class SimpleParser : public IParser {
 private:
-  std::vector<INode *> stack;
+  std::vector<ast::INode *> stack;
   std::vector<token::Token *>::iterator lookahead;
 
-  AST *parse(std::vector<token::Token *> input) override;
-  void shift();
-  void reduce();
-  void success();
-  void reject();
-  bool check();
+  ast::AST *Parse(std::vector<token::Token *> input) override;
+  void Shift();
+  void Reduce();
+  void Success();
+  void Reject();
+  bool Check();
 };
 
 class EndToken : public token::Token {

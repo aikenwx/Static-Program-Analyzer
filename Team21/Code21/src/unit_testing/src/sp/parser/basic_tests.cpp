@@ -12,6 +12,13 @@ namespace parser {
 TEST_CASE("Parser correctly generates a program node from a simple, valid program", "[Parser]") {
   std::string program = R"(procedure hello {
     read x;
+}
+procedure world {
+    print y;
+}
+procedure print {
+    print read;
+    read procedure;
 })";
   tokenizer::SimpleTokenizer* tokenizer =
     tokenizer::SimpleTokenizer::getInstance();

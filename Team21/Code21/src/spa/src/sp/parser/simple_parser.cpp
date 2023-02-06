@@ -41,6 +41,7 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
   EndToken *e = new EndToken();
   input.push_back(e);
   stack.empty();
+  statementCounter = 0;
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {
     // If empty stack, can just shift
     if (stack.size() == 0) {
@@ -255,6 +256,7 @@ bool SimpleParser::Check() {
     stack.pop_back();
     stack.pop_back();
     ast::ReadNode *r = new ast::ReadNode(v);
+    r->SetStatementNumber(++statementCounter);
     stack.push_back(r);
     return true;
   } else if (!util::instance_of<token::IdentifierToken>(*lookahead)

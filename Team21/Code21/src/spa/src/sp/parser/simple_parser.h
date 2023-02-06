@@ -7,11 +7,14 @@
 
 namespace parser {
 class SimpleParser : public IParser {
+public:
+  ast::AST *Parse(std::vector<token::Token *> input) override;
+
 private:
   std::vector<ast::INode *> stack;
   std::vector<token::Token *>::iterator lookahead;
+  int statementCounter;
 
-  ast::AST *Parse(std::vector<token::Token *> input) override;
   void Shift();
   void Reduce();
   void Success();

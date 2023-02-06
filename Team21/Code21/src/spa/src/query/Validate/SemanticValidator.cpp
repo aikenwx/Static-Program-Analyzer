@@ -20,7 +20,7 @@ namespace qps {
 	void SemanticValidator::checkForDuplicateDeclarations() {
 		//create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
 		std::unordered_set<std::string> seen;
-		for (auto & declr : query_.getDeclarations()) {
+		for (auto & declr : getQuery().getDeclarations()) {
 			std::string syn = declr.getSynonym().getSynonym();
 			if (seen.find(syn) == seen.end()) {
 				seen.insert(syn);
@@ -33,9 +33,9 @@ namespace qps {
 
 	//Does the findDeclarationsWithSynonym work?
 	void SemanticValidator::checkIfSynonymContainedInDeclaration() {
-		std::vector<Declaration>& declr = query_.getDeclarations();
-		Synonym syn = query_.getSelectClause().getSynonym();
-		if (Declaration::findDeclarationWithSynonym(declr, syn) == false) {
+		std::vector<Declaration>& declr = getQuery().getDeclarations();
+		Synonym syn = getQuery().getSelectClause().getSynonym();
+		if (Declaration::findDeclarationWithSynonym(declr, syn).has_value() == false) {
 			throw QueryException("There is missing declaration in select clause for" + syn.getSynonym());
 		}
 		/*if (query_.getSuchThatClause() != NULL) {

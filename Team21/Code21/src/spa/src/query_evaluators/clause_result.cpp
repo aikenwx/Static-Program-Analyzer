@@ -2,14 +2,14 @@
 
 namespace qps {
 
-ClauseResult::ClauseResult(Synonyms synonyms) : synonyms_(std::move(synonyms)) {
-  for (int i = 0; i < synonyms_.size(); ++i) {
-    synonym_idx_[synonyms_[i].getSynonym()] = i;
+ClauseResult::ClauseResult(Synonyms synonyms) {
+  for (int i = 0; i < synonyms.size(); ++i) {
+    synonym_idx_[synonyms[i].getSynonym()] = i;
   }
 }
 
-ClauseResult::Synonyms ClauseResult::GetSynonyms() const {
-  return synonyms_;
+ClauseResult::SynonymIdx ClauseResult::GetSynonyms() const {
+  return synonym_idx_;
 }
 
 ClauseResult::Results ClauseResult::GetResults() const {
@@ -23,8 +23,11 @@ void ClauseResult::AddResult(Result result) {
   results_.push_back(std::move(result));
 }
 
-void ClauseResult::AddSynonym(Synonym syn) {
-  synonyms_.push_back(std::move(syn));
+void ClauseResult::AddSynonym(Synonym syn, int index) {
+  if (HasSynonym(syn)) {
+    throw std::invalid_argument("Synonym already present in result");
+  }
+  synonym_idx_[syn.getSynonym()] = index;
 }
 
 bool ClauseResult::HasSynonym(Synonym &syn) {

@@ -33,11 +33,11 @@ ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   if (Synonym *syn = std::get_if<Synonym>(&ref1)) {
-    result.AddSynonym(*syn);
+    result.AddSynonym(*syn, 0);
   }
 
   if (Synonym *syn = std::get_if<Synonym>(&ref2)) {
-    result.AddSynonym(*syn);
+    result.AddSynonym(*syn, 1);
   }
 
   for (auto relation : relationships) {

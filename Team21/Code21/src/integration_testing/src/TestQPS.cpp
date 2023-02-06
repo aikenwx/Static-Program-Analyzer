@@ -6,7 +6,6 @@
 #include "query/query.h"
 #include "query/such_that_clause.h"
 #include "query/declaration.h"
-#include "query_evaluators/select_evaluators/select_evaluator.h"
 #include "query_evaluators/query_evaluator.h"
 #include "PopulatePKBHelper.h"
 
@@ -92,6 +91,48 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 11, EntityType::ASSIGN_STATEMENT);
   pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 12, EntityType::ASSIGN_STATEMENT);
   pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 13, EntityType::ASSIGN_STATEMENT);
+
+  // variable h; Select h
+  SECTION("QPS can retrieve all variables") {
+    auto res = run_select(qps::DesignEntity::VARIABLE, "h", pkb_querier);
+    REQUIRE(res == data[qps::DesignEntity::VARIABLE]);
+  }
+
+//    // stmt s; Select s such that Parent(s, 7)
+  SECTION("QPS can retieve statements that are parent of a statement") {
+    qps::Ref arg1{qps::Synonym("s")};
+    qps::Ref arg2{7};
+    auto res = run_such_that(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set < std::string > expected{"5"};
+    REQUIRE(expected == res);
+  }
+
+    // stmt s; Select s such that Parent(_, s)
+  SECTION("QPS can retrieve all statements that are a child") {
+    qps::Ref arg1{qps::Underscore()};
+    qps::Ref arg2{qps::Synonym("s")};
+    auto res = run_such_that(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set < std::string > expected{"6", "7", "8", "9", "11", "12", "13"};
+    REQUIRE(expected == res);
+  }
+
+    // assign a; Select s such that Parent(_, a)
+  SECTION("QPS can retrieve all assigments that are a child") {
+    qps::Ref arg1{qps::Underscore()};
+    qps::Ref arg2{qps::Synonym("a")};
+    auto res = run_such_that(qps::DesignEntity::ASSIGN, "a", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set < std::string > expected{"6", "7", "8", "11", "12", "13"};
+    REQUIRE(expected == res);
+  }
+
+    // call c; Select c such that Parent(_, c)
+  SECTION("QPS can retrieve all calls that are a child") {
+    qps::Ref arg1{qps::Underscore()};
+    qps::Ref arg2{qps::Synonym("c")};
+    auto res = run_such_that(qps::DesignEntity::CALL, "c", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set < std::string > expected{"9"};
+    REQUIRE(expected == res);
+  }
 }
 
 TEST_CASE("QPS can retrieve design entities") {

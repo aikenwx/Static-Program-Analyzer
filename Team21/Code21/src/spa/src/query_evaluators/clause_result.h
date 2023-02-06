@@ -20,16 +20,15 @@ class ClauseResult {
  public:
   ClauseResult() {}
   ClauseResult(Synonyms synonyms);
-  Synonyms GetSynonyms() const;
+  SynonymIdx GetSynonyms() const;
   Results GetResults() const;
   void AddResult(Result result);
-  void AddSynonym(Synonym syn);
+  void AddSynonym(Synonym syn, int index);
   bool HasSynonym(Synonym &syn);
   bool Empty();
   ResultSet Extract(Synonym synonym);
 
  private:
-  Synonyms synonyms_;
   Results results_;
   SynonymIdx synonym_idx_;
 };

@@ -6,7 +6,10 @@
 #include "../ast/statement_node.h"
 
 namespace rel {
-class Relationship {};
+class Relationship {
+  public:
+    virtual ~Relationship() = default;
+};
 
 class StmtVarRelationship : public Relationship {
  public:

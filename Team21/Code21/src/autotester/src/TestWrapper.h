@@ -7,6 +7,7 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "PKB/PKB.h"
 
 #include "PKB/PKB.h"
 

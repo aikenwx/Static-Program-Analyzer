@@ -33,7 +33,7 @@ namespace qps {
 
 	//Does the findDeclarationsWithSynonym work?
 	void SemanticValidator::checkIfSynonymContainedInDeclaration() {
-		std::vector<Declaration>& declr = getQuery().getDeclarations();
+		std::vector<Declaration> declr = getQuery().getDeclarations();
 		Synonym syn = getQuery().getSelectClause().getSynonym();
 		if (Declaration::findDeclarationWithSynonym(declr, syn).has_value() == false) {
 			throw QueryException("There is missing declaration in select clause for" + syn.getSynonym());

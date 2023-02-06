@@ -1,5 +1,5 @@
-//#include "query/validate/SemanticValidator.h"
-//#include "query/validate/SyntacticValidator.h"
+//#include "query/validation/SemanticValidator.h"
+//#include "query/validation/SyntacticValidator.h"
 //
 //#include "catch.hpp"
 //

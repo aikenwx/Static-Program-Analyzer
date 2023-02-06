@@ -37,7 +37,7 @@ Relationship getRelationshipFromString(std::string reString) {
 		return relationshipMap.at(reString);
 	}
 	catch (const std::out_of_range& err) {
-		throw QueryException("Invalid Relationship" + reString);
+		throw QueryException(ErrorType::Syntactic, "Invalid Relationship" + reString);
 	}
 }
 std::string getStringFromRelationship(Relationship relationship) {

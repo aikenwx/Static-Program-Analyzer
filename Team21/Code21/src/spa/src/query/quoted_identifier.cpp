@@ -11,7 +11,7 @@ namespace qps {
 
     QuotedIdentifier::QuotedIdentifier(std::string id_) : id{ id_ } {
         if (!QuotedIdentifier::isValidId(id_)) {
-            throw QueryException("Invalid quoted identifier: " + id_);
+            throw QueryException(ErrorType::Syntactic, "Invalid quoted identifier: " + id_);
         }
     }
 

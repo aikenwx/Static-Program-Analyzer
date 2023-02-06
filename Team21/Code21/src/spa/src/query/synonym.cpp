@@ -14,7 +14,7 @@ std::string Synonym::getSynonym() {
 
 Synonym::Synonym(std::string syn) : synonym{ syn } {
 	if (!Synonym::isValidSynonym(syn)) {
-		throw QueryException("Invalid synonym: " + syn);
+		throw QueryException(ErrorType::Syntactic, "Invalid synonym: " + syn);
 	}
 }
 }

@@ -70,7 +70,7 @@ namespace qps {
 				currentString += next();
 				tokens.push_back(currentString);
 			} else {
-				throw QueryException("Unexpected character in query string: " + std::string(1, peek()));
+				throw QueryException(ErrorType::Syntactic, "Unexpected character in query string: " + std::string(1, peek()));
 			}
 			currentString = "";
 		}

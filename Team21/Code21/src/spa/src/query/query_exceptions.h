@@ -6,8 +6,17 @@
 
 namespace qps {
 
-class QueryException : public std::runtime_error {
-public:
-	QueryException(const std::string& msg = "") : std::runtime_error(msg) {}
-};
+	enum class ErrorType { Semantic, Syntactic };
+
+	class QueryException : public std::runtime_error {
+	private:
+		ErrorType type_;
+
+	public:
+		QueryException(ErrorType type_, const std::string& msg = "") : std::runtime_error(msg) {}
+		
+		ErrorType getType() {
+			return type_;
+		}
+	};
 }

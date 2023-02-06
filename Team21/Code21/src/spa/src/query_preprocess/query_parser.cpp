@@ -38,7 +38,7 @@ namespace qps {
 		if (isSameToken(str)) {
 			return true;
 		}
-		throw QueryException("Invalid Query Syntax. Expect (" + str + ") got (" + peek() + ")");
+		throw QueryException(ErrorType::Syntactic, "Invalid Query Syntax. Expect (" + str + ") got (" + peek() + ")");
 	}
 
 	Ref QueryParser::parseRef() {
@@ -56,7 +56,7 @@ namespace qps {
 		} else if (isTokenAllDigits(peek())) {
 			return std::stoi(next());
 		} else {
-			throw QueryException("Invalid representation for Ref: (" + peek() + ")");
+			throw QueryException(ErrorType::Syntactic, "Invalid representation for Ref: (" + peek() + ")");
 		}
 	}
 
@@ -115,7 +115,7 @@ namespace qps {
 		next();
 		Synonym test_synonym{ peek() };
 		if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
-			throw QueryException("Semantic error. There is missing declaration in Select clause for " + peek());
+			throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for " + peek());
 		}
 		Synonym synonym{ next() };
 		DesignEntity design_entity = Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity();
@@ -154,7 +154,7 @@ namespace qps {
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
 		if (declaration->getDesignEntity() != DesignEntity::ASSIGN) {
-			throw QueryException("Invalid syntax for pattern assign with synonym: " + syn);
+			throw QueryException(ErrorType::Semantic, "Invalid syntax for pattern assign with synonym: " + syn);
 		}
 
 		assertNextToken("(");
@@ -185,7 +185,7 @@ namespace qps {
 				continue;
 			}
 			else {
-				throw QueryException("Invalid clause, not such-that or pattern");
+				throw QueryException(ErrorType::Syntactic, "Invalid clause, not such-that or pattern");
 			}
 		}
 		return Query(declarations, suchThatClause, patternClause, selectClause[0]);

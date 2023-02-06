@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "PKB/PKB.h"
 #include "sp/ast/ast.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/directly_modifies_extractor.h"
@@ -10,17 +11,17 @@
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/traverse.h"
+#include "sp/parser/simple_parser.h"
 #include "sp/rel/const_relationship.h"
-#include "sp/rel/var_relationship.h"
-#include "sp/rel/proc_relationship.h"
-#include "sp/rel/stmt_relationship.h"
 #include "sp/rel/follows_stmt_stmt_relationship.h"
 #include "sp/rel/modifies_proc_var_relationship.h"
 #include "sp/rel/modifies_stmt_var_relationship.h"
 #include "sp/rel/parent_stmt_stmt_relationship.h"
+#include "sp/rel/proc_relationship.h"
+#include "sp/rel/stmt_relationship.h"
 #include "sp/rel/uses_proc_var_relationship.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
-#include "sp/parser/simple_parser.h"
+#include "sp/rel/var_relationship.h"
 #include "token/token.h"
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
@@ -38,6 +39,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
   // create any objects here as instance variables of this class
   // as well as any initialization required for your spa program
+  pkb_ = PKB();
 }
 
 // method for parsing the SIMPLE source
@@ -76,47 +78,72 @@ void TestWrapper::parse(std::string filename) {
   std::vector<rel::Relationship> usesRelationships = design_extractor::Traverse(
       ast->GetRoot(), design_extractor::DirectlyUsesExtractor::GetInstance());
 
-  // init PKB
-  // TODO
-
   // put AST entities into PKB
+  PopulateFacade* popFacade = pkb_.getPopulateFacade();
   for (auto& rel : astElemRelationships) {
     // pretty nasty, but it'll work for now
     if (util::instance_of<rel::PrintStmtRelationship>(&rel)) {
-      // TODO
+      popFacade->storePrintStatement(
+          static_cast<rel::PrintStmtRelationship&>(rel).statementNumber());
     } else if (util::instance_of<rel::ReadStmtRelationship>(&rel)) {
-      // TODO
+      popFacade->storeReadStatement(
+          static_cast<rel::ReadStmtRelationship&>(rel).statementNumber());
     } else if (util::instance_of<rel::ConstRelationship>(&rel)) {
-      // TODO
+      popFacade->storeConstant(
+          static_cast<rel::ConstRelationship&>(rel).value());
     } else if (util::instance_of<rel::ProcRelationship>(&rel)) {
-      // TODO
+      popFacade->storeProcedure(
+          static_cast<rel::ProcRelationship&>(rel).procedureName());
     } else if (util::instance_of<rel::VarRelationship>(&rel)) {
-      // TODO
+      popFacade->storeVariable(
+          static_cast<rel::VarRelationship&>(rel).variableName());
     }
   }
 
   // put relationships into PKB
   for (auto& rel : followsRelationships) {
-    // TODO
+    rel::FollowsStmtStmtRelationship& followsRel =
+        static_cast<rel::FollowsStmtStmtRelationship&>(rel);
+    popFacade->storeFollowsRelationship(
+        followsRel.firstStatementNumber(), followsRel.firstEntityType(),
+        followsRel.secondStatementNumber(), followsRel.secondEntityType());
   }
 
   for (auto& rel : parentRelationships) {
-    // TODO
+    rel::ParentStmtStmtRelationship& parentRel =
+        static_cast<rel::ParentStmtStmtRelationship&>(rel);
+    popFacade->storeParentRelationship(
+        parentRel.firstStatementNumber(), parentRel.firstEntityType(),
+        parentRel.secondStatementNumber(), parentRel.secondEntityType());
   }
 
   for (auto& rel : modifiesRelationships) {
     if (util::instance_of<rel::ModifiesProcVarRelationship>(&rel)) {
-      // TODO
+      rel::ModifiesProcVarRelationship& modifiesRel =
+          static_cast<rel::ModifiesProcVarRelationship&>(rel);
+      popFacade->storeProcedureModifiesVariableRelationship(
+          modifiesRel.procedureName(), modifiesRel.variableName());
     } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(&rel)) {
-      // TODO
+      rel::ModifiesStmtVarRelationship& modifiesRel =
+          static_cast<rel::ModifiesStmtVarRelationship&>(rel);
+      popFacade->storeStatementModifiesVariableRelationship(
+          modifiesRel.statementNumber(), modifiesRel.entityType(),
+          modifiesRel.variableName());
     }
   }
 
   for (auto& rel : usesRelationships) {
     if (util::instance_of<rel::UsesProcVarRelationship>(&rel)) {
-      // TODO
+      rel::UsesProcVarRelationship& usesRel =
+          static_cast<rel::UsesProcVarRelationship&>(rel);
+      popFacade->storeProcedureUsesVariableRelationship(usesRel.procedureName(),
+                                                        usesRel.variableName());
     } else if (util::instance_of<rel::UsesStmtVarRelationship>(&rel)) {
-      // TODO
+      rel::UsesStmtVarRelationship& usesRel =
+          static_cast<rel::UsesStmtVarRelationship&>(rel);
+      popFacade->storeStatementUsesVariableRelationship(
+          usesRel.statementNumber(), usesRel.entityType(),
+          usesRel.variableName());
     }
   }
 }

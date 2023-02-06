@@ -14,7 +14,7 @@ namespace qps {
 
 	public:
 		QueryException(ErrorType type_, const std::string& msg = "") : std::runtime_error(msg) {}
-		
+
 		ErrorType getType() {
 			return type_;
 		}

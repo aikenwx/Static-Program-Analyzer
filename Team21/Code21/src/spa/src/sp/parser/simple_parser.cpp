@@ -2,6 +2,7 @@
 #include "sp/ast/ast.h"
 #include "sp/ast/identifier_node.h"
 #include "sp/ast/name_node.h"
+#include "sp/ast/print_node.h"
 #include "sp/ast/procedure_node.h"
 #include "sp/ast/program_node.h"
 #include "sp/ast/read_node.h"
@@ -60,8 +61,8 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
     // Reject condition (guard clause)
     Reject();
     ast = new ast::AST();
-    ast->SetRoot(stack.front());
-    /*assert(false);*/
+    ast->SetRoot(stack.back());
+    //assert(false);
     return ast;
   }
   // Success condition
@@ -167,6 +168,7 @@ void SimpleParser::Success() {
   S+ -> S S+ <}>
   S+ -> S <}>
   S(r) -> read V ;
+  S(p) -> print V ;
   V -> N <=, ;>
   N -> id <!id>
 */
@@ -258,6 +260,19 @@ bool SimpleParser::Check() {
     ast::ReadNode *r = new ast::ReadNode(v);
     r->SetStatementNumber(++statementCounter);
     stack.push_back(r);
+    return true;
+  } else if (stack.size() >= 3
+    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
+    && util::instance_of<ast::VariableNode>(*std::next(i, 1))
+    && util::instance_of<ast::IdentifierNode>(*std::next(i, 2)) && ((ast::IdentifierNode *) *std::next(i, 2))->GetValue() == "print") {
+    // S(p) <- print V ;
+    stack.pop_back();
+    ast::VariableNode *v = (ast::VariableNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::PrintNode *p = new ast::PrintNode(v);
+    p->SetStatementNumber(++statementCounter);
+    stack.push_back(p);
     return true;
   } else if (!util::instance_of<token::IdentifierToken>(*lookahead)
     && util::instance_of<ast::IdentifierNode>(*i)) {

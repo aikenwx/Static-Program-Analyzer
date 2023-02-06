@@ -8,6 +8,7 @@ class ProcedureNode : public NamedNode {
 public:
   ProcedureNode(std::string name, StatementListNode *statements);
 
+  // Format is a stack
   StatementListNode *GetStatements();
   std::ostream &Write(std::ostream &out) const override;
 

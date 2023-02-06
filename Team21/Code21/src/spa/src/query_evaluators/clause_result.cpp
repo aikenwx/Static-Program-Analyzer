@@ -17,10 +17,17 @@ ClauseResult::Results ClauseResult::GetResults() const {
 }
 
 void ClauseResult::AddResult(Result result) {
-  if (result.size() != synonyms_.size()) {
-    throw std::invalid_argument("Size of result tuple doesnt match number of referenced synonyms");
-  }
+//  if (result.size() != synonyms_.size()) {
+//    throw std::invalid_argument("Size of result tuple doesnt match number of referenced synonyms");
+//  }
   results_.push_back(std::move(result));
+}
+
+void ClauseResult::AddSynonym(Synonym syn) {
+//  if (result.size() != synonyms_.size()) {
+//    throw std::invalid_argument("Size of result tuple doesnt match number of referenced synonyms");
+//  }
+  synonyms_.push_back(std::move(syn));
 }
 
 ClauseResult::ResultSet ClauseResult::Extract(Synonym synonym) {

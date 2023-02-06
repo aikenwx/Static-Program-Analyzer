@@ -18,10 +18,12 @@ class ClauseResult {
   using ResultSet = std::unordered_set<std::string>;
 
  public:
+  ClauseResult() {}
   ClauseResult(Synonyms synonyms);
   Synonyms GetSynonyms() const;
   Results GetResults() const;
   void AddResult(Result result);
+  void AddSynonym(Synonym syn);
   ResultSet Extract(Synonym synonym);
 
  private:

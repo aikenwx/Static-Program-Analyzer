@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "sp/ast/ast.h"
 #include "sp/ast/identifier_node.h"
 #include "sp/ast/name_node.h"
@@ -8,9 +9,28 @@
 #include "sp/ast/statement_list_node.h"
 #include "sp/ast/symbol_node.h"
 #include "sp/ast/variable_node.h"
+#include "token/and_token.h"
+#include "token/assign_token.h"
+#include "token/divide_token.h"
 #include "token/equal_token.h"
+#include "token/greater_equal_token.h"
+#include "token/greater_than_token.h"
 #include "token/identifier_token.h"
+#include "token/integer_token.h"
+#include "token/left_brace_token.h"
+#include "token/left_paren_token.h"
+#include "token/less_equal_token.h"
+#include "token/less_than_token.h"
+#include "token/minus_token.h"
+#include "token/modulo_token.h"
+#include "token/multiply_token.h"
+#include "token/not_equal_token.h"
+#include "token/not_token.h"
+#include "token/or_token.h"
+#include "token/plus_token.h"
 #include "token/right_brace_token.h"
+#include "token/right_paren_token.h"
+#include "token/semicolon_token.h"
 #include "simple_parser.h"
 #include "util/instance_of.h"
 
@@ -32,11 +52,90 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
 
     }
   }
-  return new ast::AST();
+  ast::AST *ast;
+  if (!stack.size() == 1 || !instance_of<ast::ProgramNode>(stack.front())) {
+    // Reject condition (guard clause)
+    Reject();
+    ast = new ast::AST();
+    return ast;
+  }
+  // Success condition
+  Success();
+  ast = new ast::AST();
+  return ast;
 }
 
 void SimpleParser::Shift() {
-
+  // This code is neither DRY nor open for extension
+  if (instance_of<token::IdentifierToken>(*lookahead)) {
+    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    stack.push_back(id);
+  } else if (instance_of<token::IntegerToken>(*lookahead)) {
+    // Unimplemented
+    assert(false);
+  } else if (instance_of<token::AndToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kAnd);
+    stack.push_back(sym);
+  } else if (instance_of<token::AssignToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kAssign);
+    stack.push_back(sym);
+  } else if (instance_of<token::DivideToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kDivide);
+    stack.push_back(sym);
+  } else if (instance_of<token::EqualToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kEqual);
+    stack.push_back(sym);
+  } else if (instance_of<token::GreaterEqualToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kGreaterEqual);
+    stack.push_back(sym);
+  } else if (instance_of<token::GreaterThanToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kGreater);
+    stack.push_back(sym);
+  } else if (instance_of<token::LeftBraceToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLeftBrace);
+    stack.push_back(sym);
+  } else if (instance_of<token::LeftParenToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLeftParen);
+    stack.push_back(sym);
+  } else if (instance_of<token::LessEqualToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLesserEqual);
+    stack.push_back(sym);
+  } else if (instance_of<token::LessThanToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLesser);
+    stack.push_back(sym);
+  } else if (instance_of<token::MinusToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kMinus);
+    stack.push_back(sym);
+  } else if (instance_of<token::ModuloToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kModulo);
+    stack.push_back(sym);
+  } else if (instance_of<token::MultiplyToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kMultiply);
+    stack.push_back(sym);
+  } else if (instance_of<token::NotEqualToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kNotEqual);
+    stack.push_back(sym);
+  } else if (instance_of<token::NotToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kNot);
+    stack.push_back(sym);
+  } else if (instance_of<token::PlusToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kPlus);
+    stack.push_back(sym);
+  } else if (instance_of<token::RightBraceToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kRightBrace);
+    stack.push_back(sym);
+  } else if (instance_of<token::RightParenToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kRightParen);
+    stack.push_back(sym);
+  } else if (instance_of<token::SemicolonToken>(*lookahead)) {
+    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kSemicolon);
+    stack.push_back(sym);
+  } else {
+    // Default implementation but should not reach here
+    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    stack.push_back(id);
+    assert(false);
+  }
 }
 
 void SimpleParser::Reduce() {
@@ -133,9 +232,11 @@ bool SimpleParser::Check() {
       ast::ProcedureNode *p = new ast::ProcedureNode(n->GetName(), sl);
       stack.push_back(p);
       return true;
-    } else if (instance_of<ast::VariableNode>(*i)
-               && instance_of<ast::IdentifierNode>(*std::next(i, 1)) && ((ast::IdentifierNode *) *std::next(i, 1))->GetValue() == "read") {
+    } else if (instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
+               && instance_of<ast::VariableNode>(*std::next(i, 1))
+               && instance_of<ast::IdentifierNode>(*std::next(i, 2)) && ((ast::IdentifierNode *) *std::next(i, 2))->GetValue() == "read") {
       // S(r) <- read V;
+      stack.pop_back();
       ast::VariableNode *v = (ast::VariableNode *) stack.back();
       stack.pop_back();
       stack.pop_back();

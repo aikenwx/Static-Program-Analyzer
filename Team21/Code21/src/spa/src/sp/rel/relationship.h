@@ -6,8 +6,7 @@
 #include "../ast/statement_node.h"
 
 namespace rel {
-class Relationship {
-};
+class Relationship {};
 
 class StmtVarRelationship : public Relationship {
  public:
@@ -42,10 +41,21 @@ class StmtStmtRelationship : public Relationship {
   virtual int firstEntityType() = 0;
   virtual int secondEntityType() = 0;
   // static StmtStmtRelationship CreateRelationship(
-  //     ast::StatementNode* firstStatement, ast::StatementNode* secondStatement);
+  //     ast::StatementNode* firstStatement, ast::StatementNode*
+  //     secondStatement);
 
  private:
   ast::StatementNode* firstStatementNode_;
   ast::StatementNode* secondStatementNode_;
+};
+
+class StmtRelationship : public Relationship {
+ public:
+  virtual int statementNumber() = 0;
+  virtual int entityType() = 0;
+  // static StmtRelationship CreateRelationship(ast::StatementNode* statement);
+
+ private:
+  ast::StatementNode* statementNode_;
 };
 }  // namespace rel

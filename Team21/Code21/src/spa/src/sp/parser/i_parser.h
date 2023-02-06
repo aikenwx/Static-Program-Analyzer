@@ -7,7 +7,6 @@
 namespace parser {
 class IParser {
 public:
+  virtual ast::AST *Parse(std::vector<token::Token *> input) = 0;
 };
 }
-  virtual AST *parse(std::vector<token::Token *> input) = 0;
-};

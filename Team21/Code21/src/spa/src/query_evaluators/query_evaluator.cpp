@@ -7,7 +7,7 @@ namespace qps {
 std::unordered_set<std::string> QueryEvaluator::evaluateQuery(QueryFacade &pkb) {
   auto target = query_.getSelectClause().getSynonym();
   if (!query_.getPatternClause().empty()) {
-    throw QueryException("Pattern clause not supported for now.");
+    throw std::invalid_argument("Pattern clause not supported for now.");
   }
 
   auto select_evaluator = std::make_unique<SelectEvaluator>(query_.getSelectClause());

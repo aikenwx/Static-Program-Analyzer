@@ -37,7 +37,7 @@ DesignEntity getDesignEntityFromString(std::string deString) {
 		return designEntityMap.at(deString);
 	}
 	catch (const std::out_of_range& err) {
-		throw QueryException("Invalid Design Entity" + deString);
+		throw QueryException("Invalid Design Entity " + deString);
 	}
 }
 

@@ -6,8 +6,8 @@
 
 namespace qps {
 
-	std::set<std::string> special_phrase{ {"Follows", "Parent"} };
-	std::set<char> single_tokens{ {'(', ')', '*', ',', ';', '.', '_', '<', '>', '='} };
+	std::set<std::string> special_phrase={ "Follows", "Parent" };
+	std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
 
 
 	QueryTokenizer::QueryTokenizer(std::string source)

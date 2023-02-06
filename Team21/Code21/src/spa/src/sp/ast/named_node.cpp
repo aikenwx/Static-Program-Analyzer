@@ -1,5 +1,6 @@
 #include "named_node.h"
 
+namespace ast {
 NamedNode::NamedNode(std::string name) {
   this->name = name;
 }
@@ -10,4 +11,5 @@ NamedNode::NamedNode(std::string name) {
 
 std::string NamedNode::getName() {
   return name;
+}
 }

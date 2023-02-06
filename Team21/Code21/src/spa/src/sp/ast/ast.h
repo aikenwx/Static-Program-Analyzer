@@ -1,7 +1,7 @@
 #pragma once
-
 #include "i_node.h"
 
+namespace ast {
 class AST {
 public:
   INode *GetRoot();
@@ -9,3 +9,4 @@ public:
 private:
   INode *root;
 };
+}

@@ -2,6 +2,7 @@
 #include "statement_node.h"
 #include "variable_node.h"
 
+namespace ast {
 class ReadNode : public StatementNode {
 public:
   ReadNode(VariableNode *var);
@@ -11,3 +12,4 @@ public:
 private:
   VariableNode *var;
 };
+}

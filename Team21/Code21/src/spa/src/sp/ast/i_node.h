@@ -1,5 +1,6 @@
 #pragma once
 
+namespace ast {
 class INode {
 public:
   //virtual void execute() = 0;
@@ -9,3 +10,4 @@ public:
   */
   //virtual void acceptVisitor() = 0;
 };
+}

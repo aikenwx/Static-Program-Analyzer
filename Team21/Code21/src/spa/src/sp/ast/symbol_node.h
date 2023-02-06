@@ -1,6 +1,7 @@
 #pragma once
 #include "i_node.h"
 
+namespace ast {
 enum class SymbolType {
   kAnd,
   kAssign,
@@ -33,3 +34,4 @@ public:
 private:
   SymbolType type;
 };
+}

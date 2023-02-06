@@ -1,8 +1,8 @@
 #pragma once
-
 #include <vector>
 #include "i_node.h"
 
+namespace ast {
 class StatementListNode : public INode {
 public:
   void addStatement(INode *node);
@@ -10,3 +10,4 @@ public:
 private:
   std::vector<INode *> statements;
 };
+}

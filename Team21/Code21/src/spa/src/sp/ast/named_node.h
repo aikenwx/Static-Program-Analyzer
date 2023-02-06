@@ -2,6 +2,7 @@
 #include <string>
 #include "i_node.h"
 
+namespace ast {
 class NamedNode : public INode {
 public:
   NamedNode(std::string name);
@@ -11,3 +12,4 @@ public:
 protected:
   std::string name;
 };
+}

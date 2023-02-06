@@ -9,9 +9,9 @@
 using Data = std::unordered_map<qps::DesignEntity, std::unordered_set<std::string>>;
 
 //template <typename T>
-std::unordered_set<std::string> test(qps::DesignEntity entity_type, std::string synonym, QueryFacade* pkb) {
-  qps::Synonym s {std::move(synonym)};
-  qps::Declaration dec {entity_type, s};
+std::unordered_set<std::string> test(qps::DesignEntity entity_type, std::string synonym, QueryFacade *pkb) {
+  qps::Synonym s{std::move(synonym)};
+  qps::Declaration dec{entity_type, s};
   qps::SelectEvaluator select_clause_evaluator(dec);
   auto var_result = select_clause_evaluator.evaluate(*pkb).Extract(s);
   return var_result;
@@ -29,16 +29,15 @@ TEST_CASE("QPS can retrieve design entities") {
   data[qps::DesignEntity::PRINT] = {"4", "29", "22", "101"};
   data[qps::DesignEntity::PROCEDURE] = {"main", "calculate", "evaluate"};
 
-
   PopulatePKBHelper pkb_helper;
-  QueryFacade* pkb_querier = pkb_helper.GetQuerier();
+  QueryFacade *pkb_querier = pkb_helper.GetQuerier();
   pkb_helper.AddVariables(data[qps::DesignEntity::VARIABLE]);
   pkb_helper.AddConstants(data[qps::DesignEntity::CONSTANT]);
   pkb_helper.AddAssignments(data[qps::DesignEntity::ASSIGN]);
   pkb_helper.AddRead(data[qps::DesignEntity::READ]);
-  pkb_helper.AddPrint( data[qps::DesignEntity::PRINT]);
+  pkb_helper.AddPrint(data[qps::DesignEntity::PRINT]);
   pkb_helper.AddIf(data[qps::DesignEntity::IF]);
-  pkb_helper.AddWhile( data[qps::DesignEntity::WHILE]);
+  pkb_helper.AddWhile(data[qps::DesignEntity::WHILE]);
   pkb_helper.AddCalls(data[qps::DesignEntity::CALL]);
   pkb_helper.AddProcedures(data[qps::DesignEntity::PROCEDURE]);
 
@@ -88,14 +87,13 @@ TEST_CASE("QPS can retrieve design entities") {
   }
 
   SECTION("QPS can retrieve statements") {
-    std::unordered_set<std::string> stmts;
+    std::unordered_set < std::string > stmts;
     stmts.insert(data[qps::DesignEntity::ASSIGN].begin(), data[qps::DesignEntity::ASSIGN].end());
     stmts.insert(data[qps::DesignEntity::READ].begin(), data[qps::DesignEntity::READ].end());
     stmts.insert(data[qps::DesignEntity::PRINT].begin(), data[qps::DesignEntity::PRINT].end());
     stmts.insert(data[qps::DesignEntity::IF].begin(), data[qps::DesignEntity::IF].end());
     stmts.insert(data[qps::DesignEntity::WHILE].begin(), data[qps::DesignEntity::WHILE].end());
     stmts.insert(data[qps::DesignEntity::CALL].begin(), data[qps::DesignEntity::CALL].end());
-
 
     auto res = test(qps::DesignEntity::STMT, "r", pkb_querier);
     REQUIRE(res == stmts);

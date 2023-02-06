@@ -24,4 +24,7 @@ namespace qps {
 	ExpressionSpec PatternClause::getArg2() {
 		return arg2;
 	}
+	Synonym PatternClause::getAssign() {
+		return assignSynonym;
+	}
 }

@@ -26,40 +26,39 @@ namespace qps {
 				seen.insert(syn);
 			}
 			else {
-				throw QueryException("There is duplictate declaration found for" + syn);
+				throw QueryException("Semantic error. There is duplicate declaration found for " + syn);
 			}
 		}
 	}
 
-	//Does the findDeclarationsWithSynonym work?
 	void SemanticValidator::checkIfSynonymContainedInDeclaration() {
 		std::vector<Declaration> declr = getQuery().getDeclarations();
 		Synonym syn = getQuery().getSelectClause().getSynonym();
 		if (Declaration::findDeclarationWithSynonym(declr, syn).has_value() == false) {
-			throw QueryException("There is missing declaration in select clause for" + syn.getSynonym());
+			throw QueryException("Semantic error. There is missing declaration in Select clause for " + syn.getSynonym());
 		}
-		/*if (query_.getSuchThatClause() != NULL) {
-			Ref refSuchThat1 = query_.getSuchThatClause().getArg1();
-			Ref refSuchThat2 = query_.getSuchThatClause().getArg2();
+		if (!getQuery().getSuchThatClause().empty()) {
+			Ref refSuchThat1 = getQuery().getSuchThatClause()[0].getArg1();
+			Ref refSuchThat2 = getQuery().getSuchThatClause()[0].getArg2();
 			if (std::holds_alternative<Synonym>(refSuchThat1)) {
-				if (Declaration::findDeclarationWithSynonym(declr, refSuchThat1.getSynonym()) == false) {
-					throw QueryException("There is missing declaration in SuchThat clause for argument 1);
+				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refSuchThat1)).has_value() == false) {
+					throw QueryException("Semantic error. There is missing declaration in SuchThat clause for argument 1");
 				}
 			}
 			if (std::holds_alternative<Synonym>(refSuchThat2)) {
-				if (Declaration::findDeclarationWithSynonym(declr, refSuchThat2.getSynonym()) == false) {
-					throw QueryException("There is missing declaration in SuchThat clause for argument 2);
+				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refSuchThat2)).has_value() == false) {
+					throw QueryException("Semantic error. There is missing declaration in SuchThat clause for argument 2");
 				}
 			}
 		}
-		if (query_.getPatternClause() != NULL) {
-			Ref refPattern = query_.getPatternClause().getArg1();
+		if (!getQuery().getPatternClause().empty()) {
+			Ref refPattern = getQuery().getPatternClause()[0].getArg1();
 			if (std::holds_alternative<Synonym>(refPattern)) {
-				if (Declaration::findDeclarationWithSynonym(declr, refPattern.getSynonym()) == false) {
-					throw QueryException("There is missing declaration in AssignPattern clause for argument 1);
+				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refPattern)).has_value() == false) {
+					throw QueryException("Semantic error. There is missing declaration in AssignPattern clause for argument 1");
 				}
 			}
-		}*/
+		}
 	}
 
 	void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {
@@ -67,7 +66,16 @@ namespace qps {
 	}
 
 	void SemanticValidator::checkPatternClauseSynAssign() {
-
+		//std::vector<Declaration> declr = getQuery().getDeclarations();
+		//if (!getQuery().getPatternClause().empty()) {
+		//	Ref refPattern = getQuery().getPatternClause()[0].getAssign();
+		//	std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refPattern));
+		//	if (patternDclr.has_value()) {
+		//		if (patternDclr.value().getDesignEntity() != DesignEntity::ASSIGN) {
+		//			throw QueryException("Semantic error. There is missing declaration in AssignPattern clause for argument 1");
+		//		}
+		//	}
+		//}
 	}
 
 	void SemanticValidator::checkRelationSynonymMatchDesignEntity() {

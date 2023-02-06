@@ -115,7 +115,7 @@ namespace qps {
 		next();
 		Synonym test_synonym{ peek() };
 		if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
-			throw QueryException("No declaration found for synonym " + peek());
+			throw QueryException("Semantic error. There is missing declaration in Select clause for " + peek());
 		}
 		Synonym synonym{ next() };
 		DesignEntity design_entity = Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity();
@@ -126,6 +126,7 @@ namespace qps {
 		if (!isSameToken("such")) {
 			return false;
 		}
+		next();
 		assertNextToken("that");
 		next();
 
@@ -148,6 +149,7 @@ namespace qps {
 			return false;
 		}
 
+		next();
 		std::string syn{ next() };
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };

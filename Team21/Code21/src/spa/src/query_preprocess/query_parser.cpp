@@ -11,15 +11,11 @@ namespace qps {
 		}
 		return "";
 	}
-	std::string QueryParser::prev() {
-		if (currentIndex >= 1) {
-			return tokens[currentIndex - 1];
-		}
-		return "";
-	}
+
 	std::string QueryParser::next() {
+		std::string currentToken{ peek() };
 		currentIndex++;
-		return peek();
+		return currentToken;
 	}
 	bool QueryParser::isEnd() {
 		return (peek() == "");
@@ -117,12 +113,12 @@ namespace qps {
 	void QueryParser::parseSelectClause() {
 		assertNextToken("Select");
 		next();
-		try {
-			getDesignEntityFromString(peek());
+		Synonym test_synonym{ peek() };
+		if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
+			throw QueryException("No declaration found for synonym " + peek());
 		}
-		catch (QueryException& e) {}
 		Synonym synonym{ next() };
-		DesignEntity design_entity{ getDesignEntityFromString(synonym.getSynonym()) };
+		DesignEntity design_entity = Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity();
 		selectClause.push_back(Declaration(design_entity, synonym));
 	}
 
@@ -156,7 +152,7 @@ namespace qps {
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
 		if (declaration->getDesignEntity() != DesignEntity::ASSIGN) {
-			throw QueryException("Invalid design entity for pattern assign with synonym: " + syn);
+			throw QueryException("Invalid syntax for pattern assign with synonym: " + syn);
 		}
 
 		assertNextToken("(");

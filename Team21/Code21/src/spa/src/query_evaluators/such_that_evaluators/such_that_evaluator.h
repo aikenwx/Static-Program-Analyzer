@@ -13,15 +13,18 @@ class SuchThatEvaluator : public ClauseEvaluator {
   static const std::vector<EntityType> CONTAINER_TYPES;
 
   SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations);
-  ClauseResult evaluate(QueryFacade &pkb) override;
+
   EntityType FindEntityType(Synonym &syn);
 
-  virtual std::vector<::Relationship *> callPKB(QueryFacade &pkb, EntityType left, EntityType right) = 0;
+  ClauseResult Evaluate(QueryFacade &pkb) override;
+
+  virtual std::vector<::Relationship *> CallPkb(QueryFacade &pkb, EntityType left, EntityType right) = 0;
   virtual std::vector<EntityType> GetLeftHandTypes(Ref &left_arg) = 0;
   virtual std::vector<EntityType> GetRightHandTypes(Ref &right_arg) = 0;
 
  private:
-  bool filter(::Relationship &);
+  bool Filter(::Relationship &relationship);
+
   ClauseResult ConstructResult(const std::vector<::Relationship *> &);
   SuchThatClause clause_;
   std::vector<Declaration> declarations_;

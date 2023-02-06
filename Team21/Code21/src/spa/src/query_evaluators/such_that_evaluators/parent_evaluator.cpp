@@ -4,7 +4,7 @@
 
 namespace qps {
 
-std::vector<::Relationship *> ParentEvaluator::callPKB(QueryFacade &pkb, EntityType left, EntityType right) {
+std::vector<::Relationship *> ParentEvaluator::CallPkb(QueryFacade &pkb, EntityType left, EntityType right) {
   std::vector<::Relationship *> res;
   auto pkb_res = pkb.getParentRelationshipsByLeftAndRightEntityTypes(left, right);
   res.assign(pkb_res->begin(), pkb_res->end());

@@ -9,7 +9,7 @@ const std::vector<EntityType>
 SuchThatEvaluator::SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-ClauseResult SuchThatEvaluator::evaluate(QueryFacade &pkb) {
+ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<::Relationship *> filtered_relationships;
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
@@ -17,9 +17,9 @@ ClauseResult SuchThatEvaluator::evaluate(QueryFacade &pkb) {
   auto right_hand = GetRightHandTypes(ref2);
   for (auto left : left_hand) {
     for (auto right : right_hand) {
-      auto res = callPKB(pkb, left, right);
+      auto res = CallPkb(pkb, left, right);
       for (auto relationship : res) {
-        if (!filter(*relationship)) {
+        if (!Filter(*relationship)) {
           filtered_relationships.push_back(relationship);
         }
       }
@@ -49,29 +49,29 @@ ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship
 
 // TODO: refactor.
 // This function has a lot of repetition.
-bool SuchThatEvaluator::filter(::Relationship &r) {
+bool SuchThatEvaluator::Filter(::Relationship &relationship) {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref1)) {
-    if (r.getLeftHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (relationship.getLeftHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref2)) {
-    if (r.getRightHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (relationship.getRightHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref1)) {
-    if (r.getLeftHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (relationship.getLeftHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref2)) {
-    if (r.getRightHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (relationship.getRightHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
       return true;
     }
   }
@@ -81,9 +81,10 @@ bool SuchThatEvaluator::filter(::Relationship &r) {
 EntityType SuchThatEvaluator::FindEntityType(Synonym &syn) {
   std::optional<Declaration> decl = Declaration::findDeclarationWithSynonym(declarations_, syn);
   if (decl) {
-    return ClauseEvaluator::design_entity_to_entity_type(decl.value().getDesignEntity());
+    return ClauseEvaluator::DesignEntityToEntityType(decl.value().getDesignEntity());
   } else {
     throw QueryException("Synonym in clause not in query declaration");
   }
 }
+
 } // qps

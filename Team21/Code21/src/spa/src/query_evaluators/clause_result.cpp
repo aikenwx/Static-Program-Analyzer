@@ -17,21 +17,18 @@ ClauseResult::Results ClauseResult::GetResults() const {
 }
 
 void ClauseResult::AddResult(Result result) {
-//  if (result.size() != synonyms_.size()) {
-//    throw std::invalid_argument("Size of result tuple doesnt match number of referenced synonyms");
-//  }
   results_.push_back(std::move(result));
 }
 
-void ClauseResult::AddSynonym(Synonym syn, int index) {
-  if (HasSynonym(syn)) {
+void ClauseResult::AddSynonym(Synonym synonym, int index) {
+  if (HasSynonym(synonym)) {
     throw std::invalid_argument("Synonym already present in result");
   }
-  synonym_idx_[syn.getSynonym()] = index;
+  synonym_idx_[synonym.getSynonym()] = index;
 }
 
-bool ClauseResult::HasSynonym(Synonym &syn) {
-  return synonym_idx_.find(syn.getSynonym()) != synonym_idx_.end();
+bool ClauseResult::HasSynonym(Synonym &synonym) {
+  return synonym_idx_.find(synonym.getSynonym()) != synonym_idx_.end();
 }
 
 ClauseResult::ResultSet ClauseResult::Extract(Synonym synonym) {
@@ -49,4 +46,5 @@ ClauseResult::ResultSet ClauseResult::Extract(Synonym synonym) {
 bool ClauseResult::Empty() {
   return results_.empty();
 }
+
 } // qps

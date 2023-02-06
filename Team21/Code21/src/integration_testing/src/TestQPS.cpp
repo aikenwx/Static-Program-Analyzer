@@ -11,7 +11,7 @@
 
 using Data = std::unordered_map<qps::DesignEntity, std::unordered_set<std::string>>;
 
-void populate_entities(PopulatePKBHelper &pkb_helper, Data &data) {
+void PopulateEntities(PopulatePKBHelper &pkb_helper, Data &data) {
   pkb_helper.AddVariables(data[qps::DesignEntity::VARIABLE]);
   pkb_helper.AddConstants(data[qps::DesignEntity::CONSTANT]);
   pkb_helper.AddAssignments(data[qps::DesignEntity::ASSIGN]);
@@ -22,19 +22,18 @@ void populate_entities(PopulatePKBHelper &pkb_helper, Data &data) {
   pkb_helper.AddCalls(data[qps::DesignEntity::CALL]);
   pkb_helper.AddProcedures(data[qps::DesignEntity::PROCEDURE]);
 }
-std::unordered_set<std::string> run_select(qps::DesignEntity entity_type, std::string synonym, QueryFacade *pkb) {
+std::unordered_set<std::string> RunSelect(qps::DesignEntity entity_type, std::string synonym, QueryFacade *pkb) {
   qps::Synonym s{std::move(synonym)};
   qps::Declaration dec{entity_type, s};
   qps::Query query{dec};
   qps::QueryEvaluator evaluator(query);
-//  qps::SelectEvaluator select_clause_evaluator(dec);
   auto var_result = evaluator.evaluateQuery(*pkb);
   return var_result;
 }
 
-std::unordered_set<std::string> run_such_that(qps::DesignEntity entity_type, std::string synonym,
-                                              qps::Relationship relation, qps::Ref arg1, qps::Ref arg2,
-                                              QueryFacade *pkb) {
+std::unordered_set<std::string> RunSuchThat(qps::DesignEntity entity_type, std::string synonym,
+                                            qps::Relationship relation, qps::Ref arg1, qps::Ref arg2,
+                                            QueryFacade *pkb) {
   qps::Synonym s{std::move(synonym)};
   qps::Declaration dec{entity_type, s};
   std::vector<qps::Declaration> decl_lst = {dec};
@@ -42,7 +41,6 @@ std::unordered_set<std::string> run_such_that(qps::DesignEntity entity_type, std
   std::vector<qps::SuchThatClause> clauses = {clause};
   qps::Query query{decl_lst, clauses, {}, dec};
   qps::QueryEvaluator evaluator(query);
-//  qps::SelectEvaluator select_clause_evaluator(dec);
   auto var_result = evaluator.evaluateQuery(*pkb);
   return var_result;
 }
@@ -80,7 +78,7 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   data[qps::DesignEntity::PROCEDURE] = {"computeCentroid", "readPoint"};
 
   PopulatePKBHelper pkb_helper;
-  populate_entities(pkb_helper, data);
+  PopulateEntities(pkb_helper, data);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
   PopulateFacade *pkb_populater = pkb_helper.GetPopulater();
   pkb_populater->storeParentRelationship(5, EntityType::WHILE_STATEMENT, 6, EntityType::ASSIGN_STATEMENT);
@@ -94,16 +92,16 @@ TEST_CASE("QPS can work with select and such that parent clause") {
 
   // variable h; Select h
   SECTION("QPS can retrieve all variables") {
-    auto res = run_select(qps::DesignEntity::VARIABLE, "h", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::VARIABLE, "h", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::VARIABLE]);
   }
 
-//    // stmt s; Select s such that Parent(s, 7)
+    // stmt s; Select s such that Parent(s, 7)
   SECTION("QPS can retieve statements that are parent of a statement") {
     qps::Ref arg1{qps::Synonym("s")};
     qps::Ref arg2{7};
-    auto res = run_such_that(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
-    std::unordered_set < std::string > expected{"5"};
+    auto res = RunSuchThat(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set<std::string> expected{"5"};
     REQUIRE(expected == res);
   }
 
@@ -111,8 +109,8 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   SECTION("QPS can retrieve all statements that are a child") {
     qps::Ref arg1{qps::Underscore()};
     qps::Ref arg2{qps::Synonym("s")};
-    auto res = run_such_that(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
-    std::unordered_set < std::string > expected{"6", "7", "8", "9", "11", "12", "13"};
+    auto res = RunSuchThat(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set<std::string> expected{"6", "7", "8", "9", "11", "12", "13"};
     REQUIRE(expected == res);
   }
 
@@ -120,8 +118,8 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   SECTION("QPS can retrieve all assigments that are a child") {
     qps::Ref arg1{qps::Underscore()};
     qps::Ref arg2{qps::Synonym("a")};
-    auto res = run_such_that(qps::DesignEntity::ASSIGN, "a", qps::Relationship::Parent, arg1, arg2, pkb_querier);
-    std::unordered_set < std::string > expected{"6", "7", "8", "11", "12", "13"};
+    auto res = RunSuchThat(qps::DesignEntity::ASSIGN, "a", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set<std::string> expected{"6", "7", "8", "11", "12", "13"};
     REQUIRE(expected == res);
   }
 
@@ -129,8 +127,8 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   SECTION("QPS can retrieve all calls that are a child") {
     qps::Ref arg1{qps::Underscore()};
     qps::Ref arg2{qps::Synonym("c")};
-    auto res = run_such_that(qps::DesignEntity::CALL, "c", qps::Relationship::Parent, arg1, arg2, pkb_querier);
-    std::unordered_set < std::string > expected{"9"};
+    auto res = RunSuchThat(qps::DesignEntity::CALL, "c", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+    std::unordered_set<std::string> expected{"9"};
     REQUIRE(expected == res);
   }
 }
@@ -145,67 +143,59 @@ TEST_CASE("QPS can retrieve design entities") {
   data[qps::DesignEntity::IF] = {"3", "20", "50"};
   data[qps::DesignEntity::WHILE] = {"5", "17", "30"};
   data[qps::DesignEntity::PRINT] = {"4", "29", "22", "101"};
-  data[qps::DesignEntity::PROCEDURE] = {"main", "calculate", "evaluate"};
+  data[qps::DesignEntity::PROCEDURE] = {"main", "calculate", "Evaluate"};
 
   PopulatePKBHelper pkb_helper;
+  PopulateEntities(pkb_helper, data);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
-  pkb_helper.AddVariables(data[qps::DesignEntity::VARIABLE]);
-  pkb_helper.AddConstants(data[qps::DesignEntity::CONSTANT]);
-  pkb_helper.AddAssignments(data[qps::DesignEntity::ASSIGN]);
-  pkb_helper.AddRead(data[qps::DesignEntity::READ]);
-  pkb_helper.AddPrint(data[qps::DesignEntity::PRINT]);
-  pkb_helper.AddIf(data[qps::DesignEntity::IF]);
-  pkb_helper.AddWhile(data[qps::DesignEntity::WHILE]);
-  pkb_helper.AddCalls(data[qps::DesignEntity::CALL]);
-  pkb_helper.AddProcedures(data[qps::DesignEntity::PROCEDURE]);
 
   SECTION("QPS can retrieve variables") {
-    auto res = run_select(qps::DesignEntity::VARIABLE, "v", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::VARIABLE, "v", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::VARIABLE]);
   }
 
   SECTION("QPS can retrieve constants") {
-    auto res = run_select(qps::DesignEntity::CONSTANT, "c", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::CONSTANT, "c", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::CONSTANT]);
   }
 
   SECTION("QPS can retrieve assignments") {
-    auto res = run_select(qps::DesignEntity::ASSIGN, "a", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::ASSIGN, "a", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::ASSIGN]);
   }
 
   SECTION("QPS can retrieve prints") {
-    auto res = run_select(qps::DesignEntity::PRINT, "p", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::PRINT, "p", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::PRINT]);
   }
 
   SECTION("QPS can retrieve ifs") {
-    auto res = run_select(qps::DesignEntity::IF, "f", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::IF, "f", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::IF]);
   }
 
   SECTION("QPS can retrieve whiles") {
-    auto res = run_select(qps::DesignEntity::WHILE, "w", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::WHILE, "w", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::WHILE]);
   }
 
   SECTION("QPS can retrieve calls") {
-    auto res = run_select(qps::DesignEntity::CALL, "c", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::CALL, "c", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::CALL]);
   }
 
   SECTION("QPS can retrieve procedures") {
-    auto res = run_select(qps::DesignEntity::PROCEDURE, "p", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::PROCEDURE, "p", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::PROCEDURE]);
   }
 
   SECTION("QPS can retrieve reads") {
-    auto res = run_select(qps::DesignEntity::READ, "r", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::READ, "r", pkb_querier);
     REQUIRE(res == data[qps::DesignEntity::READ]);
   }
 
   SECTION("QPS can retrieve statements") {
-    std::unordered_set < std::string > stmts;
+    std::unordered_set<std::string> stmts;
     stmts.insert(data[qps::DesignEntity::ASSIGN].begin(), data[qps::DesignEntity::ASSIGN].end());
     stmts.insert(data[qps::DesignEntity::READ].begin(), data[qps::DesignEntity::READ].end());
     stmts.insert(data[qps::DesignEntity::PRINT].begin(), data[qps::DesignEntity::PRINT].end());
@@ -213,7 +203,7 @@ TEST_CASE("QPS can retrieve design entities") {
     stmts.insert(data[qps::DesignEntity::WHILE].begin(), data[qps::DesignEntity::WHILE].end());
     stmts.insert(data[qps::DesignEntity::CALL].begin(), data[qps::DesignEntity::CALL].end());
 
-    auto res = run_select(qps::DesignEntity::STMT, "r", pkb_querier);
+    auto res = RunSelect(qps::DesignEntity::STMT, "r", pkb_querier);
     REQUIRE(res == stmts);
   }
 }

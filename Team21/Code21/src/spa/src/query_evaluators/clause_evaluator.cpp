@@ -2,7 +2,7 @@
 
 namespace qps {
 
-EntityType ClauseEvaluator::design_entity_to_entity_type(DesignEntity entity) {
+EntityType ClauseEvaluator::DesignEntityToEntityType(DesignEntity entity) {
   switch (entity) {
     case DesignEntity::STMT:return EntityType::STATEMENT;
     case DesignEntity::READ:return EntityType::READ_STATEMENT;
@@ -16,4 +16,5 @@ EntityType ClauseEvaluator::design_entity_to_entity_type(DesignEntity entity) {
     case DesignEntity::PROCEDURE:return EntityType::PROCEDURE;
   }
 }
+
 } // qps

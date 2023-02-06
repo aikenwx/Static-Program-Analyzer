@@ -20,11 +20,12 @@ class ClauseResult {
  public:
   ClauseResult() {}
   ClauseResult(Synonyms synonyms);
+
   SynonymIdx GetSynonyms() const;
   Results GetResults() const;
   void AddResult(Result result);
-  void AddSynonym(Synonym syn, int index);
-  bool HasSynonym(Synonym &syn);
+  void AddSynonym(Synonym synonym, int index);
+  bool HasSynonym(Synonym &synonym);
   bool Empty();
   ResultSet Extract(Synonym synonym);
 

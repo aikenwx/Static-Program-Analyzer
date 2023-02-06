@@ -12,16 +12,16 @@ std::unordered_set<std::string> QueryEvaluator::evaluateQuery(QueryFacade &pkb) 
 
   auto select_evaluator = std::make_unique<SelectEvaluator>(query_.getSelectClause());
   if (query_.getSuchThatClause().empty()) {
-    return select_evaluator->evaluate(pkb).Extract(target);
+    return select_evaluator->Evaluate(pkb).Extract(target);
   } else {
     auto such_that_clause = query_.getSuchThatClause()[0];
     auto declarations = query_.getDeclarations();
     auto such_that_evaluator = SuchThatEvaluatorFactory::Create(such_that_clause, declarations);
-    auto clause_result = such_that_evaluator->evaluate(pkb);
+    auto clause_result = such_that_evaluator->Evaluate(pkb);
     if (clause_result.HasSynonym(target)) {
       return clause_result.Extract(target);
     } else if (!clause_result.Empty()) {
-      return select_evaluator->evaluate(pkb).Extract(target);
+      return select_evaluator->Evaluate(pkb).Extract(target);
     } else {
       return {};
     }

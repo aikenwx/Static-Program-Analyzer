@@ -7,12 +7,10 @@
 namespace qps {
 
 class ClauseEvaluator {
-//  static EntityType design_entity_to_entity_type(DesignEntity entity);
-
  public:
-  static EntityType design_entity_to_entity_type(DesignEntity entity);
-  virtual ClauseResult evaluate(QueryFacade &pkb) = 0;
+  static EntityType DesignEntityToEntityType(DesignEntity entity);
   virtual ~ClauseEvaluator() = default;
+  virtual ClauseResult Evaluate(QueryFacade &pkb) = 0;
 };
-} // qps
 
+} // qps

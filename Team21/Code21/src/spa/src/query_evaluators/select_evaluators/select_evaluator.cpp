@@ -1,6 +1,6 @@
-#include "query/design_entity.h"
-
 #include "select_evaluator.h"
+
+#include "query/design_entity.h"
 
 namespace qps {
 ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
@@ -11,7 +11,7 @@ ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entit
   return clause_result;
 }
 
-ClauseResult SelectEvaluator::evaluate(QueryFacade &pkb) {
+ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<Entity *> entities;
 
   auto add_entity = [&](auto vec) {
@@ -44,4 +44,5 @@ ClauseResult SelectEvaluator::evaluate(QueryFacade &pkb) {
   }
   return ConstructResult(entities);
 }
+
 } // qps

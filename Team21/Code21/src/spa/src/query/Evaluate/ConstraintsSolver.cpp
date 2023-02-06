@@ -1,4 +1,4 @@
-// need to include all the depedencies from evaluator clauses. Below are pseudo for now.
+/*// need to include all the depedencies from evaluator clauses. Below are pseudo for now.
 #include <iostream>
 
 #include "query/Clause/ClauseEvaluatorFactory.h"
@@ -16,4 +16,4 @@ namespace qps {
 
 	ClauseResult ConstraintsSolver::suchThatAssignPatternClauseResult(const Query& query) {
 	}
-}
+}*/

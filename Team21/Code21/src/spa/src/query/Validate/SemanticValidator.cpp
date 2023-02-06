@@ -14,11 +14,12 @@ namespace qps {
 		checkPatternClauseSynAssign();
 		checkNoWildCardFirstArgModifiesUses();
 		checkRelationSynonymMatchDesignEntity();
+		return true;
 	}
 
 	void SemanticValidator::checkForDuplicateDeclarations() {
 		//create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
-		std::unordered_set<Declaration> seen;
+		std::unordered_set<std::string> seen;
 		for (auto & declr : query_.getDeclarations()) {
 			std::string syn = declr.getSynonym().getSynonym();
 			if (seen.find(syn) == seen.end()) {
@@ -33,11 +34,11 @@ namespace qps {
 	//Does the findDeclarationsWithSynonym work?
 	void SemanticValidator::checkIfSynonymContainedInDeclaration() {
 		std::vector<Declaration>& declr = query_.getDeclarations();
-		std::string syn = query_.getSelectClause().getSynonym();
+		Synonym syn = query_.getSelectClause().getSynonym();
 		if (Declaration::findDeclarationWithSynonym(declr, syn) == false) {
-			throw QueryException("There is missing declaration in select clause for" + syn);
+			throw QueryException("There is missing declaration in select clause for" + syn.getSynonym());
 		}
-		if (query_.getSuchThatClause() != NULL) {
+		/*if (query_.getSuchThatClause() != NULL) {
 			Ref refSuchThat1 = query_.getSuchThatClause().getArg1();
 			Ref refSuchThat2 = query_.getSuchThatClause().getArg2();
 			if (std::holds_alternative<Synonym>(refSuchThat1)) {
@@ -58,7 +59,7 @@ namespace qps {
 					throw QueryException("There is missing declaration in AssignPattern clause for argument 1);
 				}
 			}
-		}
+		}*/
 	}
 
 	void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {

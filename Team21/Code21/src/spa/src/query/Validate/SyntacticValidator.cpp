@@ -7,6 +7,7 @@ namespace qps {
 	bool SyntacticValidator::validateQuery() {
 		checkSuchThatCorrectRefTypes();
 		checkAssignPatternCorrectRefTypes();
+		return true;
 	}
 
 	void SyntacticValidator::checkSuchThatCorrectRefTypes() {

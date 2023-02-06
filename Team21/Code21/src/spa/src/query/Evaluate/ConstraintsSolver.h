@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 //Assume for ClauseResult
 #include "query/Clause/ClauseResult.h"
@@ -12,4 +12,4 @@ namespace qps {
 	public:
 		static ClauseResult solve(const Query& query);
 	};
-}
+}*/

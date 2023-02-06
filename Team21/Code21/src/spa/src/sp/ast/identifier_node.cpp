@@ -9,7 +9,7 @@ void IdentifierNode::Execute() {
   return;
 }
 
-std::string IdentifierNode::GsetValue() {
+std::string IdentifierNode::GetValue() {
   return value;
 }
 }

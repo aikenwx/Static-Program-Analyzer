@@ -139,6 +139,7 @@ std::vector<std::string> expectedTokenStrings{
     "*",
     "cenY",
     ";",
+    "}",
 };
 TEST_CASE("Tokenizer can tokenize a simple, well-formatted program",
           "[tokenizer]") {

@@ -88,6 +88,9 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
     // otherwise there's nothing for us to do now
   }
 
+  // we're out of characters -- let's flush the buffer
+  tokenize();
+
   return tokens;
 }
 

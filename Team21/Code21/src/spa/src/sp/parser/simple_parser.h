@@ -6,6 +6,7 @@
 #include "i_parser.h"
 #include "token/token.h"
 
+namespace parser {
 class SimpleParser : public IParser {
 private:
   std::vector<INode *> stack;
@@ -23,3 +24,4 @@ class EndToken : public token::Token {
 public:
   const std::string getValue() override;
 };
+}

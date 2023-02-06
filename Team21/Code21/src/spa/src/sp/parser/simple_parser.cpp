@@ -16,6 +16,7 @@
 
 using namespace util;
 
+namespace parser {
 AST *SimpleParser::parse(std::vector<token::Token *> input) {
   EndToken *e = new EndToken();
   input.push_back(e);
@@ -66,7 +67,7 @@ bool SimpleParser::check() {
   if (instance_of<EndToken>(*lookahead)) {
     // When token has reached end
     if (instance_of<ProgramNode>(*i)
-        && instance_of<ProcedureNode>(*std::next(i, 1))) {
+      && instance_of<ProcedureNode>(*std::next(i, 1))) {
       // Pr <- P Pr
       ProgramNode *pr = (ProgramNode *) stack.back();
       stack.pop_back();
@@ -87,7 +88,7 @@ bool SimpleParser::check() {
   } else if (instance_of<token::RightBraceToken>(*lookahead)) {
     // When lookahead is right brace (end of statement list)
     if (instance_of<StatementListNode>(*i)
-        && instance_of<StatementNode>(*std::next(i, 1))) {
+      && instance_of<StatementNode>(*std::next(i, 1))) {
       // S+ <- S S+
       StatementListNode *sl = (StatementListNode *) stack.back();
       stack.pop_back();
@@ -117,10 +118,10 @@ bool SimpleParser::check() {
     }
   } else {
     if (instance_of<SymbolNode>(*i) && ((SymbolNode *) *i)->getType() == SymbolType::kRightBrace
-        && instance_of<StatementListNode>(*std::next(i, 1))
-        && instance_of<SymbolNode>(*std::next(i, 2)) && ((SymbolNode *) *std::next(i, 2))->getType() == SymbolType::kLeftBrace
-        && instance_of<NameNode>(*std::next(i, 3))
-        && instance_of<IdentifierNode>(*std::next(i, 4)) && ((IdentifierNode *) *std::next(i, 4))->getValue() == "procedure") {
+      && instance_of<StatementListNode>(*std::next(i, 1))
+      && instance_of<SymbolNode>(*std::next(i, 2)) && ((SymbolNode *) *std::next(i, 2))->getType() == SymbolType::kLeftBrace
+      && instance_of<NameNode>(*std::next(i, 3))
+      && instance_of<IdentifierNode>(*std::next(i, 4)) && ((IdentifierNode *) *std::next(i, 4))->getValue() == "procedure") {
       // P <- procedure N { S+ }
       stack.pop_back();
       StatementListNode *sl = (StatementListNode *) stack.back();
@@ -133,7 +134,7 @@ bool SimpleParser::check() {
       stack.push_back(p);
       return true;
     } else if (instance_of<VariableNode>(*i)
-               && instance_of<IdentifierNode>(*std::next(i, 1)) && ((IdentifierNode *) *std::next(i, 1))->getValue() == "read") {
+      && instance_of<IdentifierNode>(*std::next(i, 1)) && ((IdentifierNode *) *std::next(i, 1))->getValue() == "read") {
       // S(r) <- read V;
       VariableNode *v = (VariableNode *) stack.back();
       stack.pop_back();
@@ -142,7 +143,7 @@ bool SimpleParser::check() {
       stack.push_back(r);
       return true;
     } else if (!instance_of<token::IdentifierToken>(*lookahead)
-               && instance_of<IdentifierNode>(*i)) {
+      && instance_of<IdentifierNode>(*i)) {
       // if not identifier then
       // N <- id
       IdentifierNode *id = (IdentifierNode *) stack.back();
@@ -157,4 +158,5 @@ bool SimpleParser::check() {
 
 const std::string EndToken::getValue() {
   return "$";
+}
 }

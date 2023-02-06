@@ -26,6 +26,7 @@ class PatternClause {
 		bool isExpressionPartial();
 		Ref getArg1();
 		ExpressionSpec getArg2();
+		Synonym getAssign();
 
 		bool operator==(const PatternClause& clause) const {
 			return assignSynonym == clause.assignSynonym && arg1 == clause.arg1

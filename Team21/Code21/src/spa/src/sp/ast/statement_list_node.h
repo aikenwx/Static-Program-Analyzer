@@ -6,6 +6,7 @@ namespace ast {
 class StatementListNode : public INode {
 public:
   void AddStatement(INode *node);
+  std::vector<INode *> *GetStatements();
 
   std::ostream &Write(std::ostream &out) const override;
 

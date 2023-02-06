@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "sp/ast/ast.h"
+#include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/directly_modifies_extractor.h"
 #include "sp/design_extractor/directly_uses_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
@@ -44,6 +45,11 @@ void TestWrapper::parse(std::string filename) {
   // parse tokens into AST
   parser::SimpleParser* parser = new parser::SimpleParser();
   ast::AST* ast = parser->Parse(tokens);
+
+  // process AST to get elements
+  std::vector<rel::Relationship> astElemRelationships =
+      design_extractor::Traverse(
+          ast->GetRoot(), design_extractor::AstElemExtractor::GetInstance());
 
   // process AST to find relationships
   std::vector<rel::Relationship> followsRelationships =

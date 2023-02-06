@@ -24,6 +24,8 @@ class ClauseResult {
   Results GetResults() const;
   void AddResult(Result result);
   void AddSynonym(Synonym syn);
+  bool HasSynonym(Synonym &syn);
+  bool Empty();
   ResultSet Extract(Synonym synonym);
 
  private:

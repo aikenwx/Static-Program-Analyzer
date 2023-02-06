@@ -24,15 +24,16 @@ void ClauseResult::AddResult(Result result) {
 }
 
 void ClauseResult::AddSynonym(Synonym syn) {
-//  if (result.size() != synonyms_.size()) {
-//    throw std::invalid_argument("Size of result tuple doesnt match number of referenced synonyms");
-//  }
   synonyms_.push_back(std::move(syn));
+}
+
+bool ClauseResult::HasSynonym(Synonym &syn) {
+  return synonym_idx_.find(syn.getSynonym()) != synonym_idx_.end();
 }
 
 ClauseResult::ResultSet ClauseResult::Extract(Synonym synonym) {
   ResultSet result_set;
-  if (synonym_idx_.find(synonym.getSynonym()) == synonym_idx_.end()) {
+  if (!HasSynonym(synonym)) {
     throw std::invalid_argument("Extracting synonym not present in result");
   }
   int synonym_idx = synonym_idx_[synonym.getSynonym()];
@@ -40,5 +41,9 @@ ClauseResult::ResultSet ClauseResult::Extract(Synonym synonym) {
     result_set.insert(vec[synonym_idx]);
   }
   return result_set;
+}
+
+bool ClauseResult::Empty() {
+  return results_.empty();
 }
 } // qps

@@ -8,6 +8,7 @@ public:
   NamedNode(std::string name);
 
   std::string GetName();
+  virtual std::ostream &Write(std::ostream &out) const override = 0;
 
 protected:
   std::string name;

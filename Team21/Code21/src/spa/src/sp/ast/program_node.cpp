@@ -9,4 +9,13 @@ void ProgramNode::AddProcedure(INode* procedure) {
 std::vector<INode*> *ProgramNode::GetProcedures() {
   return &procedures;
 }
+
+std::ostream &ProgramNode::Write(std::ostream &out) const {
+  out << "program:" << "\n{";
+  for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
+    (*i)->Write(out);
+  }
+  out << "}" << "\n";
+  return out;
+}
 }

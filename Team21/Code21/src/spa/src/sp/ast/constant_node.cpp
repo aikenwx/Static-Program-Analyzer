@@ -12,4 +12,9 @@ void ConstantNode::Execute() {
 int ConstantNode::GetValue() {
   return this->value;
 }
+
+std::ostream &ConstantNode::Write(std::ostream &out) const {
+  out << "constant:" << value << "\n";
+  return out;
+}
 }

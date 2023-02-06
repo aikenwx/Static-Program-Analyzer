@@ -13,4 +13,9 @@ INode *BinaryOperationNode::GetLeft() {
 INode *BinaryOperationNode::GetRight() {
   return right;
 }
+
+std::ostream &BinaryOperationNode::Write(std::ostream &out) const {
+  out << "BinOp" << "\n";
+  return out;
+}
 }

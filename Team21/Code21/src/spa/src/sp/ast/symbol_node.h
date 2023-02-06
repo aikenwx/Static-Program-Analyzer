@@ -30,6 +30,7 @@ public:
   SymbolNode(SymbolType type);
 
   SymbolType GetType();
+  std::ostream &Write(std::ostream &out) const override;
 
 private:
   SymbolType type;

@@ -7,5 +7,6 @@ public:
   using NamedNode::NamedNode;
 
   //void Execute() override;
+  std::ostream &Write(std::ostream &out) const override;
 };
 }

@@ -3,9 +3,9 @@
 #include "variable_node.h"
 
 namespace ast {
-class ReadNode : public StatementNode {
+class PrintNode : public StatementNode {
 public:
-  ReadNode(VariableNode *var);
+  PrintNode(VariableNode *var);
 
   VariableNode *GetVariable();
   std::ostream &Write(std::ostream &out) const override;

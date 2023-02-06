@@ -12,4 +12,9 @@ void IdentifierNode::Execute() {
 std::string IdentifierNode::GetValue() {
   return value;
 }
+
+std::ostream &IdentifierNode::Write(std::ostream &out) const {
+  out << "Identifier" << "\n";
+  return out;
+}
 }

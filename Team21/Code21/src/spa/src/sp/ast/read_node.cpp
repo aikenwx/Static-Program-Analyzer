@@ -8,4 +8,11 @@ ReadNode::ReadNode(VariableNode *var) {
 VariableNode *ReadNode::GetVariable() {
   return var;
 }
+
+std::ostream &ReadNode::Write(std::ostream &out) const {
+  out << "read:" << "\n{";
+  var->Write(out);
+  out << "}" << "\n";
+  return out;
+}
 }

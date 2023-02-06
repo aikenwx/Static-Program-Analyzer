@@ -7,6 +7,8 @@ class ProgramNode : public INode {
 public:
   void AddProcedure(INode *procedure);
 
+  std::ostream &Write(std::ostream &out) const override;
+
 private:
   std::vector<INode *> procedures;
 };

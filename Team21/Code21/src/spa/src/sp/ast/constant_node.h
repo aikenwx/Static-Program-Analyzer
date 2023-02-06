@@ -8,6 +8,7 @@ public:
 
   void Execute();
   int GetValue();
+  std::ostream &Write(std::ostream &out) const override;
 
 private:
   int value;

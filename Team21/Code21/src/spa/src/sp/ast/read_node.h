@@ -8,6 +8,7 @@ public:
   ReadNode(VariableNode *var);
 
   VariableNode *GetVariable();
+  std::ostream &Write(std::ostream &out) const override;
 
 private:
   VariableNode *var;

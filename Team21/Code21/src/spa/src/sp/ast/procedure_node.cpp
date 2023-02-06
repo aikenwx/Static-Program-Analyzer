@@ -8,4 +8,11 @@ ProcedureNode::ProcedureNode(std::string name, StatementListNode *statements) : 
 StatementListNode *ProcedureNode::GetStatements() {
   return statements;
 }
+
+std::ostream &ProcedureNode::Write(std::ostream &out) const {
+  out << "procedure:" << name << "\n{";
+  statements->Write(out);
+  out << "}" << "\n";
+  return out;
+}
 }

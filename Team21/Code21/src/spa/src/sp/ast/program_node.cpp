@@ -5,4 +5,8 @@ namespace ast {
 void ProgramNode::AddProcedure(INode* procedure) {
   procedures.push_back(procedure);
 }
+
+std::vector<INode*> *ProgramNode::GetProcedures() {
+  return &procedures;
+}
 }

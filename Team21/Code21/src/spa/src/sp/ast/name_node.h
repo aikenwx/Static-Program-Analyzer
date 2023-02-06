@@ -7,6 +7,6 @@ class NameNode : public NamedNode {
 public:
   using NamedNode::NamedNode;
 
-  //void execute() override;
+  //void Execute() override;
 };
 }

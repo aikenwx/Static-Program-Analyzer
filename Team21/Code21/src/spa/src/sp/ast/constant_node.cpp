@@ -5,11 +5,11 @@ ConstantNode::ConstantNode(int value) {
   this->value = value;
 }
 
-void ConstantNode::execute() {
+void ConstantNode::Execute() {
 
 }
 
-int ConstantNode::getValue() {
+int ConstantNode::GetValue() {
   return this->value;
 }
 }

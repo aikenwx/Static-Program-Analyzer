@@ -7,7 +7,7 @@ class NamedNode : public INode {
 public:
   NamedNode(std::string name);
 
-  std::string getName();
+  std::string GetName();
 
 protected:
   std::string name;

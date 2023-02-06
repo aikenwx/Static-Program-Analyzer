@@ -7,7 +7,7 @@ class ReadNode : public StatementNode {
 public:
   ReadNode(VariableNode *var);
 
-  VariableNode *getVariable();
+  VariableNode *GetVariable();
 
 private:
   VariableNode *var;

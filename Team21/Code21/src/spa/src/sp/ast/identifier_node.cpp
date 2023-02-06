@@ -5,11 +5,11 @@ IdentifierNode::IdentifierNode(std::string value) {
   this->value = value;
 }
 
-void IdentifierNode::execute() {
+void IdentifierNode::Execute() {
   return;
 }
 
-std::string IdentifierNode::getValue() {
+std::string IdentifierNode::GsetValue() {
   return value;
 }
 }

@@ -5,11 +5,11 @@ NamedNode::NamedNode(std::string name) {
   this->name = name;
 }
 
-//void NamedNode::execute() {
+//void NamedNode::Execute() {
 //  return;
 //}
 
-std::string NamedNode::getName() {
+std::string NamedNode::GetName() {
   return name;
 }
 }

@@ -29,7 +29,7 @@ class SymbolNode : public INode {
 public:
   SymbolNode(SymbolType type);
 
-  SymbolType getType();
+  SymbolType GetType();
 
 private:
   SymbolType type;

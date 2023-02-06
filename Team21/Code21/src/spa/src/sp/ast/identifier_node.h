@@ -7,8 +7,8 @@ class IdentifierNode : public INode {
 public:
   IdentifierNode(std::string value);
 
-  void execute();
-  std::string getValue();
+  void Execute();
+  std::string GetValue();
 
 private:
   std::string value;

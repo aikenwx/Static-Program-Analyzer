@@ -10,7 +10,7 @@ public:
 
   ProcedureNode() = default;
 
-  StatementListNode *getStatements();
+  StatementListNode *GetStatements();
 
 private:
   // Creates some coupling with statement list node

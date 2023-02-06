@@ -6,8 +6,8 @@ class ConstantNode : public INode {
 public:
   ConstantNode(int value);
 
-  void execute();
-  int getValue();
+  void Execute();
+  int GetValue();
 
 private:
   int value;

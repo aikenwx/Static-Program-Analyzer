@@ -5,7 +5,7 @@
 namespace ast {
 class ProgramNode : public INode {
 public:
-  void addProcedure(INode *procedure);
+  void AddProcedure(INode *procedure);
 
 private:
   std::vector<INode *> procedures;

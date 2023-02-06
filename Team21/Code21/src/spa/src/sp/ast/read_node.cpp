@@ -5,7 +5,7 @@ ReadNode::ReadNode(VariableNode *var) {
   this->var = var;
 }
 
-VariableNode *ReadNode::getVariable() {
+VariableNode *ReadNode::GetVariable() {
   return var;
 }
 }

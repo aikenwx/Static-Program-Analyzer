@@ -5,7 +5,7 @@ SymbolNode::SymbolNode(SymbolType type) {
   this->type = type;
 }
 
-SymbolType SymbolNode::getType() {
+SymbolType SymbolNode::GetType() {
   return type;
 }
 }

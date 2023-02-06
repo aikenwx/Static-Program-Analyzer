@@ -5,7 +5,7 @@ ProcedureNode::ProcedureNode(std::string name, StatementListNode *statements) : 
   this->statements = statements;
 }
 
-StatementListNode *ProcedureNode::getStatements() {
+StatementListNode *ProcedureNode::GetStatements() {
   return statements;
 }
 }

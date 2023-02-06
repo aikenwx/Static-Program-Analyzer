@@ -3,11 +3,11 @@
 namespace ast {
 class INode {
 public:
-  //virtual void execute() = 0;
+  //virtual void Execute() = 0;
 
   /*
     Method for accepting visitors
   */
-  //virtual void acceptVisitor() = 0;
+  //virtual void AcceptVisitor() = 0;
 };
 }

@@ -5,7 +5,7 @@
 namespace ast {
 class StatementListNode : public INode {
 public:
-  void addStatement(INode *node);
+  void AddStatement(INode *node);
 
 private:
   std::vector<INode *> statements;

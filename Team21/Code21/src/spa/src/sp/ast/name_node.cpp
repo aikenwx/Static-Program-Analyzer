@@ -1,7 +1,7 @@
 #include "name_node.h"
 
 namespace ast {
-//void NameNode::execute() {
+//void NameNode::Execute() {
 //  return;
 //}
 }

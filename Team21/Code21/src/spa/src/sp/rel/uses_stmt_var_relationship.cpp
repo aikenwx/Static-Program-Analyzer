@@ -1,14 +1,15 @@
 #include <string>
 
 #include "uses_stmt_var_relationship.h"
+#include "util.h"
 
 namespace rel {
 int UsesStmtVarRelationship::statementNumber() {
   return statementNode_->GetStatementNumber();
 };
 
-int UsesStmtVarRelationship::entityType() {
-  return 0; // TODO
+EntityType UsesStmtVarRelationship::entityType() {
+  return resolveEntityType(statementNode_);
 };
 
 std::string UsesStmtVarRelationship::variableName() {

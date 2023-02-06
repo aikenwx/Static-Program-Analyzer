@@ -5,8 +5,8 @@ int PrintStmtRelationship::statementNumber() {
   return statementNode_->GetStatementNumber();
 };
 
-int PrintStmtRelationship::entityType() {
-  return 0; // TODO
+EntityType PrintStmtRelationship::entityType() {
+  return EntityType::PRINT_STATEMENT;
 };
 
 PrintStmtRelationship PrintStmtRelationship::CreateRelationship(ast::PrintNode* statementNode) {
@@ -21,8 +21,8 @@ int ReadStmtRelationship::statementNumber() {
   return statementNode_->GetStatementNumber();
 };
 
-int ReadStmtRelationship::entityType() {
-  return 0; // TODO
+EntityType ReadStmtRelationship::entityType() {
+  return EntityType::READ_STATEMENT;
 };
 
 ReadStmtRelationship ReadStmtRelationship::CreateRelationship(ast::ReadNode* statementNode) {

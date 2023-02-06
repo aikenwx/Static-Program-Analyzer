@@ -1,6 +1,8 @@
+#include "follows_stmt_stmt_relationship.h"
+
 #include <string>
 
-#include "follows_stmt_stmt_relationship.h"
+#include "util.h"
 
 namespace rel {
 int FollowsStmtStmtRelationship::firstStatementNumber() {
@@ -11,20 +13,18 @@ int FollowsStmtStmtRelationship::secondStatementNumber() {
   return secondStatementNode_->GetStatementNumber();
 };
 
-int FollowsStmtStmtRelationship::firstEntityType() {
-  return 0; // TODO
+EntityType FollowsStmtStmtRelationship::firstEntityType() {
+  return resolveEntityType(secondStatementNode_);
 };
 
-int FollowsStmtStmtRelationship::secondEntityType() {
-  return 0; // TODO
+EntityType FollowsStmtStmtRelationship::secondEntityType() {
+  return resolveEntityType(secondStatementNode_);
 };
 
-FollowsStmtStmtRelationship
-FollowsStmtStmtRelationship::CreateRelationship(
+FollowsStmtStmtRelationship FollowsStmtStmtRelationship::CreateRelationship(
     ast::StatementNode* firstStatementNode,
     ast::StatementNode* secondStatementNode) {
-  return FollowsStmtStmtRelationship(firstStatementNode,
-                                         secondStatementNode);
+  return FollowsStmtStmtRelationship(firstStatementNode, secondStatementNode);
 };
 
 FollowsStmtStmtRelationship::FollowsStmtStmtRelationship(

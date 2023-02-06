@@ -10,7 +10,7 @@ namespace rel {
 class PrintStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
-  int entityType() override;
+  EntityType entityType() override;
   static PrintStmtRelationship CreateRelationship(
       ast::PrintNode* statementNode);
 
@@ -22,7 +22,7 @@ class PrintStmtRelationship : public StmtRelationship {
 class ReadStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
-  int entityType() override;
+  EntityType entityType() override;
   static ReadStmtRelationship CreateRelationship(ast::ReadNode* statementNode);
 
  private:

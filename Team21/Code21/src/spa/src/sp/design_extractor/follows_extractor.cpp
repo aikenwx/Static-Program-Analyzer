@@ -16,11 +16,12 @@ FollowsExtractor::HandleStatementListNode(std::vector<ast::INode*> parents,
     return std::nullopt;
   };
 
-  std::vector<ast::INode*>::const_iterator it = statements.cbegin();
+  // nb: `StatementListNode` stores statements in reverse order
+  auto it = statements.crbegin();
   ast::StatementNode* first = static_cast<ast::StatementNode*>(*it);
   it++;
 
-  for (; it != statements.cend(); it++) {
+  for (; it != statements.crend(); it++) {
     ast::StatementNode* second = static_cast<ast::StatementNode*>(*it);
     relationships.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));

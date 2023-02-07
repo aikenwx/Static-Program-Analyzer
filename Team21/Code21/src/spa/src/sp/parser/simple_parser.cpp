@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "sp/ast/ast.h"
+#include "sp/ast/constant_node.h"
 #include "sp/ast/identifier_node.h"
 #include "sp/ast/name_node.h"
 #include "sp/ast/print_node.h"
@@ -78,8 +79,8 @@ void SimpleParser::Shift() {
     ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
     stack.push_back(id);
   } else if (util::instance_of<token::IntegerToken>(*lookahead)) {
-    // Unimplemented
-    assert(false);
+    ast::ConstantNode *c = new ast::ConstantNode(std::stoi((*lookahead)->getValue()));
+    stack.push_back(c);
   } else if (util::instance_of<token::AndToken>(*lookahead)) {
     ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kAnd);
     stack.push_back(sym);

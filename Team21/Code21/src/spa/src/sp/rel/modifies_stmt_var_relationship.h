@@ -10,7 +10,7 @@ class ModifiesStmtVarRelationship : public StmtVarRelationship {
   int statementNumber() override;
   EntityType entityType() override;
   std::string variableName() override;
-  static ModifiesStmtVarRelationship CreateRelationship(
+  static ModifiesStmtVarRelationship* CreateRelationship(
       ast::StatementNode* statementNode, std::string variableName);
 
  private:

@@ -6,10 +6,10 @@
 #include "../rel/relationship.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship>>
+std::optional<std::vector<rel::Relationship*>>
 FollowsExtractor::HandleStatementListNode(std::vector<ast::INode*> parents,
                                           ast::StatementListNode* node) {
-  std::vector<rel::Relationship> relationships;
+  std::vector<rel::Relationship*> relationships;
   std::vector<ast::INode*> statements = *node->GetStatements();
   if (statements.size() <= 1) {
     // no Follows relationship possible in this statement list

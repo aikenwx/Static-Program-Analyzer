@@ -9,8 +9,8 @@ EntityType PrintStmtRelationship::entityType() {
   return EntityType::PRINT_STATEMENT;
 };
 
-PrintStmtRelationship PrintStmtRelationship::CreateRelationship(ast::PrintNode* statementNode) {
-  return PrintStmtRelationship(statementNode);
+PrintStmtRelationship* PrintStmtRelationship::CreateRelationship(ast::PrintNode* statementNode) {
+  return new PrintStmtRelationship(statementNode);
 };
 
 PrintStmtRelationship::PrintStmtRelationship(ast::PrintNode* statementNode) {
@@ -25,8 +25,8 @@ EntityType ReadStmtRelationship::entityType() {
   return EntityType::READ_STATEMENT;
 };
 
-ReadStmtRelationship ReadStmtRelationship::CreateRelationship(ast::ReadNode* statementNode) {
-  return ReadStmtRelationship(statementNode);
+ReadStmtRelationship* ReadStmtRelationship::CreateRelationship(ast::ReadNode* statementNode) {
+  return new ReadStmtRelationship(statementNode);
 };
 
 ReadStmtRelationship::ReadStmtRelationship(ast::ReadNode* statementNode) {

@@ -11,7 +11,7 @@ class PrintStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
   EntityType entityType() override;
-  static PrintStmtRelationship CreateRelationship(
+  static PrintStmtRelationship* CreateRelationship(
       ast::PrintNode* statementNode);
 
  private:
@@ -23,7 +23,7 @@ class ReadStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
   EntityType entityType() override;
-  static ReadStmtRelationship CreateRelationship(ast::ReadNode* statementNode);
+  static ReadStmtRelationship* CreateRelationship(ast::ReadNode* statementNode);
 
  private:
   ReadStmtRelationship(ast::ReadNode* statementNode);

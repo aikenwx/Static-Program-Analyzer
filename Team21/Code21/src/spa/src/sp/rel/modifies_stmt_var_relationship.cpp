@@ -16,8 +16,8 @@ std::string ModifiesStmtVarRelationship::variableName() {
   return variableName_;
 };
 
-ModifiesStmtVarRelationship ModifiesStmtVarRelationship::CreateRelationship(ast::StatementNode* statementNode, std::string variableName) {
-  return ModifiesStmtVarRelationship(statementNode, variableName);
+ModifiesStmtVarRelationship* ModifiesStmtVarRelationship::CreateRelationship(ast::StatementNode* statementNode, std::string variableName) {
+  return new ModifiesStmtVarRelationship(statementNode, variableName);
 };
 
 ModifiesStmtVarRelationship::ModifiesStmtVarRelationship(ast::StatementNode* statementNode, std::string variableName) {

@@ -6,10 +6,10 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship>>
+std::optional<std::vector<rel::Relationship*>>
 DirectlyUsesExtractor::HandlePrintNode(std::vector<ast::INode*> parents,
                                        ast::PrintNode* node) {
-  std::vector<rel::Relationship> relationships;
+  std::vector<rel::Relationship*> relationships;
 
   relationships.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
       node, node->GetVariable()->GetName()));

@@ -11,7 +11,7 @@ class FollowsStmtStmtRelationship : public StmtStmtRelationship {
   int secondStatementNumber() override;
   EntityType firstEntityType() override;
   EntityType secondEntityType() override;
-  static FollowsStmtStmtRelationship CreateRelationship(
+  static FollowsStmtStmtRelationship* CreateRelationship(
       ast::StatementNode* firstStatement, ast::StatementNode* secondStatement);
 
  private:

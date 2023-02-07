@@ -11,7 +11,7 @@ class ParentStmtStmtRelationship : public StmtStmtRelationship {
   int secondStatementNumber() override;
   EntityType firstEntityType() override;
   EntityType secondEntityType() override;
-  static ParentStmtStmtRelationship CreateRelationship(
+  static ParentStmtStmtRelationship* CreateRelationship(
       ast::StatementNode* firstStatement, ast::StatementNode* secondStatement);
 
  private:

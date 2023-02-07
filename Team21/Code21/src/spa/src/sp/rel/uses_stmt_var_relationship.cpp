@@ -16,8 +16,8 @@ std::string UsesStmtVarRelationship::variableName() {
   return variableName_;
 };
 
-UsesStmtVarRelationship UsesStmtVarRelationship::CreateRelationship(ast::StatementNode* statementNode, std::string variableName) {
-  return UsesStmtVarRelationship(statementNode, variableName);
+UsesStmtVarRelationship* UsesStmtVarRelationship::CreateRelationship(ast::StatementNode* statementNode, std::string variableName) {
+  return new UsesStmtVarRelationship(statementNode, variableName);
 };
 
 UsesStmtVarRelationship::UsesStmtVarRelationship(ast::StatementNode* statementNode, std::string variableName) {

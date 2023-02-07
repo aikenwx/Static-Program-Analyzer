@@ -25,7 +25,7 @@ class TestWrapper : public AbstractWrapper {
   // method for evaluating a query
   virtual void evaluate(std::string query, std::list<std::string> &results);
  private:
-  PKB pkb_;
+  PKB* pkb_;
 };
 
 #endif

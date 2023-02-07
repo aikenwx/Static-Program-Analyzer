@@ -21,10 +21,10 @@ EntityType FollowsStmtStmtRelationship::secondEntityType() {
   return resolveEntityType(secondStatementNode_);
 };
 
-FollowsStmtStmtRelationship FollowsStmtStmtRelationship::CreateRelationship(
+FollowsStmtStmtRelationship* FollowsStmtStmtRelationship::CreateRelationship(
     ast::StatementNode* firstStatementNode,
     ast::StatementNode* secondStatementNode) {
-  return FollowsStmtStmtRelationship(firstStatementNode, secondStatementNode);
+  return new FollowsStmtStmtRelationship(firstStatementNode, secondStatementNode);
 };
 
 FollowsStmtStmtRelationship::FollowsStmtStmtRelationship(

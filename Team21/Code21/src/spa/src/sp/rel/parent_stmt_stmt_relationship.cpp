@@ -20,10 +20,10 @@ EntityType ParentStmtStmtRelationship::secondEntityType() {
   return resolveEntityType(secondStatementNode_);
 };
 
-ParentStmtStmtRelationship
+ParentStmtStmtRelationship*
 ParentStmtStmtRelationship::CreateRelationship(
     ast::StatementNode* firstStatement, ast::StatementNode* secondStatement) {
-  return ParentStmtStmtRelationship(firstStatement, secondStatement);
+  return new ParentStmtStmtRelationship(firstStatement, secondStatement);
 };
 
 ParentStmtStmtRelationship::ParentStmtStmtRelationship(

@@ -11,10 +11,10 @@ std::string ModifiesProcVarRelationship::variableName() {
   return variableName_;
 };
 
-ModifiesProcVarRelationship
+ModifiesProcVarRelationship*
 ModifiesProcVarRelationship::CreateRelationship(std::string procedureName,
                                                 std::string variableName) {
-  return ModifiesProcVarRelationship(procedureName, variableName);
+  return new ModifiesProcVarRelationship(procedureName, variableName);
 };
 
 ModifiesProcVarRelationship::ModifiesProcVarRelationship(std::string procedureName, std::string variableName) {

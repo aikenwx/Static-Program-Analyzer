@@ -18,7 +18,9 @@ std::vector<rel::Relationship> _Traverse(
     parents.push_back(node);
     for (auto procedure :
          *static_cast<ast::ProgramNode*>(node)->GetProcedures()) {
-      _Traverse(parents, procedure, extractor);
+      std::vector<rel::Relationship> res =
+          _Traverse(parents, procedure, extractor);
+      relationships.insert(relationships.end(), res.begin(), res.end());
     }
     parents.pop_back();
   } else if (util::instance_of<ast::ProcedureNode>(node)) {
@@ -31,8 +33,10 @@ std::vector<rel::Relationship> _Traverse(
     }
 
     parents.push_back(node);
-    _Traverse(parents, static_cast<ast::ProcedureNode*>(node)->GetStatements(),
-              extractor);
+    std::vector<rel::Relationship> res = _Traverse(
+        parents, static_cast<ast::ProcedureNode*>(node)->GetStatements(),
+        extractor);
+    relationships.insert(relationships.end(), res.begin(), res.end());
     parents.pop_back();
   } else if (util::instance_of<ast::StatementListNode>(node)) {
     std::optional<std::vector<rel::Relationship>> newRels =
@@ -46,7 +50,9 @@ std::vector<rel::Relationship> _Traverse(
     parents.push_back(node);
     for (auto statement :
          *static_cast<ast::StatementListNode*>(node)->GetStatements()) {
-      _Traverse(parents, statement, extractor);
+      std::vector<rel::Relationship> res =
+          _Traverse(parents, statement, extractor);
+      relationships.insert(relationships.end(), res.begin(), res.end());
     }
     parents.pop_back();
   } else if (util::instance_of<ast::ReadNode>(node)) {
@@ -58,17 +64,17 @@ std::vector<rel::Relationship> _Traverse(
     }
 
     // it's also a statement node
-    newRels =
-        extractor->HandleStatementNode(parents,
-                                       static_cast<ast::ReadNode*>(node));
+    newRels = extractor->HandleStatementNode(parents,
+                                             static_cast<ast::ReadNode*>(node));
     if (newRels.has_value()) {
       relationships.insert(relationships.end(), newRels.value().begin(),
                            newRels.value().end());
     }
 
     parents.push_back(node);
-    _Traverse(parents, static_cast<ast::ReadNode*>(node)->GetVariable(),
-              extractor);
+    std::vector<rel::Relationship> res = _Traverse(
+        parents, static_cast<ast::ReadNode*>(node)->GetVariable(), extractor);
+    relationships.insert(relationships.end(), res.begin(), res.end());
     parents.pop_back();
   } else if (util::instance_of<ast::BinaryOperationNode>(node)) {
     std::optional<std::vector<rel::Relationship>> newRels =
@@ -80,10 +86,14 @@ std::vector<rel::Relationship> _Traverse(
     }
 
     parents.push_back(node);
-    _Traverse(parents, static_cast<ast::BinaryOperationNode*>(node)->GetLeft(),
-              extractor);
-    _Traverse(parents, static_cast<ast::BinaryOperationNode*>(node)->GetRight(),
-              extractor);
+    std::vector<rel::Relationship> res = _Traverse(
+        parents, static_cast<ast::BinaryOperationNode*>(node)->GetLeft(),
+        extractor);
+    relationships.insert(relationships.end(), res.begin(), res.end());
+    res = _Traverse(parents,
+                    static_cast<ast::BinaryOperationNode*>(node)->GetRight(),
+                    extractor);
+    relationships.insert(relationships.end(), res.begin(), res.end());
     parents.pop_back();
   } else if (util::instance_of<ast::ConstantNode>(node)) {
     std::optional<std::vector<rel::Relationship>> newRels =
@@ -104,17 +114,17 @@ std::vector<rel::Relationship> _Traverse(
     }
 
     // it's also a statement node
-    newRels =
-        extractor->HandleStatementNode(parents,
-                                       static_cast<ast::PrintNode*>(node));
+    newRels = extractor->HandleStatementNode(
+        parents, static_cast<ast::PrintNode*>(node));
     if (newRels.has_value()) {
       relationships.insert(relationships.end(), newRels.value().begin(),
                            newRels.value().end());
     }
 
     parents.push_back(node);
-    _Traverse(parents, static_cast<ast::PrintNode*>(node)->GetVariable(),
-              extractor);
+    std::vector<rel::Relationship> res = _Traverse(
+        parents, static_cast<ast::PrintNode*>(node)->GetVariable(), extractor);
+    relationships.insert(relationships.end(), res.begin(), res.end());
     parents.pop_back();
   } else if (util::instance_of<ast::VariableNode>(node)) {
     std::optional<std::vector<rel::Relationship>> newRels =

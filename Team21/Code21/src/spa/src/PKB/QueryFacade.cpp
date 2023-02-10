@@ -27,8 +27,8 @@
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
 QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager) {
-    this->entityManager = std::shared_ptr<EntityManager>(entityManager);
-    this->relationshipManager = std::shared_ptr<RelationshipManager>(relationshipManager);
+    this->entityManager = entityManager;
+    this->relationshipManager = relationshipManager;
 }
 
 std::vector<std::shared_ptr<AssignStatement>> *QueryFacade::getAllAssignStatements() {

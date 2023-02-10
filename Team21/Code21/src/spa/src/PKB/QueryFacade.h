@@ -29,8 +29,8 @@
 
 class QueryFacade {
    private:
-    std::shared_ptr<EntityManager> entityManager;
-    std::shared_ptr<RelationshipManager> relationshipManager;
+    EntityManager* entityManager;
+    RelationshipManager* relationshipManager;
 
    public:
     QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager);

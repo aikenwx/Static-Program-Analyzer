@@ -5,23 +5,16 @@
 #include "PKB.h"
 
 PKB::PKB() {
-    this->entityManager = new EntityManager();
-    this->relationshipManager = new RelationshipManager();
-    this->populateFacade = new PopulateFacade(entityManager, relationshipManager);
-    this->queryFacade = new QueryFacade(entityManager, relationshipManager);
-}
-
-PKB::~PKB() {
-    delete this->populateFacade;
-    delete this->queryFacade;
-    delete this->entityManager;
-    delete this->relationshipManager;
+    this->entityManager = std::make_shared<EntityManager>();
+    this->relationshipManager = std::make_shared<RelationshipManager>();
+    this->populateFacade = std::make_shared<PopulateFacade>(entityManager.get(), relationshipManager.get());
+    this->queryFacade = std::make_shared<QueryFacade>(entityManager.get(), relationshipManager.get());
 }
 
 PopulateFacade *PKB::getPopulateFacade() {
-    return this->populateFacade;
+    return this->populateFacade.get();
 }
 
 QueryFacade *PKB::getQueryFacade() {
-    return this->queryFacade;
+    return this->queryFacade.get();
 }

@@ -2,10 +2,9 @@
 // Created by Aiken Wong on 5/2/23.
 //
 
-#include "catch.hpp"
 #include "PKB/PKB.h"
-
 #include "PKBtestHelpers.h"
+#include "catch.hpp"
 
 TEST_CASE("PKB instantiation") {
     PKB *pkb = new PKB();
@@ -26,7 +25,7 @@ TEST_CASE("PKB can store read statement and QueryFacade can retrieve read statem
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
     populateFacade->storeReadStatement(1);
-    std::vector<ReadStatement *> *entities = queryFacade->getAllReadStatements();
+    auto entities = queryFacade->getAllReadStatements();
 
     REQUIRE(entities->size() == 1);
     ReadStatement *expectedReadStatement = new ReadStatement(1);
@@ -34,7 +33,6 @@ TEST_CASE("PKB can store read statement and QueryFacade can retrieve read statem
 
     delete pkb;
     delete expectedReadStatement;
-    delete entities;
 }
 
 TEST_CASE("PKB can store multiple read statements and QueryFacade can retrieve read statements") {
@@ -44,7 +42,7 @@ TEST_CASE("PKB can store multiple read statements and QueryFacade can retrieve r
 
     populateFacade->storeReadStatement(1);
     populateFacade->storeReadStatement(2);
-    std::vector<ReadStatement *> *entities = queryFacade->getAllReadStatements();
+    auto entities = queryFacade->getAllReadStatements();
 
     REQUIRE(entities->size() == 2);
     ReadStatement *expectedReadStatement1 = new ReadStatement(1);
@@ -55,7 +53,6 @@ TEST_CASE("PKB can store multiple read statements and QueryFacade can retrieve r
     delete pkb;
     delete expectedReadStatement1;
     delete expectedReadStatement2;
-    delete entities;
 }
 
 TEST_CASE("PKB can store read relationship and QueryFacade can read retrieve relationship") {
@@ -64,19 +61,18 @@ TEST_CASE("PKB can store read relationship and QueryFacade can read retrieve rel
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
     populateFacade->storeFollowsRelationship(1, READ_STATEMENT, 2, READ_STATEMENT);
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            READ_STATEMENT, READ_STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        READ_STATEMENT, READ_STATEMENT);
 
     REQUIRE(relationships->size() == 1);
 
     FollowsRelationship *expectedFollowsRelationship = new FollowsRelationship(new ReadStatement(1),
                                                                                new ReadStatement(2));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedFollowsRelationship));
 
     delete pkb;
     delete expectedFollowsRelationship;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade can retrieve the relationships") {
@@ -86,8 +82,8 @@ TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade
 
     populateFacade->storeFollowsRelationship(1, READ_STATEMENT, 2, READ_STATEMENT);
     populateFacade->storeFollowsRelationship(2, READ_STATEMENT, 3, READ_STATEMENT);
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            READ_STATEMENT, READ_STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        READ_STATEMENT, READ_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -96,13 +92,12 @@ TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade
     FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new ReadStatement(2),
                                                                                 new ReadStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedFollowsRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedFollowsRelationship2));
 
     delete pkb;
     delete expectedFollowsRelationship1;
     delete expectedFollowsRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple print statements and retrieve mulitple print statements") {
@@ -112,7 +107,7 @@ TEST_CASE("PKB can store multiple print statements and retrieve mulitple print s
 
     populateFacade->storePrintStatement(1);
     populateFacade->storePrintStatement(2);
-    std::vector<PrintStatement *> *entities = queryFacade->getAllPrintStatements();
+    auto *entities = queryFacade->getAllPrintStatements();
 
     REQUIRE(entities->size() == 2);
     PrintStatement *expectedPrintStatement1 = new PrintStatement(1);
@@ -123,8 +118,6 @@ TEST_CASE("PKB can store multiple print statements and retrieve mulitple print s
     delete pkb;
     delete expectedPrintStatement1;
     delete expectedPrintStatement2;
-    delete entities;
-
 }
 
 TEST_CASE("PKB can store multiple print follow print relationships and retrieve the relationships") {
@@ -134,8 +127,8 @@ TEST_CASE("PKB can store multiple print follow print relationships and retrieve 
 
     populateFacade->storeFollowsRelationship(1, PRINT_STATEMENT, 2, PRINT_STATEMENT);
     populateFacade->storeFollowsRelationship(2, PRINT_STATEMENT, 3, PRINT_STATEMENT);
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            PRINT_STATEMENT, PRINT_STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        PRINT_STATEMENT, PRINT_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -144,13 +137,12 @@ TEST_CASE("PKB can store multiple print follow print relationships and retrieve 
     FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new PrintStatement(2),
                                                                                 new PrintStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedFollowsRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedFollowsRelationship2));
 
     delete pkb;
     delete expectedFollowsRelationship1;
     delete expectedFollowsRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple call statements and retrieve multiple call statements") {
@@ -160,7 +152,7 @@ TEST_CASE("PKB can store multiple call statements and retrieve multiple call sta
 
     populateFacade->storeCallStatement(1);
     populateFacade->storeCallStatement(2);
-    std::vector<CallStatement *> *entities = queryFacade->getAllCallStatements();
+    auto entities = queryFacade->getAllCallStatements();
 
     REQUIRE(entities->size() == 2);
     CallStatement *expectedCallStatement1 = new CallStatement(1);
@@ -171,7 +163,6 @@ TEST_CASE("PKB can store multiple call statements and retrieve multiple call sta
     delete pkb;
     delete expectedCallStatement1;
     delete expectedCallStatement2;
-    delete entities;
 }
 
 TEST_CASE("PKB can store multiple assign statements and retrieve multiple assign statements") {
@@ -181,7 +172,7 @@ TEST_CASE("PKB can store multiple assign statements and retrieve multiple assign
 
     populateFacade->storeAssignmentStatement(1);
     populateFacade->storeAssignmentStatement(2);
-    std::vector<AssignStatement *> *entities = queryFacade->getAllAssignStatements();
+    auto entities = queryFacade->getAllAssignStatements();
 
     REQUIRE(entities->size() == 2);
     AssignStatement *expectedAssignStatement1 = new AssignStatement(1);
@@ -192,7 +183,6 @@ TEST_CASE("PKB can store multiple assign statements and retrieve multiple assign
     delete pkb;
     delete expectedAssignStatement1;
     delete expectedAssignStatement2;
-    delete entities;
 }
 
 TEST_CASE("PKB can store multiple if statements and retrieve multiple if statements") {
@@ -202,7 +192,7 @@ TEST_CASE("PKB can store multiple if statements and retrieve multiple if stateme
 
     populateFacade->storeIfStatement(1);
     populateFacade->storeIfStatement(2);
-    std::vector<IfStatement *> *entities = queryFacade->getAllIfStatements();
+    auto entities = queryFacade->getAllIfStatements();
 
     REQUIRE(entities->size() == 2);
     IfStatement *expectedIfStatement1 = new IfStatement(1);
@@ -213,7 +203,6 @@ TEST_CASE("PKB can store multiple if statements and retrieve multiple if stateme
     delete pkb;
     delete expectedIfStatement1;
     delete expectedIfStatement2;
-    delete entities;
 }
 
 TEST_CASE("PKB can store multiple while statements and retrieve multiple while statements") {
@@ -223,7 +212,7 @@ TEST_CASE("PKB can store multiple while statements and retrieve multiple while s
 
     populateFacade->storeWhileStatement(1);
     populateFacade->storeWhileStatement(2);
-    std::vector<WhileStatement *> *entities = queryFacade->getAllWhileStatements();
+    auto entities = queryFacade->getAllWhileStatements();
 
     REQUIRE(entities->size() == 2);
     WhileStatement *expectedWhileStatement1 = new WhileStatement(1);
@@ -234,7 +223,6 @@ TEST_CASE("PKB can store multiple while statements and retrieve multiple while s
     delete pkb;
     delete expectedWhileStatement1;
     delete expectedWhileStatement2;
-    delete entities;
 }
 
 TEST_CASE("PKB can store multiple while parent read relationships and retrieve the relationships") {
@@ -244,8 +232,8 @@ TEST_CASE("PKB can store multiple while parent read relationships and retrieve t
 
     populateFacade->storeParentRelationship(1, WHILE_STATEMENT, 2, READ_STATEMENT);
     populateFacade->storeParentRelationship(2, WHILE_STATEMENT, 3, READ_STATEMENT);
-    std::vector<ParentRelationship *> *relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-            WHILE_STATEMENT, READ_STATEMENT);
+    auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
+        WHILE_STATEMENT, READ_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -254,13 +242,12 @@ TEST_CASE("PKB can store multiple while parent read relationships and retrieve t
     ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(2),
                                                                              new ReadStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedParentRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedParentRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedParentRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedParentRelationship2));
 
     delete pkb;
     delete expectedParentRelationship1;
     delete expectedParentRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple while parent assign relationships and retrieve the relationships") {
@@ -270,8 +257,8 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
 
     populateFacade->storeParentRelationship(1, WHILE_STATEMENT, 2, ASSIGN_STATEMENT);
     populateFacade->storeParentRelationship(2, WHILE_STATEMENT, 3, ASSIGN_STATEMENT);
-    std::vector<ParentRelationship *> *relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-            WHILE_STATEMENT, ASSIGN_STATEMENT);
+    auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
+        WHILE_STATEMENT, ASSIGN_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -280,13 +267,12 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
     ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(2),
                                                                              new AssignStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedParentRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedParentRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedParentRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedParentRelationship2));
 
     delete pkb;
     delete expectedParentRelationship1;
     delete expectedParentRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store mulitple assignment follows read relationships and retrieve the relationships") {
@@ -296,8 +282,8 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
 
     populateFacade->storeFollowsRelationship(1, ASSIGN_STATEMENT, 2, READ_STATEMENT);
     populateFacade->storeFollowsRelationship(2, ASSIGN_STATEMENT, 3, READ_STATEMENT);
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            ASSIGN_STATEMENT, READ_STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        ASSIGN_STATEMENT, READ_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -306,13 +292,12 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
     FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
                                                                                 new ReadStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedFollowsRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedFollowsRelationship2));
 
     delete pkb;
     delete expectedFollowsRelationship1;
     delete expectedFollowsRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple assignment follows assignment relationships and retrieve the relationships") {
@@ -322,8 +307,8 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
 
     populateFacade->storeFollowsRelationship(1, ASSIGN_STATEMENT, 2, ASSIGN_STATEMENT);
     populateFacade->storeFollowsRelationship(2, ASSIGN_STATEMENT, 3, ASSIGN_STATEMENT);
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            ASSIGN_STATEMENT, ASSIGN_STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        ASSIGN_STATEMENT, ASSIGN_STATEMENT);
 
     REQUIRE(relationships->size() == 2);
 
@@ -332,13 +317,12 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
     FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
                                                                                 new AssignStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedFollowsRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedFollowsRelationship2));
 
     delete pkb;
     delete expectedFollowsRelationship1;
     delete expectedFollowsRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple assignment uses variable relationships and retrieve the relationships") {
@@ -348,21 +332,20 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
 
     populateFacade->storeStatementUsesVariableRelationship(1, ASSIGN_STATEMENT, "x");
     populateFacade->storeStatementUsesVariableRelationship(2, ASSIGN_STATEMENT, "y");
-    std::vector<UsesRelationship *> *relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-            ASSIGN_STATEMENT, VARIABLE);
+    auto relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
+        ASSIGN_STATEMENT, VARIABLE);
 
     REQUIRE(relationships->size() == 2);
 
     UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new AssignStatement(1), new Variable("x"));
     UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new AssignStatement(2), new Variable("y"));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedUsesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedUsesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedUsesRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedUsesRelationship2));
 
     delete pkb;
     delete expectedUsesRelationship1;
     delete expectedUsesRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple procedure uses variable relationships and retrieve the relationships") {
@@ -372,21 +355,20 @@ TEST_CASE("PKB can store multiple procedure uses variable relationships and retr
 
     populateFacade->storeProcedureUsesVariableRelationship("Procedure1", "x");
     populateFacade->storeProcedureUsesVariableRelationship("Procedure2", "y");
-    std::vector<UsesRelationship *> *relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-            PROCEDURE, VARIABLE);
+    auto relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
+        PROCEDURE, VARIABLE);
 
     REQUIRE(relationships->size() == 2);
 
     UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new Procedure("Procedure1"), new Variable("x"));
     UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new Procedure("Procedure2"), new Variable("y"));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedUsesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedUsesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedUsesRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedUsesRelationship2));
 
     delete pkb;
     delete expectedUsesRelationship1;
     delete expectedUsesRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple call modifies variable relationships and retrieve the relationships") {
@@ -396,8 +378,8 @@ TEST_CASE("PKB can store multiple call modifies variable relationships and retri
 
     populateFacade->storeStatementModifiesVariableRelationship(1, CALL_STATEMENT, "x");
     populateFacade->storeStatementModifiesVariableRelationship(2, CALL_STATEMENT, "y");
-    std::vector<ModifiesRelationship *> *relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-            CALL_STATEMENT, VARIABLE);
+    auto relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
+        CALL_STATEMENT, VARIABLE);
 
     REQUIRE(relationships->size() == 2);
 
@@ -406,13 +388,12 @@ TEST_CASE("PKB can store multiple call modifies variable relationships and retri
     ModifiesRelationship *expectedModifiesRelationship2 = new ModifiesRelationship(new CallStatement(2),
                                                                                    new Variable("y"));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedModifiesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedModifiesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedModifiesRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedModifiesRelationship2));
 
     delete pkb;
     delete expectedModifiesRelationship1;
     delete expectedModifiesRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multiple procedure modifies variable relationships and retrieve the relationships") {
@@ -422,8 +403,8 @@ TEST_CASE("PKB can store multiple procedure modifies variable relationships and 
 
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure2", "y");
-    std::vector<ModifiesRelationship *> *relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-            PROCEDURE, VARIABLE);
+    auto relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
+        PROCEDURE, VARIABLE);
 
     REQUIRE(relationships->size() == 2);
 
@@ -432,13 +413,12 @@ TEST_CASE("PKB can store multiple procedure modifies variable relationships and 
     ModifiesRelationship *expectedModifiesRelationship2 = new ModifiesRelationship(new Procedure("Procedure2"),
                                                                                    new Variable("y"));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedModifiesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedModifiesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0).get(), expectedModifiesRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1).get(), expectedModifiesRelationship2));
 
     delete pkb;
     delete expectedModifiesRelationship1;
     delete expectedModifiesRelationship2;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
@@ -454,13 +434,12 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
     populateFacade->storeWhileStatement(6);
     populateFacade->storeAssignmentStatement(7);
 
-
     // should not be returned
     populateFacade->storeConstant(1);
     populateFacade->storeVariable("x");
     populateFacade->storeProcedure("Procedure1");
 
-    std::vector<Statement *> *statements = queryFacade->getAllStatements();
+    auto statements = queryFacade->getAllStatements();
 
     REQUIRE(statements->size() == 7);
 
@@ -477,10 +456,10 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
                                                    expectedStatement7};
 
     // for loop finds the statement in the vector and compares it to the expected statement
-    for (Statement *statement: *statements) {
+    for (auto statement : *statements) {
         bool found = false;
-        for (Statement *expectedStatement: expectedStatements) {
-            found = expectedStatement->equals(statement);
+        for (Statement *expectedStatement : expectedStatements) {
+            found = statement->equals(expectedStatement);
         }
     }
 
@@ -492,7 +471,6 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
     delete expectedStatement5;
     delete expectedStatement6;
     delete expectedStatement7;
-    delete statements;
 }
 
 TEST_CASE("PKB can store mulitple types of statement follows statements relationships and retrieve them all") {
@@ -513,8 +491,8 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
     populateFacade->storeStatementModifiesVariableRelationship(1, ASSIGN_STATEMENT, "y");
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
 
-    std::vector<FollowsRelationship *> *relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-            STATEMENT, STATEMENT);
+    auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
+        STATEMENT, STATEMENT);
 
     REQUIRE(relationships->size() == 6);
 
@@ -539,10 +517,10 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
                                                                        expectedFollowsRelationship6};
 
     // for loop finds the relationship in the vector and compares it to the expected relationship
-    for (FollowsRelationship *relationship: *relationships) {
+    for (auto relationship : *relationships) {
         bool found = false;
-        for (FollowsRelationship *expectedRelationship: expectedFollowsRelationships) {
-            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        for (FollowsRelationship *expectedRelationship : expectedFollowsRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship.get(), expectedRelationship);
         }
         REQUIRE(found);
     }
@@ -554,7 +532,6 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
     delete expectedFollowsRelationship4;
     delete expectedFollowsRelationship5;
     delete expectedFollowsRelationship6;
-    delete relationships;
 }
 
 TEST_CASE("PKB can store multitple while parent statements relationships and retrieve them all") {
@@ -576,8 +553,8 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     populateFacade->storeStatementModifiesVariableRelationship(2, ASSIGN_STATEMENT, "y");
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
 
-    std::vector<ParentRelationship *> *relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-            WHILE_STATEMENT, STATEMENT);
+    auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
+        WHILE_STATEMENT, STATEMENT);
 
     REQUIRE(relationships->size() == 6);
 
@@ -602,10 +579,10 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
 
     // for loop finds the relationship in the vector and compares it to the expected relationship
 
-    for (ParentRelationship *relationship: *relationships) {
+    for (auto relationship : *relationships) {
         bool found = false;
-        for (ParentRelationship *expectedRelationship: expectedParentRelationships) {
-            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        for (ParentRelationship *expectedRelationship : expectedParentRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship.get(), expectedRelationship);
         }
         REQUIRE(found);
     }
@@ -617,5 +594,4 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     delete expectedParentRelationship4;
     delete expectedParentRelationship5;
     delete expectedParentRelationship6;
-    delete relationships;
 }

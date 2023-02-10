@@ -337,7 +337,6 @@ TEST_CASE("Retrieve Statement Parent Assignment") {
 
     AssignStatement *assignStatement = new AssignStatement(6);
     AssignStatement *assignStatement2 = new AssignStatement(7);
-    AssignStatement *assignStatement3 = new AssignStatement(8);
     AssignStatement *assignStatement4 = new AssignStatement(9);
 
     Relationship *relationship = new ParentRelationship(readStatement, assignStatement);
@@ -366,7 +365,6 @@ TEST_CASE("Retrieve Assign Parent Statement") {
     RelationshipManager *relationshipManager = new RelationshipManager();
     ReadStatement *readStatement = new ReadStatement(1);
     ReadStatement *readStatement2 = new ReadStatement(2);
-    PrintStatement *printStatement = new PrintStatement(3);
     PrintStatement *printStatement2 = new PrintStatement(4);
     PrintStatement *printStatement3 = new PrintStatement(5);
 
@@ -396,22 +394,9 @@ TEST_CASE("Retrieve Assign Parent Statement") {
 
 TEST_CASE("Retrieve Statement Follows Statement from empty RelationshipManager") {
     RelationshipManager *relationshipManager = new RelationshipManager();
-    ReadStatement *readStatement = new ReadStatement(1);
-    ReadStatement *readStatement2 = new ReadStatement(2);
-    PrintStatement *printStatement = new PrintStatement(3);
-    PrintStatement *printStatement2 = new PrintStatement(4);
-    PrintStatement *printStatement3 = new PrintStatement(5);
-    PrintStatement *printStatement4 = new PrintStatement(6);
-    ReadStatement *readStatement3 = new ReadStatement(7);
-
-    Relationship *relationship = new FollowsRelationship(readStatement, readStatement2);
-    Relationship *relationship2 = new FollowsRelationship(readStatement3, printStatement);
-    Relationship *relationship3 = new FollowsRelationship(printStatement2, printStatement3);
-    Relationship *relationship4 = new FollowsRelationship(printStatement4, readStatement);
 
     std::vector<std::shared_ptr<Relationship>> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
                                                                                                              STATEMENT);
-
     REQUIRE(relationships->size() == 0);
 
     delete relationshipManager;

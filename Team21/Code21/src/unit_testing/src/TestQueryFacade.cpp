@@ -7,6 +7,8 @@ TEST_CASE("QueryFacade Instantiates") {
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve read statement") {
@@ -24,6 +26,8 @@ TEST_CASE("QueryFacade can retrieve read statement") {
     REQUIRE(readStatements->at(0)->equals(readStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve print statement") {
@@ -41,6 +45,8 @@ TEST_CASE("QueryFacade can retrieve print statement") {
     REQUIRE(printStatements->at(0)->equals(printStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve assign statement") {
@@ -58,6 +64,8 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
     REQUIRE(assignStatements->at(0)->equals(assignStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve call statement") {
@@ -75,6 +83,8 @@ TEST_CASE("QueryFacade can retrieve call statement") {
     REQUIRE(callStatements->at(0)->equals(callStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve while statement") {
@@ -92,6 +102,8 @@ TEST_CASE("QueryFacade can retrieve while statement") {
     REQUIRE(whileStatements->at(0)->equals(whileStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve if statement") {
@@ -109,6 +121,8 @@ TEST_CASE("QueryFacade can retrieve if statement") {
     REQUIRE(ifStatements->at(0)->equals(ifStatement));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve procedure") {
@@ -125,6 +139,8 @@ TEST_CASE("QueryFacade can retrieve procedure") {
     REQUIRE(procedures->at(0)->equals(procedure));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve variable") {
@@ -141,6 +157,8 @@ TEST_CASE("QueryFacade can retrieve variable") {
     REQUIRE(variables->at(0)->equals(variable));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve constant") {
@@ -157,6 +175,8 @@ TEST_CASE("QueryFacade can retrieve constant") {
     REQUIRE(constants->at(0)->equals(constant));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFace can retrieve all statements") {
@@ -181,6 +201,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
     REQUIRE(Entity::isStatementType(statements->at(2)->getEntityType()));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve follow relationships") {
@@ -208,6 +230,8 @@ TEST_CASE("QueryFacade can retrieve follow relationships") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(followsRelationships2->at(0).get(), followsRelationship2));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve parent relationships") {
@@ -235,6 +259,8 @@ TEST_CASE("QueryFacade can retrieve parent relationships") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(parentRelationships2->at(0).get(), parentRelationship2));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve modifies relationships") {
@@ -244,7 +270,6 @@ TEST_CASE("QueryFacade can retrieve modifies relationships") {
 
     IfStatement *ifStatement = new IfStatement(1);
     WhileStatement *whileStatement = new WhileStatement(1);
-    ReadStatement *readStatement = new ReadStatement(1);
     Variable *variable = new Variable("variable");
     Variable *variable2 = new Variable("variable2");
 
@@ -263,6 +288,8 @@ TEST_CASE("QueryFacade can retrieve modifies relationships") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(modifiesRelationships2->at(0).get(), modifiesRelationship2));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve uses relationships") {
@@ -272,7 +299,6 @@ TEST_CASE("QueryFacade can retrieve uses relationships") {
 
     IfStatement *ifStatement = new IfStatement(1);
     WhileStatement *whileStatement = new WhileStatement(1);
-    ReadStatement *readStatement = new ReadStatement(1);
     Variable *variable = new Variable("variable");
     Variable *variable2 = new Variable("variable2");
 
@@ -291,6 +317,8 @@ TEST_CASE("QueryFacade can retrieve uses relationships") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(usesRelationships2->at(0).get(), usesRelationship2));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade gives emtpy vector") {
@@ -305,6 +333,8 @@ TEST_CASE("QueryFacade gives emtpy vector") {
     REQUIRE(modifiesRelationships2->size() == 0);
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }
 
 TEST_CASE("QueryFacade can retrieve Statement Follows Statement relationships") {
@@ -329,4 +359,6 @@ TEST_CASE("QueryFacade can retrieve Statement Follows Statement relationships") 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(followsRelationships->at(1).get(), followsRelationship2));
 
     delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
 }

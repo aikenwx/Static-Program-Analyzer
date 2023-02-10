@@ -19,12 +19,11 @@ class PopulateFacade {
 private:
     RelationshipManager *relationshipManager;
     EntityManager *entityManager;
-    EntityFactory *entityFactory;
-    RelationshipFactory *relationshipFactory;
+    EntityFactory entityFactory;
+    RelationshipFactory relationshipFactory;
 
 public:
     PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager);
-    ~PopulateFacade();
 
     void storeAssignmentStatement(int statementNumber);
     void storeCallStatement(int statementNumber);

@@ -3,6 +3,7 @@
 //
 
 #include "ParentRelationship.h"
+#include <memory>
 
 bool ParentRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->parentStatement->equals(entity);
@@ -13,8 +14,8 @@ bool ParentRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *childStatement) {
-    this->childStatement = childStatement;
-    this->parentStatement = parentStatement;
+    this->childStatement = std::shared_ptr<Statement>(childStatement);
+    this->parentStatement = std::shared_ptr<Statement>(parentStatement);
 }
 
 RelationshipType ParentRelationship::getRelationshipType() {
@@ -22,9 +23,9 @@ RelationshipType ParentRelationship::getRelationshipType() {
 }
 
 Entity* ParentRelationship::getLeftHandEntity() {
-    return this->parentStatement;
+    return this->parentStatement.get();
 }
 
 Entity* ParentRelationship::getRightHandEntity() {
-    return this->childStatement;
+    return this->childStatement.get();
 }

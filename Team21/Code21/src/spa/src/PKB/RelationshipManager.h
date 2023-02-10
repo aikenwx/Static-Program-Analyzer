@@ -5,38 +5,34 @@
 #ifndef SPA_RELATIONSHIPMANAGER_H
 #define SPA_RELATIONSHIPMANAGER_H
 
+#include <memory>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
+
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
-
 class RelationshipManager {
+   private:
+    std::unordered_map<int, std::shared_ptr<std::vector<std::shared_ptr<Relationship>>>> relationshipMap;
 
-private:
-    std::unordered_map<std::string, std::vector<Relationship *> *> *relationshipMap;
-
-public:
+   public:
     RelationshipManager();
 
     ~RelationshipManager();
 
     void storeRelationship(Relationship *relationship);
 
-    std::vector<Relationship *> *
+    // ownership of the vector is transferred to the caller, so we return a smart pointer
+    std::vector<std::shared_ptr<Relationship>> *
     getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
                             EntityType rightHandEntityType);
 
-
-
-private:
-    void initialiseVectorForIndexIfNotExist(std::string hashkey);
-
-    std::vector<std::string> *getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
-                                                                                    EntityType leftHandEntityType,
-                                                                                    EntityType rightHandEntityType);
-
+   private:
+    void initialiseVectorForIndexIfNotExist(int hashkey);
+    std::shared_ptr<std::vector<int>> getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
+                                                                                            EntityType leftHandEntityType,
+                                                                                            EntityType rightHandEntityType);
 };
 
-
-#endif //SPA_RELATIONSHIPMANAGER_H
+#endif  // SPA_RELATIONSHIPMANAGER_H

@@ -3,6 +3,7 @@
 //
 
 #include "FollowsRelationship.h"
+#include <memory>
 
 bool FollowsRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->followedStatement->equals(entity);
@@ -13,8 +14,8 @@ bool FollowsRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement *followerStatement) {
-    this->followedStatement = followedStatement;
-    this->followerStatement = followerStatement;
+    this->followedStatement = std::shared_ptr<Statement>(followedStatement);
+    this->followerStatement = std::shared_ptr<Statement>(followerStatement);
 }
 
 RelationshipType FollowsRelationship::getRelationshipType() {
@@ -22,10 +23,10 @@ RelationshipType FollowsRelationship::getRelationshipType() {
 }
 
 Entity* FollowsRelationship::getLeftHandEntity() {
-    return this->followedStatement;
+    return this->followedStatement.get();
 }
 
 Entity* FollowsRelationship::getRightHandEntity() {
-    return this->followerStatement;
+    return this->followerStatement.get();
 }
 

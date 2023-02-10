@@ -7,12 +7,14 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Variable.h"
+#include <memory>
 
 class ModifiesRelationship : public Relationship {
 private:
     // Can be Statement or Procedure
-    Entity *modifier;
-    Variable *modifiedVariable;
+
+    std::shared_ptr<Entity> modifier;
+    std::shared_ptr<Variable> modifiedVariable;
 
 public:
     ModifiesRelationship(Entity *modifier, Variable *modifiedVariable);

@@ -19,15 +19,14 @@ enum EntityType {
     VARIABLE = 7,
     PROCEDURE = 8,
     STATEMENT = 9,
+    LAST_ENTITY = STATEMENT
 };
 
-
-
 class Entity {
-public:
+   public:
     static std::vector<EntityType> statementTypes;
 
-public:
+   public:
     virtual std::string getEntityValue() = 0;
 
     virtual ~Entity() = default;
@@ -38,6 +37,5 @@ public:
 
     static bool isStatementType(EntityType entityType);
 };
-
 
 #endif

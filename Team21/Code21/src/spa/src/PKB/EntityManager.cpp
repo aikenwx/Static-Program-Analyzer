@@ -4,54 +4,47 @@
 
 #include "EntityManager.h"
 
+#include <iostream>
+
 EntityManager::EntityManager() {
-    this->entityMap = new std::unordered_map<int, std::vector<Entity *> *>();
+    this->entityMap = std::unordered_map<int, std::shared_ptr<std::vector<std::shared_ptr<Entity>>>>();
 }
 
 EntityManager::~EntityManager() {
-
-    // todo delete all the vector in the hash map
-
-    delete this->entityMap;
+    this->entityMap.clear();
 }
 
-void EntityManager::storeEntity(Entity *entity) {
-
-    // initialise the vector if it does not exist
-    if (this->entityMap->find(entity->getEntityType()) == this->entityMap->end()) {
-        this->entityMap->insert({entity->getEntityType(), new std::vector<Entity *>()});
-    }
-
-    this->entityMap->at(entity->getEntityType())->push_back(entity);
+void EntityManager::storeEntity(Entity* entity) {
+    initialiseVectorForIndexIfNotExist(entity->getEntityType());
+    this->entityMap.at(entity->getEntityType())->push_back(std::shared_ptr<Entity>(entity));
 }
 
-std::vector<Entity *> *EntityManager::getEntitiesByType(EntityType entityType) {
+std::vector<std::shared_ptr<Entity>>* EntityManager::getEntitiesByType(EntityType entityType) {
     if (entityType == EntityType::STATEMENT) {
         return this->getAllStatements();
     }
     // initialise the vector if it does not exist
     EntityManager::initialiseVectorForIndexIfNotExist(entityType);
-    return this->entityMap->at(entityType);
+    return this->entityMap.at(entityType).get();
 }
 
-std::vector<Entity *> *EntityManager::getAllStatements() {
-    std::vector<Entity *> *statementVector = new std::vector<Entity *>();
+std::vector<std::shared_ptr<Entity>>* EntityManager::getAllStatements() {
+    if (this->entityMap.find(EntityType::STATEMENT) != this->entityMap.end()) {
+        return this->entityMap.at(EntityType::STATEMENT).get();
+    }
+
+    std::shared_ptr<std::vector<std::shared_ptr<Entity>>> statementVector = std::make_shared<std::vector<std::shared_ptr<Entity>>>();
 
     for (EntityType statementType : Entity::statementTypes) {
         EntityManager::initialiseVectorForIndexIfNotExist(statementType);
-
-        statementVector->insert(statementVector->end(), this->entityMap->at(statementType)->begin(), this->entityMap->at(statementType)->end());
+        statementVector->insert(statementVector->end(), this->entityMap.at(statementType)->begin(), this->entityMap.at(statementType)->end());
     }
-
-    return statementVector;
+    this->entityMap.insert({EntityType::STATEMENT, statementVector});
+    return statementVector.get();
 }
 
 void EntityManager::initialiseVectorForIndexIfNotExist(EntityType entityType) {
-    if (this->entityMap->find(entityType) == this->entityMap->end()) {
-        this->entityMap->insert({entityType, new std::vector<Entity *>()});
+    if (this->entityMap.find(entityType) == this->entityMap.end()) {
+        this->entityMap.insert({entityType, std::make_shared<std::vector<std::shared_ptr<Entity>>>()});
     }
 }
-
-
-
-

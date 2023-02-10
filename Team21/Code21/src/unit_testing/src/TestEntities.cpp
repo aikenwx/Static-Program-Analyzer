@@ -1,18 +1,15 @@
 // add guards
 
-
-#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
-#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "PKBStorageClasses/EntityClasses/IfStatement.h"
-#include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
-#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
-#include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "PKBStorageClasses/EntityClasses/Procedure.h"
-#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
-
-
+#include "PKBStorageClasses/EntityClasses/Entity.h"
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
+#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
+#include "PKBStorageClasses/EntityClasses/Procedure.h"
+#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
+#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 #include "catch.hpp"
 
 using namespace std;
@@ -27,7 +24,6 @@ TEST_CASE("Entities can instantiate") {
     Procedure *procedure = new Procedure("procedure");
     Variable *variable = new Variable("variable");
     Constant *constant = new Constant(1);
-
 
     delete printStatement;
     delete readStatement;
@@ -51,7 +47,6 @@ TEST_CASE("Entities retrieve their stored values") {
     Variable *variable = new Variable("variable");
     Constant *constant = new Constant(1);
 
-
     REQUIRE(printStatement->getEntityValue() == "2");
     REQUIRE(readStatement->getEntityValue() == "3");
     REQUIRE(assignStatement->getEntityValue() == "4");
@@ -61,7 +56,6 @@ TEST_CASE("Entities retrieve their stored values") {
     REQUIRE(procedure->getEntityValue() == "procedure");
     REQUIRE(variable->getEntityValue() == "variable");
     REQUIRE(constant->getEntityValue() == "1");
-
 
     delete printStatement;
     delete readStatement;
@@ -160,4 +154,22 @@ TEST_CASE("Entities can be compared") {
     delete procedure;
     delete variable;
     delete constant;
+    delete printStatement2;
+    delete readStatement2;
+    delete assignStatement2;
+    delete callStatement2;
+    delete whileStatement2;
+    delete ifStatement2;
+    delete procedure2;
+    delete variable2;
+    delete constant2;
+    delete printStatement3;
+    delete readStatement3;
+    delete assignStatement3;
+    delete callStatement3;
+    delete whileStatement3;
+    delete ifStatement3;
+    delete procedure3;
+    delete variable3;
+    delete constant3;
 }

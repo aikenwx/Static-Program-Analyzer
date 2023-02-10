@@ -36,8 +36,6 @@ TEST_CASE("RelationshipFactory can create Parent relationship") {
 
     delete relationship;
     delete relationshipFactory;
-    delete whileStatement;
-    delete readStatement;
 }
 
 TEST_CASE("RelationshipFactory can create Uses relationship") {
@@ -53,8 +51,6 @@ TEST_CASE("RelationshipFactory can create Uses relationship") {
 
     delete relationship;
     delete relationshipFactory;
-    delete procedure;
-    delete variable;
 }
 
 TEST_CASE("RelationshipFactory can create Modifies relationship") {
@@ -71,8 +67,6 @@ TEST_CASE("RelationshipFactory can create Modifies relationship") {
 
     delete relationship;
     delete relationshipFactory;
-    delete procedure;
-    delete variable;
 }
 
 TEST_CASE("RelationshipFactory can create Follows relationship") {
@@ -89,8 +83,6 @@ TEST_CASE("RelationshipFactory can create Follows relationship") {
 
     delete relationship;
     delete relationshipFactory;
-    delete printStatement;
-    delete readStatement;
 }
 
 TEST_CASE("Parent relationship with non statement entities") {

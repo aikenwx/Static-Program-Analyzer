@@ -9,6 +9,7 @@ enum RelationshipType {
     USES = 1,
     PARENT = 2,
     FOLLOWS = 3,
+    LAST_RELATIONSHIP = FOLLOWS,
 };
 
 class Relationship {

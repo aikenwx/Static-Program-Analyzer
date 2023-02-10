@@ -2,7 +2,7 @@
 // Created by Aiken Wong on 3/2/23.
 //
 #include <stdexcept>
-
+#include <memory>
 #include "ModifiesRelationship.h"
 
 bool ModifiesRelationship::containsEntityOnLeftHand(Entity *entity) {
@@ -20,8 +20,8 @@ ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedV
         throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
     }
 
-    this->modifier = modifier;
-    this->modifiedVariable = modifiedVariable;
+    this->modifier = std::shared_ptr<Entity>(modifier);
+    this->modifiedVariable = std::shared_ptr<Variable>(modifiedVariable);
 }
 
 RelationshipType ModifiesRelationship::getRelationshipType() {
@@ -29,10 +29,10 @@ RelationshipType ModifiesRelationship::getRelationshipType() {
 }
 
 Entity *ModifiesRelationship::getLeftHandEntity() {
-    return this->modifier;
+    return this->modifier.get();
 }
 
 Entity *ModifiesRelationship::getRightHandEntity() {
-    return this->modifiedVariable;
+    return this->modifiedVariable.get();
 }
 

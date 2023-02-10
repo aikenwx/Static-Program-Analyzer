@@ -7,30 +7,30 @@
 
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include <stdexcept>
+#include <memory>
 
 
 RelationshipHashkeyFactory::RelationshipHashkeyFactory() {
 
 }
 
-std::string RelationshipHashkeyFactory::getHashKey(Relationship *relationship) {
+int RelationshipHashkeyFactory::getHashKey(Relationship *relationship) {
 
     return this->getHashKey(relationship->getRelationshipType(), relationship->getLeftHandEntity()->getEntityType(),
                             relationship->getRightHandEntity()->getEntityType());
 }
 
 
-std::string RelationshipHashkeyFactory::getHashKey(RelationshipType relationshipType, EntityType leftHandEntityType,
+int RelationshipHashkeyFactory::getHashKey(RelationshipType relationshipType, EntityType leftHandEntityType,
                                                    EntityType rightHandEntityType) {
 
-    if (leftHandEntityType == EntityType::STATEMENT || rightHandEntityType == EntityType::STATEMENT) {
-        throw std::invalid_argument("Statement is not a specific entity type.");
-    }
 
-    std::string hashKey = relationshipTypeMapping[relationshipType] +
-                          "_" + entityTypeMapping[leftHandEntityType] +
-                          "_" + entityTypeMapping[rightHandEntityType];
+    // the base is the maximum of the last entity and last relationship, plus 1, so as to prevent overlap
+    int base = std::max<int>(LAST_ENTITY, LAST_RELATIONSHIP) + 1;
 
+    // relationshipType is the most significant digit of the given base
+    // leftHandEntityType is the second most significant digit of the given base
+    // rightHandEntityType is the least significant digit of the given base
 
-    return hashKey;
+    return (int) relationshipType * base * base + (int) leftHandEntityType * base + (int) rightHandEntityType;
 }

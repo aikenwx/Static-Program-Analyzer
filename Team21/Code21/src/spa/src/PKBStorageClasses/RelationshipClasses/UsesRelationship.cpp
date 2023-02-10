@@ -19,9 +19,8 @@ UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) {
     if (!Entity::isStatementType(user->getEntityType()) && user->getEntityType() != EntityType::PROCEDURE) {
         throw std::invalid_argument("user can only be Statement or Procedure");
     }
-
-    this->user = user;
-    this->usedVariable = usedVariable;
+    this->user = std::shared_ptr<Entity>(user);
+    this->usedVariable = std::shared_ptr<Variable>(usedVariable);
 }
 
 RelationshipType UsesRelationship::getRelationshipType() {
@@ -29,9 +28,9 @@ RelationshipType UsesRelationship::getRelationshipType() {
 }
 
 Entity* UsesRelationship::getLeftHandEntity() {
-    return this->user;
+    return this->user.get();
 }
 
 Entity* UsesRelationship::getRightHandEntity() {
-    return this->usedVariable;
+    return this->usedVariable.get();
 }

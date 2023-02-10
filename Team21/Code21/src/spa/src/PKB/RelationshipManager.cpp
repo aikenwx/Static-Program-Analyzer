@@ -3,58 +3,62 @@
 //
 
 #include "RelationshipManager.h"
+
+#include <memory>
+
 #include "RelationshipHashkeyFactory.h"
 
 RelationshipManager::RelationshipManager() {
-    this->relationshipMap = new std::unordered_map<std::string, std::vector<Relationship *> *>();
+    this->relationshipMap = std::unordered_map<int, std::shared_ptr<std::vector<std::shared_ptr<Relationship>>>>();
 }
 
 RelationshipManager::~RelationshipManager() {
-    // todo delete all the vectors in the hash map
-
-    delete this->relationshipMap;
+    this->relationshipMap.clear();
 }
 
 void RelationshipManager::storeRelationship(Relationship *relationship) {
-
     RelationshipHashkeyFactory relationshipHashFactory;
-    std::string hashKey = relationshipHashFactory.getHashKey(relationship);
+    int hashKey = relationshipHashFactory.getHashKey(relationship);
 
+    // Wrap the relationship in a shared_ptr and pass ownership to the vector in the map
+    std::shared_ptr<Relationship> relationshipPtr = std::shared_ptr<Relationship>(relationship);
     RelationshipManager::initialiseVectorForIndexIfNotExist(hashKey);
-    this->relationshipMap->at(hashKey)->push_back(relationship);
+    this->relationshipMap.at(hashKey)->push_back(relationshipPtr);
 }
 
-std::vector<Relationship *> *
+std::vector<std::shared_ptr<Relationship>> *
 RelationshipManager::getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
                                              EntityType rightHandEntityType) {
+    int hashKey = RelationshipHashkeyFactory().getHashKey(relationshipType, leftHandEntityType, rightHandEntityType);
 
-    std::vector<std::string> *hashKeys = RelationshipManager::getPossibleHashKeysForGivenEntityAndRelationshipTypes(
+    if (this->relationshipMap.find(hashKey) == this->relationshipMap.end()) {
+        auto derivedHashKeys = RelationshipManager::getPossibleHashKeysForGivenEntityAndRelationshipTypes(
             relationshipType, leftHandEntityType, rightHandEntityType);
+        auto relationships = std::make_shared<std::vector<std::shared_ptr<Relationship>>>();
 
-    // get all relationships
-    std::vector<Relationship *> *relationships = new std::vector<Relationship *>();
-    for (std::string hashKey: *hashKeys) {
-        initialiseVectorForIndexIfNotExist(hashKey);
-        std::vector<Relationship *> *relationshipsForHashKey = this->relationshipMap->at(hashKey);
+        for (int derivedHashKey : *derivedHashKeys) {
+            initialiseVectorForIndexIfNotExist(derivedHashKey);
+            auto relationshipsForHashKey = this->relationshipMap.at(derivedHashKey);
+            relationships->insert(relationships->end(), relationshipsForHashKey->begin(), relationshipsForHashKey->end());
+        }
 
-        relationships->insert(relationships->end(), relationshipsForHashKey->begin(), relationshipsForHashKey->end());
+        // Memoise the relationships in the map for future use, and also to take ownership of the vector
+        this->relationshipMap.insert({hashKey, relationships});
     }
-    delete hashKeys;
-    return relationships;
+
+    return this->relationshipMap.at(hashKey).get();
 }
 
-void RelationshipManager::initialiseVectorForIndexIfNotExist(std::string hashkey) {
-    if (this->relationshipMap->find(hashkey) == this->relationshipMap->end()) {
-        this->relationshipMap->insert({hashkey, new std::vector<Relationship *>()});
+void RelationshipManager::initialiseVectorForIndexIfNotExist(int hashkey) {
+    if (this->relationshipMap.find(hashkey) == this->relationshipMap.end()) {
+        this->relationshipMap.insert({hashkey, std::make_shared<std::vector<std::shared_ptr<Relationship>>>()});
     }
 }
 
-std::vector<std::string> *RelationshipManager::getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
-                                                                           EntityType leftHandEntityType,
-                                                                           EntityType rightHandEntityType) {
-    std::vector<std::string> *hashKeys = new std::vector<std::string>();
-
-
+std::shared_ptr<std::vector<int>> RelationshipManager::getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
+                                                                                                             EntityType leftHandEntityType,
+                                                                                                             EntityType rightHandEntityType) {
+    std::shared_ptr<std::vector<int>> hashKeys = std::make_shared<std::vector<int>>();
 
     RelationshipHashkeyFactory relationshipHashFactory;
     std::vector<EntityType> possibleLeftEntityTypes = {leftHandEntityType};
@@ -68,9 +72,9 @@ std::vector<std::string> *RelationshipManager::getPossibleHashKeysForGivenEntity
         possibleRightEntityTypes = Entity::statementTypes;
     }
 
-    for (EntityType leftEntityType: possibleLeftEntityTypes) {
-        for (EntityType rightEntityType: possibleRightEntityTypes) {
-            std::string hashKey = relationshipHashFactory.getHashKey(relationshipType, leftEntityType, rightEntityType);
+    for (EntityType leftEntityType : possibleLeftEntityTypes) {
+        for (EntityType rightEntityType : possibleRightEntityTypes) {
+            auto hashKey = relationshipHashFactory.getHashKey(relationshipType, leftEntityType, rightEntityType);
             hashKeys->push_back(hashKey);
         }
     }

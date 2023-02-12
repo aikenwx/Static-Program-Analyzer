@@ -13,8 +13,8 @@ class ModifiesRelationship : public Relationship {
 private:
     // Can be Statement or Procedure
 
-    std::shared_ptr<Entity> modifier;
-    std::shared_ptr<Variable> modifiedVariable;
+    Entity* modifier;
+    Variable* modifiedVariable;
 
 public:
     ModifiesRelationship(Entity *modifier, Variable *modifiedVariable);

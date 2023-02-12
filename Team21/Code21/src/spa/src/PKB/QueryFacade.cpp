@@ -4,7 +4,6 @@
 
 #include "QueryFacade.h"
 
-#include <iostream>
 #include <memory>
 
 #include "PKB/EntityManager.h"
@@ -25,67 +24,110 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "RelationshipLiteralHashkeyGenerator.h"
 
 QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager) {
     this->entityManager = entityManager;
     this->relationshipManager = relationshipManager;
 }
 
-std::vector<std::shared_ptr<AssignStatement>> *QueryFacade::getAllAssignStatements() {
-    return (std::vector<std::shared_ptr<AssignStatement>> *)this->entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
+std::vector<AssignStatement *> *QueryFacade::getAllAssignStatements() {
+    return (std::vector<AssignStatement *> *)this->entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
 }
 
-std::vector<std::shared_ptr<IfStatement>> *QueryFacade::getAllIfStatements() {
-    return (std::vector<std::shared_ptr<IfStatement>> *)this->entityManager->getEntitiesByType(EntityType::IF_STATEMENT);
+std::vector<IfStatement *> *QueryFacade::getAllIfStatements() {
+    return (std::vector<IfStatement *> *)this->entityManager->getEntitiesByType(EntityType::IF_STATEMENT);
 }
 
-std::vector<std::shared_ptr<WhileStatement>> *QueryFacade::getAllWhileStatements() {
-    return (std::vector<std::shared_ptr<WhileStatement>> *)this->entityManager->getEntitiesByType(EntityType::WHILE_STATEMENT);
+std::vector<WhileStatement *> *QueryFacade::getAllWhileStatements() {
+    return (std::vector<WhileStatement *> *)this->entityManager->getEntitiesByType(EntityType::WHILE_STATEMENT);
 }
 
-std::vector<std::shared_ptr<CallStatement>> *QueryFacade::getAllCallStatements() {
-    return (std::vector<std::shared_ptr<CallStatement>> *)this->entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
+std::vector<CallStatement *> *QueryFacade::getAllCallStatements() {
+    return (std::vector<CallStatement *> *)this->entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
 }
 
-std::vector<std::shared_ptr<ReadStatement>> *QueryFacade::getAllReadStatements() {
-    return (std::vector<std::shared_ptr<ReadStatement>> *)this->entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+std::vector<ReadStatement *> *QueryFacade::getAllReadStatements() {
+    return (std::vector<ReadStatement *> *)this->entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 }
 
-std::vector<std::shared_ptr<PrintStatement>> *QueryFacade::getAllPrintStatements() {
-    return (std::vector<std::shared_ptr<PrintStatement>> *)this->entityManager->getEntitiesByType(EntityType::PRINT_STATEMENT);
+std::vector<PrintStatement *> *QueryFacade::getAllPrintStatements() {
+    return (std::vector<PrintStatement *> *)this->entityManager->getEntitiesByType(EntityType::PRINT_STATEMENT);
 }
-std::vector<std::shared_ptr<Procedure>> *QueryFacade::getAllProcedures() {
-    return (std::vector<std::shared_ptr<Procedure>> *)this->entityManager->getEntitiesByType(EntityType::PROCEDURE);
-}
-
-std::vector<std::shared_ptr<Variable>> *QueryFacade::getAllVariables() {
-    return (std::vector<std::shared_ptr<Variable>> *)this->entityManager->getEntitiesByType(EntityType::VARIABLE);
+std::vector<Procedure *> *QueryFacade::getAllProcedures() {
+    return (std::vector<Procedure *> *)this->entityManager->getEntitiesByType(EntityType::PROCEDURE);
 }
 
-std::vector<std::shared_ptr<Constant>> *QueryFacade::getAllConstants() {
-    return (std::vector<std::shared_ptr<Constant>> *)this->entityManager->getEntitiesByType(EntityType::CONSTANT);
+std::vector<Variable *> *QueryFacade::getAllVariables() {
+    return (std::vector<Variable *> *)this->entityManager->getEntitiesByType(EntityType::VARIABLE);
 }
 
-std::vector<std::shared_ptr<Statement>> *QueryFacade::getAllStatements() {
-    return (std::vector<std::shared_ptr<Statement>> *)this->entityManager->getEntitiesByType(EntityType::STATEMENT);
+std::vector<Constant *> *QueryFacade::getAllConstants() {
+    return (std::vector<Constant *> *)this->entityManager->getEntitiesByType(EntityType::CONSTANT);
 }
 
-std::vector<std::shared_ptr<ParentRelationship>> *QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<std::shared_ptr<ParentRelationship>> *)this->relationshipManager->getRelationshipsByTypes(
+std::vector<Statement *> *QueryFacade::getAllStatements() {
+    return (std::vector<Statement *> *)this->entityManager->getEntitiesByType(EntityType::STATEMENT);
+}
+
+std::vector<ParentRelationship *> *QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<ParentRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
         RelationshipType::PARENT, leftEntityType, rightEntityType);
 }
 
-std::vector<std::shared_ptr<FollowsRelationship>> *QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<std::shared_ptr<FollowsRelationship>> *)this->relationshipManager->getRelationshipsByTypes(
+std::vector<FollowsRelationship *> *QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<FollowsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
         RelationshipType::FOLLOWS, leftEntityType, rightEntityType);
 }
 
-std::vector<std::shared_ptr<ModifiesRelationship>> *QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<std::shared_ptr<ModifiesRelationship>> *)this->relationshipManager->getRelationshipsByTypes(
+std::vector<ModifiesRelationship *> *QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<ModifiesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
         RelationshipType::MODIFIES, leftEntityType, rightEntityType);
 }
 
-std::vector<std::shared_ptr<UsesRelationship>> *QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<std::shared_ptr<UsesRelationship>> *)this->relationshipManager->getRelationshipsByTypes(
+std::vector<UsesRelationship *> *QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<UsesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
         RelationshipType::USES, leftEntityType, rightEntityType);
+}
+
+ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getStatementModifiesVariableHashKey(statementNumber, &variableName);
+    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+ModifiesRelationship *QueryFacade::getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getProcedureModifiesVariableHashKey(&procedureName, &variableName);
+    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+UsesRelationship *QueryFacade::getStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getStatementUsesVariableHashKey(statementNumber, &variableName);
+    return (UsesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+ModifiesRelationship *QueryFacade::getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getProcedureUsesVariableHashKey(&procedureName, &variableName);
+    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+ParentRelationship *QueryFacade::getParentRelationship(int parentStatementNumber, int childStatementNumber) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getParentRelationshipHashKey(parentStatementNumber, childStatementNumber);
+    return (ParentRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+ParentRelationship *QueryFacade::getFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getFollowsRelationshipHashKey(firstStatementNumber, secondStatementNumber);
+    return (ParentRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
 }

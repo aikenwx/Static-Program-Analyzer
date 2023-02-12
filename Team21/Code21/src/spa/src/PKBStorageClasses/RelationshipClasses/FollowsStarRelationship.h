@@ -10,13 +10,13 @@
 #include "../EntityClasses/Statement.h"
 #include <memory>
 
-class FollowsRelationship : public Relationship {
+class FollowsStarRelationship : public Relationship {
 private:
     Statement* followedStatement;
     Statement* followerStatement;
 
 public:
-    FollowsRelationship(Statement *followedStatement, Statement *followerStatement);
+    FollowsStarRelationship(Statement *followedStatement, Statement *followerStatement);
     bool containsEntityOnLeftHand(Entity *entity) override;
     bool containsEntityOnRightHand(Entity *entity) override;
     RelationshipType getRelationshipType() override;

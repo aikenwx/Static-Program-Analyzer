@@ -27,13 +27,11 @@ class Entity {
     static std::vector<EntityType> statementTypes;
 
    public:
-    virtual std::string getEntityValue() = 0;
-
-    virtual ~Entity() = default;
+    virtual std::string * getEntityValue() = 0;
 
     virtual EntityType getEntityType() = 0;
 
-    bool equals(Entity *otherEntity);
+    bool equals(Entity* otherEntity);
 
     static bool isStatementType(EntityType entityType);
 };

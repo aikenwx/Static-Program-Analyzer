@@ -6,52 +6,65 @@
 
 #include <memory>
 
-#include "RelationshipHashkeyFactory.h"
+#include "RelationshipLiteralHashkeyGenerator.h"
+#include "RelationshipSynonymHashkeyGenerator.h"
 
 RelationshipManager::RelationshipManager() {
-    this->relationshipMap = std::unordered_map<int, std::shared_ptr<std::vector<std::shared_ptr<Relationship>>>>();
+    this->relationshipSynonymHashToRelationshipStore = std::unordered_map<int, std::shared_ptr<std::vector<Relationship *>>>();
+    this->relationshipLiteralHashToRelationshipStore = std::unordered_map<std::string, std::shared_ptr<Relationship>>();
 }
 
 RelationshipManager::~RelationshipManager() {
-    this->relationshipMap.clear();
+    this->relationshipSynonymHashToRelationshipStore.clear();
 }
 
-void RelationshipManager::storeRelationship(Relationship *relationship) {
-    RelationshipHashkeyFactory relationshipHashFactory;
-    int hashKey = relationshipHashFactory.getHashKey(relationship);
+void RelationshipManager::storeRelationship(std::shared_ptr<Relationship> relationship) {
+    RelationshipLiteralHashkeyGenerator relationshipLiteralHashFactory;
+    std::string literalHashkey = relationshipLiteralHashFactory.getHashKey(relationship.get());
+    this->relationshipLiteralHashToRelationshipStore.insert({literalHashkey, std::shared_ptr<Relationship>(relationship)});
+
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int synonymHashkey = relationshipHashFactory.getHashKey(relationship.get());
 
     // Wrap the relationship in a shared_ptr and pass ownership to the vector in the map
-    std::shared_ptr<Relationship> relationshipPtr = std::shared_ptr<Relationship>(relationship);
-    RelationshipManager::initialiseVectorForIndexIfNotExist(hashKey);
-    this->relationshipMap.at(hashKey)->push_back(relationshipPtr);
+    RelationshipManager::initialiseVectorForIndexIfNotExist(synonymHashkey);
+    this->relationshipSynonymHashToRelationshipStore.at(synonymHashkey)->push_back(relationship.get());
 }
 
-std::vector<std::shared_ptr<Relationship>> *
+std::vector<Relationship *> *
 RelationshipManager::getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
                                              EntityType rightHandEntityType) {
-    int hashKey = RelationshipHashkeyFactory().getHashKey(relationshipType, leftHandEntityType, rightHandEntityType);
+    int hashKey = RelationshipSynonymHashkeyGenerator().getHashKey(relationshipType, leftHandEntityType, rightHandEntityType);
 
-    if (this->relationshipMap.find(hashKey) == this->relationshipMap.end()) {
+    if (this->relationshipSynonymHashToRelationshipStore.find(hashKey) == this->relationshipSynonymHashToRelationshipStore.end()) {
         auto derivedHashKeys = RelationshipManager::getPossibleHashKeysForGivenEntityAndRelationshipTypes(
             relationshipType, leftHandEntityType, rightHandEntityType);
-        auto relationships = std::make_shared<std::vector<std::shared_ptr<Relationship>>>();
+
+        auto relationships = std::make_shared<std::vector<Relationship *>>();
 
         for (int derivedHashKey : *derivedHashKeys) {
             initialiseVectorForIndexIfNotExist(derivedHashKey);
-            auto relationshipsForHashKey = this->relationshipMap.at(derivedHashKey);
+            auto relationshipsForHashKey = this->relationshipSynonymHashToRelationshipStore.at(derivedHashKey);
             relationships->insert(relationships->end(), relationshipsForHashKey->begin(), relationshipsForHashKey->end());
         }
 
         // Memoise the relationships in the map for future use, and also to take ownership of the vector
-        this->relationshipMap.insert({hashKey, relationships});
+        this->relationshipSynonymHashToRelationshipStore.insert({hashKey, relationships});
     }
 
-    return this->relationshipMap.at(hashKey).get();
+    return this->relationshipSynonymHashToRelationshipStore.at(hashKey).get();
+}
+
+Relationship *RelationshipManager::getRelationshipByLiterals(std::string relationshipLiteralHash) {
+    if (this->relationshipLiteralHashToRelationshipStore.find(relationshipLiteralHash) == this->relationshipLiteralHashToRelationshipStore.end()) {
+        return nullptr;
+    }
+    return this->relationshipLiteralHashToRelationshipStore.at(relationshipLiteralHash).get();
 }
 
 void RelationshipManager::initialiseVectorForIndexIfNotExist(int hashkey) {
-    if (this->relationshipMap.find(hashkey) == this->relationshipMap.end()) {
-        this->relationshipMap.insert({hashkey, std::make_shared<std::vector<std::shared_ptr<Relationship>>>()});
+    if (this->relationshipSynonymHashToRelationshipStore.find(hashkey) == this->relationshipSynonymHashToRelationshipStore.end()) {
+        this->relationshipSynonymHashToRelationshipStore.insert({hashkey, std::make_shared<std::vector<Relationship *>>()});
     }
 }
 
@@ -60,7 +73,7 @@ std::shared_ptr<std::vector<int>> RelationshipManager::getPossibleHashKeysForGiv
                                                                                                              EntityType rightHandEntityType) {
     std::shared_ptr<std::vector<int>> hashKeys = std::make_shared<std::vector<int>>();
 
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     std::vector<EntityType> possibleLeftEntityTypes = {leftHandEntityType};
     std::vector<EntityType> possibleRightEntityTypes = {rightHandEntityType};
 

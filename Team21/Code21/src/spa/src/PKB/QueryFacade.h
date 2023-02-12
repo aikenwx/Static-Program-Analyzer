@@ -35,21 +35,28 @@ class QueryFacade {
    public:
     QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager);
 
-    std::vector<std::shared_ptr<AssignStatement>>* getAllAssignStatements();
-    std::vector<std::shared_ptr<IfStatement>>* getAllIfStatements();
-    std::vector<std::shared_ptr<WhileStatement>>* getAllWhileStatements();
-    std::vector<std::shared_ptr<CallStatement>>* getAllCallStatements();
-    std::vector<std::shared_ptr<ReadStatement>>* getAllReadStatements();
-    std::vector<std::shared_ptr<PrintStatement>>* getAllPrintStatements();
-    std::vector<std::shared_ptr<Procedure>>* getAllProcedures();
-    std::vector<std::shared_ptr<Variable>>* getAllVariables();
-    std::vector<std::shared_ptr<Constant>>* getAllConstants();
-    std::vector<std::shared_ptr<Statement>>* getAllStatements();
+    std::vector<AssignStatement*>* getAllAssignStatements();
+    std::vector<IfStatement*>* getAllIfStatements();
+    std::vector<WhileStatement*>* getAllWhileStatements();
+    std::vector<CallStatement*>* getAllCallStatements();
+    std::vector<ReadStatement*>* getAllReadStatements();
+    std::vector<PrintStatement*>* getAllPrintStatements();
+    std::vector<Procedure*>* getAllProcedures();
+    std::vector<Variable*>* getAllVariables();
+    std::vector<Constant*>* getAllConstants();
+    std::vector<Statement*>* getAllStatements();
 
-    std::vector<std::shared_ptr<ParentRelationship>>* getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    std::vector<std::shared_ptr<FollowsRelationship>>* getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    std::vector<std::shared_ptr<ModifiesRelationship>>* getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    std::vector<std::shared_ptr<UsesRelationship>>* getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<ParentRelationship*>* getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<FollowsRelationship*>* getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<ModifiesRelationship*>* getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<UsesRelationship*>* getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+
+    ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
+    ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
+    UsesRelationship* getStatementUsesVariableRelationship(int statementNumber, std::string variableName);
+    ModifiesRelationship* getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
+    ParentRelationship* getParentRelationship(int parentStatementNumber, int childStatementNumber);
+    ParentRelationship* getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
 };
 
 #endif  // SPA_QUERYFACADE_H

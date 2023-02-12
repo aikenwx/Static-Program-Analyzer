@@ -14,8 +14,8 @@ bool FollowsRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement *followerStatement) {
-    this->followedStatement = std::shared_ptr<Statement>(followedStatement);
-    this->followerStatement = std::shared_ptr<Statement>(followerStatement);
+    this->followedStatement = followedStatement;
+    this->followerStatement = followerStatement;
 }
 
 RelationshipType FollowsRelationship::getRelationshipType() {
@@ -23,10 +23,10 @@ RelationshipType FollowsRelationship::getRelationshipType() {
 }
 
 Entity* FollowsRelationship::getLeftHandEntity() {
-    return this->followedStatement.get();
+    return this->followedStatement;
 }
 
 Entity* FollowsRelationship::getRightHandEntity() {
-    return this->followerStatement.get();
+    return this->followerStatement;
 }
 

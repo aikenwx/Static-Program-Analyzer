@@ -14,8 +14,8 @@ bool ParentRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *childStatement) {
-    this->childStatement = std::shared_ptr<Statement>(childStatement);
-    this->parentStatement = std::shared_ptr<Statement>(parentStatement);
+    this->childStatement = childStatement;
+    this->parentStatement = parentStatement;
 }
 
 RelationshipType ParentRelationship::getRelationshipType() {
@@ -23,9 +23,9 @@ RelationshipType ParentRelationship::getRelationshipType() {
 }
 
 Entity* ParentRelationship::getLeftHandEntity() {
-    return this->parentStatement.get();
+    return this->parentStatement;
 }
 
 Entity* ParentRelationship::getRightHandEntity() {
-    return this->childStatement.get();
+    return this->childStatement;
 }

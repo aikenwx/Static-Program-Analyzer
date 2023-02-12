@@ -2,20 +2,20 @@
 // Created by Aiken Wong on 4/2/23.
 //
 
-#ifndef SPA_RELATIONSHIPHASHKEYFACTORY_H
-#define SPA_RELATIONSHIPHASHKEYFACTORY_H
+#ifndef SPA_RELATIONSHIPSYNONYMHASHKEYGENERATOR_H
+#define SPA_RELATIONSHIPSYNONYMHASHKEYGENERATOR_H
 
 #include <string>
 #include <array>
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
 
-class RelationshipHashkeyFactory {
+class RelationshipSynonymHashkeyGenerator {
 private:
 
 public:
 
-    RelationshipHashkeyFactory();
+    RelationshipSynonymHashkeyGenerator() = default;
 
     int getHashKey(Relationship *relationship);
 
@@ -24,4 +24,4 @@ public:
 };
 
 
-#endif //SPA_RELATIONSHIPHASHKEYFACTORY_H
+#endif //SPA_RELATIONSHIPSYNONYMHASHKEYGENERATOR_H

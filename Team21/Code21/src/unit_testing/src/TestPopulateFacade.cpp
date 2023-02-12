@@ -9,6 +9,7 @@ TEST_CASE("PopulateFacade can instantiate") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate assign statement") {
@@ -26,6 +27,7 @@ TEST_CASE("PopulateFace can populate assign statement") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate call statement") {
@@ -42,6 +44,7 @@ TEST_CASE("PopulateFace can populate call statement") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate while statement") {
@@ -58,6 +61,7 @@ TEST_CASE("PopulateFace can populate while statement") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate if statement") {
@@ -74,6 +78,7 @@ TEST_CASE("PopulateFace can populate if statement") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate procedure") {
@@ -92,6 +97,7 @@ TEST_CASE("PopulateFace can populate procedure") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate variable") {
@@ -109,6 +115,7 @@ TEST_CASE("PopulateFace can populate variable") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFace can populate constant") {
@@ -125,6 +132,7 @@ TEST_CASE("PopulateFace can populate constant") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate follow relationship") {
@@ -150,6 +158,7 @@ TEST_CASE("PopulateFacade can populate follow relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate parent relationship") {
@@ -176,6 +185,62 @@ TEST_CASE("PopulateFacade can populate parent relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
+}
+
+TEST_CASE("PopulateFacade can populate parentStar relationship") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    PatternManager *patternManager = new PatternManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+
+    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
+    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
+
+    entityManager->storeStatement(whileStatement);
+    entityManager->storeStatement(printStatement);
+
+    populateFacade->storeParentStarRelationship(1, 2);
+
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT_STAR,
+                                                                                              WHILE_STATEMENT,
+                                                                                              PRINT_STATEMENT);
+    REQUIRE(relationships->size() == 1);
+    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::PARENT_STAR);
+    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
+
+    delete populateFacade;
+    delete entityManager;
+    delete relationshipManager;
+    delete patternManager;
+}
+
+TEST_CASE("PopulateFacade can populate followStar relationship") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    PatternManager *patternManager = new PatternManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+
+    std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
+    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
+    entityManager->storeStatement(callStatement);
+    entityManager->storeStatement(printStatement);
+
+    populateFacade->storeFollowsStarRelationship(1, 2);
+
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR,
+                                                                                              CALL_STATEMENT,
+                                                                                              PRINT_STATEMENT);
+    REQUIRE(relationships->size() == 1);
+    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::FOLLOWS_STAR);
+    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
+
+    delete populateFacade;
+    delete entityManager;
+    delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("Adding a relationship with a non-existent entity throws an exception") {
@@ -189,6 +254,7 @@ TEST_CASE("Adding a relationship with a non-existent entity throws an exception"
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate statement modifies relationship") {
@@ -217,6 +283,7 @@ TEST_CASE("PopulateFacade can populate statement modifies relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate statement uses relationship") {
@@ -241,6 +308,7 @@ TEST_CASE("PopulateFacade can populate statement uses relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
@@ -268,6 +336,7 @@ TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate procedure uses relationship") {
@@ -296,6 +365,7 @@ TEST_CASE("PopulateFacade can populate procedure uses relationship") {
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }
 
 TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
@@ -310,6 +380,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     populateFacade->storeAssignmentStatement(3);
     populateFacade->storeAssignmentStatement(4);
 
+    populateFacade->storeParentStarRelationship(1, 2);
+    populateFacade->storeFollowsStarRelationship(1, 3);
     populateFacade->storeFollowsRelationship(1, 3);
     populateFacade->storeFollowsRelationship(2, 4);
 
@@ -333,6 +405,7 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(relationships->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
     REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "3");
 
+
     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
         RelationshipType::FOLLOWS, EntityType::CALL_STATEMENT, EntityType::ASSIGN_STATEMENT);
     REQUIRE(relationships2->size() == 1);
@@ -342,7 +415,27 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(relationships2->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
     REQUIRE(*relationships2->at(0)->getRightHandEntity()->getEntityValue() == "4");
 
+
+    std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(
+        RelationshipType::PARENT_STAR, EntityType::ASSIGN_STATEMENT, EntityType::CALL_STATEMENT);
+    REQUIRE(relationships3->size() == 1);
+    REQUIRE(relationships3->at(0)->getRelationshipType() == RelationshipType::PARENT_STAR);
+    REQUIRE(relationships3->at(0)->getLeftHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
+    REQUIRE(*relationships3->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+    REQUIRE(relationships3->at(0)->getRightHandEntity()->getEntityType() == EntityType::CALL_STATEMENT);
+    REQUIRE(*relationships3->at(0)->getRightHandEntity()->getEntityValue() == "2");
+    
+    std::vector<Relationship *> *relationships4 = relationshipManager->getRelationshipsByTypes(
+        RelationshipType::FOLLOWS_STAR, EntityType::ASSIGN_STATEMENT, EntityType::ASSIGN_STATEMENT);
+    REQUIRE(relationships4->size() == 1);
+    REQUIRE(relationships4->at(0)->getRelationshipType() == RelationshipType::FOLLOWS_STAR);
+    REQUIRE(relationships4->at(0)->getLeftHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
+    REQUIRE(*relationships4->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+    REQUIRE(relationships4->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
+    REQUIRE(*relationships4->at(0)->getRightHandEntity()->getEntityValue() == "3");
+
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
+    delete patternManager;
 }

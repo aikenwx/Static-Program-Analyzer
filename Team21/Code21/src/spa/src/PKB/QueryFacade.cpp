@@ -90,6 +90,16 @@ std::vector<UsesRelationship *> *QueryFacade::getUsesRelationshipsByLeftAndRight
         RelationshipType::USES, leftEntityType, rightEntityType);
 }
 
+std::vector<ParentStarRelationship *> *QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<ParentStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+        RelationshipType::PARENT_STAR, leftEntityType, rightEntityType);
+}
+
+std::vector<FollowsStarRelationship *> *QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
+    return (std::vector<FollowsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+        RelationshipType::FOLLOWS_STAR, leftEntityType, rightEntityType);
+}
+
 ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
     RelationshipLiteralHashkeyGenerator hashkeyGenerator;
 
@@ -130,4 +140,18 @@ ParentRelationship *QueryFacade::getFollowsRelationship(int firstStatementNumber
 
     std::string hashkey = hashkeyGenerator.getFollowsRelationshipHashKey(firstStatementNumber, secondStatementNumber);
     return (ParentRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+ParentStarRelationship *QueryFacade::getParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getParentStarRelationshipHashKey(parentStatementNumber, childStatementNumber);
+    return (ParentStarRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+}
+
+FollowsStarRelationship *QueryFacade::getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
+    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+
+    std::string hashkey = hashkeyGenerator.getFollowsStarRelationshipHashKey(firstStatementNumber, secondStatementNumber);
+    return (FollowsStarRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
 }

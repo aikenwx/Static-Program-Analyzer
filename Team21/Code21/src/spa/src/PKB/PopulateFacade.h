@@ -38,8 +38,10 @@ class PopulateFacade {
     void storeProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
     void storeParentRelationship(int parentStatementNumber, int childStatementNumber);
     void storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
+    void storeParentStarRelationship(int parentStatementNumber, int childStatementNumber);
+    void storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
 
-    void storeAssignStatementPostfixExpression(int statementNumber, std::string *postfixExpression);
+    void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
 
    private:
     void validateEntityExists(Entity *entity);

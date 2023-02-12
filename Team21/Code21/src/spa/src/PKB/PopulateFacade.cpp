@@ -23,6 +23,8 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationShip.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 
 PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager) {
     this->entityManager = entityManager;
@@ -114,7 +116,23 @@ void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedur
     this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(procedure, variable));
 }
 
-void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string *postfixExpression) {
+void PopulateFacade::storeParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
+    Statement *parentStatement = this->entityManager->getStatementByStatementNumber(parentStatementNumber);
+    Statement *childStatement = this->entityManager->getStatementByStatementNumber(childStatementNumber);
+    this->validateEntityExists(parentStatement);
+    this->validateEntityExists(childStatement);
+    this->relationshipManager->storeRelationship(std::make_shared<ParentStarRelationship>(parentStatement, childStatement));
+}
+
+void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
+    Statement *firstStatement = this->entityManager->getStatementByStatementNumber(firstStatementNumber);
+    Statement *secondStatement = this->entityManager->getStatementByStatementNumber(secondStatementNumber);
+    this->validateEntityExists(firstStatement);
+    this->validateEntityExists(secondStatement);
+    this->relationshipManager->storeRelationship(std::make_shared<FollowsStarRelationship>(firstStatement, secondStatement));
+}
+
+void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression) {
     Statement *statement = this->entityManager->getStatementByStatementNumber(statementNumber);
     this->validateEntityExists(statement);
 
@@ -122,7 +140,7 @@ void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, 
         throw std::runtime_error("Statement is not an assign statement, cannot store postfix expressions");
     }
 
-    this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, postfixExpression);
+    this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, new std::string(postfixExpression));
 }
 
 void PopulateFacade::validateEntityExists(Entity *entity) {

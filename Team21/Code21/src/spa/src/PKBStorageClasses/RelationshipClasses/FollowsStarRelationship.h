@@ -2,8 +2,8 @@
 // Created by Aiken Wong on 3/2/23.
 //
 
-#ifndef SPA_FOLLOWSRELATIONSHIP_H
-#define SPA_FOLLOWSRELATIONSHIP_H
+#ifndef SPA_FOLLOWSSTARRELATIONSHIP_H
+#define SPA_FOLLOWSSTARRELATIONSHIP_H
 
 
 #include "Relationship.h"
@@ -25,4 +25,4 @@ public:
 };
 
 
-#endif //SPA_FOLLOWSRELATIONSHIP_H
+#endif //SPA_FOLLOWSSTARRELATIONSHIP_H

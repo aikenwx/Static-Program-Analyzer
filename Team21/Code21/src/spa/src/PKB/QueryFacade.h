@@ -25,6 +25,8 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "QueryFacade.h"
 
 class QueryFacade {
@@ -50,6 +52,8 @@ class QueryFacade {
     std::vector<FollowsRelationship*>* getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
     std::vector<ModifiesRelationship*>* getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
     std::vector<UsesRelationship*>* getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<ParentStarRelationship*>* getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<FollowsStarRelationship*>* getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
 
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
@@ -57,6 +61,9 @@ class QueryFacade {
     ModifiesRelationship* getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
     ParentRelationship* getParentRelationship(int parentStatementNumber, int childStatementNumber);
     ParentRelationship* getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
+    ParentStarRelationship* getParentStarRelationship(int parentStatementNumber, int childStatementNumber);
+    FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
+
 };
 
 #endif  // SPA_QUERYFACADE_H

@@ -65,3 +65,18 @@ std::string RelationshipLiteralHashkeyGenerator::getFollowsRelationshipHashKey(i
     return getHashKey(RelationshipType::FOLLOWS, EntityType::STATEMENT, &firstStatementNumberString, EntityType::STATEMENT, &secondStatementNumberString);
 }
 
+std::string RelationshipLiteralHashkeyGenerator::getFollowsStarRelationshipHashKey(int firstStatementNumber, int secondStatementNumber) {
+    std::string firstStatementNumberString = std::to_string(firstStatementNumber);
+    std::string secondStatementNumberString = std::to_string(secondStatementNumber);
+
+    
+    return getHashKey(RelationshipType::FOLLOWS_STAR, EntityType::STATEMENT, &firstStatementNumberString, EntityType::STATEMENT, &secondStatementNumberString);
+}
+
+std::string RelationshipLiteralHashkeyGenerator::getParentStarRelationshipHashKey(int parentStatementNumber, int childStatementNumber) {
+    std::string parentStatementNumberString = std::to_string(parentStatementNumber);
+    std::string childStatementNumberString = std::to_string(childStatementNumber);
+
+    
+    return getHashKey(RelationshipType::PARENT_STAR, EntityType::STATEMENT, &parentStatementNumberString, EntityType::STATEMENT, &childStatementNumberString);
+}

@@ -5,6 +5,7 @@
 #include "EntityManager.h"
 
 #include <iostream>
+#include <stdexcept>
 
 EntityManager::EntityManager() {
     this->entityTypeToEntityStore = std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>>();
@@ -17,29 +18,32 @@ EntityManager::EntityManager() {
 }
 
 EntityManager::~EntityManager() {
-            this->statementNumberToStatementStore.clear();
+    this->statementNumberToStatementStore.clear();
 
     this->entityTypeToEntityStore.clear();
     this->variableNameToVariableStore.clear();
     this->procedureNameToProcedureStore.clear();
     this->constantValueToConstantStore.clear();
-
 }
 
 void EntityManager::storeConstant(std::shared_ptr<Constant> constant) {
+    this->validateDuplicateStore(constant->getConstantNumber(), &this->constantValueToConstantStore);
     constantValueToConstantStore.insert({constant->getConstantNumber(), std::shared_ptr<Constant>(constant)});
     this->storeInEntityTypeToEntityStore(constant.get());
 }
 
 void EntityManager::storeVariable(std::shared_ptr<Variable> variable) {
+    this->validateDuplicateStore(*variable->getEntityValue(), &this->variableNameToVariableStore);
     variableNameToVariableStore.insert({*variable->getEntityValue(), std::shared_ptr<Variable>(variable)});
     this->storeInEntityTypeToEntityStore(variable.get());
 }
 void EntityManager::storeProcedure(std::shared_ptr<Procedure> procedure) {
+    this->validateDuplicateStore(*procedure->getEntityValue(), &this->procedureNameToProcedureStore);
     procedureNameToProcedureStore.insert({*procedure->getEntityValue(), std::shared_ptr<Procedure>(procedure)});
     this->storeInEntityTypeToEntityStore(procedure.get());
 }
 void EntityManager::storeStatement(std::shared_ptr<Statement> statement) {
+    this->validateDuplicateStore(statement->getStatementNumber(), &this->statementNumberToStatementStore);
     statementNumberToStatementStore.insert({statement->getStatementNumber(), std::shared_ptr<Statement>(statement)});
     this->storeInEntityTypeToEntityStore(statement.get());
 }
@@ -64,7 +68,6 @@ Constant* EntityManager::getConstantByConstantValue(int constantValue) {
 
     return this->constantValueToConstantStore.at(constantValue).get();
 }
-
 
 Variable* EntityManager::getVariableByVariableName(std::string variableName) {
     if (this->variableNameToVariableStore.find(variableName) == this->variableNameToVariableStore.end()) {
@@ -109,5 +112,12 @@ std::vector<Entity*>* EntityManager::getAllStatements() {
 void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType entityType) {
     if (this->entityTypeToEntityStore.find(entityType) == this->entityTypeToEntityStore.end()) {
         this->entityTypeToEntityStore.insert({entityType, std::make_shared<std::vector<Entity*>>()});
+    }
+}
+
+template <typename T, typename S>
+void EntityManager::validateDuplicateStore(T hash, std::unordered_map<T, S>* entityStore) {
+    if (entityStore->find(hash) != entityStore->end()) {
+        throw std::runtime_error("Duplicate entity already exists in the storage");
     }
 }

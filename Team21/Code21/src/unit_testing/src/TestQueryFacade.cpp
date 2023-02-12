@@ -225,6 +225,10 @@ TEST_CASE("QueryFacade can retrieve follow relationships") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete ifStatement;
+    delete whileStatement;
+    delete whileStatement2;
+    delete readStatement;
 }
 
 TEST_CASE("QueryFacade can retrieve parent relationships") {
@@ -254,6 +258,10 @@ TEST_CASE("QueryFacade can retrieve parent relationships") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete ifStatement;
+    delete whileStatement;
+    delete whileStatement2;
+    delete readStatement;
 }
 
 TEST_CASE("QueryFacade can retrieve modifies relationships") {

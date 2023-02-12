@@ -173,3 +173,17 @@ TEST_CASE("Entities can be compared") {
     delete variable3;
     delete constant3;
 }
+
+
+TEST_CASE("Assign Statement stores post-fix expression") {
+    AssignStatement *assignStatement = new AssignStatement(4);
+    assignStatement->setPostfixExpression(new std::string("xy+"));
+    REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
+    delete assignStatement;
+}
+
+TEST_CASE("Assign Statement throws error if getting post-fix expression before setting") {
+    AssignStatement *assignStatement = new AssignStatement(4);
+    REQUIRE_THROWS(assignStatement->getPostFixExpression());
+    delete assignStatement;
+}

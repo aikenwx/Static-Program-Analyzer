@@ -21,8 +21,12 @@ RelationshipManager::~RelationshipManager() {
 void RelationshipManager::storeRelationship(std::shared_ptr<Relationship> relationship) {
     RelationshipLiteralHashkeyGenerator relationshipLiteralHashFactory;
     std::string literalHashkey = relationshipLiteralHashFactory.getHashKey(relationship.get());
-    this->relationshipLiteralHashToRelationshipStore.insert({literalHashkey, std::shared_ptr<Relationship>(relationship)});
 
+    if (this->getRelationshipByLiterals(literalHashkey) != nullptr) {
+        throw std::runtime_error("Relationship already exists in the RelationshipManager");
+    }
+
+    this->relationshipLiteralHashToRelationshipStore.insert({literalHashkey, std::shared_ptr<Relationship>(relationship)});
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int synonymHashkey = relationshipHashFactory.getHashKey(relationship.get());
 

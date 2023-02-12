@@ -2,8 +2,8 @@
 // Created by Aiken Wong on 3/2/23.
 //
 
-#ifndef SPA_PARENTRELATIONSHIP_H
-#define SPA_PARENTRELATIONSHIP_H
+#ifndef SPA_PARENTSTARRELATIONSHIP_H
+#define SPA_PARENTSTARRELATIONSHIP_H
 
 #include <memory>
 
@@ -27,4 +27,4 @@ class ParentStarRelationship : public Relationship {
     Entity *getRightHandEntity() override;
 };
 
-#endif  // SPA_PARENTRELATIONSHIP_H
+#endif  // SPA_PARENTSTARRELATIONSHIP_H

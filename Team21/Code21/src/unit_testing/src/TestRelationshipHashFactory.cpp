@@ -19,6 +19,8 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "catch.hpp"
 
 enum class stubEntityType {
@@ -38,7 +40,7 @@ enum stubRelationshipType {
     STUB_USES = 1,
     STUB_PARENT = 2,
     STUB_FOLLOWS = 3,
-    STUB_PARENTS_STAR = 4,
+    STUB_PARENT_STAR = 4,
     STUB_FOLLOWS_STAR = 5,
 };
 
@@ -431,4 +433,125 @@ TEST_CASE("Read Modifies Variable") {
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_MODIFIES * stubBase * stubBase + (int)stubEntityType::STUB_READ_STATEMENT * stubBase + (int)stubEntityType::STUB_VARIABLE);
 
     delete modifiesRelationship;
+}
+
+TEST_CASE("While ParentStar While") {
+    WhileStatement *whileStatement1 = new WhileStatement(1);
+    WhileStatement *whileStatement2 = new WhileStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement1, whileStatement2);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("While ParentStar If") {
+    WhileStatement *whileStatement = new WhileStatement(1);
+    IfStatement *ifStatement = new IfStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, ifStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("While ParentStar Call") {
+    WhileStatement *whileStatement = new WhileStatement(1);
+    CallStatement *callStatement = new CallStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, callStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("While ParentStar Assign") {
+    WhileStatement *whileStatement = new WhileStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("While ParentStar Print") {
+    WhileStatement *whileStatement = new WhileStatement(1);
+    PrintStatement *printStatement = new PrintStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, printStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("While ParentStar Read") {
+    WhileStatement *whileStatement = new WhileStatement(1);
+    ReadStatement *readStatement = new ReadStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, readStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_READ_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("If ParentStar If") {
+    IfStatement *ifStatement1 = new IfStatement(1);
+    IfStatement *ifStatement2 = new IfStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(ifStatement1, ifStatement2);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("If ParentStar Call") {
+    IfStatement *ifStatement = new IfStatement(1);
+    CallStatement *callStatement = new CallStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(ifStatement, callStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("If ParentStar Assign") {
+    IfStatement *ifStatement = new IfStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(ifStatement, assignStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("If ParentStar Print") {
+    IfStatement *ifStatement = new IfStatement(1);
+    PrintStatement *printStatement = new PrintStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(ifStatement, printStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT);
+
+    delete parentStarRelationship;
+}
+
+TEST_CASE("If ParentStar Read") {
+    IfStatement *ifStatement = new IfStatement(1);
+    ReadStatement *readStatement = new ReadStatement(2);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(ifStatement, readStatement);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(parentStarRelationship);
+    REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT_STAR * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_READ_STATEMENT);
+
+    delete parentStarRelationship;
 }

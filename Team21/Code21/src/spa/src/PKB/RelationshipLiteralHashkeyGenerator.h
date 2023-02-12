@@ -24,6 +24,8 @@ class RelationshipLiteralHashkeyGenerator {
     std::string getProcedureUsesVariableHashKey(std::string* procedureName, std::string* variableName);
     std::string getParentRelationshipHashKey(int parentStatementNumber, int childStatementNumber);
     std::string getFollowsRelationshipHashKey(int firstStatementNumber, int secondStatementNumber);
+    std::string getFollowsStarRelationshipHashKey(int firstStatementNumber, int secondStatementNumber);
+    std::string getParentStarRelationshipHashKey(int parentStatementNumber, int childStatementNumber);
 };
 
 #endif  // SPA_RELATIONSHIPLITERALHASHKEYGENERATOR_H

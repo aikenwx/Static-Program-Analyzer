@@ -181,3 +181,58 @@ TEST_CASE("Retrieving statements from empty EntityManager returns empty vector")
 
     delete entityManager;
 }
+
+TEST_CASE("Storing duplicate entity throws error") {
+    EntityManager *entityManager = new EntityManager();
+    std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(1);
+    std::shared_ptr<ReadStatement> readStatement2 = std::make_shared<ReadStatement>(1);
+    entityManager->storeStatement(readStatement);
+
+    REQUIRE_THROWS(entityManager->storeStatement(readStatement2));
+    delete entityManager;
+}
+
+TEST_CASE("Can store and retrieve constant by constant value") {
+    EntityManager *entityManager = new EntityManager();
+    std::shared_ptr<Constant> constant = std::make_shared<Constant>(1);
+    entityManager->storeConstant(constant);
+
+    Constant *retrievedConstant = entityManager->getConstantByConstantValue(1);
+
+    REQUIRE(retrievedConstant->equals(constant.get()));
+    delete entityManager;
+}
+
+TEST_CASE("Can store and retrieve variable by variable name") {
+    EntityManager *entityManager = new EntityManager();
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("x"));
+    entityManager->storeVariable(variable);
+
+    Variable *retrievedVariable = entityManager->getVariableByVariableName("x");
+
+    REQUIRE(retrievedVariable->equals(variable.get()));
+    delete entityManager;
+}
+
+TEST_CASE("Can store and retrieve procedure by procedure name") {
+    EntityManager *entityManager = new EntityManager();
+    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("main"));
+    entityManager->storeProcedure(procedure);
+
+    Procedure *retrievedProcedure = entityManager->getProcedureByProcedureName("main");
+
+    REQUIRE(retrievedProcedure->equals(procedure.get()));
+    delete entityManager;
+}
+
+TEST_CASE("Can store and retrieve statement by statement number") {
+    EntityManager *entityManager = new EntityManager();
+    std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(1);
+    entityManager->storeStatement(readStatement);
+
+    Statement *retrievedStatement = entityManager->getStatementByStatementNumber(1);
+
+    REQUIRE(retrievedStatement->equals(readStatement.get()));
+    delete entityManager;
+}
+

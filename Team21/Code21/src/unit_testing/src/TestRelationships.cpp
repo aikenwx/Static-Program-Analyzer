@@ -12,7 +12,10 @@
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+
 #include "catch.hpp"
 
 TEST_CASE("Relationships can instantiate") {
@@ -30,10 +33,16 @@ TEST_CASE("Relationships can instantiate") {
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
 
+
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
+
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
+    delete parentStarRelationship;
+    delete followsStarRelationship;
     delete printStatement;
     delete readStatement;
     delete whileStatement;
@@ -58,16 +67,30 @@ TEST_CASE("Relationships contain the correct left entity") {
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
 
     REQUIRE(parentRelationship->containsEntityOnLeftHand(whileStatement));
     REQUIRE(usesRelationship->containsEntityOnLeftHand(procedure));
     REQUIRE(modifiesRelationship->containsEntityOnLeftHand(procedure2));
     REQUIRE(followsRelationship->containsEntityOnLeftHand(printStatement));
+    REQUIRE(parentStarRelationship->containsEntityOnLeftHand(whileStatement));
+    REQUIRE(followsStarRelationship->containsEntityOnLeftHand(printStatement));
 
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
+    delete parentStarRelationship;
+    delete followsStarRelationship;
+    delete printStatement;
+    delete readStatement;
+    delete whileStatement;
+    delete assignStatement;
+    delete procedure;
+    delete variable;
+    delete procedure2;
+    delete variable2;
 }
 
 TEST_CASE("Relationships contain the correct right entity") {
@@ -84,6 +107,8 @@ TEST_CASE("Relationships contain the correct right entity") {
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
 
     REQUIRE(parentRelationship->containsEntityOnRightHand(assignStatement));
     REQUIRE(usesRelationship->containsEntityOnRightHand(variable));
@@ -102,6 +127,8 @@ TEST_CASE("Relationships contain the correct right entity") {
     delete variable;
     delete procedure2;
     delete variable2;
+    delete parentStarRelationship;
+    delete followsStarRelationship;
 }
 
 TEST_CASE("Relationships contain the wrong left entity") {
@@ -118,16 +145,23 @@ TEST_CASE("Relationships contain the wrong left entity") {
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
+    
 
     REQUIRE(!parentRelationship->containsEntityOnLeftHand(assignStatement));
     REQUIRE(!usesRelationship->containsEntityOnLeftHand(variable));
     REQUIRE(!modifiesRelationship->containsEntityOnLeftHand(variable2));
     REQUIRE(!followsRelationship->containsEntityOnLeftHand(readStatement));
+    REQUIRE(!parentStarRelationship->containsEntityOnLeftHand(assignStatement));
+    REQUIRE(!followsStarRelationship->containsEntityOnLeftHand(readStatement));
 
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
+    delete parentStarRelationship;
+    delete followsStarRelationship;
     delete printStatement;
     delete readStatement;
     delete whileStatement;
@@ -152,16 +186,22 @@ TEST_CASE("Relationships contain the wrong right entity") {
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
+    ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
+    FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
 
     REQUIRE(!parentRelationship->containsEntityOnRightHand(whileStatement));
     REQUIRE(!usesRelationship->containsEntityOnRightHand(procedure));
     REQUIRE(!modifiesRelationship->containsEntityOnRightHand(procedure2));
     REQUIRE(!followsRelationship->containsEntityOnRightHand(printStatement));
+    REQUIRE(!parentStarRelationship->containsEntityOnRightHand(whileStatement));
+    REQUIRE(!followsStarRelationship->containsEntityOnRightHand(printStatement));
 
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
     delete followsRelationship;
+    delete parentStarRelationship;
+    delete followsStarRelationship;
     delete printStatement;
     delete readStatement;
     delete whileStatement;

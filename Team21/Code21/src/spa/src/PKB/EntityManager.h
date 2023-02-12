@@ -53,6 +53,10 @@ class EntityManager {
     void initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType entityType);
 
     std::vector<Entity*>* getAllStatements();
+
+    template <typename T, typename S>
+
+    void validateDuplicateStore(T hash, std::unordered_map<T, S>* entityStore);
 };
 
 #endif  // SPA_ENTITYMANAGER_H

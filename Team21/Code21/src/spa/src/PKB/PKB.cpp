@@ -7,7 +7,8 @@
 PKB::PKB() {
     this->entityManager = std::make_shared<EntityManager>();
     this->relationshipManager = std::make_shared<RelationshipManager>();
-    this->populateFacade = std::make_shared<PopulateFacade>(entityManager.get(), relationshipManager.get());
+    this->patternManager = std::make_shared<PatternManager>();
+    this->populateFacade = std::make_shared<PopulateFacade>(entityManager.get(), relationshipManager.get(), patternManager.get());
     this->queryFacade = std::make_shared<QueryFacade>(entityManager.get(), relationshipManager.get());
 }
 

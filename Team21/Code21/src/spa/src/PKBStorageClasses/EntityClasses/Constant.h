@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Entity.h"
+#include <memory>
 
 #ifndef SPA_CONSTANT_H
 #define SPA_CONSTANT_H

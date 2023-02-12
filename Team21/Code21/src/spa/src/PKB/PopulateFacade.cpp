@@ -24,13 +24,14 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager) {
+PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager) {
     this->entityManager = entityManager;
     this->relationshipManager = relationshipManager;
+    this->patternManager = patternManager;
 }
 
-void PopulateFacade::storeAssignmentStatement(int statementNumber, std::string postfixExpression) {
-    this->entityManager->storeStatement(std::make_shared<AssignStatement>(statementNumber, new std::string(postfixExpression)));
+void PopulateFacade::storeAssignmentStatement(int statementNumber) {
+    this->entityManager->storeStatement(std::make_shared<AssignStatement>(statementNumber));
 }
 
 void PopulateFacade::storeCallStatement(int statementNumber) {
@@ -111,6 +112,17 @@ void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedur
     this->validateEntityExists(procedure);
     this->validateEntityExists(variable);
     this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(procedure, variable));
+}
+
+void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string *postfixExpression) {
+    Statement *statement = this->entityManager->getStatementByStatementNumber(statementNumber);
+    this->validateEntityExists(statement);
+
+    if (statement->getEntityType() != EntityType::ASSIGN_STATEMENT) {
+        throw std::runtime_error("Statement is not an assign statement, cannot store postfix expressions");
+    }
+
+    this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, postfixExpression);
 }
 
 void PopulateFacade::validateEntityExists(Entity *entity) {

@@ -17,7 +17,7 @@ using namespace std;
 TEST_CASE("Entities can instantiate") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
+    AssignStatement *assignStatement = new AssignStatement(4);
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
@@ -39,7 +39,7 @@ TEST_CASE("Entities can instantiate") {
 TEST_CASE("Entities retrieve their stored values") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
+    AssignStatement *assignStatement = new AssignStatement(4);
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
@@ -77,9 +77,9 @@ TEST_CASE("Entities can be compared") {
     ReadStatement *readStatement2 = new ReadStatement(3);
     ReadStatement *readStatement3 = new ReadStatement(4);
 
-    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
-    AssignStatement *assignStatement2 = new AssignStatement(4, new std::string("xy*"));
-    AssignStatement *assignStatement3 = new AssignStatement(5, new std::string("xy*"));
+    AssignStatement *assignStatement = new AssignStatement(4);
+    AssignStatement *assignStatement2 = new AssignStatement(4);
+    AssignStatement *assignStatement3 = new AssignStatement(5);
 
     CallStatement *callStatement = new CallStatement(5);
     CallStatement *callStatement2 = new CallStatement(5);

@@ -29,7 +29,7 @@ TEST_CASE("EntityManager can retrieve entity") {
 
     entityManager->storeStatement(readStatement);
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 
     REQUIRE(entities->size() == 1);
     REQUIRE(entities->at(0)->equals(readStatement.get()));
@@ -45,7 +45,7 @@ TEST_CASE("EntityManager can retrieve mulitple entries") {
     entityManager->storeStatement(readStatement1);
     entityManager->storeStatement(readStatement2);
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 
     REQUIRE(entities->size() == 2);
     REQUIRE(entities->at(0)->equals(readStatement1.get()));
@@ -57,7 +57,7 @@ TEST_CASE("EntityManager can retrieve mulitple entries") {
 TEST_CASE("EntityManager returns empty vector if no entries") {
     EntityManager *entityManager = new EntityManager();
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 
     REQUIRE(entities->size() == 0);
 
@@ -67,11 +67,11 @@ TEST_CASE("EntityManager returns empty vector if no entries") {
 TEST_CASE("EntityManager can retrieve multiple types") {
     EntityManager *entityManager = new EntityManager();
     std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(1);
-    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(2, new std::string("xy+"));
+    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(2);
     entityManager->storeStatement(readStatement);
     entityManager->storeStatement(assignStatement);
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 
     REQUIRE(entities->size() == 1);
     REQUIRE(entities->at(0)->equals(readStatement.get()));
@@ -88,12 +88,10 @@ TEST_CASE("EntityManager can retrieve multiple entities of multiple types") {
     EntityManager *entityManager = new EntityManager();
     std::shared_ptr<ReadStatement> readStatement1 = std::make_shared<ReadStatement>(1);
     std::shared_ptr<ReadStatement> readStatement2 = std::make_shared<ReadStatement>(2);
-    std::shared_ptr<AssignStatement> assignStatement1 = std::make_shared<AssignStatement>(3, new std::string("xy+"));
-    std::shared_ptr<AssignStatement> assignStatement2 = std::make_shared<AssignStatement>(4, new std::string("xy+"));
+    std::shared_ptr<AssignStatement> assignStatement1 = std::make_shared<AssignStatement>(3);
+    std::shared_ptr<AssignStatement> assignStatement2 = std::make_shared<AssignStatement>(4);
     std::shared_ptr<Procedure> procedure1 = std::make_shared<Procedure>(new std::string("main"));
     std::shared_ptr<Procedure> procedure2 = std::make_shared<Procedure>(new std::string("main2"));
-
-
 
     entityManager->storeStatement(readStatement1);
     entityManager->storeStatement(readStatement2);
@@ -102,19 +100,19 @@ TEST_CASE("EntityManager can retrieve multiple entities of multiple types") {
     entityManager->storeProcedure(procedure1);
     entityManager->storeProcedure(procedure2);
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
 
     REQUIRE(entities->size() == 2);
     REQUIRE(entities->at(0)->equals(readStatement1.get()));
     REQUIRE(entities->at(1)->equals(readStatement2.get()));
 
-    std::vector<Entity*> *entities2 = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
+    std::vector<Entity *> *entities2 = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
 
     REQUIRE(entities2->size() == 2);
     REQUIRE(entities2->at(0)->equals(assignStatement1.get()));
     REQUIRE(entities2->at(1)->equals(assignStatement2.get()));
 
-    std::vector<Entity*> *entities3 = entityManager->getEntitiesByType(EntityType::PROCEDURE);
+    std::vector<Entity *> *entities3 = entityManager->getEntitiesByType(EntityType::PROCEDURE);
 
     REQUIRE(entities3->size() == 2);
     REQUIRE(entities3->at(0)->equals(procedure1.get()));
@@ -130,8 +128,8 @@ TEST_CASE("EntityManager can retrieve all Statements") {
     std::shared_ptr<ReadStatement> readStatement2 = std::make_shared<ReadStatement>(2);
     std::shared_ptr<PrintStatement> printStatement1 = std::make_shared<PrintStatement>(3);
     std::shared_ptr<PrintStatement> printStatement2 = std::make_shared<PrintStatement>(4);
-    std::shared_ptr<AssignStatement> assignStatement1 = std::make_shared<AssignStatement>(5, new std::string("xy+"));
-    std::shared_ptr<AssignStatement> assignStatement2 = std::make_shared<AssignStatement>(6, new std::string("xy+"));
+    std::shared_ptr<AssignStatement> assignStatement1 = std::make_shared<AssignStatement>(5);
+    std::shared_ptr<AssignStatement> assignStatement2 = std::make_shared<AssignStatement>(6);
     std::shared_ptr<CallStatement> callStatement1 = std::make_shared<CallStatement>(7);
     std::shared_ptr<CallStatement> callStatement2 = std::make_shared<CallStatement>(8);
     std::shared_ptr<WhileStatement> whileStatement1 = std::make_shared<WhileStatement>(9);
@@ -140,7 +138,6 @@ TEST_CASE("EntityManager can retrieve all Statements") {
     std::shared_ptr<IfStatement> ifStatement2 = std::make_shared<IfStatement>(12);
     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("x"));
     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("main"));
-    
 
     entityManager->storeStatement(readStatement1);
     entityManager->storeStatement(readStatement2);
@@ -157,11 +154,11 @@ TEST_CASE("EntityManager can retrieve all Statements") {
     entityManager->storeVariable(variable);
     entityManager->storeProcedure(procedure);
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
 
-     REQUIRE(entities->size() == 12);
+    REQUIRE(entities->size() == 12);
 
-    for (Entity* entity : *entities) {
+    for (Entity *entity : *entities) {
         bool isStatement = entity->getEntityType() == EntityType::READ_STATEMENT ||
                            entity->getEntityType() == EntityType::PRINT_STATEMENT ||
                            entity->getEntityType() == EntityType::ASSIGN_STATEMENT ||
@@ -178,7 +175,7 @@ TEST_CASE("EntityManager can retrieve all Statements") {
 TEST_CASE("Retrieving statements from empty EntityManager returns empty vector") {
     EntityManager *entityManager = new EntityManager();
 
-    std::vector<Entity*> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
+    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::STATEMENT);
 
     REQUIRE(entities->size() == 0);
 

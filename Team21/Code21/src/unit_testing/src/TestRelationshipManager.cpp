@@ -112,8 +112,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
     ReadStatement *readStatement3 = new ReadStatement(3);
     ReadStatement *readStatement4 = new ReadStatement(4);
 
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("ab-"));
-    AssignStatement *assignStatement2 = new AssignStatement(2, new std::string("ab-"));
+    AssignStatement *assignStatement = new AssignStatement(1);
+    AssignStatement *assignStatement2 = new AssignStatement(2);
 
     Variable *variable = new Variable(new std::string("a"));
     Variable *variable2 = new Variable(new std::string("b"));
@@ -159,9 +159,9 @@ TEST_CASE("Retrieve Statement follow Statement") {
     PrintStatement *printStatement4 = new PrintStatement(6);
 
     std::shared_ptr<FollowsRelationship> relationship = std::make_shared<FollowsRelationship>(readStatement, readStatement2);
-    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship> (readStatement3, printStatement);
-    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship> (printStatement2, printStatement3);
-    std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship> (printStatement4, readStatement4);
+    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(readStatement3, printStatement);
+    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(printStatement2, printStatement3);
+    std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship>(printStatement4, readStatement4);
 
     relationshipManager->storeRelationship(relationship);
     relationshipManager->storeRelationship(relationship2);
@@ -172,7 +172,7 @@ TEST_CASE("Retrieve Statement follow Statement") {
                                                                                               STATEMENT);
 
     REQUIRE(relationships->size() == 4);
-    for (Relationship* relationship : *relationships) {
+    for (Relationship *relationship : *relationships) {
         REQUIRE(Entity::isStatementType(relationship->getLeftHandEntity()->getEntityType()));
         REQUIRE(Entity::isStatementType(relationship->getRightHandEntity()->getEntityType()));
     }
@@ -193,9 +193,9 @@ TEST_CASE("Retrieve Statement Follows Statement") {
     PrintStatement *printStatement4 = new PrintStatement(8);
 
     std::shared_ptr<FollowsRelationship> relationship = std::make_shared<FollowsRelationship>(readStatement, readStatement2);
-    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship> (readStatement3, printStatement);
-    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship> (printStatement2, printStatement3);
-    std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship> (printStatement4, readStatement4);
+    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(readStatement3, printStatement);
+    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(printStatement2, printStatement3);
+    std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship>(printStatement4, readStatement4);
 
     relationshipManager->storeRelationship(relationship);
     relationshipManager->storeRelationship(relationship2);
@@ -206,7 +206,7 @@ TEST_CASE("Retrieve Statement Follows Statement") {
                                                                                               STATEMENT);
 
     REQUIRE(relationships->size() == 4);
-    for (Relationship* relationship : *relationships) {
+    for (Relationship *relationship : *relationships) {
         REQUIRE(Entity::isStatementType(relationship->getLeftHandEntity()->getEntityType()));
         REQUIRE(Entity::isStatementType(relationship->getRightHandEntity()->getEntityType()));
     }
@@ -233,8 +233,8 @@ TEST_CASE("Retrieve Statement Follows Statement2") {
     WhileStatement *whileStatement2 = new WhileStatement(3);
     ReadStatement *readStatement = new ReadStatement(4);
 
-    std::shared_ptr<FollowsRelationship> followsRelationship = std::make_shared<FollowsRelationship> (ifStatement, whileStatement);
-    std::shared_ptr<FollowsRelationship> followsRelationship2 = std::make_shared<FollowsRelationship> (whileStatement2, readStatement);
+    std::shared_ptr<FollowsRelationship> followsRelationship = std::make_shared<FollowsRelationship>(ifStatement, whileStatement);
+    std::shared_ptr<FollowsRelationship> followsRelationship2 = std::make_shared<FollowsRelationship>(whileStatement2, readStatement);
 
     relationshipManager->storeRelationship(followsRelationship);
     relationshipManager->storeRelationship(followsRelationship2);
@@ -243,7 +243,7 @@ TEST_CASE("Retrieve Statement Follows Statement2") {
                                                                                               STATEMENT);
 
     REQUIRE(relationships->size() == 2);
-    for (Relationship* relationship : *relationships) {
+    for (Relationship *relationship : *relationships) {
         REQUIRE(Entity::isStatementType(relationship->getLeftHandEntity()->getEntityType()));
         REQUIRE(Entity::isStatementType(relationship->getRightHandEntity()->getEntityType()));
     }
@@ -297,9 +297,9 @@ TEST_CASE("Retrieve Call Follows Calls") {
     CallStatement *callStatement5 = new CallStatement(5);
     CallStatement *callStatement6 = new CallStatement(6);
 
-    std::shared_ptr<Relationship> relationship = std::make_shared<FollowsRelationship> (callStatement, callStatement2);
-    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship> (callStatement3, callStatement4);
-    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship> (callStatement5, callStatement6);
+    std::shared_ptr<Relationship> relationship = std::make_shared<FollowsRelationship>(callStatement, callStatement2);
+    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(callStatement3, callStatement4);
+    std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(callStatement5, callStatement6);
 
     relationshipManager->storeRelationship(relationship);
     relationshipManager->storeRelationship(relationship2);
@@ -335,9 +335,9 @@ TEST_CASE("Retrieve Statement Parent Assignment") {
     PrintStatement *printStatement2 = new PrintStatement(4);
     PrintStatement *printStatement3 = new PrintStatement(5);
 
-    AssignStatement *assignStatement = new AssignStatement(6, new std::string("ab-"));
-    AssignStatement *assignStatement2 = new AssignStatement(7, new std::string("ab-"));
-    AssignStatement *assignStatement4 = new AssignStatement(9, new std::string("ab-"));
+    AssignStatement *assignStatement = new AssignStatement(6);
+    AssignStatement *assignStatement2 = new AssignStatement(7);
+    AssignStatement *assignStatement4 = new AssignStatement(9);
 
     std::shared_ptr<Relationship> relationship = std::make_shared<ParentRelationship>(readStatement, assignStatement);
     std::shared_ptr<Relationship> relationship2 = std::make_shared<ParentRelationship>(readStatement2, assignStatement2);
@@ -353,7 +353,7 @@ TEST_CASE("Retrieve Statement Parent Assignment") {
                                                                                               ASSIGN_STATEMENT);
 
     REQUIRE(relationships->size() == 3);
-    for (Relationship* relationship : *relationships) {
+    for (Relationship *relationship : *relationships) {
         REQUIRE(Entity::isStatementType(relationship->getLeftHandEntity()->getEntityType()));
         REQUIRE(relationship->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
     }
@@ -368,10 +368,10 @@ TEST_CASE("Retrieve Assign Parent Statement") {
     PrintStatement *printStatement2 = new PrintStatement(4);
     PrintStatement *printStatement3 = new PrintStatement(5);
 
-    AssignStatement *assignStatement = new AssignStatement(6, new std::string("ab-"));
-    AssignStatement *assignStatement2 = new AssignStatement(7, new std::string("ab-"));
-    AssignStatement *assignStatement3 = new AssignStatement(8, new std::string("ab-"));
-    AssignStatement *assignStatement4 = new AssignStatement(9, new std::string("ab-"));
+    AssignStatement *assignStatement = new AssignStatement(6);
+    AssignStatement *assignStatement2 = new AssignStatement(7);
+    AssignStatement *assignStatement3 = new AssignStatement(8);
+    AssignStatement *assignStatement4 = new AssignStatement(9);
 
     std::shared_ptr<Relationship> relationship = std::make_shared<ParentRelationship>(readStatement, assignStatement);
     std::shared_ptr<Relationship> relationship2 = std::make_shared<ParentRelationship>(readStatement2, assignStatement2);

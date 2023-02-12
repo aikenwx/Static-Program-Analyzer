@@ -72,7 +72,7 @@ TEST_CASE("Procedure uses variable") {
 
 TEST_CASE("Apply hash factory on Modifies Relationship") {
     Variable *variable = new Variable(new std::string("x"));
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(assignStatement, variable);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(modifiesRelationship);
@@ -92,7 +92,7 @@ TEST_CASE("Apply hash factory on Parent Relationship") {
 }
 
 TEST_CASE("Apply hash factory on Follows Relationship") {
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     WhileStatement *whileStatement = new WhileStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(assignStatement, whileStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
@@ -158,7 +158,7 @@ TEST_CASE("Call Follows If") {
 }
 
 TEST_CASE("Assign Follows Call") {
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(assignStatement, callStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
@@ -169,7 +169,7 @@ TEST_CASE("Assign Follows Call") {
 }
 
 TEST_CASE("Assign Parent While") {
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     WhileStatement *whileStatement = new WhileStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement, whileStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
@@ -181,7 +181,7 @@ TEST_CASE("Assign Parent While") {
 
 TEST_CASE("While Parent Assign") {
     WhileStatement *whileStatement = new WhileStatement(1);
-    AssignStatement *assignStatement = new AssignStatement(2, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
@@ -268,7 +268,7 @@ TEST_CASE("Call Parent If") {
 }
 
 TEST_CASE("Assign Parent Call") {
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement, callStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
@@ -280,7 +280,7 @@ TEST_CASE("Assign Parent Call") {
 
 TEST_CASE("Call Parent Assign") {
     CallStatement *callStatement = new CallStatement(1);
-    AssignStatement *assignStatement = new AssignStatement(2, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(callStatement, assignStatement);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
@@ -290,8 +290,8 @@ TEST_CASE("Call Parent Assign") {
 }
 
 TEST_CASE("Assign Parent Assign") {
-    AssignStatement *assignStatement1 = new AssignStatement(1, new std::string("xy+"));
-    AssignStatement *assignStatement2 = new AssignStatement(2, new std::string("xy+"));
+    AssignStatement *assignStatement1 = new AssignStatement(1);
+    AssignStatement *assignStatement2 = new AssignStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement1, assignStatement2);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;
 
@@ -401,7 +401,7 @@ TEST_CASE("Procedure Uses Variable") {
 }
 
 TEST_CASE("Assign Uses Variable") {
-    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement = new AssignStatement(1);
     Variable *variable = new Variable(new std::string("variable"));
     UsesRelationship *usesRelationship = new UsesRelationship(assignStatement, variable);
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;

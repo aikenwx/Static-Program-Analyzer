@@ -11,6 +11,7 @@
 #include "PopulateFacade.h"
 #include "QueryFacade.h"
 #include "RelationshipManager.h"
+#include "PatternManager.h"
 
 class PKB {
    private:
@@ -18,6 +19,7 @@ class PKB {
     std::shared_ptr<QueryFacade> queryFacade;
     std::shared_ptr<EntityManager> entityManager;
     std::shared_ptr<RelationshipManager> relationshipManager;
+    std::shared_ptr<PatternManager> patternManager;
 
    public:
     PKB();

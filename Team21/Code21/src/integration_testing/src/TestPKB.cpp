@@ -178,13 +178,13 @@ TEST_CASE("PKB can store multiple assign statements and retrieve multiple assign
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
-    populateFacade->storeAssignmentStatement(2, "xy+");
+    populateFacade->storeAssignmentStatement(1);
+    populateFacade->storeAssignmentStatement(2);
     auto entities = queryFacade->getAllAssignStatements();
 
     REQUIRE(entities->size() == 2);
-    AssignStatement *expectedAssignStatement1 = new AssignStatement(1, new std::string("xy+"));
-    AssignStatement *expectedAssignStatement2 = new AssignStatement(2, new std::string("xy+"));
+    AssignStatement *expectedAssignStatement1 = new AssignStatement(1);
+    AssignStatement *expectedAssignStatement2 = new AssignStatement(2);
     REQUIRE(entities->at(0)->equals(expectedAssignStatement1));
     REQUIRE(entities->at(1)->equals(expectedAssignStatement2));
 
@@ -267,9 +267,9 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
     populateFacade->storeWhileStatement(1);
-    populateFacade->storeAssignmentStatement(2, "xy+");
+    populateFacade->storeAssignmentStatement(2);
     populateFacade->storeWhileStatement(3);
-    populateFacade->storeAssignmentStatement(4, "xy+");
+    populateFacade->storeAssignmentStatement(4);
     populateFacade->storeParentRelationship(1, 2);
     populateFacade->storeParentRelationship(3, 4);
     auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
@@ -278,9 +278,9 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
     REQUIRE(relationships->size() == 2);
 
     ParentRelationship *expectedParentRelationship1 = new ParentRelationship(new WhileStatement(1),
-                                                                             new AssignStatement(2, new std::string("xy+")));
+                                                                             new AssignStatement(2));
     ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(3),
-                                                                             new AssignStatement(4, new std::string("xy+")));
+                                                                             new AssignStatement(4));
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedParentRelationship1));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedParentRelationship2));
@@ -295,9 +295,9 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
+    populateFacade->storeAssignmentStatement(1);
     populateFacade->storeReadStatement(2);
-    populateFacade->storeAssignmentStatement(3, "xy+");
+    populateFacade->storeAssignmentStatement(3);
     populateFacade->storeReadStatement(4);
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(3, 4);
@@ -306,9 +306,9 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1, new std::string("xy+")),
+    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
                                                                                 new ReadStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(3, new std::string("xy+")),
+    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(3),
                                                                                 new ReadStatement(4));
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
@@ -324,9 +324,9 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
-    populateFacade->storeAssignmentStatement(2, "xy+");
-    populateFacade->storeAssignmentStatement(3, "xy+");
+    populateFacade->storeAssignmentStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeAssignmentStatement(3);
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(2, 3);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
@@ -334,10 +334,10 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1, new std::string("xy+")),
-                                                                                new AssignStatement(2, new std::string("xy+")));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2, new std::string("xy+")),
-                                                                                new AssignStatement(3, new std::string("xy+")));
+    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
+                                                                                new AssignStatement(2));
+    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
+                                                                                new AssignStatement(3));
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
@@ -352,8 +352,8 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
-    populateFacade->storeAssignmentStatement(2, "xy+");
+    populateFacade->storeAssignmentStatement(1);
+    populateFacade->storeAssignmentStatement(2);
     populateFacade->storeVariable("x");
     populateFacade->storeVariable("y");
     populateFacade->storeStatementUsesVariableRelationship(1, "x");
@@ -363,8 +363,8 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
 
     REQUIRE(relationships->size() == 2);
 
-    UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new AssignStatement(1, new std::string("xy+")), new Variable(new std::string("x")));
-    UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new AssignStatement(2, new std::string("xy+")), new Variable(new std::string("y")));
+    UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new AssignStatement(1), new Variable(new std::string("x")));
+    UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new AssignStatement(2), new Variable(new std::string("y")));
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedUsesRelationship1));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedUsesRelationship2));
@@ -464,13 +464,13 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
+    populateFacade->storeAssignmentStatement(1);
     populateFacade->storeCallStatement(2);
     populateFacade->storeIfStatement(3);
     populateFacade->storePrintStatement(4);
     populateFacade->storeReadStatement(5);
     populateFacade->storeWhileStatement(6);
-    populateFacade->storeAssignmentStatement(7, "xy+");
+    populateFacade->storeAssignmentStatement(7);
 
     // should not be returned
     populateFacade->storeConstant(1);
@@ -481,13 +481,13 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
 
     REQUIRE(statements->size() == 7);
 
-    Statement *expectedStatement1 = new AssignStatement(1, new std::string("xy+"));
+    Statement *expectedStatement1 = new AssignStatement(1);
     Statement *expectedStatement2 = new CallStatement(2);
     Statement *expectedStatement3 = new IfStatement(3);
     Statement *expectedStatement4 = new PrintStatement(4);
     Statement *expectedStatement5 = new ReadStatement(5);
     Statement *expectedStatement6 = new WhileStatement(6);
-    Statement *expectedStatement7 = new AssignStatement(7, new std::string("xy+"));
+    Statement *expectedStatement7 = new AssignStatement(7);
 
     std::vector<Statement *> expectedStatements = {expectedStatement1, expectedStatement2, expectedStatement3,
                                                    expectedStatement4, expectedStatement5, expectedStatement6,
@@ -516,8 +516,8 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
     PopulateFacade *populateFacade = pkb->getPopulateFacade();
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
-    populateFacade->storeAssignmentStatement(1, "xy+");
-    populateFacade->storeAssignmentStatement(2, "xy+");
+    populateFacade->storeAssignmentStatement(1);
+    populateFacade->storeAssignmentStatement(2);
     populateFacade->storeCallStatement(3);
     populateFacade->storeIfStatement(4);
     populateFacade->storePrintStatement(5);
@@ -546,9 +546,9 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
 
     REQUIRE(relationships->size() == 6);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1, new std::string("xy+")),
-                                                                                new AssignStatement(2, new std::string("xy+")));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2, new std::string("xy+")),
+    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
+                                                                                new AssignStatement(2));
+    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
                                                                                 new CallStatement(3));
     FollowsRelationship *expectedFollowsRelationship3 = new FollowsRelationship(new CallStatement(3),
                                                                                 new IfStatement(4));
@@ -590,16 +590,15 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     QueryFacade *queryFacade = pkb->getQueryFacade();
 
     populateFacade->storeWhileStatement(1);
-    populateFacade->storeAssignmentStatement(2, "xy+");
+    populateFacade->storeAssignmentStatement(2);
     populateFacade->storeCallStatement(3);
     populateFacade->storePrintStatement(4);
     populateFacade->storeReadStatement(5);
     populateFacade->storeIfStatement(6);
     populateFacade->storeWhileStatement(7);
 
-
     populateFacade->storeIfStatement(8);
-    populateFacade->storeAssignmentStatement(9, "xy+");
+    populateFacade->storeAssignmentStatement(9);
 
     populateFacade->storeVariable("x");
     populateFacade->storeVariable("y");
@@ -625,7 +624,7 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     REQUIRE(relationships->size() == 6);
 
     ParentRelationship *expectedParentRelationship1 = new ParentRelationship(new WhileStatement(1),
-                                                                             new AssignStatement(2, new std::string("xy+")));
+                                                                             new AssignStatement(2));
     ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(1),
                                                                              new CallStatement(3));
     ParentRelationship *expectedParentRelationship3 = new ParentRelationship(new WhileStatement(1),

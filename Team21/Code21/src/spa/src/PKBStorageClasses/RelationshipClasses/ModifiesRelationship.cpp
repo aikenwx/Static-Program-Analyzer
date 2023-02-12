@@ -20,8 +20,8 @@ ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedV
         throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
     }
 
-    this->modifier = std::shared_ptr<Entity>(modifier);
-    this->modifiedVariable = std::shared_ptr<Variable>(modifiedVariable);
+    this->modifier = modifier;
+    this->modifiedVariable = modifiedVariable;
 }
 
 RelationshipType ModifiesRelationship::getRelationshipType() {
@@ -29,10 +29,10 @@ RelationshipType ModifiesRelationship::getRelationshipType() {
 }
 
 Entity *ModifiesRelationship::getLeftHandEntity() {
-    return this->modifier.get();
+    return this->modifier;
 }
 
 Entity *ModifiesRelationship::getRightHandEntity() {
-    return this->modifiedVariable.get();
+    return this->modifiedVariable;
 }
 

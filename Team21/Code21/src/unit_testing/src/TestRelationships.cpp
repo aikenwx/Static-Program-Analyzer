@@ -19,11 +19,11 @@ TEST_CASE("Relationships can instantiate") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
-    AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
-    Procedure *procedure2 = new Procedure("procedure2");
-    Variable *variable2 = new Variable("variable2");
+    AssignStatement *assignStatement = new AssignStatement(5, new std::string("xy"));
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -40,11 +40,11 @@ TEST_CASE("Relationships contain the correct left entity") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
-    AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
-    Procedure *procedure2 = new Procedure("procedure2");
-    Variable *variable2 = new Variable("variable2");
+    AssignStatement *assignStatement = new AssignStatement(5, new std::string("xy"));
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -66,11 +66,11 @@ TEST_CASE("Relationships contain the correct right entity") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
-    AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
-    Procedure *procedure2 = new Procedure("procedure2");
-    Variable *variable2 = new Variable("variable2");
+    AssignStatement *assignStatement = new AssignStatement(5, new std::string("xy"));
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -92,11 +92,11 @@ TEST_CASE("Relationships contain the wrong left entity") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
-    AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
-    Procedure *procedure2 = new Procedure("procedure2");
-    Variable *variable2 = new Variable("variable2");
+    AssignStatement *assignStatement = new AssignStatement(5, new std::string("xy"));
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -118,11 +118,11 @@ TEST_CASE("Relationships contain the wrong right entity") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
-    AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
-    Procedure *procedure2 = new Procedure("procedure2");
-    Variable *variable2 = new Variable("variable2");
+    AssignStatement *assignStatement = new AssignStatement(5, new std::string("xy"));
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -141,8 +141,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
 }
 
 TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Statement as LHS throws an exception") {
-    Variable *variable = new Variable("variable");
-    Variable *variable2 = new Variable("variable2");
+    Variable *variable = new Variable(new std::string("variable"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     REQUIRE_THROWS_AS(new ModifiesRelationship(variable2, variable), std::invalid_argument);
 
@@ -151,8 +151,8 @@ TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Stat
 }
 
 TEST_CASE("Instantiating a UsesRelationship with a non-Procedure or non-Statement as LHS entity throws an exception") {
-    Variable *variable = new Variable("variable");
-    Variable *variable2 = new Variable("variable2");
+    Variable *variable = new Variable(new std::string("variable"));
+    Variable *variable2 = new Variable(new std::string("variable2"));
 
     REQUIRE_THROWS_AS(new UsesRelationship(variable2, variable), std::invalid_argument);
 

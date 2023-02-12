@@ -24,21 +24,38 @@
 
 class EntityManager {
    private:
-    std::unordered_map<int, std::shared_ptr<std::vector<std::shared_ptr<Entity>>>> entityMap;
+    std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToEntityStore;
+    std::unordered_map<int, std::shared_ptr<Statement>> statementNumberToStatementStore;
+    std::unordered_map<std::string, std::shared_ptr<Variable>> variableNameToVariableStore;
+    std::unordered_map<std::string, std::shared_ptr<Procedure>> procedureNameToProcedureStore;
+    std::unordered_map<int, std::shared_ptr<Constant>> constantValueToConstantStore;
+
+    
 
    public:
     EntityManager();
 
     ~EntityManager();
 
-    void storeEntity(Entity *entity);
+    void storeConstant(std::shared_ptr<Constant> constant);
+    void storeVariable(std::shared_ptr<Variable> variable);
+    void storeProcedure(std::shared_ptr<Procedure> procedure);
+    void storeStatement(std::shared_ptr<Statement> statement);
 
-    std::vector<std::shared_ptr<Entity>> *getEntitiesByType(EntityType entityType);
+    std::vector<Entity*>* getEntitiesByType(EntityType entityType);
+
+
+    Statement* getStatementByStatementNumber(int statementNumber);
+    Variable* getVariableByVariableName(std::string variableName);
+    Procedure* getProcedureByProcedureName(std::string procedureName);
+    Constant* getConstantByConstantValue(int constantValue);
 
    private:
-    void initialiseVectorForIndexIfNotExist(EntityType entityType);
+    void storeInEntityTypeToEntityStore(Entity* entity);
 
-    std::vector<std::shared_ptr<Entity>> *getAllStatements();
+    void initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType entityType);
+
+    std::vector<Entity*>* getAllStatements();
 };
 
 #endif  // SPA_ENTITYMANAGER_H

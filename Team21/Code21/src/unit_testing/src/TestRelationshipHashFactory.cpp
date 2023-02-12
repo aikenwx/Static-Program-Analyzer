@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "PKB/RelationshipHashkeyFactory.h"
+#include "PKB/RelationshipSynonymHashkeyGenerator.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
@@ -38,12 +38,14 @@ enum stubRelationshipType {
     STUB_USES = 1,
     STUB_PARENT = 2,
     STUB_FOLLOWS = 3,
+    STUB_PARENTS_STAR = 4,
+    STUB_FOLLOWS_STAR = 5,
 };
 
 int stubBase = 10;
 
 TEST_CASE("Assignment statement parent of read statement") {
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     RelationshipType relationshipType = RelationshipType::PARENT;
     EntityType leftHandEntityType = EntityType::WHILE_STATEMENT;
     EntityType rightHandEntityType = EntityType::ASSIGN_STATEMENT;
@@ -51,7 +53,7 @@ TEST_CASE("Assignment statement parent of read statement") {
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
 }
 TEST_CASE("Assignment modifies variable") {
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     RelationshipType relationshipType = RelationshipType::MODIFIES;
     EntityType leftHandEntityType = EntityType::ASSIGN_STATEMENT;
     EntityType rightHandEntityType = EntityType::VARIABLE;
@@ -60,7 +62,7 @@ TEST_CASE("Assignment modifies variable") {
 }
 
 TEST_CASE("Procedure uses variable") {
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     RelationshipType relationshipType = RelationshipType::USES;
     EntityType leftHandEntityType = EntityType::PROCEDURE;
     EntityType rightHandEntityType = EntityType::VARIABLE;
@@ -69,10 +71,10 @@ TEST_CASE("Procedure uses variable") {
 }
 
 TEST_CASE("Apply hash factory on Modifies Relationship") {
-    Variable *variable = new Variable("x");
-    AssignStatement *assignStatement = new AssignStatement(1);
+    Variable *variable = new Variable(new std::string("x"));
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(assignStatement, variable);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(modifiesRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_MODIFIES * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_VARIABLE);
     delete modifiesRelationship;
@@ -82,7 +84,7 @@ TEST_CASE("Apply hash factory on Parent Relationship") {
     WhileStatement *whileStatement = new WhileStatement(1);
     ReadStatement *readStatement = new ReadStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, readStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_READ_STATEMENT);
 
@@ -90,10 +92,10 @@ TEST_CASE("Apply hash factory on Parent Relationship") {
 }
 
 TEST_CASE("Apply hash factory on Follows Relationship") {
-    AssignStatement *assignStatement = new AssignStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
     WhileStatement *whileStatement = new WhileStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(assignStatement, whileStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -104,7 +106,7 @@ TEST_CASE("While Follows While") {
     WhileStatement *whileStatement1 = new WhileStatement(1);
     WhileStatement *whileStatement2 = new WhileStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(whileStatement1, whileStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -115,7 +117,7 @@ TEST_CASE("Call Follows While") {
     CallStatement *callStatement = new CallStatement(1);
     WhileStatement *whileStatement = new WhileStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(callStatement, whileStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -126,7 +128,7 @@ TEST_CASE("While Follows Call") {
     WhileStatement *whileStatement = new WhileStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(whileStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -137,7 +139,7 @@ TEST_CASE("If Follows Call") {
     IfStatement *ifStatement = new IfStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(ifStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -148,7 +150,7 @@ TEST_CASE("Call Follows If") {
     CallStatement *callStatement = new CallStatement(1);
     IfStatement *ifStatement = new IfStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(callStatement, ifStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
 
@@ -156,10 +158,10 @@ TEST_CASE("Call Follows If") {
 }
 
 TEST_CASE("Assign Follows Call") {
-    AssignStatement *assignStatement = new AssignStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
     CallStatement *callStatement = new CallStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(assignStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -167,10 +169,10 @@ TEST_CASE("Assign Follows Call") {
 }
 
 TEST_CASE("Assign Parent While") {
-    AssignStatement *assignStatement = new AssignStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
     WhileStatement *whileStatement = new WhileStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement, whileStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -179,9 +181,9 @@ TEST_CASE("Assign Parent While") {
 
 TEST_CASE("While Parent Assign") {
     WhileStatement *whileStatement = new WhileStatement(1);
-    AssignStatement *assignStatement = new AssignStatement(2);
+    AssignStatement *assignStatement = new AssignStatement(2, new std::string("xy+"));
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
 
@@ -192,7 +194,7 @@ TEST_CASE("While Parent While") {
     WhileStatement *whileStatement1 = new WhileStatement(1);
     WhileStatement *whileStatement2 = new WhileStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement1, whileStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -203,7 +205,7 @@ TEST_CASE("If Parent While") {
     IfStatement *ifStatement = new IfStatement(1);
     WhileStatement *whileStatement = new WhileStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(ifStatement, whileStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -214,7 +216,7 @@ TEST_CASE("While Parent If") {
     WhileStatement *whileStatement = new WhileStatement(1);
     IfStatement *ifStatement = new IfStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, ifStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
 
@@ -225,7 +227,7 @@ TEST_CASE("Call Parent While") {
     CallStatement *callStatement = new CallStatement(1);
     WhileStatement *whileStatement = new WhileStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(callStatement, whileStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT);
 
@@ -236,7 +238,7 @@ TEST_CASE("While Parent Call") {
     WhileStatement *whileStatement = new WhileStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_WHILE_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -247,7 +249,7 @@ TEST_CASE("If Parent Call") {
     IfStatement *ifStatement = new IfStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(ifStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -258,7 +260,7 @@ TEST_CASE("Call Parent If") {
     CallStatement *callStatement = new CallStatement(1);
     IfStatement *ifStatement = new IfStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(callStatement, ifStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
 
@@ -266,10 +268,10 @@ TEST_CASE("Call Parent If") {
 }
 
 TEST_CASE("Assign Parent Call") {
-    AssignStatement *assignStatement = new AssignStatement(1);
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
     CallStatement *callStatement = new CallStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -278,9 +280,9 @@ TEST_CASE("Assign Parent Call") {
 
 TEST_CASE("Call Parent Assign") {
     CallStatement *callStatement = new CallStatement(1);
-    AssignStatement *assignStatement = new AssignStatement(2);
+    AssignStatement *assignStatement = new AssignStatement(2, new std::string("xy+"));
     ParentRelationship *parentRelationship = new ParentRelationship(callStatement, assignStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
 
@@ -288,10 +290,10 @@ TEST_CASE("Call Parent Assign") {
 }
 
 TEST_CASE("Assign Parent Assign") {
-    AssignStatement *assignStatement1 = new AssignStatement(1);
-    AssignStatement *assignStatement2 = new AssignStatement(2);
+    AssignStatement *assignStatement1 = new AssignStatement(1, new std::string("xy+"));
+    AssignStatement *assignStatement2 = new AssignStatement(2, new std::string("xy+"));
     ParentRelationship *parentRelationship = new ParentRelationship(assignStatement1, assignStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
 
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT);
@@ -303,7 +305,7 @@ TEST_CASE("Call Parent Call") {
     CallStatement *callStatement1 = new CallStatement(1);
     CallStatement *callStatement2 = new CallStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(callStatement1, callStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -314,7 +316,7 @@ TEST_CASE("If Parent If") {
     IfStatement *ifStatement1 = new IfStatement(1);
     IfStatement *ifStatement2 = new IfStatement(2);
     ParentRelationship *parentRelationship = new ParentRelationship(ifStatement1, ifStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(parentRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_PARENT * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
 
@@ -325,7 +327,7 @@ TEST_CASE("Print Follows Print") {
     PrintStatement *printStatement1 = new PrintStatement(1);
     PrintStatement *printStatement2 = new PrintStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement1, printStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT);
 
@@ -336,7 +338,7 @@ TEST_CASE("Print Follows Read") {
     PrintStatement *printStatement = new PrintStatement(1);
     ReadStatement *readStatement = new ReadStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT * stubBase + (int)stubEntityType::STUB_READ_STATEMENT);
 
@@ -347,7 +349,7 @@ TEST_CASE("Read Follows Print") {
     ReadStatement *readStatement = new ReadStatement(1);
     PrintStatement *printStatement = new PrintStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(readStatement, printStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_READ_STATEMENT * stubBase + (int)stubEntityType::STUB_PRINT_STATEMENT);
 
@@ -358,7 +360,7 @@ TEST_CASE("Read Follows Read") {
     ReadStatement *readStatement1 = new ReadStatement(1);
     ReadStatement *readStatement2 = new ReadStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(readStatement1, readStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_READ_STATEMENT * stubBase + (int)stubEntityType::STUB_READ_STATEMENT);
 
@@ -369,7 +371,7 @@ TEST_CASE("If Follows If") {
     IfStatement *ifStatement1 = new IfStatement(1);
     IfStatement *ifStatement2 = new IfStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(ifStatement1, ifStatement2);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_IF_STATEMENT * stubBase + (int)stubEntityType::STUB_IF_STATEMENT);
 
@@ -380,7 +382,7 @@ TEST_CASE("Read Follows Call") {
     ReadStatement *readStatement = new ReadStatement(1);
     CallStatement *callStatement = new CallStatement(2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(readStatement, callStatement);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(followsRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_FOLLOWS * stubBase * stubBase + (int)stubEntityType::STUB_READ_STATEMENT * stubBase + (int)stubEntityType::STUB_CALL_STATEMENT);
 
@@ -388,10 +390,10 @@ TEST_CASE("Read Follows Call") {
 }
 
 TEST_CASE("Procedure Uses Variable") {
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(usesRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_USES * stubBase * stubBase + (int)stubEntityType::STUB_PROCEDURE * stubBase + (int)stubEntityType::STUB_VARIABLE);
 
@@ -399,10 +401,10 @@ TEST_CASE("Procedure Uses Variable") {
 }
 
 TEST_CASE("Assign Uses Variable") {
-    AssignStatement *assignStatement = new AssignStatement(1);
-    Variable *variable = new Variable("variable");
+    AssignStatement *assignStatement = new AssignStatement(1, new std::string("xy+"));
+    Variable *variable = new Variable(new std::string("variable"));
     UsesRelationship *usesRelationship = new UsesRelationship(assignStatement, variable);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(usesRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_USES * stubBase * stubBase + (int)stubEntityType::STUB_ASSIGN_STATEMENT * stubBase + (int)stubEntityType::STUB_VARIABLE);
 
@@ -410,10 +412,10 @@ TEST_CASE("Assign Uses Variable") {
 }
 
 TEST_CASE("Procedure Modifies Variable") {
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure, variable);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(modifiesRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_MODIFIES * stubBase * stubBase + (int)stubEntityType::STUB_PROCEDURE * stubBase + (int)stubEntityType::STUB_VARIABLE);
 
@@ -422,9 +424,9 @@ TEST_CASE("Procedure Modifies Variable") {
 
 TEST_CASE("Read Modifies Variable") {
     ReadStatement *readStatement = new ReadStatement(1);
-    Variable *variable = new Variable("variable");
+    Variable *variable = new Variable(new std::string("variable"));
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(readStatement, variable);
-    RelationshipHashkeyFactory relationshipHashFactory;
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
     int hashKey = relationshipHashFactory.getHashKey(modifiesRelationship);
     REQUIRE(hashKey == (int)stubRelationshipType::STUB_MODIFIES * stubBase * stubBase + (int)stubEntityType::STUB_READ_STATEMENT * stubBase + (int)stubEntityType::STUB_VARIABLE);
 

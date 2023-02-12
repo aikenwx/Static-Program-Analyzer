@@ -5,21 +5,23 @@
 #ifndef SPA_PROCEDURE_H
 #define SPA_PROCEDURE_H
 
+#include <memory>
 #include <string>
+
 #include "Entity.h"
 
 class Procedure : public Entity {
-private:
-    std::string procedureName;
+   private:
+    std::shared_ptr<std::string> procedureName;
 
-public:
-    Procedure(std::string variableValue);
+   public:
+    Procedure(std::string* variableValue);
 
-    std::string getEntityValue() override;
+    ~Procedure() = default;
+
+    std::string * getEntityValue() override;
 
     EntityType getEntityType() override;
 };
 
-
-#endif //SPA_PROCEDURE_H
-
+#endif  // SPA_PROCEDURE_H

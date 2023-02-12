@@ -17,12 +17,12 @@ using namespace std;
 TEST_CASE("Entities can instantiate") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     Constant *constant = new Constant(1);
 
     delete printStatement;
@@ -39,23 +39,23 @@ TEST_CASE("Entities can instantiate") {
 TEST_CASE("Entities retrieve their stored values") {
     PrintStatement *printStatement = new PrintStatement(2);
     ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4);
+    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     Constant *constant = new Constant(1);
 
-    REQUIRE(printStatement->getEntityValue() == "2");
-    REQUIRE(readStatement->getEntityValue() == "3");
-    REQUIRE(assignStatement->getEntityValue() == "4");
-    REQUIRE(callStatement->getEntityValue() == "5");
-    REQUIRE(whileStatement->getEntityValue() == "6");
-    REQUIRE(ifStatement->getEntityValue() == "7");
-    REQUIRE(procedure->getEntityValue() == "procedure");
-    REQUIRE(variable->getEntityValue() == "variable");
-    REQUIRE(constant->getEntityValue() == "1");
+    REQUIRE(*printStatement->getEntityValue() == "2");
+    REQUIRE(*readStatement->getEntityValue() == "3");
+    REQUIRE(*assignStatement->getEntityValue() == "4");
+    REQUIRE(*callStatement->getEntityValue() == "5");
+    REQUIRE(*whileStatement->getEntityValue() == "6");
+    REQUIRE(*ifStatement->getEntityValue() == "7");
+    REQUIRE(*procedure->getEntityValue() == "procedure");
+    REQUIRE(*variable->getEntityValue() == "variable");
+    REQUIRE(*constant->getEntityValue() == "1");
 
     delete printStatement;
     delete readStatement;
@@ -77,9 +77,9 @@ TEST_CASE("Entities can be compared") {
     ReadStatement *readStatement2 = new ReadStatement(3);
     ReadStatement *readStatement3 = new ReadStatement(4);
 
-    AssignStatement *assignStatement = new AssignStatement(4);
-    AssignStatement *assignStatement2 = new AssignStatement(4);
-    AssignStatement *assignStatement3 = new AssignStatement(5);
+    AssignStatement *assignStatement = new AssignStatement(4, new std::string("xy*"));
+    AssignStatement *assignStatement2 = new AssignStatement(4, new std::string("xy*"));
+    AssignStatement *assignStatement3 = new AssignStatement(5, new std::string("xy*"));
 
     CallStatement *callStatement = new CallStatement(5);
     CallStatement *callStatement2 = new CallStatement(5);
@@ -93,13 +93,13 @@ TEST_CASE("Entities can be compared") {
     IfStatement *ifStatement2 = new IfStatement(7);
     IfStatement *ifStatement3 = new IfStatement(8);
 
-    Variable *variable = new Variable("variable");
-    Variable *variable2 = new Variable("variable");
-    Variable *variable3 = new Variable("variable2");
+    Variable *variable = new Variable(new std::string("variable"));
+    Variable *variable2 = new Variable(new std::string("variable"));
+    Variable *variable3 = new Variable(new std::string("variable2"));
 
-    Procedure *procedure = new Procedure("procedure");
-    Procedure *procedure2 = new Procedure("procedure");
-    Procedure *procedure3 = new Procedure("procedure2");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure"));
+    Procedure *procedure3 = new Procedure(new std::string("procedure2"));
 
     Constant *constant = new Constant(1);
     Constant *constant2 = new Constant(1);
@@ -114,7 +114,7 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(procedure->equals(procedure));
     REQUIRE(variable->equals(variable));
     REQUIRE(constant->equals(constant));
-
+    printStatement->equals(printStatement2);
     REQUIRE(printStatement->equals(printStatement2));
     REQUIRE(readStatement->equals(readStatement2));
     REQUIRE(assignStatement->equals(assignStatement2));

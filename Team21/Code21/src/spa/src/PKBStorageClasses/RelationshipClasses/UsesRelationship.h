@@ -13,8 +13,8 @@
 class UsesRelationship : public Relationship {
 private:
     // Can be Statement or Procedure
-    std::shared_ptr<Entity> user;
-    std::shared_ptr<Variable> usedVariable;
+    Entity* user;
+    Variable* usedVariable;
 
 public:
     UsesRelationship(Entity *user, Variable *usedVariable);

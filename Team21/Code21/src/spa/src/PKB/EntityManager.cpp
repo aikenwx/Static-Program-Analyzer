@@ -76,7 +76,7 @@ Variable* EntityManager::getVariableByVariableName(std::string variableName) {
 
 Procedure* EntityManager::getProcedureByProcedureName(std::string procedureName) {
     if (this->procedureNameToProcedureStore.find(procedureName) == this->procedureNameToProcedureStore.end()) {
-        throw std::runtime_error("Procedure name " + procedureName + " does not exist, please populate the procedure store first");
+        return nullptr;
     }
 
     return this->procedureNameToProcedureStore.at(procedureName).get();

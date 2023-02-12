@@ -2,12 +2,13 @@
 // Created by Aiken Wong on 4/2/23.
 //
 
+#include <memory>
 #include <string>
 
 #include "PKB/EntityManager.h"
+#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
-#include <memory>
 
 #ifndef SPA_POPULATEFACADE_H
 #define SPA_POPULATEFACADE_H
@@ -16,11 +17,12 @@ class PopulateFacade {
    private:
     RelationshipManager *relationshipManager;
     EntityManager *entityManager;
+    PatternManager *patternManager;
 
    public:
-    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager);
+    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager);
 
-    void storeAssignmentStatement(int statementNumber, std::string postfixExpression);
+    void storeAssignmentStatement(int statementNumber);
     void storeCallStatement(int statementNumber);
     void storeIfStatement(int statementNumber);
     void storePrintStatement(int statementNumber);
@@ -37,7 +39,9 @@ class PopulateFacade {
     void storeParentRelationship(int parentStatementNumber, int childStatementNumber);
     void storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
 
-    private:
+    void storeAssignStatementPostfixExpression(int statementNumber, std::string *postfixExpression);
+
+   private:
     void validateEntityExists(Entity *entity);
 };
 

@@ -5,16 +5,18 @@
 
 #include "Statement.h"
 
-
 class AssignStatement : public Statement {
-private:
+   private:
     std::shared_ptr<std::string> postFixExpression;
-public:
-    AssignStatement(int statementNumber, std::string * postFixExpression);
+
+   public:
+    AssignStatement(int statementNumber);
+
+    void setPostfixExpression(std::string* postfixExpression);
 
     EntityType getEntityType() override;
 
-    std::string * getPostFixExpression();
+    std::string* getPostFixExpression();
 };
 
 #endif

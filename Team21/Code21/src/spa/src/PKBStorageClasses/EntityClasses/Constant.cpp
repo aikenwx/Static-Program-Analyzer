@@ -5,7 +5,7 @@ Constant::Constant(int constantValue) {
     this->constantValueString = std::make_shared<std::string>(std::to_string(constantValue));
 }
 
-std::string * Constant::getEntityValue() {
+std::string* Constant::getEntityValue() {
     return constantValueString.get();
 }
 

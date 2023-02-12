@@ -14,7 +14,7 @@
 
 class RelationshipManager {
    private:
-    std::unordered_map<int, std::shared_ptr<std::vector<Relationship *>>> relationshipSynonymHashToRelationshipStore;
+    std::unordered_map<int, std::shared_ptr<std::vector<Relationship*>>> relationshipSynonymHashToRelationshipStore;
     std::unordered_map<std::string, std::shared_ptr<Relationship>> relationshipLiteralHashToRelationshipStore;
 
    public:
@@ -25,13 +25,12 @@ class RelationshipManager {
     void storeRelationship(std::shared_ptr<Relationship> relationship);
 
     // ownership of the vector is transferred to the caller, so we return a smart pointer
-    std::vector<Relationship*> *
+    std::vector<Relationship*>*
     getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
                             EntityType rightHandEntityType);
 
-   Relationship* getRelationshipByLiterals(std::string relationshipLiteralHash);     
+    Relationship* getRelationshipByLiterals(std::string relationshipLiteralHash);
 
-   
    private:
     void initialiseVectorForIndexIfNotExist(int hashkey);
     std::shared_ptr<std::vector<int>> getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,

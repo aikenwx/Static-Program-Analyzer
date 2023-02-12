@@ -30,8 +30,6 @@ class EntityManager {
     std::unordered_map<std::string, std::shared_ptr<Procedure>> procedureNameToProcedureStore;
     std::unordered_map<int, std::shared_ptr<Constant>> constantValueToConstantStore;
 
-    
-
    public:
     EntityManager();
 
@@ -43,7 +41,6 @@ class EntityManager {
     void storeStatement(std::shared_ptr<Statement> statement);
 
     std::vector<Entity*>* getEntitiesByType(EntityType entityType);
-
 
     Statement* getStatementByStatementNumber(int statementNumber);
     Variable* getVariableByVariableName(std::string variableName);

@@ -103,9 +103,9 @@ TEST_CASE("Tokenizer: usesS(syn,_)") {
 }
 
 TEST_CASE("Tokenizer: usesP(quoted_id,_)") {
-	qps::QueryTokenizer tokenizer("variable u; assign a, b; Select a such that Uses (\"x\",_)");
+	qps::QueryTokenizer tokenizer("variable u; procedure a, b; Select a such that Uses (\"x\",_)");
 	std::vector<std::string> tokens = tokenizer.tokenize();
-	std::vector<std::string> correct_tokens{ "variable", "u", ";", "assign", "a", ",", "b", ";", "Select", "a", "such", "that", "Uses", "(", "\"", "x", "\"", ",", "_", ")" };
+	std::vector<std::string> correct_tokens{ "variable", "u", ";", "procedure", "a", ",", "b", ";", "Select", "a", "such", "that", "Uses", "(", "\"", "x", "\"", ",", "_", ")" };
 	REQUIRE(tokens == correct_tokens);
 }
 

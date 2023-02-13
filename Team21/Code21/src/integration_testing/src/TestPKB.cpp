@@ -28,11 +28,11 @@ TEST_CASE("PKB can store read statement and QueryFacade can retrieve read statem
     auto entities = queryFacade->getAllReadStatements();
 
     REQUIRE(entities->size() == 1);
-    ReadStatement *expectedReadStatement = new ReadStatement(1);
-    REQUIRE(entities->at(0)->equals(expectedReadStatement));
+    ReadStatement *expectedStatement = new ReadStatement(1);
+    REQUIRE(entities->at(0)->equals(expectedStatement));
 
     delete pkb;
-    delete expectedReadStatement;
+    delete expectedStatement;
 }
 
 TEST_CASE("PKB can store multiple read statements and QueryFacade can retrieve read statements") {
@@ -45,14 +45,14 @@ TEST_CASE("PKB can store multiple read statements and QueryFacade can retrieve r
     auto entities = queryFacade->getAllReadStatements();
 
     REQUIRE(entities->size() == 2);
-    ReadStatement *expectedReadStatement1 = new ReadStatement(1);
-    ReadStatement *expectedReadStatement2 = new ReadStatement(2);
-    REQUIRE(entities->at(0)->equals(expectedReadStatement1));
-    REQUIRE(entities->at(1)->equals(expectedReadStatement2));
+    ReadStatement *expectedStatement1 = new ReadStatement(1);
+    ReadStatement *expectedStatement2 = new ReadStatement(2);
+    REQUIRE(entities->at(0)->equals(expectedStatement1));
+    REQUIRE(entities->at(1)->equals(expectedStatement2));
 
     delete pkb;
-    delete expectedReadStatement1;
-    delete expectedReadStatement2;
+    delete expectedStatement1;
+    delete expectedStatement2;
 }
 
 TEST_CASE("PKB can store read relationship and QueryFacade can read retrieve relationship") {
@@ -68,13 +68,13 @@ TEST_CASE("PKB can store read relationship and QueryFacade can read retrieve rel
 
     REQUIRE(relationships->size() == 1);
 
-    FollowsRelationship *expectedFollowsRelationship = new FollowsRelationship(new ReadStatement(1),
-                                                                               new ReadStatement(2));
+    FollowsRelationship *expectedRelationship = new FollowsRelationship(new ReadStatement(1),
+                                                                        new ReadStatement(2));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship));
 
     delete pkb;
-    delete expectedFollowsRelationship;
+    PKBtestHelpers::deleteRelationship(expectedRelationship);
 }
 
 TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade can retrieve the relationships") {
@@ -92,17 +92,17 @@ TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new ReadStatement(1),
-                                                                                new ReadStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new ReadStatement(2),
-                                                                                new ReadStatement(3));
+    FollowsRelationship *expectedRelationship1 = new FollowsRelationship(new ReadStatement(1),
+                                                                         new ReadStatement(2));
+    FollowsRelationship *expectedRelationship2 = new FollowsRelationship(new ReadStatement(2),
+                                                                         new ReadStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedFollowsRelationship1;
-    delete expectedFollowsRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple print statements and retrieve mulitple print statements") {
@@ -140,17 +140,17 @@ TEST_CASE("PKB can store multiple print follow print relationships and retrieve 
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new PrintStatement(1),
-                                                                                new PrintStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new PrintStatement(2),
-                                                                                new PrintStatement(3));
+    FollowsRelationship *expectedRelationship1 = new FollowsRelationship(new PrintStatement(1),
+                                                                         new PrintStatement(2));
+    FollowsRelationship *expectedRelationship2 = new FollowsRelationship(new PrintStatement(2),
+                                                                         new PrintStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedFollowsRelationship1;
-    delete expectedFollowsRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple call statements and retrieve multiple call statements") {
@@ -248,17 +248,17 @@ TEST_CASE("PKB can store multiple while parent read relationships and retrieve t
 
     REQUIRE(relationships->size() == 2);
 
-    ParentRelationship *expectedParentRelationship1 = new ParentRelationship(new WhileStatement(1),
-                                                                             new ReadStatement(2));
-    ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(1),
-                                                                             new ReadStatement(3));
+    ParentRelationship *expectedRelationship1 = new ParentRelationship(new WhileStatement(1),
+                                                                       new ReadStatement(2));
+    ParentRelationship *expectedRelationship2 = new ParentRelationship(new WhileStatement(1),
+                                                                       new ReadStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedParentRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedParentRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedParentRelationship1;
-    delete expectedParentRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple while parent assign relationships and retrieve the relationships") {
@@ -277,17 +277,17 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
 
     REQUIRE(relationships->size() == 2);
 
-    ParentRelationship *expectedParentRelationship1 = new ParentRelationship(new WhileStatement(1),
-                                                                             new AssignStatement(2));
-    ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(3),
-                                                                             new AssignStatement(4));
+    ParentRelationship *expectedRelationship1 = new ParentRelationship(new WhileStatement(1),
+                                                                       new AssignStatement(2));
+    ParentRelationship *expectedRelationship2 = new ParentRelationship(new WhileStatement(3),
+                                                                       new AssignStatement(4));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedParentRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedParentRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedParentRelationship1;
-    delete expectedParentRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store mulitple assignment follows read relationships and retrieve the relationships") {
@@ -306,17 +306,17 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
-                                                                                new ReadStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(3),
-                                                                                new ReadStatement(4));
+    FollowsRelationship *expectedRelationship1 = new FollowsRelationship(new AssignStatement(1),
+                                                                         new ReadStatement(2));
+    FollowsRelationship *expectedRelationship2 = new FollowsRelationship(new AssignStatement(3),
+                                                                         new ReadStatement(4));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedFollowsRelationship1;
-    delete expectedFollowsRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple assignment follows assignment relationships and retrieve the relationships") {
@@ -334,17 +334,17 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
 
     REQUIRE(relationships->size() == 2);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
-                                                                                new AssignStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
-                                                                                new AssignStatement(3));
+    FollowsRelationship *expectedRelationship1 = new FollowsRelationship(new AssignStatement(1),
+                                                                         new AssignStatement(2));
+    FollowsRelationship *expectedRelationship2 = new FollowsRelationship(new AssignStatement(2),
+                                                                         new AssignStatement(3));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedFollowsRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedFollowsRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedFollowsRelationship1;
-    delete expectedFollowsRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple assignment uses variable relationships and retrieve the relationships") {
@@ -363,15 +363,15 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
 
     REQUIRE(relationships->size() == 2);
 
-    UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new AssignStatement(1), new Variable(new std::string("x")));
-    UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new AssignStatement(2), new Variable(new std::string("y")));
+    UsesRelationship *expectedRelationship1 = new UsesRelationship(new AssignStatement(1), new Variable(new std::string("x")));
+    UsesRelationship *expectedRelationship2 = new UsesRelationship(new AssignStatement(2), new Variable(new std::string("y")));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedUsesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedUsesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedUsesRelationship1;
-    delete expectedUsesRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple procedure uses variable relationships and retrieve the relationships") {
@@ -390,15 +390,15 @@ TEST_CASE("PKB can store multiple procedure uses variable relationships and retr
 
     REQUIRE(relationships->size() == 2);
 
-    UsesRelationship *expectedUsesRelationship1 = new UsesRelationship(new Procedure(new std::string("Procedure1")), new Variable(new std::string("x")));
-    UsesRelationship *expectedUsesRelationship2 = new UsesRelationship(new Procedure(new std::string("Procedure2")), new Variable(new std::string("y")));
+    UsesRelationship *expectedRelationship1 = new UsesRelationship(new Procedure(new std::string("Procedure1")), new Variable(new std::string("x")));
+    UsesRelationship *expectedRelationship2 = new UsesRelationship(new Procedure(new std::string("Procedure2")), new Variable(new std::string("y")));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedUsesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedUsesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedUsesRelationship1;
-    delete expectedUsesRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple call modifies variable relationships and retrieve the relationships") {
@@ -417,17 +417,17 @@ TEST_CASE("PKB can store multiple call modifies variable relationships and retri
 
     REQUIRE(relationships->size() == 2);
 
-    ModifiesRelationship *expectedModifiesRelationship1 = new ModifiesRelationship(new CallStatement(1),
-                                                                                   new Variable(new std::string("x")));
-    ModifiesRelationship *expectedModifiesRelationship2 = new ModifiesRelationship(new CallStatement(2),
-                                                                                   new Variable(new std::string("y")));
+    ModifiesRelationship *expectedRelationship1 = new ModifiesRelationship(new CallStatement(1),
+                                                                           new Variable(new std::string("x")));
+    ModifiesRelationship *expectedRelationship2 = new ModifiesRelationship(new CallStatement(2),
+                                                                           new Variable(new std::string("y")));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedModifiesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedModifiesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedModifiesRelationship1;
-    delete expectedModifiesRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store multiple procedure modifies variable relationships and retrieve the relationships") {
@@ -446,17 +446,17 @@ TEST_CASE("PKB can store multiple procedure modifies variable relationships and 
 
     REQUIRE(relationships->size() == 2);
 
-    ModifiesRelationship *expectedModifiesRelationship1 = new ModifiesRelationship(new Procedure(new std::string("Procedure1")),
-                                                                                   new Variable(new std::string("x")));
-    ModifiesRelationship *expectedModifiesRelationship2 = new ModifiesRelationship(new Procedure(new std::string("Procedure2")),
-                                                                                   new Variable(new std::string("y")));
+    ModifiesRelationship *expectedRelationship1 = new ModifiesRelationship(new Procedure(new std::string("Procedure1")),
+                                                                           new Variable(new std::string("x")));
+    ModifiesRelationship *expectedRelationship2 = new ModifiesRelationship(new Procedure(new std::string("Procedure2")),
+                                                                           new Variable(new std::string("y")));
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedModifiesRelationship1));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedModifiesRelationship2));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), expectedRelationship1));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), expectedRelationship2));
 
     delete pkb;
-    delete expectedModifiesRelationship1;
-    delete expectedModifiesRelationship2;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
 }
 
 TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
@@ -546,42 +546,42 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
 
     REQUIRE(relationships->size() == 6);
 
-    FollowsRelationship *expectedFollowsRelationship1 = new FollowsRelationship(new AssignStatement(1),
-                                                                                new AssignStatement(2));
-    FollowsRelationship *expectedFollowsRelationship2 = new FollowsRelationship(new AssignStatement(2),
-                                                                                new CallStatement(3));
-    FollowsRelationship *expectedFollowsRelationship3 = new FollowsRelationship(new CallStatement(3),
-                                                                                new IfStatement(4));
-    FollowsRelationship *expectedFollowsRelationship4 = new FollowsRelationship(new IfStatement(4),
-                                                                                new PrintStatement(5));
-    FollowsRelationship *expectedFollowsRelationship5 = new FollowsRelationship(new PrintStatement(5),
-                                                                                new ReadStatement(6));
-    FollowsRelationship *expectedFollowsRelationship6 = new FollowsRelationship(new ReadStatement(6),
-                                                                                new WhileStatement(7));
+    FollowsRelationship *expectedRelationship1 = new FollowsRelationship(new AssignStatement(1),
+                                                                         new AssignStatement(2));
+    FollowsRelationship *expectedRelationship2 = new FollowsRelationship(new AssignStatement(2),
+                                                                         new CallStatement(3));
+    FollowsRelationship *expectedRelationship3 = new FollowsRelationship(new CallStatement(3),
+                                                                         new IfStatement(4));
+    FollowsRelationship *expectedRelationship4 = new FollowsRelationship(new IfStatement(4),
+                                                                         new PrintStatement(5));
+    FollowsRelationship *expectedRelationship5 = new FollowsRelationship(new PrintStatement(5),
+                                                                         new ReadStatement(6));
+    FollowsRelationship *expectedRelationship6 = new FollowsRelationship(new ReadStatement(6),
+                                                                         new WhileStatement(7));
 
-    std::vector<FollowsRelationship *> expectedFollowsRelationships = {expectedFollowsRelationship1,
-                                                                       expectedFollowsRelationship2,
-                                                                       expectedFollowsRelationship3,
-                                                                       expectedFollowsRelationship4,
-                                                                       expectedFollowsRelationship5,
-                                                                       expectedFollowsRelationship6};
+    std::vector<FollowsRelationship *> expectedRelationships = {expectedRelationship1,
+                                                                expectedRelationship2,
+                                                                expectedRelationship3,
+                                                                expectedRelationship4,
+                                                                expectedRelationship5,
+                                                                expectedRelationship6};
 
     // for loop finds the relationship in the vector and compares it to the expected relationship
     for (auto relationship : *relationships) {
         bool found = false;
-        for (FollowsRelationship *expectedRelationship : expectedFollowsRelationships) {
+        for (FollowsRelationship *expectedRelationship : expectedRelationships) {
             found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
         }
         REQUIRE(found);
     }
 
     delete pkb;
-    delete expectedFollowsRelationship1;
-    delete expectedFollowsRelationship2;
-    delete expectedFollowsRelationship3;
-    delete expectedFollowsRelationship4;
-    delete expectedFollowsRelationship5;
-    delete expectedFollowsRelationship6;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
+    PKBtestHelpers::deleteRelationship(expectedRelationship5);
+    PKBtestHelpers::deleteRelationship(expectedRelationship6);
 }
 
 TEST_CASE("PKB can store multitple while parent statements relationships and retrieve them all") {
@@ -617,46 +617,128 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     populateFacade->storeStatementUsesVariableRelationship(2, "x");
     populateFacade->storeStatementModifiesVariableRelationship(2, "y");
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
+    populateFacade->storeParentStarRelationship(1, 2);
+    populateFacade->storeFollowsStarRelationship(2, 3);
 
     auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
         WHILE_STATEMENT, STATEMENT);
 
     REQUIRE(relationships->size() == 6);
 
-    ParentRelationship *expectedParentRelationship1 = new ParentRelationship(new WhileStatement(1),
-                                                                             new AssignStatement(2));
-    ParentRelationship *expectedParentRelationship2 = new ParentRelationship(new WhileStatement(1),
-                                                                             new CallStatement(3));
-    ParentRelationship *expectedParentRelationship3 = new ParentRelationship(new WhileStatement(1),
-                                                                             new PrintStatement(4));
-    ParentRelationship *expectedParentRelationship4 = new ParentRelationship(new WhileStatement(1),
-                                                                             new ReadStatement(5));
-    ParentRelationship *expectedParentRelationship5 = new ParentRelationship(new WhileStatement(1), new IfStatement(6));
-    ParentRelationship *expectedParentRelationship6 = new ParentRelationship(new WhileStatement(1),
-                                                                             new WhileStatement(7));
+    ParentRelationship *expectedRelationship1 = new ParentRelationship(new WhileStatement(1),
+                                                                       new AssignStatement(2));
+    ParentRelationship *expectedRelationship2 = new ParentRelationship(new WhileStatement(1),
+                                                                       new CallStatement(3));
+    ParentRelationship *expectedRelationship3 = new ParentRelationship(new WhileStatement(1),
+                                                                       new PrintStatement(4));
+    ParentRelationship *expectedRelationship4 = new ParentRelationship(new WhileStatement(1),
+                                                                       new ReadStatement(5));
+    ParentRelationship *expectedRelationship5 = new ParentRelationship(new WhileStatement(1), new IfStatement(6));
+    ParentRelationship *expectedRelationship6 = new ParentRelationship(new WhileStatement(1),
+                                                                       new WhileStatement(7));
 
-    std::vector<ParentRelationship *> expectedParentRelationships = {expectedParentRelationship1,
-                                                                     expectedParentRelationship2,
-                                                                     expectedParentRelationship3,
-                                                                     expectedParentRelationship4,
-                                                                     expectedParentRelationship5,
-                                                                     expectedParentRelationship6};
+    std::vector<ParentRelationship *> expectedRelationships = {expectedRelationship1,
+                                                               expectedRelationship2,
+                                                               expectedRelationship3,
+                                                               expectedRelationship4,
+                                                               expectedRelationship5,
+                                                               expectedRelationship6};
 
     // for loop finds the relationship in the vector and compares it to the expected relationship
 
     for (auto relationship : *relationships) {
         bool found = false;
-        for (ParentRelationship *expectedRelationship : expectedParentRelationships) {
+        for (ParentRelationship *expectedRelationship : expectedRelationships) {
             found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
         }
         REQUIRE(found);
     }
 
     delete pkb;
-    delete expectedParentRelationship1;
-    delete expectedParentRelationship2;
-    delete expectedParentRelationship3;
-    delete expectedParentRelationship4;
-    delete expectedParentRelationship5;
-    delete expectedParentRelationship6;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
+    PKBtestHelpers::deleteRelationship(expectedRelationship5);
+    PKBtestHelpers::deleteRelationship(expectedRelationship6);
+}
+
+TEST_CASE("PKB can store multitple while parentStar statements relationships and retrieve them all") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeCallStatement(3);
+    populateFacade->storePrintStatement(4);
+    populateFacade->storeReadStatement(5);
+    populateFacade->storeIfStatement(6);
+    populateFacade->storeWhileStatement(7);
+
+    populateFacade->storeIfStatement(8);
+    populateFacade->storeAssignmentStatement(9);
+
+    populateFacade->storeVariable("x");
+    populateFacade->storeVariable("y");
+    populateFacade->storeProcedure("Procedure1");
+
+    populateFacade->storeParentStarRelationship(1, 2);
+    populateFacade->storeParentStarRelationship(1, 3);
+    populateFacade->storeParentStarRelationship(1, 4);
+    populateFacade->storeParentStarRelationship(1, 5);
+    populateFacade->storeParentStarRelationship(1, 6);
+    populateFacade->storeParentStarRelationship(1, 7);
+
+    // should not be returned
+    populateFacade->storeParentRelationship(8, 9);
+    populateFacade->storeFollowsRelationship(2, 3);
+    populateFacade->storeStatementUsesVariableRelationship(2, "x");
+    populateFacade->storeStatementModifiesVariableRelationship(2, "y");
+    populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
+    populateFacade->storeParentRelationship(1, 2);
+    populateFacade->storeFollowsStarRelationship(2, 3);
+
+    auto relationships = queryFacade->getParentStarRelationshipsByLeftAndRightEntityTypes(
+        WHILE_STATEMENT, STATEMENT);
+
+    REQUIRE(relationships->size() == 6);
+
+    ParentStarRelationship *expectedRelationship1 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new AssignStatement(2));
+    ParentStarRelationship *expectedRelationship2 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new CallStatement(3));
+    ParentStarRelationship *expectedRelationship3 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new PrintStatement(4));
+    ParentStarRelationship *expectedRelationship4 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new ReadStatement(5));
+    ParentStarRelationship *expectedRelationship5 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new IfStatement(6));
+    ParentStarRelationship *expectedRelationship6 = new ParentStarRelationship(new WhileStatement(1),
+                                                                               new WhileStatement(7));
+
+    std::vector<ParentStarRelationship *> expectedRelationships = {expectedRelationship1,
+                                                                   expectedRelationship2,
+                                                                   expectedRelationship3,
+                                                                   expectedRelationship4,
+                                                                   expectedRelationship5,
+                                                                   expectedRelationship6};
+
+    // for loop finds the relationship in the vector and compares it to the expected relationship
+
+    for (auto relationship : *relationships) {
+        bool found = false;
+        for (ParentStarRelationship *expectedRelationship : expectedRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        }
+        REQUIRE(found);
+    }
+
+    delete pkb;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
+    PKBtestHelpers::deleteRelationship(expectedRelationship5);
+    PKBtestHelpers::deleteRelationship(expectedRelationship6);
 }

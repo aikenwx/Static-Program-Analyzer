@@ -2,6 +2,7 @@
 // Created by Aiken Wong on 4/2/23.
 //
 
+#include "PKB/RelationshipLiteralHashkeyGenerator.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -15,10 +16,9 @@
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
-#include "PKB/RelationshipLiteralHashkeyGenerator.h"
+#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBtestHelpers.h"
 #include "catch.hpp"
 
@@ -38,6 +38,8 @@ TEST_CASE("RelationshipManager stores relationship") {
     relationshipManager->storeRelationship(relationship);
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
 }
 
 TEST_CASE("RelationshipManager retrieves relationship") {
@@ -56,6 +58,8 @@ TEST_CASE("RelationshipManager retrieves relationship") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), relationship.get()));
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
 }
 
 TEST_CASE("RelationshipManager retrieves multitple relationships") {
@@ -79,6 +83,10 @@ TEST_CASE("RelationshipManager retrieves multitple relationships") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), relationship2.get()));
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete readStatement3;
+    delete readStatement4;
 }
 
 TEST_CASE("RelationshipManager returns empty vector if no entries") {
@@ -107,6 +115,8 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
     REQUIRE(relationships->size() == 0);
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
 }
 
 TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple types") {
@@ -148,6 +158,14 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(1), relationship4.get()));
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete readStatement3;
+    delete readStatement4;
+    delete assignStatement;
+    delete assignStatement2;
+    delete variable;
+    delete variable2;
 }
 
 TEST_CASE("Retrieve Statement follow Statement") {
@@ -182,6 +200,14 @@ TEST_CASE("Retrieve Statement follow Statement") {
     }
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete readStatement3;
+    delete readStatement4;
+    delete printStatement;
+    delete printStatement2;
+    delete printStatement3;
+    delete printStatement4;
 }
 
 TEST_CASE("Retrieve Statement Follows Statement") {
@@ -228,6 +254,14 @@ TEST_CASE("Retrieve Statement Follows Statement") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships3->at(0), relationship3.get()));
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete readStatement3;
+    delete readStatement4;
+    delete printStatement;
+    delete printStatement2;
+    delete printStatement3;
+    delete printStatement4;
 }
 
 TEST_CASE("Retrieve Statement Follows Statement2") {
@@ -263,6 +297,10 @@ TEST_CASE("Retrieve Statement Follows Statement2") {
     REQUIRE(relationships3->size() == 1);
 
     delete relationshipManager;
+    delete ifStatement;
+    delete whileStatement;
+    delete whileStatement2;
+    delete readStatement;
 }
 
 TEST_CASE("Retrieve While Parent While") {
@@ -290,6 +328,12 @@ TEST_CASE("Retrieve While Parent While") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), relationship2.get()));
 
     delete relationshipManager;
+    delete whileStatement;
+    delete whileStatement2;
+    delete whileStatement3;
+    delete whileStatement4;
+    delete whileStatement5;
+    delete whileStatement6;
 }
 
 TEST_CASE("Retrieve Call Follows Calls") {
@@ -329,6 +373,12 @@ TEST_CASE("Retrieve Call Follows Calls") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships3->at(2), relationship3.get()));
 
     delete relationshipManager;
+    delete callStatement;
+    delete callStatement2;
+    delete callStatement3;
+    delete callStatement4;
+    delete callStatement5;
+    delete callStatement6;
 }
 
 TEST_CASE("Retrieve Statement Parent Assignment") {
@@ -363,6 +413,14 @@ TEST_CASE("Retrieve Statement Parent Assignment") {
     }
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete printStatement;
+    delete printStatement2;
+    delete printStatement3;
+    delete assignStatement;
+    delete assignStatement2;
+    delete assignStatement4;
 }
 
 TEST_CASE("Retrieve Assign Parent Statement") {
@@ -394,6 +452,14 @@ TEST_CASE("Retrieve Assign Parent Statement") {
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), relationship3.get()));
 
     delete relationshipManager;
+    delete readStatement;
+    delete readStatement2;
+    delete printStatement2;
+    delete printStatement3;
+    delete assignStatement;
+    delete assignStatement2;
+    delete assignStatement3;
+    delete assignStatement4;
 }
 
 TEST_CASE("Retrieve Statement Follows Statement from empty RelationshipManager") {
@@ -635,7 +701,6 @@ TEST_CASE("Can retrieve relationship by literal values") {
     relationshipManager->storeRelationship(relationship9);
     relationshipManager->storeRelationship(relationship10);
     relationshipManager->storeRelationship(relationship11);
-
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship.get()))));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship2.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship2.get()))));

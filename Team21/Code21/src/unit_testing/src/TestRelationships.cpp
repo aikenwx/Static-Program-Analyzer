@@ -10,12 +10,11 @@
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-
 #include "catch.hpp"
 
 TEST_CASE("Relationships can instantiate") {
@@ -32,7 +31,6 @@ TEST_CASE("Relationships can instantiate") {
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
-
 
     ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
     FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
@@ -147,7 +145,6 @@ TEST_CASE("Relationships contain the wrong left entity") {
     FollowsRelationship *followsRelationship = new FollowsRelationship(printStatement, readStatement);
     ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
     FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
-    
 
     REQUIRE(!parentRelationship->containsEntityOnLeftHand(assignStatement));
     REQUIRE(!usesRelationship->containsEntityOnLeftHand(variable));

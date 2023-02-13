@@ -1,9 +1,9 @@
 //
 // Created by Aiken Wong on 3/2/23.
 //
-#include <stdexcept>
-
 #include "UsesRelationship.h"
+
+#include <stdexcept>
 
 bool UsesRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->user->equals(entity);
@@ -14,7 +14,6 @@ bool UsesRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) {
-
     // user can only be Statement or Procedure
     if (!Entity::isStatementType(user->getEntityType()) && user->getEntityType() != EntityType::PROCEDURE) {
         throw std::invalid_argument("user can only be Statement or Procedure");
@@ -27,10 +26,10 @@ RelationshipType UsesRelationship::getRelationshipType() {
     return RelationshipType::USES;
 }
 
-Entity* UsesRelationship::getLeftHandEntity() {
+Entity *UsesRelationship::getLeftHandEntity() {
     return this->user;
 }
 
-Entity* UsesRelationship::getRightHandEntity() {
+Entity *UsesRelationship::getRightHandEntity() {
     return this->usedVariable;
 }

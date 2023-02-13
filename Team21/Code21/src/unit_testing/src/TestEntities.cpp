@@ -174,7 +174,6 @@ TEST_CASE("Entities can be compared") {
     delete constant3;
 }
 
-
 TEST_CASE("Assign Statement stores post-fix expression") {
     AssignStatement *assignStatement = new AssignStatement(4);
     assignStatement->setPostfixExpression(new std::string("xy+"));

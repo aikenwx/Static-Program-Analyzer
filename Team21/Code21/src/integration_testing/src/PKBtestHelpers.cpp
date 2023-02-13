@@ -9,3 +9,9 @@ bool PKBtestHelpers::relationshipEqualsRelationship(Relationship *relationship1,
            relationship1->getLeftHandEntity()->equals(relationship2->getLeftHandEntity()) &&
            relationship1->getRightHandEntity()->equals(relationship2->getRightHandEntity());
 }
+
+void PKBtestHelpers::deleteRelationship(Relationship *relationship) {
+    delete relationship->getRightHandEntity();
+    delete relationship->getLeftHandEntity();
+    delete relationship;
+}

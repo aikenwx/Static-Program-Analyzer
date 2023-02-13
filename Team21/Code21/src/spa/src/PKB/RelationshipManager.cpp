@@ -5,6 +5,7 @@
 #include "RelationshipManager.h"
 
 #include <memory>
+#include <stdexcept>
 
 #include "RelationshipLiteralHashkeyGenerator.h"
 #include "RelationshipSynonymHashkeyGenerator.h"

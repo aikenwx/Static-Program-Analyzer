@@ -10,6 +10,7 @@
 class PKBtestHelpers {
    public:
     static bool relationshipEqualsRelationship(Relationship *relationship1, Relationship *relationship2);
+    static void deleteRelationship(Relationship *relationship);
 };
 
 #endif  // SPA_PKBTESTHELPERS_H

@@ -27,7 +27,9 @@ class Entity {
     static std::vector<EntityType> statementTypes;
 
    public:
-    virtual std::string * getEntityValue() = 0;
+    virtual ~Entity(){};
+
+    virtual std::string* getEntityValue() = 0;
 
     virtual EntityType getEntityType() = 0;
 

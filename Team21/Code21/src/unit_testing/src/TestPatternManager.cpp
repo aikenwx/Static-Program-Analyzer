@@ -16,7 +16,7 @@ TEST_CASE("PatternManager can store assign statement postfix expression") {
     patternManager->storeAssignStatementPostfixExpression(assignStatement, postfixExpression);
 
     REQUIRE(*assignStatement->getPostFixExpression() == "ab-");
-  
+
     delete assignStatement;
     delete patternManager;
 }

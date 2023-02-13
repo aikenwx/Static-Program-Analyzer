@@ -14,6 +14,6 @@ public:
 
 private:
   VariableNode *var;
-  INode *assignment
+  INode *assignment;
 };
 }

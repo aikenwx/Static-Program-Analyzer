@@ -302,6 +302,7 @@ bool SimpleParser::Check() {
     a->SetStatementNumber(++statementCounter);
     stack.push_back(a);
     return true;
+  }
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (util::instance_of<ast::VariableNode>(*i)) {
       // F <- V <;>

@@ -259,4 +259,3 @@ TEST_CASE("Parser: pattern + such that") {
 	std::vector<qps::PatternClause> patternClause = query.getPatternClause();
 	REQUIRE(patternClause[0] == qps::PatternClause(qps::Synonym("a"), qps::QuotedIdentifier("y"), qps::Underscore()));
 }
-

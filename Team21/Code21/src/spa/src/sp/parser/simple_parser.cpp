@@ -175,27 +175,28 @@ void SimpleParser::Success() {
   Pr -> P Pr <$>
   Pr -> P <$>
   P -> procedure N { S+ }
-  S+ -> S S+ <}>
-  S+ -> S <}>
-  S(r) -> read V ;
-  S(p) -> print V ;
-  S(a) -> V = E ;
+  S+ -> S ; S+ <}>
+  S+ -> S ; <}>
+  S(r) -> read V <;>
+  S(p) -> print V <;>
   F -> V <;>
   F -> C <;>
   F -> ( E ) <;>
-  T -> T * F <;, *, /, %>
-  T -> T / F <;, *, /, %>
-  T -> T % F <;, *, /, %>
-  T -> F <;, *, /, %>
+  T -> T * F <;, +, -, *, /, %>
+  T -> T / F <;, +, -, *, /, %>
+  T -> T % F <;, +, -, *, /, %>
+  T -> F <;, +, -, *, /, %>
   E -> E + T <;, +, ->
   E -> E - T <;, +, ->
   E -> T <;, +, ->
+  S(a) -> V = E <;>
   V -> N <=, ;, +, -, *, /, %, )>
   N -> id <!id>
   C -> int
 */
 bool SimpleParser::Check() {
   auto i = stack.rbegin();
+  // program
   if (util::instance_of<EndToken>(*lookahead)) {
     // When token has reached end
     if (stack.size() >= 2
@@ -220,29 +221,7 @@ bool SimpleParser::Check() {
       return true;
     }
   }
-  if (util::instance_of<token::RightBraceToken>(*lookahead)) {
-    // When lookahead is right brace (end of statement list)
-    if (stack.size() >= 2
-      && util::instance_of<ast::StatementListNode>(*i)
-      && util::instance_of<ast::StatementNode>(*std::next(i, 1))) {
-      // S+ <- S S+
-      ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
-      stack.pop_back();
-      ast::StatementNode *s = (ast::StatementNode *) stack.back();
-      stack.pop_back();
-      sl->AddStatement(s);
-      stack.push_back(sl);
-      return true;
-    } else if (util::instance_of<ast::StatementNode>(*i)) {
-      // S+ <- S
-      ast::StatementNode *s = (ast::StatementNode *) stack.back();
-      stack.pop_back();
-      ast::StatementListNode *sl = new ast::StatementListNode();
-      sl->AddStatement(s);
-      stack.push_back(sl);
-      return true;
-    }
-  }
+  // procedure
   if (stack.size() >= 5
     && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(i, 1))
@@ -260,59 +239,73 @@ bool SimpleParser::Check() {
     ast::ProcedureNode *p = new ast::ProcedureNode(n->GetName(), sl);
     stack.push_back(p);
     return true;
-  } else if (stack.size() >= 3
-    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
-    && util::instance_of<ast::VariableNode>(*std::next(i, 1))
-    && util::instance_of<ast::IdentifierNode>(*std::next(i, 2)) && ((ast::IdentifierNode *) *std::next(i, 2))->GetValue() == "read") {
-    // S(r) <- read V ;
-    stack.pop_back();
-    ast::VariableNode *v = (ast::VariableNode *) stack.back();
-    stack.pop_back();
-    stack.pop_back();
-    ast::ReadNode *r = new ast::ReadNode(v);
-    r->SetStatementNumber(++statementCounter);
-    stack.push_back(r);
-    return true;
-  } else if (stack.size() >= 3
-    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
-    && util::instance_of<ast::VariableNode>(*std::next(i, 1))
-    && util::instance_of<ast::IdentifierNode>(*std::next(i, 2)) && ((ast::IdentifierNode *) *std::next(i, 2))->GetValue() == "print") {
-    // S(p) <- print V ;
-    stack.pop_back();
-    ast::VariableNode *v = (ast::VariableNode *) stack.back();
-    stack.pop_back();
-    stack.pop_back();
-    ast::PrintNode *p = new ast::PrintNode(v);
-    p->SetStatementNumber(++statementCounter);
-    stack.push_back(p);
-    return true;
-  } else if (stack.size() >= 4
-    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
-    && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))
-    && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kEqual
-    && util::instance_of<ast::VariableNode>(*std::next(i, 3))) {
-    // S(a) -> V = E ;
-    stack.pop_back();
-    ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
-    stack.pop_back();
-    stack.pop_back();
-    ast::VariableNode *v = (ast::VariableNode *) stack.back();
-    stack.pop_back();
-    ast::AssignNode *a = new ast::AssignNode(v, e);
-    a->SetStatementNumber(++statementCounter);
-    stack.push_back(a);
-    return true;
   }
+  // statement lists
+  if (util::instance_of<token::RightBraceToken>(*lookahead)) {
+    // When lookahead is right brace (end of statement list)
+    if (stack.size() >= 3
+      && util::instance_of<ast::StatementListNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::StatementNode>(*std::next(i, 2))) {
+      // S+ <- S ; S+
+      ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      stack.pop_back();
+      sl->AddStatement(s);
+      stack.push_back(sl);
+      return true;
+    } else if (stack.size() >= 2
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::StatementNode>(*std::next(i, 1))) {
+      // S+ <- S ;
+      stack.pop_back();
+      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      stack.pop_back();
+      ast::StatementListNode *sl = new ast::StatementListNode();
+      sl->AddStatement(s);
+      stack.push_back(sl);
+      return true;
+    }
+  }
+  // read, print statements
+  if (util::instance_of<token::SemicolonToken>(*lookahead)) {
+    if (stack.size() >= 2
+      && util::instance_of<ast::VariableNode>(*i)
+      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && ((ast::IdentifierNode *) *std::next(i, 1))->GetValue() == "read") {
+      // S(r) <- read V
+      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::ReadNode *r = new ast::ReadNode(v);
+      r->SetStatementNumber(++statementCounter);
+      stack.push_back(r);
+      return true;
+    } else if (stack.size() >= 2
+      && util::instance_of<ast::VariableNode>(*i)
+      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && ((ast::IdentifierNode *) *std::next(i, 1))->GetValue() == "print") {
+      // S(p) <- print V
+      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::PrintNode *p = new ast::PrintNode(v);
+      p->SetStatementNumber(++statementCounter);
+      stack.push_back(p);
+      return true;
+    }
+  }
+  // factors
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (util::instance_of<ast::VariableNode>(*i)) {
-      // F <- V <;>
+      // F <- V
       ast::VariableNode *v = (ast::VariableNode *) stack.back();
       stack.pop_back();
       ast::FactorNode *f = new ast::FactorNode(v);
       stack.push_back(f);
       return true;
     } else if (util::instance_of<ast::ConstantNode>(*i)) {
-      // F <- C <;>
+      // F <- C
       ast::ConstantNode *c = (ast::ConstantNode *) stack.back();
       stack.pop_back();
       ast::FactorNode *f = new ast::FactorNode(c);
@@ -322,16 +315,20 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))
       && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftParen) {
-      // F -> ( E ) <;>
+      // F <- ( E )
       stack.pop_back();
       ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
       ast::FactorNode *f = new ast::FactorNode(e->GetOperand());
       stack.push_back(f);
+      return true;
     }
   }
+  // terms
   if (util::instance_of<token::SemicolonToken>(*lookahead)
+    || util::instance_of<token::PlusToken>(*lookahead)
+    || util::instance_of<token::MinusToken>(*lookahead)
     || util::instance_of<token::MultiplyToken>(*lookahead)
     || util::instance_of<token::DivideToken>(*lookahead)
     || util::instance_of<token::ModuloToken>(*lookahead)) {
@@ -339,7 +336,7 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kMultiply
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      // T <- T * F < ;, *, /, % >
+      // T <- T * F
       ast::FactorNode *f = (ast::FactorNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
@@ -353,7 +350,7 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kDivide
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      // T <- T / F < ;, *, /, % >
+      // T <- T / F
       ast::FactorNode *f = (ast::FactorNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
@@ -367,7 +364,7 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kModulo
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      //T <- T % F < ;, *, /, % >
+      //T <- T % F
       ast::FactorNode *f = (ast::FactorNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
@@ -378,13 +375,15 @@ bool SimpleParser::Check() {
       stack.push_back(t2);
       return true;
     } else if (util::instance_of<ast::FactorNode>(*i)) {
-      // T <- F < ;, *, /, % >
+      // T <- F
       ast::FactorNode *f = (ast::FactorNode *) stack.back();
       stack.pop_back();
       ast::TermNode *t = new ast::TermNode(f->GetOperand());
       stack.push_back(t);
+      return true;
     }
   }
+  // expressions
   if (util::instance_of<token::SemicolonToken>(*lookahead)
     || util::instance_of<token::PlusToken>(*lookahead)
     || util::instance_of<token::MinusToken>(*lookahead)) {
@@ -422,8 +421,28 @@ bool SimpleParser::Check() {
       stack.pop_back();
       ast::ExpressionNode *e = new ast::ExpressionNode(t->GetOperand());
       stack.push_back(e);
+      return true;
     }
   }
+  // assign
+  if (util::instance_of<token::SemicolonToken>(*lookahead)) {
+    if (stack.size() >= 3
+      && util::instance_of<ast::ExpressionNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kEqual
+      && util::instance_of<ast::VariableNode>(*std::next(i, 2))) {
+      // S(a) -> V = E
+      ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      stack.pop_back();
+      ast::AssignNode *a = new ast::AssignNode(v, e);
+      a->SetStatementNumber(++statementCounter);
+      stack.push_back(a);
+      return true;
+    }
+  }
+  // variable
   if (util::instance_of<token::EqualToken>(*lookahead)
     || util::instance_of<token::SemicolonToken>(*lookahead)
     || util::instance_of<token::PlusToken>(*lookahead)
@@ -432,7 +451,6 @@ bool SimpleParser::Check() {
     || util::instance_of<token::DivideToken>(*lookahead)
     || util::instance_of<token::ModuloToken>(*lookahead)
     || util::instance_of<token::RightParenToken>(*lookahead)) {
-    // assignment (not yet added other ops)
     if (util::instance_of<ast::NameNode>(*i)) {
       // V <- N
       ast::NameNode *n = (ast::NameNode *) stack.back();
@@ -442,6 +460,7 @@ bool SimpleParser::Check() {
       return true;
     }
   }
+  // name
   if (!util::instance_of<token::IdentifierToken>(*lookahead)) {
       if (util::instance_of<ast::IdentifierNode>(*i)) {
       // if not identifier then

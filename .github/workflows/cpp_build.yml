@@ -21,6 +21,7 @@ jobs:
           - cxx: clang++-14
             platform: macos-latest
             build_type: Release
+            other_pkgs: llvm@14
             std: 17
             cmake_configurations:
     runs-on: ${{ matrix.platform }}
@@ -46,11 +47,9 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
 
-      - name: Install LLVM and Clang (macOS)
+      - name: Prepare environment (macOS)
         if: matrix.platform == 'macos-latest'
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "14.0"
+        run: brew install ninja ${{matrix.other_pkgs}}
 
       - name: Configure build
         working-directory: ${{runner.workspace}}

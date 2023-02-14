@@ -18,7 +18,7 @@ jobs:
             build_type: Release
             std: 17
             cmake_configurations:
-          - cxx: clang++-14
+          - cxx: clang++
             platform: macos-latest
             build_type: Release
             other_pkgs: llvm@14

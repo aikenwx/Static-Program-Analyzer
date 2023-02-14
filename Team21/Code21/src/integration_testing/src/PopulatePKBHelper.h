@@ -1,10 +1,13 @@
 #include <unordered_set>
 
 #include "PKB/PKB.h"
+#include "query/design_entity.h"
 
 class PopulatePKBHelper {
 
  public:
+  using Data = std::unordered_map<qps::DesignEntity, std::unordered_set<std::string>>;
+
   PopulatePKBHelper() {
     pkb_ = new PKB();
   }
@@ -20,6 +23,67 @@ class PopulatePKBHelper {
   PopulateFacade *GetPopulater() {
     return pkb_->getPopulateFacade();
   }
+
+  void PopulateEntities(Data &data) {
+    AddVariables(data[qps::DesignEntity::VARIABLE]);
+    AddConstants(data[qps::DesignEntity::CONSTANT]);
+    AddAssignments(data[qps::DesignEntity::ASSIGN]);
+    AddRead(data[qps::DesignEntity::READ]);
+    AddPrint(data[qps::DesignEntity::PRINT]);
+    AddIf(data[qps::DesignEntity::IF]);
+    AddWhile(data[qps::DesignEntity::WHILE]);
+    AddCalls(data[qps::DesignEntity::CALL]);
+    AddProcedures(data[qps::DesignEntity::PROCEDURE]);
+  }
+
+  void AddStatementModifies(const std::vector<std::pair<int, std::string>> &modifies) {
+    for (const auto &[stmt, var_name] : modifies) {
+      pkb_->getPopulateFacade()->storeStatementModifiesVariableRelationship(stmt, var_name);
+    }
+  }
+
+  void AddProcedureModifies(const std::vector<std::pair<std::string, std::string>> &modifies) {
+    for (const auto &[proc_name, var_name] : modifies) {
+      pkb_->getPopulateFacade()->storeProcedureModifiesVariableRelationship(proc_name, var_name);
+    }
+  }
+
+  void AddProcedureUses(const std::vector<std::pair<std::string, std::string>> &uses) {
+    for (const auto &[proc_name, var_name] : uses) {
+      pkb_->getPopulateFacade()->storeProcedureUsesVariableRelationship(proc_name, var_name);
+    }
+  }
+
+  void AddStatementUses(const std::vector<std::pair<int, std::string>> &uses) {
+    for (const auto &[stmt, var_name] : uses) {
+      pkb_->getPopulateFacade()->storeStatementUsesVariableRelationship(stmt, var_name);
+    }
+  }
+
+  void AddParent(const std::vector<std::pair<int, int>> &parent) {
+    for (const auto &[parent, child] : parent) {
+      pkb_->getPopulateFacade()->storeParentRelationship(parent, child);
+    }
+  }
+
+  void AddParentStar(const std::vector<std::pair<int, int>> &parent) {
+    for (const auto &[parent, child] : parent) {
+      pkb_->getPopulateFacade()->storeParentStarRelationship(parent, child);
+    }
+  }
+
+  void AddFollows(const std::vector<std::pair<int, int>> &follows) {
+    for (const auto &[before, after] : follows) {
+      pkb_->getPopulateFacade()->storeFollowsRelationship(before, after);
+    }
+  }
+
+  void AddFollowsStar(const std::vector<std::pair<int, int>> &follows) {
+    for (const auto &[parent, child] : follows) {
+      pkb_->getPopulateFacade()->storeFollowsStarRelationship(parent, child);
+    }
+  }
+
   void AddVariables(const std::unordered_set<std::string> &variables) {
     for (const auto &str : variables) {
       pkb_->getPopulateFacade()->storeVariable(str);

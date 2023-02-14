@@ -9,7 +9,7 @@ INode *TermNode::GetOperand() {
   return operand;
 }
 
-std::ostream &TermNode::Write(std::ostream &out) const {
-  return out;
+std::string TermNode::ToString() const {
+  return "term:" + operand->ToString() + "\n";
 }
 }

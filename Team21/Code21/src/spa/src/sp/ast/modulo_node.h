@@ -3,6 +3,9 @@
 
 namespace ast {
 class ModuloNode : public BinaryOperationNode {
+public:
   using BinaryOperationNode::BinaryOperationNode;
+
+  std::string ToString() const override;
 };
 }

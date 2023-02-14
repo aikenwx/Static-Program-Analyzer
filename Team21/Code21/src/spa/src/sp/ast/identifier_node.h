@@ -9,7 +9,7 @@ public:
 
   void Execute();
   std::string GetValue();
-  std::ostream &Write(std::ostream &out) const override;
+  std::string ToString() const override;
 
 private:
   std::string value;

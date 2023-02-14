@@ -3,6 +3,9 @@
 
 namespace ast {
 class DivideNode : public BinaryOperationNode {
+public:
   using BinaryOperationNode::BinaryOperationNode;
+
+  virtual std::string ToString() const override;
 };
 }

@@ -7,7 +7,7 @@ public:
   TermNode(INode *operand);
 
   INode *GetOperand();
-  std::ostream &Write(std::ostream &out) const override;
+  std::string ToString() const override;
 
 private:
   INode *operand;

@@ -8,7 +8,7 @@ public:
   void AddStatement(INode *node);
   // Format is a stack, i.e. statements are stored in reverse order
   std::vector<INode *> *GetStatements();
-  std::ostream &Write(std::ostream &out) const override;
+  std::string ToString() const override;
 
 private:
   std::vector<INode *> statements;

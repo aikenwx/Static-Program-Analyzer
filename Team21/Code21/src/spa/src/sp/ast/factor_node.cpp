@@ -9,7 +9,7 @@ INode *FactorNode::GetOperand() {
   return operand;
 }
 
-std::ostream &FactorNode::Write(std::ostream &out) const {
-  return out;
+std::string FactorNode::ToString() const {
+  return "factor:" + operand->ToString() + "\n";
 }
 }

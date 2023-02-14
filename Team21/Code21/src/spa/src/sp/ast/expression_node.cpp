@@ -9,7 +9,7 @@ INode *ExpressionNode::GetOperand() {
   return operand;
 }
 
-std::ostream &ExpressionNode::Write(std::ostream &out) const {
-  return out;
+std::string ExpressionNode::ToString() const {
+  return "expression:" + operand->ToString() + "\n";
 }
 }

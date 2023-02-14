@@ -8,9 +8,9 @@ public:
 
   INode *GetLeft();
   INode *GetRight();
-  std::ostream &Write(std::ostream &out) const override;
+  virtual std::string ToString() const override = 0;
 
-private:
+protected:
   INode *left;
   INode *right;
 };

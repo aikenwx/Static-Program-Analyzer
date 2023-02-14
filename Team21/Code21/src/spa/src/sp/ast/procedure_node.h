@@ -10,7 +10,7 @@ public:
 
   // Format is a stack
   StatementListNode *GetStatements();
-  std::ostream &Write(std::ostream &out) const override;
+  std::string ToString() const override;
 
 private:
   // Creates some coupling with statement list node

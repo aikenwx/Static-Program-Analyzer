@@ -9,10 +9,7 @@ VariableNode *PrintNode::GetVariable() {
   return var;
 }
 
-std::ostream &PrintNode::Write(std::ostream &out) const {
-  out << "print:" << "\n{";
-  var->Write(out);
-  out << "}" << "\n";
-  return out;
+std::string PrintNode::ToString() const {
+  return "print:\n{\n" + var->ToString() + "}\n";
 }
 }

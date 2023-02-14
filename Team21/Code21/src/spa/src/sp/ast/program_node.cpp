@@ -10,12 +10,12 @@ std::vector<INode*> *ProgramNode::GetProcedures() {
   return &procedures;
 }
 
-std::ostream &ProgramNode::Write(std::ostream &out) const {
-  out << "program:" << "\n{";
+std::string ProgramNode::ToString() const {
+  std::string str = "program:\n{\n";
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
-    (*i)->Write(out);
+    str += (*i)->ToString();
   }
-  out << "}" << "\n";
-  return out;
+  str += "}\n";
+  return str;
 }
 }

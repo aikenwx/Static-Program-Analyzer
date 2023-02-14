@@ -14,10 +14,7 @@ INode *AssignNode::GetAssignment() {
   return assignment;
 }
 
-std::ostream &AssignNode::Write(std::ostream &out) const {
-  out << "assign:" << "\n{";
-  var->Write(out);
-  out << "}" << "\n";
-  return out;
+std::string AssignNode::ToString() const {
+  return "assign:\n{\n" + var->ToString() + assignment->ToString() + "}\n";
 }
 }

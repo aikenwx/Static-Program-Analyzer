@@ -8,7 +8,7 @@ public:
   PrintNode(VariableNode *var);
 
   VariableNode *GetVariable();
-  std::ostream &Write(std::ostream &out) const override;
+  std::string ToString() const override;
 
 private:
   VariableNode *var;

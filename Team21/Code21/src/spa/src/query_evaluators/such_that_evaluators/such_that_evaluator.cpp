@@ -13,8 +13,8 @@ ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<::Relationship *> filtered_relationships;
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
-  auto left_hand = GetLeftHandTypes(ref1);
-  auto right_hand = GetRightHandTypes(ref2);
+  auto left_hand = ResolveLeftTypes(ref1);
+  auto right_hand = ResolveRightTypes(ref2);
   for (auto left : left_hand) {
     for (auto right : right_hand) {
       auto res = CallPkb(pkb, left, right);
@@ -87,5 +87,19 @@ EntityType SuchThatEvaluator::FindEntityType(Synonym &syn) {
     throw std::invalid_argument("Synonym in clause not in query declaration");
   }
 }
+std::vector<EntityType> SuchThatEvaluator::ResolveLeftTypes(Ref &left_arg) {
+  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
+    return {FindEntityType(*syn)};
+  } else {
+    return GetLeftHandTypes(left_arg);
+  }
+}
 
+std::vector<EntityType> SuchThatEvaluator::ResolveRightTypes(Ref &right_arg) {
+  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
+    return {FindEntityType(*syn)};
+  } else {
+    return GetRightHandTypes(right_arg);
+  }
+}
 } // qps

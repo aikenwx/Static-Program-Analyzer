@@ -9,19 +9,10 @@ std::vector<::Relationship *> ParentStarEvaluator::CallPkb(QueryFacade &pkb, Ent
 }
 
 std::vector<EntityType> ParentStarEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return {EntityType::WHILE_STATEMENT, EntityType::IF_STATEMENT};
-  }
+  return {EntityType::WHILE_STATEMENT, EntityType::IF_STATEMENT};
 }
 
-// TODO: Refactor some repetition of code
 std::vector<EntityType> ParentStarEvaluator::GetRightHandTypes(Ref &right_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return {EntityType::STATEMENT};
-  }
+  return {EntityType::STATEMENT};
 }
 } // qps

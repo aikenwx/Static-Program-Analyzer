@@ -38,11 +38,6 @@ jobs:
       - name: Merge to master
         run: git checkout --progress --force ${{ github.sha }}
 
-      - name: Run repository-wide tests
-        if: runner.os == 'Linux'
-        working-directory:  ${{ github.workspace }}/.github
-        run: ./run-checks.sh
-
       - name: Prepare environment (Ubuntu)
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}

@@ -13,6 +13,16 @@ jobs:
             other_pkgs: clang-14
             std: 17
             cmake_configurations:
+          - cxx: MSVC
+            platform: windows-latest
+            build_type: Release
+            std: 17
+            cmake_configurations:
+          - cxx: clang++-14
+            platform: macos-latest
+            build_type: Release
+            std: 17
+            cmake_configurations:
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -35,6 +45,12 @@ jobs:
       - name: Prepare environment (Ubuntu)
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
+
+      - name: Install LLVM and Clang (macOS)
+        if: matrix.platform == 'macos-latest'
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
 
       - name: Configure build
         working-directory: ${{runner.workspace}}

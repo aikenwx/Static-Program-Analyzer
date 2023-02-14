@@ -1,14 +1,7 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "PKB/PKB.h"
-#include "query/ref.h"
 #include "query/query.h"
-#include "query/such_that_clause.h"
-#include "query/declaration.h"
-#include "query_evaluators/query_evaluator.h"
-#include "query_evaluators/QPS.h"
-#include "PopulatePKBHelper.h"
 #include "query/validation/SemanticValidator.h"
 #include "query_preprocess/query_parser.h"
 #include "query_preprocess/query_tokenizer.h"

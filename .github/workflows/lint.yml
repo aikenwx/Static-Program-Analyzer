@@ -1,6 +1,6 @@
 name: Linting and other checks
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:

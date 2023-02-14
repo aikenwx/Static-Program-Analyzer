@@ -47,6 +47,10 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
 
+      - name: Prepare environment (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Prepare environment (macOS)
         if: matrix.platform == 'macos-latest'
         run: brew install ninja ${{matrix.other_pkgs}}

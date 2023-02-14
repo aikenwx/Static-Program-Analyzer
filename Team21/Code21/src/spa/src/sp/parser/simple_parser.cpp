@@ -462,7 +462,7 @@ bool SimpleParser::Check() {
   }
   // name
   if (!util::instance_of<token::IdentifierToken>(*lookahead)) {
-      if (util::instance_of<ast::IdentifierNode>(*i)) {
+    if (util::instance_of<ast::IdentifierNode>(*i)) {
       // if not identifier then
       // N <- id
       ast::IdentifierNode *id = (ast::IdentifierNode *) stack.back();

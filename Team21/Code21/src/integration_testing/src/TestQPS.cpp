@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include "query/query.h"
-#include "PopulatePKBHelper.h"
 #include "query/validation/SemanticValidator.h"
 #include "query_preprocess/query_parser.h"
 #include "query_preprocess/query_tokenizer.h"

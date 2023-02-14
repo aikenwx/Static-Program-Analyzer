@@ -3,6 +3,7 @@
 #include "PKB/PKB.h"
 #include "query/design_entity.h"
 
+namespace qps_test {
 class PopulatePKBHelper {
 
  public:
@@ -139,4 +140,5 @@ class PopulatePKBHelper {
  private:
   PKB *pkb_;
 };
+}
 

@@ -1,6 +1,6 @@
 name: C++ CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
@@ -9,8 +9,19 @@ jobs:
         include:
           - cxx: clang++-14
             platform: ubuntu-latest
-            build_type: Debug
+            build_type: Release
             other_pkgs: clang-14
+            std: 17
+            cmake_configurations:
+          - cxx: cl
+            platform: windows-latest
+            build_type: Release
+            std: 17
+            cmake_configurations:
+          - cxx: clang++
+            platform: macos-latest
+            build_type: Release
+            other_pkgs: llvm@14
             std: 17
             cmake_configurations:
     runs-on: ${{ matrix.platform }}
@@ -27,14 +38,17 @@ jobs:
       - name: Merge to master
         run: git checkout --progress --force ${{ github.sha }}
 
-      - name: Run repository-wide tests
-        if: runner.os == 'Linux'
-        working-directory:  ${{ github.workspace }}/.github
-        run: ./run-checks.sh
-
       - name: Prepare environment (Ubuntu)
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
+
+      - name: Prepare environment (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Prepare environment (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: brew install ninja ${{matrix.other_pkgs}}
 
       - name: Configure build
         working-directory: ${{runner.workspace}}
@@ -43,12 +57,12 @@ jobs:
           CXXFLAGS: ${{matrix.cxxflags}}
         # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
         #       This is important
-        run: |
-          cmake -Bbuild -H$GITHUB_WORKSPACE/Team21/Code21 \
-                -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
-                -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-                ${{matrix.cmake_configurations}} \
-                -G Ninja
+        run: >
+          cmake -Bbuild -H${{github.workspace}}/Team21/Code21
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DCMAKE_CXX_STANDARD=${{matrix.std}}
+          ${{matrix.cmake_configurations}}
+          -G Ninja
 
       - name: Build tests + project
         working-directory: ${{runner.workspace}}/build

@@ -59,7 +59,7 @@ jobs:
         # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
         #       This is important
         run: >
-          cmake -Bbuild -H$GITHUB_WORKSPACE/Team21/Code21
+          cmake -Bbuild -H${{github.workspace}}/Team21/Code21
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
           -DCMAKE_CXX_STANDARD=${{matrix.std}}
           ${{matrix.cmake_configurations}}

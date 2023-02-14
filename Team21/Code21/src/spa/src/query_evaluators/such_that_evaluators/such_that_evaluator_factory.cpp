@@ -3,6 +3,7 @@
 #include "follows_evaluator.h"
 #include "uses_evaluator.h"
 #include "modifies_evaluator.h"
+#include "parent_star_evaluator.h"
 
 #include "query/query_exceptions.h"
 
@@ -18,6 +19,7 @@ std::unique_ptr<SuchThatEvaluator> SuchThatEvaluatorFactory::Create(SuchThatClau
     case Relationship::ModifiesP:
     case Relationship::ModifiesS:
     case Relationship::Modifies:return std::make_unique<ModifiesEvaluator>(clause, decl_lst);
+    case Relationship::ParentT:return std::make_unique<ParentStarEvaluator>(clause, decl_lst);
     default:throw std::invalid_argument("Clause type not supported yet");
   }
 }

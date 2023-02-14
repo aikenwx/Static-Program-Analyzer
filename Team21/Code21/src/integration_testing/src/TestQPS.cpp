@@ -120,20 +120,20 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   PopulateEntities(pkb_helper, data);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
   PopulateFacade *pkb_populater = pkb_helper.GetPopulater();
-  pkb_populater->storeParentRelationship(5, EntityType::WHILE_STATEMENT, 6, EntityType::ASSIGN_STATEMENT);
-  pkb_populater->storeParentRelationship(5, EntityType::WHILE_STATEMENT, 7, EntityType::ASSIGN_STATEMENT);
-  pkb_populater->storeParentRelationship(5, EntityType::WHILE_STATEMENT, 8, EntityType::ASSIGN_STATEMENT);
-  pkb_populater->storeParentRelationship(5, EntityType::WHILE_STATEMENT, 9, EntityType::CALL_STATEMENT);
+  pkb_populater->storeParentRelationship(5, 6);
+  pkb_populater->storeParentRelationship(5, 7);
+  pkb_populater->storeParentRelationship(5, 8);
+  pkb_populater->storeParentRelationship(5, 9);
 
-  pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 11, EntityType::ASSIGN_STATEMENT);
-  pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 12, EntityType::ASSIGN_STATEMENT);
-  pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 13, EntityType::ASSIGN_STATEMENT);
+  pkb_populater->storeParentRelationship(10, 11);
+  pkb_populater->storeParentRelationship(10, 12);
+  pkb_populater->storeParentRelationship(10, 13);
 
-  pkb_populater->storeStatementModifiesVariableRelationship(6, EntityType::ASSIGN_STATEMENT, "count");
-  pkb_populater->storeStatementModifiesVariableRelationship(7, EntityType::ASSIGN_STATEMENT, "cenX");
-  pkb_populater->storeStatementModifiesVariableRelationship(7, EntityType::ASSIGN_STATEMENT, "cenY");
-  pkb_populater->storeStatementModifiesVariableRelationship(12, EntityType::ASSIGN_STATEMENT, "cenX");
-  pkb_populater->storeStatementModifiesVariableRelationship(13, EntityType::ASSIGN_STATEMENT, "cenY");
+  pkb_populater->storeStatementModifiesVariableRelationship(6, "count");
+  pkb_populater->storeStatementModifiesVariableRelationship(7, "cenX");
+  pkb_populater->storeStatementModifiesVariableRelationship(7, "cenY");
+  pkb_populater->storeStatementModifiesVariableRelationship(12, "cenX");
+  pkb_populater->storeStatementModifiesVariableRelationship(13, "cenY");
 
 
 
@@ -179,10 +179,10 @@ TEST_CASE("QPS parse and can retrieve design entities") {
   data[qps::DesignEntity::CONSTANT] = {"20", "0", "1000", "-99"};
   data[qps::DesignEntity::ASSIGN] = {"1", "7", "11"};
   data[qps::DesignEntity::READ] = {"29", "56"};
-  data[qps::DesignEntity::CALL] = {"4", "19", "23", "100"};
+  data[qps::DesignEntity::CALL] = {"200", "19", "23", "100"};
   data[qps::DesignEntity::IF] = {"3", "20", "50"};
   data[qps::DesignEntity::WHILE] = {"5", "17", "30"};
-  data[qps::DesignEntity::PRINT] = {"4", "29", "22", "101"};
+  data[qps::DesignEntity::PRINT] = {"4", "500", "22", "101"};
   data[qps::DesignEntity::PROCEDURE] = {"main", "calculate", "Evaluate"};
 
   PopulatePKBHelper pkb_helper;

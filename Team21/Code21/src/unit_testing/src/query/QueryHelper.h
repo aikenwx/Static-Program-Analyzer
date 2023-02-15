@@ -3,7 +3,7 @@
 #include <string>
 #include<vector>
 
-#include "query.h"
+#include "query/query.h"
 #include "query_preprocess/query_tokenizer.h"
 #include "query_preprocess/query_parser.h"
 

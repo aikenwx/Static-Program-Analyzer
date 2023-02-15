@@ -27,6 +27,9 @@ namespace qps {
 				return false;
 			}
 		}
+		if (str.length() > 1 && str[0] == '0') {
+			throw QueryException(ErrorType::Syntactic, "Invalid Query Syntax. Integer cannot have leading zero");
+		}
 		return str.length() != 0;
 	}
 

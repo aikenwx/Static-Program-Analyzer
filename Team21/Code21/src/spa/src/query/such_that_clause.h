@@ -36,7 +36,7 @@ class SuchThatClause {
 					? Relationship::UsesP : Relationship::ModifiesP;
 			} else if (std::holds_alternative<StatementNumber>(arg1)) {
 				relationship = (relationship == Relationship::Uses)
-					? Relationship::UsesP : Relationship::ModifiesP;
+					? Relationship::UsesS : Relationship::ModifiesS;
 			}
 		}
 

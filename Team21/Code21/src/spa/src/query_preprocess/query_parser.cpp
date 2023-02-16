@@ -157,7 +157,7 @@ namespace qps {
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
 		if (declaration->getDesignEntity() != DesignEntity::ASSIGN) {
-			throw QueryException(ErrorType::Semantic, "Invalid syntax for pattern assign with synonym: " + syn);
+			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern assign with synonym: " + syn);
 		}
 
 		assertNextToken("(");

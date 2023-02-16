@@ -35,7 +35,7 @@ namespace qps {
 		}
 	}
 
-	//TBD expression-spec does not have parser to parse and check if valid
+	//TBD expression-spec does not have parser to parse and check if valid. Need to add something to check. Now only check for first arg.
 	void SyntacticValidator::checkAssignPatternCorrectRefTypes() {
 		std::vector<PatternClause> patt = getQuery().getPatternClause();
 		for (int i = 0; i < patt.size(); i++) {

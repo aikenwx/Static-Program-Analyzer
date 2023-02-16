@@ -81,10 +81,11 @@ namespace qps {
 		std::vector<Declaration> declr = getQuery().getDeclarations();
 		if (!getQuery().getPatternClause().empty()) {
 			Ref refPattern = getQuery().getPatternClause()[0].getAssign();
-			std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refPattern));
+			Synonym syn = std::get<Synonym>(refPattern);
+			std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, syn);
 			if (patternDclr.has_value()) {
 				if (patternDclr.value().getDesignEntity() != DesignEntity::ASSIGN) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. The pattern clause synonym is not assign design entity");
+					throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern assign with synonym: " + syn.getSynonym());
 				}
 			}
 		}
@@ -106,7 +107,12 @@ namespace qps {
 				}
 				else if (d != DesignEntity::STMT && d != DesignEntity::READ && d != DesignEntity::PRINT && d != DesignEntity::ASSIGN
 					&& d != DesignEntity::IF && d != DesignEntity::WHILE && d != DesignEntity::CALL) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+					if ((rel == Relationship::Modifies || rel == Relationship::Uses) && d != DesignEntity::PROCEDURE) {
+						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+					}
+					else if ((rel != Relationship::Modifies && rel != Relationship::Uses)) {
+						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+					}
 				}
 			}
 			if (std::holds_alternative<Synonym>(s[i].getArg2())) {

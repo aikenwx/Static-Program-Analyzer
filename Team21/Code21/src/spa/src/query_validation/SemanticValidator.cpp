@@ -100,7 +100,7 @@ namespace qps {
 					if (d != DesignEntity::PROCEDURE) {
 						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
 					}
-				} 
+				}
 				else {
 					checkSynonymStatementHelper(d, relStr);
 				}

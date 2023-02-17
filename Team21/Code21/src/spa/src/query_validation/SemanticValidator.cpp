@@ -42,23 +42,19 @@ namespace qps {
 		for (int i = 0; i < s.size(); i++) {
 			Ref refSuchThat1 = s[i].getArg1();
 			Ref refSuchThat2 = s[i].getArg2();
-			if (std::holds_alternative<Synonym>(refSuchThat1)) {
-				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refSuchThat1)).has_value() == false) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in SuchThat clause for argument 1");
-				}
-			}
-			if (std::holds_alternative<Synonym>(refSuchThat2)) {
-				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refSuchThat2)).has_value() == false) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in SuchThat clause for argument 2");
-				}
-			}
+			checkSynonymDeclareHelper(refSuchThat1, declr, "SuchThat clause for argument 1");
+			checkSynonymDeclareHelper(refSuchThat2, declr, "SuchThat clause for argument 2");
 		}
 		for (int i = 0; i < p.size(); i++) {
 			Ref refPattern = p[i].getArg1();
-			if (std::holds_alternative<Synonym>(refPattern)) {
-				if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(refPattern)).has_value() == false) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in AssignPattern clause for argument 1");
-				}
+			checkSynonymDeclareHelper(refPattern, declr, "AssignPattern clause for argument 1");
+		}
+	}
+
+	void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing) {
+		if (std::holds_alternative<Synonym>(r)) {
+			if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
+				throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in " + missing);
 			}
 		}
 	}
@@ -68,8 +64,8 @@ namespace qps {
 		for (int i = 0; i < s.size(); i++) {
 			Relationship rel = s[i].getRelationship();
 			if (std::holds_alternative<Underscore>(s[i].getArg1())) {
-				if (rel == Relationship::Modifies || rel == Relationship::ModifiesP || rel == Relationship::ModifiesS
-					|| rel == Relationship::Uses || rel == Relationship::UsesP || rel == Relationship::UsesS) {
+				if (rel == Relationship::ModifiesP || rel == Relationship::ModifiesS || rel == Relationship::UsesP || rel == Relationship::UsesS
+					|| rel == Relationship::Modifies || rel == Relationship::Uses) {
 					std::string relStr = getStringFromRelationship(rel);
 					throw QueryException(ErrorType::Semantic, "Semantic error. There is wild card as first argument in " + relStr);
 				}
@@ -104,31 +100,30 @@ namespace qps {
 					if (d != DesignEntity::PROCEDURE) {
 						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
 					}
-				}
-				else if (d != DesignEntity::STMT && d != DesignEntity::READ && d != DesignEntity::PRINT && d != DesignEntity::ASSIGN
-					&& d != DesignEntity::IF && d != DesignEntity::WHILE && d != DesignEntity::CALL) {
-					if ((rel == Relationship::Modifies || rel == Relationship::Uses) && d != DesignEntity::PROCEDURE) {
-						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-					}
-					else if ((rel != Relationship::Modifies && rel != Relationship::Uses)) {
-						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-					}
+				} 
+				else {
+					checkSynonymStatementHelper(d, relStr);
 				}
 			}
 			if (std::holds_alternative<Synonym>(s[i].getArg2())) {
 				Synonym syn2 = std::get<Synonym>(s[i].getArg2());
 				DesignEntity d2 = Declaration::findDeclarationWithSynonym(declr, syn2).value().getDesignEntity();
-				if ((rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS || rel == Relationship::UsesS)
-					|| rel == Relationship::Modifies || rel == Relationship::Uses) {
+				if ((rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS || rel == Relationship::UsesS)) {
 					if (d2 != DesignEntity::VARIABLE) {
 						throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
 					}
 				}
-				else if (d2 != DesignEntity::STMT && d2 != DesignEntity::READ && d2 != DesignEntity::PRINT && d2 != DesignEntity::ASSIGN
-					&& d2 != DesignEntity::IF && d2 != DesignEntity::WHILE && d2 != DesignEntity::CALL) {
-					throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+				else {
+					checkSynonymStatementHelper(d2, relStr);
 				}
 			}
+		}
+	}
+
+	void SemanticValidator::checkSynonymStatementHelper(DesignEntity d, std::string relStr) {
+		if (d != DesignEntity::STMT && d != DesignEntity::READ && d != DesignEntity::PRINT && d != DesignEntity::ASSIGN
+			&& d != DesignEntity::IF && d != DesignEntity::WHILE && d != DesignEntity::CALL) {
+			throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
 		}
 	}
 }

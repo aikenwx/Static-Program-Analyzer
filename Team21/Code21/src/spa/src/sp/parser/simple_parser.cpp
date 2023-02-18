@@ -4,7 +4,7 @@
 #include "sp/ast/ast.h"
 #include "sp/ast/conditional_expression_node.h"
 #include "sp/ast/constant_node.h"
-#include "sp/ast/container_statement_node.h"  
+#include "sp/ast/container_statement_node.h"
 #include "sp/ast/divide_node.h"
 #include "sp/ast/equals_node.h"
 #include "sp/ast/expression_node.h"

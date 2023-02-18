@@ -7,7 +7,7 @@ namespace ast {
 class IfNode : public ContainerStatementNode {
 public:
   IfNode(ConditionalExpressionNode *condition, StatementListNode *then, StatementListNode *els);
-  
+
   ConditionalExpressionNode *GetCondition();
   StatementListNode *GetThen();
   StatementListNode *GetElse();

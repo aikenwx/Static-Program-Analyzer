@@ -5,13 +5,12 @@
 #include "token.h"
 
 namespace token {
-class LessEqualToken : public SymbolToken {
+class LessEqualToken : public Token {
  public:
-  static const LessEqualToken* createToken(std::string);
+  static const std::unique_ptr<Token> createToken(std::string);
   const std::string getValue() override;
 
  private:
   LessEqualToken();
-  static LessEqualToken* instance_;
 };
 }  // namespace token

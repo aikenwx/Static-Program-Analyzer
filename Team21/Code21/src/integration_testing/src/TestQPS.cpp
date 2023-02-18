@@ -28,11 +28,11 @@ void PopulateEntities(PopulatePKBHelper &pkb_helper, Data &data) {
 }
 
 qps::Query buildQuery(std::string str) {
-    std::string dupeInput(str);
-    qps::QueryTokenizer tokenizer(dupeInput);
-    std::vector<std::string> tokenList = tokenizer.tokenize();
-    qps::QueryParser parser(tokenList);
-    return parser.parse();
+  std::string dupeInput(str);
+  qps::QueryTokenizer tokenizer(dupeInput);
+  std::vector<std::string> tokenList = tokenizer.tokenize();
+  qps::QueryParser parser(tokenList);
+  return parser.parse();
 }
 
 std::unordered_set<std::string> RunSelect(qps::DesignEntity entity_type, std::string synonym, QueryFacade *pkb) {
@@ -66,22 +66,22 @@ std::unordered_set<std::string> RunQuery(std::string query_str, QueryFacade &pkb
 }
 
 TEST_CASE("Queries can be built from parsing and tokenising from inputs") {
-    SECTION("Can be built with single select clause only") {
-        REQUIRE_NOTHROW(buildQuery("stmt s; Select s"));
-    }
+  SECTION("Can be built with single select clause only") {
+    REQUIRE_NOTHROW(buildQuery("stmt s; Select s"));
+  }
 
-    SECTION("Can be built with single such that clause") {
-        REQUIRE_NOTHROW(buildQuery("stmt s; Select s such that Modifies(s, _)"));
-    }
+  SECTION("Can be built with single such that clause") {
+    REQUIRE_NOTHROW(buildQuery("stmt s; Select s such that Modifies(s, _)"));
+  }
 
-    SECTION("Can be built with single assign pattern clause") {
-        REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s pattern a (s, _)"));
-    }
+  SECTION("Can be built with single assign pattern clause") {
+    REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s pattern a (s, _)"));
+  }
 
-    SECTION("Can be built with one such that and assign pattern clause") {
-        REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s such that Modifies(s, _) pattern a (s, _)"));
-        REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s pattern a (s, _) such that Modifies(s, _)"));
-    }
+  SECTION("Can be built with one such that and assign pattern clause") {
+    REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s such that Modifies(s, _) pattern a (s, _)"));
+    REQUIRE_NOTHROW(buildQuery("stmt s; assign a; Select s pattern a (s, _) such that Modifies(s, _)"));
+  }
 }
 
 //Sample program
@@ -129,46 +129,47 @@ TEST_CASE("QPS can work with select and such that parent clause") {
   pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 12, EntityType::ASSIGN_STATEMENT);
   pkb_populater->storeParentRelationship(10, EntityType::IF_STATEMENT, 13, EntityType::ASSIGN_STATEMENT);
 
-  // variable h; Select h
+  pkb_populater->storeStatementModifiesVariableRelationship(6, EntityType::ASSIGN_STATEMENT, "count");
+  pkb_populater->storeStatementModifiesVariableRelationship(7, EntityType::ASSIGN_STATEMENT, "cenX");
+  pkb_populater->storeStatementModifiesVariableRelationship(7, EntityType::ASSIGN_STATEMENT, "cenY");
+  pkb_populater->storeStatementModifiesVariableRelationship(12, EntityType::ASSIGN_STATEMENT, "cenX");
+  pkb_populater->storeStatementModifiesVariableRelationship(13, EntityType::ASSIGN_STATEMENT, "cenY");
+
+
+
+
   SECTION("QPS can retrieve all variables") {
-    auto res = RunSelect(qps::DesignEntity::VARIABLE, "h", pkb_querier);
-    REQUIRE(res == data[qps::DesignEntity::VARIABLE]);
+    REQUIRE(RunQuery("variable h; Select h", *pkb_querier) == data[qps::DesignEntity::VARIABLE]);
   }
 
-    // stmt s; Select s such that Parent(s, 7)
-  SECTION("QPS can retieve statements that are parent of a statement") {
-    qps::Ref arg1{qps::Synonym("s")};
-    qps::Ref arg2{7};
-    auto res = RunSuchThat(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
+  SECTION("QPS can retrieve variables modified in a single staement") {
+    std::unordered_set<std::string> expected{"count"};
+    REQUIRE(RunQuery("variable v; Select v such that Modifies(6, v)", *pkb_querier) == expected);
+  }
+
+  SECTION("QPS can retrieve all variables modified in a assign a statement") {
+    std::unordered_set<std::string> expected{"count", "cenX", "cenY"};
+    REQUIRE(RunQuery("variable v; assign a; Select v such that Modifies(a, v)", *pkb_querier) == expected);
+  }
+
+  SECTION("QPS can retrieve statements that are parent of a statement") {
     std::unordered_set<std::string> expected{"5"};
-    REQUIRE(expected == res);
+    REQUIRE(RunQuery("stmt s; Select s such that Parent(s, 7)", *pkb_querier) == expected);
   }
 
-    // stmt s; Select s such that Parent(_, s)
   SECTION("QPS can retrieve all statements that are a child") {
-    qps::Ref arg1{qps::Underscore()};
-    qps::Ref arg2{qps::Synonym("s")};
-    auto res = RunSuchThat(qps::DesignEntity::STMT, "s", qps::Relationship::Parent, arg1, arg2, pkb_querier);
     std::unordered_set<std::string> expected{"6", "7", "8", "9", "11", "12", "13"};
-    REQUIRE(expected == res);
+    REQUIRE(RunQuery("stmt s; Select s such that Parent(_, s)", *pkb_querier) == expected);
   }
 
-    // assign a; Select s such that Parent(_, a)
   SECTION("QPS can retrieve all assigments that are a child") {
-    qps::Ref arg1{qps::Underscore()};
-    qps::Ref arg2{qps::Synonym("a")};
-    auto res = RunSuchThat(qps::DesignEntity::ASSIGN, "a", qps::Relationship::Parent, arg1, arg2, pkb_querier);
     std::unordered_set<std::string> expected{"6", "7", "8", "11", "12", "13"};
-    REQUIRE(expected == res);
+    REQUIRE(RunQuery("assign a; Select a such that Parent(_, a)", *pkb_querier) == expected);
   }
 
-    // call c; Select c such that Parent(_, c)
   SECTION("QPS can retrieve all calls that are a child") {
-    qps::Ref arg1{qps::Underscore()};
-    qps::Ref arg2{qps::Synonym("c")};
-    auto res = RunSuchThat(qps::DesignEntity::CALL, "c", qps::Relationship::Parent, arg1, arg2, pkb_querier);
     std::unordered_set<std::string> expected{"9"};
-    REQUIRE(expected == res);
+    REQUIRE(RunQuery("call c; Select c such that Parent(_, c)", *pkb_querier) == expected);
   }
 }
 
@@ -228,8 +229,8 @@ TEST_CASE("QPS parse and can retrieve design entities") {
   }
 
   SECTION("QPS can get semantic error") {
-      std::unordered_set<std::string> error = {"SemanticError"};
-      REQUIRE(RunQuery("read r; Select a", *pkb_querier) == error);
+    std::unordered_set<std::string> error = {"SemanticError"};
+    REQUIRE(RunQuery("read r; Select a", *pkb_querier) == error);
   }
 
   SECTION("QPS can retrieve statements") {
@@ -246,48 +247,53 @@ TEST_CASE("QPS parse and can retrieve design entities") {
 }
 
 TEST_CASE("Semantic validation for queries") {
-    using Catch::Matchers::Contains;
+  using Catch::Matchers::Contains;
 
-    SECTION("Duplicate declaration") {
-        std::string dupeInput("stmt s; procedure s; variable v; assign a; Select s such that Parent (s, _)");
-        qps::Query dupeQuery = buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("There is duplicate declaration found for s"));
-    }
+  SECTION("Duplicate declaration") {
+    std::string dupeInput("stmt s; procedure s; variable v; assign a; Select s such that Parent (s, _)");
+    qps::Query dupeQuery = buildQuery(dupeInput);
+    qps::SemanticValidator validator(dupeQuery);
+    REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("There is duplicate declaration found for s"));
+  }
 
-    SECTION("No duplicate declaration when capitals are used") {
-        std::string dupeInput("stmt s; procedure p; variable P; assign S; Select P");
-        qps::Query dupeQuery = buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE(validator.validateQuery() == true);
-    }
+  SECTION("No duplicate declaration when capitals are used") {
+    std::string dupeInput("stmt s; procedure p; variable P; assign S; Select P");
+    qps::Query dupeQuery = buildQuery(dupeInput);
+    qps::SemanticValidator validator(dupeQuery);
+    REQUIRE(validator.validateQuery() == true);
+  }
 
-    SECTION("The synonym for select clause is not previously declared") {
-        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select S");
-        qps::QueryTokenizer tokenizer(dupeInput);
-        std::vector<std::string> tokenList = tokenizer.tokenize();
-        qps::QueryParser parser(tokenList);
-        REQUIRE_THROWS_WITH(parser.parse(), Contains("Semantic error. There is missing declaration in Select clause for S"));
-    }
+  SECTION("The synonym for select clause is not previously declared") {
+    std::string dupeInput("stmt s; procedure p; variable v; assign a; Select S");
+    qps::QueryTokenizer tokenizer(dupeInput);
+    std::vector<std::string> tokenList = tokenizer.tokenize();
+    qps::QueryParser parser(tokenList);
+    REQUIRE_THROWS_WITH(parser.parse(),
+                        Contains("Semantic error. There is missing declaration in Select clause for S"));
+  }
 
-    SECTION("The synonym for such that clause is not previously declared") {
-        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent(w, s)");
-        qps::Query dupeQuery = buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Semantic error. There is missing declaration in SuchThat clause"));
-    }
+  SECTION("The synonym for such that clause is not previously declared") {
+    std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent(w, s)");
+    qps::Query dupeQuery = buildQuery(dupeInput);
+    qps::SemanticValidator validator(dupeQuery);
+    REQUIRE_THROWS_WITH(validator.validateQuery(),
+                        Contains("Semantic error. There is missing declaration in SuchThat clause"));
+  }
 
-    SECTION("The synonym for assignPattern clause is not previously declared") {
-        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s pattern a (New, _)");
-        qps::Query dupeQuery = buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
-    }
+  SECTION("The synonym for assignPattern clause is not previously declared") {
+    std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s pattern a (New, _)");
+    qps::Query dupeQuery = buildQuery(dupeInput);
+    qps::SemanticValidator validator(dupeQuery);
+    REQUIRE_THROWS_WITH(validator.validateQuery(),
+                        Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
+  }
 
-    SECTION("The synonym for assignPattern clause is not previously declared and with double clause") {
-        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent(s, _) pattern a (New, _)");
-        qps::Query dupeQuery = buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
-    }
+  SECTION("The synonym for assignPattern clause is not previously declared and with double clause") {
+    std::string
+        dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent(s, _) pattern a (New, _)");
+    qps::Query dupeQuery = buildQuery(dupeInput);
+    qps::SemanticValidator validator(dupeQuery);
+    REQUIRE_THROWS_WITH(validator.validateQuery(),
+                        Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
+  }
 }

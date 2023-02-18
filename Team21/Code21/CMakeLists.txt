@@ -14,10 +14,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS_DEBUG "-g")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
   set(CMAKE_EXE_LINKER_FLAGS "-no-pie")
 endif()
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)

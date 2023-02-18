@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
+const std::unique_ptr<Token> EqualToken::createToken(std::string str) {
+  assert(str == "==");
+  return std::unique_ptr<EqualToken>(new EqualToken());
+};
+
 EqualToken::EqualToken(){};
 
 const std::string EqualToken::getValue() { return "=="; };
-
-const EqualToken* EqualToken::createToken(std::string str) {
-  assert(str == "==");
-  if (instance_ == nullptr) instance_ = new EqualToken();
-  return instance_;
-};
-
-EqualToken* EqualToken::instance_ = nullptr;
 }  // namespace token

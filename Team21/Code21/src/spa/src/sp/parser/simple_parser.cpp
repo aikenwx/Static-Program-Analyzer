@@ -1,25 +1,40 @@
 #include <assert.h>
+#include "sp/ast/and_node.h"
 #include "sp/ast/assign_node.h"
 #include "sp/ast/ast.h"
+#include "sp/ast/conditional_expression_node.h"
 #include "sp/ast/constant_node.h"
+#include "sp/ast/container_statement_node.h"  
 #include "sp/ast/divide_node.h"
+#include "sp/ast/equals_node.h"
 #include "sp/ast/expression_node.h"
 #include "sp/ast/factor_node.h"
+#include "sp/ast/greater_equals_node.h"
+#include "sp/ast/greater_node.h"
 #include "sp/ast/identifier_node.h"
+#include "sp/ast/if_node.h"
+#include "sp/ast/lesser_equals_node.h"
+#include "sp/ast/lesser_node.h"
 #include "sp/ast/minus_node.h"
 #include "sp/ast/modulo_node.h"
 #include "sp/ast/name_node.h"
+#include "sp/ast/not_node.h"
+#include "sp/ast/not_equals_node.h"
+#include "sp/ast/or_node.h"
 #include "sp/ast/plus_node.h"
 #include "sp/ast/print_node.h"
 #include "sp/ast/procedure_node.h"
 #include "sp/ast/program_node.h"
 #include "sp/ast/read_node.h"
+#include "sp/ast/relational_expression_node.h"
+#include "sp/ast/relational_factor_node.h"
 #include "sp/ast/statement_node.h"
 #include "sp/ast/statement_list_node.h"
 #include "sp/ast/symbol_node.h"
 #include "sp/ast/term_node.h"
 #include "sp/ast/times_node.h"
 #include "sp/ast/variable_node.h"
+#include "sp/ast/while_node.h"
 #include "token/and_token.h"
 #include "token/assign_token.h"
 #include "token/divide_token.h"
@@ -175,10 +190,12 @@ void SimpleParser::Success() {
   Pr -> P Pr <$>
   Pr -> P <$>
   P -> procedure N { S+ }
+  S+ -> Sc S+ <}>
   S+ -> S ; S+ <}>
   S+ -> S ; <}>
   S(r) -> read V <;>
   S(p) -> print V <;>
+  S(c) -> call N <;>
   F -> V <;>
   F -> C <;>
   F -> ( E ) <;>
@@ -190,6 +207,21 @@ void SimpleParser::Success() {
   E -> E - T <;, +, ->
   E -> T <;, +, ->
   S(a) -> V = E <;>
+  L -> E <), >, <, ==, >=, <=, !=>
+  L -> V <), >, <, ==, >=, <=, !=>
+  L -> C <), >, <, ==, >=, <=, !=>
+  R -> L > L <)>
+  R -> L < L <)>
+  R -> L == L <)>
+  R -> L >= L <)>
+  R -> L <= L <)>
+  R -> L != L <)>
+  O -> ! ( O ) <)>
+  O -> ( O ) && ( O ) <)>
+  O -> ( O ) || ( O ) <)>
+  O -> R <)>
+  Sc(w) -> while ( O ) { S+ }
+  Sc(i) -> if ( O ) then { S+ } else { S+ }
   V -> N <=, ;, +, -, *, /, %, )>
   N -> id <!id>
   C -> int
@@ -243,6 +275,18 @@ bool SimpleParser::Check() {
   // statement lists
   if (util::instance_of<token::RightBraceToken>(*lookahead)) {
     // When lookahead is right brace (end of statement list)
+    if (stack.size() >= 2
+      && util::instance_of<ast::StatementListNode>(*i)
+      && util::instance_of<ast::ContainerStatementNode>(*std::next(i, 1))) {
+      // S+ <Sc S+
+      ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
+      stack.pop_back();
+      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      stack.pop_back();
+      sl->AddStatement(s);
+      stack.push_back(sl);
+      return true;
+    }
     if (stack.size() >= 3
       && util::instance_of<ast::StatementListNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kSemicolon
@@ -428,7 +472,7 @@ bool SimpleParser::Check() {
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::ExpressionNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kEqual
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kAssign
       && util::instance_of<ast::VariableNode>(*std::next(i, 2))) {
       // S(a) -> V = E
       ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
@@ -439,6 +483,196 @@ bool SimpleParser::Check() {
       ast::AssignNode *a = new ast::AssignNode(v, e);
       a->SetStatementNumber(++statementCounter);
       stack.push_back(a);
+      return true;
+    }
+  }
+  // relational factors
+  if (util::instance_of<token::RightParenToken>(*lookahead)
+    || util::instance_of<token::LessThanToken>(*lookahead)
+    || util::instance_of<token::GreaterThanToken>(*lookahead)
+    || util::instance_of<token::EqualToken>(*lookahead)
+    || util::instance_of<token::LessEqualToken>(*lookahead)
+    || util::instance_of<token::GreaterEqualToken>(*lookahead)
+    || util::instance_of<token::NotEqualToken>(*lookahead)) {
+    if (util::instance_of<ast::ExpressionNode>(*i)) {
+      // L <- E
+      ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(e->GetOperand());
+      stack.push_back(f);
+      return true;
+    } else if (util::instance_of<ast::VariableNode>(*i)) {
+      // L <- V
+      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(v);
+      stack.push_back(f);
+      return true;
+    } else if (util::instance_of<ast::ConstantNode>(*i)) {
+      // L <- C
+      ast::ConstantNode *c = (ast::ConstantNode *) stack.back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(c);
+      stack.push_back(f);
+      return true;
+    }
+  }
+  // relational expression
+  if (util::instance_of<token::RightParenToken>(*lookahead)) {
+    if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kGreater
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L > L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::GreaterNode *b = new ast::GreaterNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLesser
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L < L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::LesserNode *b = new ast::LesserNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kEqual
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L == L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::EqualsNode *b = new ast::EqualsNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kGreaterEqual
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L >= L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::GreaterEqualsNode *b = new ast::GreaterEqualsNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLesserEqual
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L <= L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::LesserEqualsNode *b = new ast::LesserEqualsNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 3
+      && util::instance_of<ast::RelationalFactorNode>(*i)
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kNotEqual
+      && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
+      // R <- L == L
+      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      stack.pop_back();
+      ast::NotEqualsNode *b = new ast::NotEqualsNode(f2, f1);
+      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    }
+  }
+  // conditional expressions
+  if (util::instance_of<token::RightParenToken>(*lookahead)) {
+    if (stack.size() >= 4
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kNot) {
+      // O <- ! ( O )
+      stack.pop_back();
+      ast::ConditionalExpressionNode *n = (ast::ConditionalExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::NotNode *u = new ast::NotNode(n->GetOperand());
+      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(u);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 7
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kAnd
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLeftParen) {
+      // O <- ( O ) && ( O )
+      stack.pop_back();
+      ast::ConditionalExpressionNode *n1 = (ast::ConditionalExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::ConditionalExpressionNode *n2 = (ast::ConditionalExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::AndNode *b = new ast::AndNode(n2->GetOperand(), n1->GetOperand());
+      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 7
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kOr
+      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLeftParen) {
+      // O <- (O) || (O)
+      stack.pop_back();
+      ast::ConditionalExpressionNode *n1 = (ast::ConditionalExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::ConditionalExpressionNode *n2 = (ast::ConditionalExpressionNode *) stack.back();
+      stack.pop_back();
+      stack.pop_back();
+      ast::OrNode *b = new ast::OrNode(n2->GetOperand(), n1->GetOperand());
+      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(b);
+      stack.push_back(e);
+      return true;
+    } else if (stack.size() >= 4
+      && util::instance_of<ast::RelationalExpressionNode>(*i)) {
+      // O <- R
+      ast::RelationalExpressionNode *r = (ast::RelationalExpressionNode *) stack.back();
+      stack.pop_back();
+      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(r->GetOperand());
+      stack.push_back(e);
       return true;
     }
   }

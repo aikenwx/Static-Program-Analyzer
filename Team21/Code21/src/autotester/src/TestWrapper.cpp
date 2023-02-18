@@ -125,6 +125,7 @@ void TestWrapper::parse(std::string filename) {
       rel::ModifiesStmtVarRelationship *modifiesRel =
           static_cast<rel::ModifiesStmtVarRelationship *>(rel);
       PopFacade->storeStatementModifiesVariableRelationship(modifiesRel->statementNumber(),
+                                                            modifiesRel->variableName());
     }
   }
 

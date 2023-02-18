@@ -41,7 +41,7 @@ ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship
   }
 
   for (auto relation : relationships) {
-    auto res = {relation->getLeftHandEntity()->getEntityValue(), relation->getRightHandEntity()->getEntityValue()};
+    auto res = {*relation->getLeftHandEntity()->getEntityValue(), *relation->getRightHandEntity()->getEntityValue()};
     result.AddResult({res});
   }
   return result;
@@ -53,25 +53,25 @@ bool SuchThatEvaluator::Filter(::Relationship &relationship) {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref1)) {
-    if (relationship.getLeftHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (*(relationship.getLeftHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref2)) {
-    if (relationship.getRightHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (*(relationship.getRightHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref1)) {
-    if (relationship.getLeftHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (*(relationship.getLeftHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref2)) {
-    if (relationship.getRightHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (*(relationship.getRightHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
       return true;
     }
   }

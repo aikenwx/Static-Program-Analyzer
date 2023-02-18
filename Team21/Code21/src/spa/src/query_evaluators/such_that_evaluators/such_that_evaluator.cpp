@@ -9,7 +9,7 @@ const std::vector<EntityType>
 SuchThatEvaluator::SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
+ClauseEvaluator::ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<::Relationship *> filtered_relationships;
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
@@ -28,21 +28,29 @@ ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   return qps::SuchThatEvaluator::ConstructResult(filtered_relationships);
 }
 
-ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) {
-  ClauseResult result;
+ClauseEvaluator::ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
+  std::vector<Synonym> syns;
+  bool left_syn = false;
+  bool right_syn = false;
   if (Synonym *syn = std::get_if<Synonym>(&ref1)) {
-    result.AddSynonym(*syn, 0);
+    left_syn = true;
+    syns.push_back(*syn);
   }
-
   if (Synonym *syn = std::get_if<Synonym>(&ref2)) {
-    result.AddSynonym(*syn, 1);
+    right_syn = true;
+    syns.push_back(*syn);
   }
 
+  if (!left_syn && !right_syn) return !relationships.empty();
+
+  SynonymTable result(syns);
   for (auto relation : relationships) {
-    auto res = {*relation->getLeftHandEntity()->getEntityValue(), *relation->getRightHandEntity()->getEntityValue()};
-    result.AddResult({res});
+    SynonymTable::Row row;
+    if (left_syn) row.push_back(*relation->getLeftHandEntity()->getEntityValue());
+    if (right_syn) row.push_back(*relation->getRightHandEntity()->getEntityValue());
+    result.AddRow(row);
   }
   return result;
 }

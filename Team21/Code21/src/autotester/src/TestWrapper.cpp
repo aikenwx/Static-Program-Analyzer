@@ -4,8 +4,8 @@
 #include <sstream>
 
 #include "PKB/PKB.h"
-#include "query_evaluators/QPS.h"
 #include "query/query_exceptions.h"
+#include "query_evaluators/QPS.h"
 #include "sp/ast/ast.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/directly_modifies_extractor.h"
@@ -29,8 +29,8 @@
 #include "util/instance_of.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
-AbstractWrapper *WrapperFactory::wrapper = 0;
-AbstractWrapper *WrapperFactory::createWrapper() {
+AbstractWrapper* WrapperFactory::wrapper = 0;
+AbstractWrapper* WrapperFactory::createWrapper() {
   if (wrapper == 0) wrapper = new TestWrapper;
   return wrapper;
 }
@@ -53,13 +53,13 @@ void TestWrapper::parse(std::string filename) {
   std::string program = buf.str();
 
   // tokenize the string
-  tokenizer::SimpleTokenizer* tokenizer =
-      tokenizer::SimpleTokenizer::getInstance();
-  std::vector<token::Token*> tokens = tokenizer->tokenize(program);
+  tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
+  std::vector<std::unique_ptr<token::Token>> tokens =
+      tokenizer.tokenize(program);
 
   // parse tokens into AST
-  parser::SimpleParser* parser = new parser::SimpleParser();
-  ast::AST* ast = parser->Parse(tokens);
+  parser::SimpleParser parser = parser::SimpleParser();
+  std::unique_ptr<ast::AST> ast = parser.Parse(tokens);
 
   // process AST to get elements
   std::vector<rel::Relationship*> astElemRelationships =
@@ -77,8 +77,10 @@ void TestWrapper::parse(std::string filename) {
       design_extractor::Traverse(
           ast->GetRoot(),
           design_extractor::DirectlyModifiesExtractor::GetInstance());
-  std::vector<rel::Relationship*> usesRelationships = design_extractor::Traverse(
-      ast->GetRoot(), design_extractor::DirectlyUsesExtractor::GetInstance());
+  std::vector<rel::Relationship*> usesRelationships =
+      design_extractor::Traverse(
+          ast->GetRoot(),
+          design_extractor::DirectlyUsesExtractor::GetInstance());
 
   // put AST entities into PKB
   PopulateFacade* PopFacade = pkb_->getPopulateFacade();
@@ -138,8 +140,8 @@ void TestWrapper::parse(std::string filename) {
     if (util::instance_of<rel::UsesProcVarRelationship>(rel)) {
       rel::UsesProcVarRelationship* usesRel =
           static_cast<rel::UsesProcVarRelationship*>(rel);
-      PopFacade->storeProcedureUsesVariableRelationship(usesRel->procedureName(),
-                                                        usesRel->variableName());
+      PopFacade->storeProcedureUsesVariableRelationship(
+          usesRel->procedureName(), usesRel->variableName());
     } else if (util::instance_of<rel::UsesStmtVarRelationship>(rel)) {
       rel::UsesStmtVarRelationship* usesRel =
           static_cast<rel::UsesStmtVarRelationship*>(rel);

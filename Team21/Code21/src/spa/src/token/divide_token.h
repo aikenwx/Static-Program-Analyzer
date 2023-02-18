@@ -5,13 +5,12 @@
 #include "token.h"
 
 namespace token {
-class DivideToken : public SymbolToken {
+class DivideToken : public Token {
  public:
-  static const DivideToken* createToken(std::string);
+  static const std::unique_ptr<Token> createToken(std::string);
   const std::string getValue() override;
 
  private:
   DivideToken();
-  static DivideToken* instance_;
 };
 }  // namespace token

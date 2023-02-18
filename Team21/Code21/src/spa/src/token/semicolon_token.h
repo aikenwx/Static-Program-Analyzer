@@ -5,13 +5,12 @@
 #include "token.h"
 
 namespace token {
-class SemicolonToken : public SymbolToken {
+class SemicolonToken : public Token {
  public:
-  static const SemicolonToken* createToken(std::string);
+  static const std::unique_ptr<Token> createToken(std::string);
   const std::string getValue() override;
 
  private:
   SemicolonToken();
-  static SemicolonToken* instance_;
 };
 }  // namespace token

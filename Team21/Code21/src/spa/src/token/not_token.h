@@ -5,13 +5,12 @@
 #include "token.h"
 
 namespace token {
-class NotToken : public SymbolToken {
+class NotToken : public Token {
  public:
-  static const NotToken* createToken(std::string);
+  static const std::unique_ptr<Token> createToken(std::string);
   const std::string getValue() override;
 
  private:
   NotToken();
-  static NotToken* instance_;
 };
 }  // namespace token

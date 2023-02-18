@@ -2,7 +2,7 @@
 #include "binary_operation_node.h"
 
 namespace ast {
-class DivideNode : public BinaryOperationNode {
+class GreaterNode : public BinaryOperationNode {
 public:
   using BinaryOperationNode::BinaryOperationNode;
 

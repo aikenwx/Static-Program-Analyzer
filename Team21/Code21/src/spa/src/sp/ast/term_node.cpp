@@ -1,11 +1,11 @@
 #include "term_node.h"
 
 namespace ast {
-TermNode::TermNode(INode *operand) {
+TermNode::TermNode(std::shared_ptr<INode> operand) {
   this->operand = operand;
 }
 
-INode *TermNode::GetOperand() {
+std::shared_ptr<INode> TermNode::GetOperand() {
   return operand;
 }
 

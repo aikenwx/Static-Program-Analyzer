@@ -1,16 +1,16 @@
 #include "while_node.h"
 
 namespace ast {
-WhileNode::WhileNode(INode *condition, StatementListNode *body) {
+WhileNode::WhileNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> body) {
   this->condition = condition;
   this->body = body;
 }
 
-INode *WhileNode::GetCondition() {
+std::shared_ptr<INode> WhileNode::GetCondition() {
   return condition;
 }
 
-StatementListNode *WhileNode::GetBody() {
+std::shared_ptr<StatementListNode> WhileNode::GetBody() {
   return body;
 }
 

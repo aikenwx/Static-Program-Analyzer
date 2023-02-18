@@ -1,15 +1,18 @@
 #pragma once
+
+#include <memory>
+
 #include "i_node.h"
 
 namespace ast {
 class NotNode : public INode {
 public:
-  NotNode(INode *operand);
+  NotNode(std::shared_ptr<INode> operand);
 
-  INode *GetOperand();
+  std::shared_ptr<INode> GetOperand();
   std::string ToString() const override;
 
 private:
-  INode *operand;
+  std::shared_ptr<INode> operand;
 };
 }

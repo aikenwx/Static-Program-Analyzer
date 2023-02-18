@@ -6,11 +6,11 @@
 #include "../rel/relationship.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship*>>
-FollowsExtractor::HandleStatementListNode(std::vector<ast::INode*> parents,
-                                          ast::StatementListNode* node) {
-  std::vector<rel::Relationship*> relationships;
-  std::vector<ast::INode*> statements = *node->GetStatements();
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
+FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode>> parents,
+                                          std::shared_ptr<ast::StatementListNode> node) {
+  std::vector<std::unique_ptr<rel::Relationship>> relationships;
+  std::vector<std::shared_ptr<ast::INode>> statements = node->GetStatements();
   if (statements.size() <= 1) {
     // no Follows relationship possible in this statement list
     return std::nullopt;
@@ -18,11 +18,11 @@ FollowsExtractor::HandleStatementListNode(std::vector<ast::INode*> parents,
 
   // nb: `StatementListNode` stores statements in reverse order
   auto it = statements.crbegin();
-  ast::StatementNode* first = static_cast<ast::StatementNode*>(*it);
+  std::shared_ptr<ast::StatementNode> first = std::static_pointer_cast<ast::StatementNode>(*it);
   it++;
 
   for (; it != statements.crend(); it++) {
-    ast::StatementNode* second = static_cast<ast::StatementNode*>(*it);
+    std::shared_ptr<ast::StatementNode> second = std::static_pointer_cast<ast::StatementNode>(*it);
     relationships.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));
     first = second;

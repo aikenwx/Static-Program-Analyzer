@@ -3,8 +3,8 @@
 namespace rel {
 std::string VarRelationship::variableName() { return variableName_; }
 
-VarRelationship* VarRelationship::CreateRelationship(std::string variableName) {
-  return new VarRelationship(variableName);
+std::unique_ptr<VarRelationship> VarRelationship::CreateRelationship(std::string variableName) {
+  return std::unique_ptr<VarRelationship>(new VarRelationship(variableName));
 };
 
 VarRelationship::VarRelationship(std::string variableName) {

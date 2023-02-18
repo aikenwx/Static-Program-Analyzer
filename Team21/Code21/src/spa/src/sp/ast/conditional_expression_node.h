@@ -1,15 +1,18 @@
 #pragma once
+
+#include <memory>
+
 #include "i_node.h"
 
 namespace ast {
 class ConditionalExpressionNode : public INode {
 public:
-  ConditionalExpressionNode(INode *operand);
+  ConditionalExpressionNode(std::shared_ptr<INode> operand);
 
-  INode *GetOperand();
+  std::shared_ptr<INode> GetOperand();
   std::string ToString() const override;
 
 private:
-  INode *operand;
+  std::shared_ptr<INode> operand;
 };
 }

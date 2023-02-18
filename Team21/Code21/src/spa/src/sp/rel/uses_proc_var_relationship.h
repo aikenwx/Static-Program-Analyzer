@@ -9,7 +9,7 @@ class UsesProcVarRelationship : public ProcVarRelationship {
  public:
   std::string procedureName() override;
   std::string variableName() override;
-  static UsesProcVarRelationship* CreateRelationship(
+  static std::unique_ptr<UsesProcVarRelationship> CreateRelationship(
       std::string procedureName, std::string variableName);
 
  private:

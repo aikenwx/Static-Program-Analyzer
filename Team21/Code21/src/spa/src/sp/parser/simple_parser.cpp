@@ -63,10 +63,10 @@
 using namespace util;
 
 namespace parser {
-ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
-  EndToken *e = new EndToken();
+std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
+  std::unique_ptr<token::Token> e = std::make_unique<EndToken>();
   input.push_back(e);
-  stack.empty();
+  (void) stack.empty();
   statementCounter = 0;
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {
     // If empty stack, can just shift
@@ -81,18 +81,18 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
 
     Shift();
   }
-  ast::AST *ast;
+  std::unique_ptr<ast::AST> ast;
   if (!stack.size() == 1 || !util::instance_of<ast::ProgramNode>(stack.front())) {
     // Reject condition (guard clause)
     Reject();
-    ast = new ast::AST();
+    ast = std::make_unique<ast::AST>();
     ast->SetRoot(stack.back());
     //assert(false);
     return ast;
   }
   // Success condition
   Success();
-  ast = new ast::AST();
+  ast = std::make_unique<ast::AST>();
   ast->SetRoot(stack.front());
   return ast;
 }
@@ -100,74 +100,74 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
 void SimpleParser::Shift() {
   // This code is neither DRY nor open for extension
   if (util::instance_of<token::IdentifierToken>(*lookahead)) {
-    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
     stack.push_back(id);
   } else if (util::instance_of<token::IntegerToken>(*lookahead)) {
-    ast::ConstantNode *c = new ast::ConstantNode(std::stoi((*lookahead)->getValue()));
+    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((*lookahead)->getValue()));
     stack.push_back(c);
   } else if (util::instance_of<token::AndToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kAnd);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAnd);
     stack.push_back(sym);
   } else if (util::instance_of<token::AssignToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kAssign);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAssign);
     stack.push_back(sym);
   } else if (util::instance_of<token::DivideToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kDivide);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kDivide);
     stack.push_back(sym);
   } else if (util::instance_of<token::EqualToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kEqual);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kEqual);
     stack.push_back(sym);
   } else if (util::instance_of<token::GreaterEqualToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kGreaterEqual);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kGreaterEqual);
     stack.push_back(sym);
   } else if (util::instance_of<token::GreaterThanToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kGreater);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kGreater);
     stack.push_back(sym);
   } else if (util::instance_of<token::LeftBraceToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLeftBrace);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLeftBrace);
     stack.push_back(sym);
   } else if (util::instance_of<token::LeftParenToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLeftParen);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLeftParen);
     stack.push_back(sym);
   } else if (util::instance_of<token::LessEqualToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLesserEqual);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLesserEqual);
     stack.push_back(sym);
   } else if (util::instance_of<token::LessThanToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kLesser);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLesser);
     stack.push_back(sym);
   } else if (util::instance_of<token::MinusToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kMinus);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kMinus);
     stack.push_back(sym);
   } else if (util::instance_of<token::ModuloToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kModulo);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kModulo);
     stack.push_back(sym);
   } else if (util::instance_of<token::MultiplyToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kMultiply);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kMultiply);
     stack.push_back(sym);
   } else if (util::instance_of<token::NotEqualToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kNotEqual);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kNotEqual);
     stack.push_back(sym);
   } else if (util::instance_of<token::NotToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kNot);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kNot);
     stack.push_back(sym);
   } else if (util::instance_of<token::PlusToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kPlus);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kPlus);
     stack.push_back(sym);
   } else if (util::instance_of<token::RightBraceToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kRightBrace);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kRightBrace);
     stack.push_back(sym);
   } else if (util::instance_of<token::RightParenToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kRightParen);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kRightParen);
     stack.push_back(sym);
   } else if (util::instance_of<token::SemicolonToken>(*lookahead)) {
-    ast::SymbolNode *sym = new ast::SymbolNode(ast::SymbolType::kSemicolon);
+    std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kSemicolon);
     stack.push_back(sym);
   } else if (util::instance_of<EndToken>(*lookahead)) {
     // end token
     return;
   } else {
     // Default implementation but should not reach here
-    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
     stack.push_back(id);
     assert(false);
   }
@@ -236,18 +236,18 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::ProcedureNode>(*std::next(i, 1))) {
       // TODO: Fix if statement formatting
       // Pr <- P Pr
-      ast::ProgramNode *pr = (ast::ProgramNode *) stack.back();
+      std::shared_ptr<ast::ProgramNode> pr = std::static_pointer_cast<ast::ProgramNode>(stack.back());
       stack.pop_back();
-      ast::ProcedureNode *p = (ast::ProcedureNode *) stack.back();
+      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack.back());
       stack.pop_back();
       pr->AddProcedure(p);
       stack.push_back(pr);
       return true;
     } else if (util::instance_of<ast::ProcedureNode>(*i)) {
       // Pr <- P
-      ast::ProcedureNode *p = (ast::ProcedureNode *) stack.back();
+      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack.back());
       stack.pop_back();
-      ast::ProgramNode *pr = new ast::ProgramNode();
+      std::shared_ptr<ast::ProgramNode> pr = std::make_shared<ast::ProgramNode>();
       pr->AddProcedure(p);
       stack.push_back(pr);
       return true;
@@ -255,20 +255,20 @@ bool SimpleParser::Check() {
   }
   // procedure
   if (stack.size() >= 5
-    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kRightBrace
+    && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(i, 1))
-    && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftBrace
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftBrace
     && util::instance_of<ast::NameNode>(*std::next(i, 3))
-    && util::instance_of<ast::IdentifierNode>(*std::next(i, 4)) && ((ast::IdentifierNode *) *std::next(i, 4))->GetValue() == "procedure") {
+    && util::instance_of<ast::IdentifierNode>(*std::next(i, 4)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 4)))->GetValue() == "procedure") {
     // P <- procedure N { S+ }
     stack.pop_back();
-    ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
+    std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack.back());
     stack.pop_back();
     stack.pop_back();
-    ast::NameNode *n = (ast::NameNode *) stack.back();
+    std::shared_ptr<ast::NameNode> n = std::static_pointer_cast<ast::NameNode>(stack.back());
     stack.pop_back();
     stack.pop_back();
-    ast::ProcedureNode *p = new ast::ProcedureNode(n->GetName(), sl);
+    std::shared_ptr<ast::ProcedureNode> p = std::make_shared<ast::ProcedureNode>(n->GetName(), sl);
     stack.push_back(p);
     return true;
   }
@@ -279,9 +279,9 @@ bool SimpleParser::Check() {
       && util::instance_of<ast::StatementListNode>(*i)
       && util::instance_of<ast::ContainerStatementNode>(*std::next(i, 1))) {
       // S+ <- Sc S+
-      ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
+      std::shared_ptr<ast::StatementNode> sl = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
-      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
       sl->AddStatement(s);
       stack.push_back(sl);
@@ -289,25 +289,25 @@ bool SimpleParser::Check() {
     }
     if (stack.size() >= 3
       && util::instance_of<ast::StatementListNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kSemicolon
       && util::instance_of<ast::StatementNode>(*std::next(i, 2))) {
       // S+ <- S ; S+
-      ast::StatementListNode *sl = (ast::StatementListNode *) stack.back();
+      std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
       sl->AddStatement(s);
       stack.push_back(sl);
       return true;
     } else if (stack.size() >= 2
-      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kSemicolon
       && util::instance_of<ast::StatementNode>(*std::next(i, 1))) {
       // S+ <- S ;
       stack.pop_back();
-      ast::StatementNode *s = (ast::StatementNode *) stack.back();
+      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
-      ast::StatementListNode *sl = new ast::StatementListNode();
+      std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
       sl->AddStatement(s);
       stack.push_back(sl);
       return true;
@@ -317,23 +317,23 @@ bool SimpleParser::Check() {
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (stack.size() >= 2
       && util::instance_of<ast::VariableNode>(*i)
-      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && ((ast::IdentifierNode *) *std::next(i, 1))->GetValue() == "read") {
+      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 1)))->GetValue() == "read") {
       // S(r) <- read V
-      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::ReadNode *r = new ast::ReadNode(v);
+      std::shared_ptr<ast::ReadNode> r = std::make_shared<ast::ReadNode>(v);
       r->SetStatementNumber(++statementCounter);
       stack.push_back(r);
       return true;
     } else if (stack.size() >= 2
       && util::instance_of<ast::VariableNode>(*i)
-      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && ((ast::IdentifierNode *) *std::next(i, 1))->GetValue() == "print") {
+      && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 1)))->GetValue() == "print") {
       // S(p) <- print V
-      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::PrintNode *p = new ast::PrintNode(v);
+      std::shared_ptr<ast::PrintNode> p = std::make_shared<ast::PrintNode>(v);
       p->SetStatementNumber(++statementCounter);
       stack.push_back(p);
       return true;
@@ -343,28 +343,28 @@ bool SimpleParser::Check() {
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (util::instance_of<ast::VariableNode>(*i)) {
       // F <- V
-      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
-      ast::FactorNode *f = new ast::FactorNode(v);
+      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(v);
       stack.push_back(f);
       return true;
     } else if (util::instance_of<ast::ConstantNode>(*i)) {
       // F <- C
-      ast::ConstantNode *c = (ast::ConstantNode *) stack.back();
+      std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack.back());
       stack.pop_back();
-      ast::FactorNode *f = new ast::FactorNode(c);
+      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(c);
       stack.push_back(f);
       return true;
     } else if (stack.size() >= 3
-      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftParen) {
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen) {
       // F <- ( E )
       stack.pop_back();
-      ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
+      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::FactorNode *f = new ast::FactorNode(e->GetOperand());
+      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(e->GetOperand());
       stack.push_back(f);
       return true;
     }
@@ -378,51 +378,51 @@ bool SimpleParser::Check() {
     || util::instance_of<token::ModuloToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kMultiply
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMultiply
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
       // T <- T * F
-      ast::FactorNode *f = (ast::FactorNode *) stack.back();
+      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::TermNode *t1 = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t1 = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
-      ast::TimesNode *b = new ast::TimesNode(t1->GetOperand(), f->GetOperand());
-      ast::TermNode *t2 = new ast::TermNode(b);
+      std::shared_ptr<ast::TimesNode> b = std::make_shared<ast::TimesNode>(t1->GetOperand(), f->GetOperand());
+      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
       stack.push_back(t2);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kDivide
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kDivide
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
       // T <- T / F
-      ast::FactorNode *f = (ast::FactorNode *) stack.back();
+      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::TermNode *t = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
-      ast::DivideNode *b = new ast::DivideNode(t->GetOperand(), f->GetOperand());
-      ast::TermNode *t2 = new ast::TermNode(b);
+      std::shared_ptr<ast::DivideNode> b = std::make_shared<ast::DivideNode>(t->GetOperand(), f->GetOperand());
+      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
       stack.push_back(t2);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kModulo
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kModulo
       && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
       //T <- T % F
-      ast::FactorNode *f = (ast::FactorNode *) stack.back();
+      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::TermNode *t = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
-      ast::ModuloNode *b = new ast::ModuloNode(t->GetOperand(), f->GetOperand());
-      ast::TermNode *t2 = new ast::TermNode(b);
+      std::shared_ptr<ast::ModuloNode> b = std::make_shared<ast::ModuloNode>(t->GetOperand(), f->GetOperand());
+      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
       stack.push_back(t2);
       return true;
     } else if (util::instance_of<ast::FactorNode>(*i)) {
       // T <- F
-      ast::FactorNode *f = (ast::FactorNode *) stack.back();
+      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack.back());
       stack.pop_back();
-      ast::TermNode *t = new ast::TermNode(f->GetOperand());
+      std::shared_ptr<ast::TermNode> t = std::make_shared<ast::TermNode>(f->GetOperand());
       stack.push_back(t);
       return true;
     }
@@ -433,37 +433,37 @@ bool SimpleParser::Check() {
     || util::instance_of<token::MinusToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::TermNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kPlus
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kPlus
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 2))) {
       // E <- E + T < ;, +, ->
-      ast::TermNode *t = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::ExpressionNode *e1 = (ast::ExpressionNode *) stack.back();
+      std::shared_ptr<ast::ExpressionNode> e1 = std::static_pointer_cast<ast::ExpressionNode>(stack.back());
       stack.pop_back();
-      ast::PlusNode *b = new ast::PlusNode(e1->GetOperand(), t->GetOperand());
-      ast::ExpressionNode *e2 = new ast::ExpressionNode(b);
+      std::shared_ptr<ast::PlusNode> b = std::make_shared<ast::PlusNode>(e1->GetOperand(), t->GetOperand());
+      std::shared_ptr<ast::ExpressionNode> e2 = std::make_shared<ast::ExpressionNode>(b);
       stack.push_back(e2);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::TermNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kMinus
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMinus
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 2))) {
       // E <- E - T < ;, +, ->
-      ast::TermNode *t = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::ExpressionNode *e1 = (ast::ExpressionNode *) stack.back();
+      std::shared_ptr<ast::ExpressionNode> e1 = std::static_pointer_cast<ast::ExpressionNode>(stack.back());
       stack.pop_back();
-      ast::MinusNode *b = new ast::MinusNode(e1->GetOperand(), t->GetOperand());
-      ast::ExpressionNode *e2 = new ast::ExpressionNode(b);
+      std::shared_ptr<ast::MinusNode> b = std::make_shared<ast::MinusNode>(e1->GetOperand(), t->GetOperand());
+      std::shared_ptr<ast::ExpressionNode> e2 = std::make_shared<ast::ExpressionNode>(b);
       stack.push_back(e2);
       return true;
     } else if (util::instance_of<ast::TermNode>(*i)) {
       // E <- T < ;, +, ->
-      ast::TermNode *t = (ast::TermNode *) stack.back();
+      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack.back());
       stack.pop_back();
-      ast::ExpressionNode *e = new ast::ExpressionNode(t->GetOperand());
+      std::shared_ptr<ast::ExpressionNode> e = std::make_shared<ast::ExpressionNode>(t->GetOperand());
       stack.push_back(e);
       return true;
     }
@@ -472,15 +472,15 @@ bool SimpleParser::Check() {
   if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::ExpressionNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kAssign
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kAssign
       && util::instance_of<ast::VariableNode>(*std::next(i, 2))) {
       // S(a) -> V = E
-      ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
+      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
-      ast::AssignNode *a = new ast::AssignNode(v, e);
+      std::shared_ptr<ast::AssignNode> a = std::make_shared<ast::AssignNode>(v, e);
       a->SetStatementNumber(++statementCounter);
       stack.push_back(a);
       return true;
@@ -496,23 +496,23 @@ bool SimpleParser::Check() {
     || util::instance_of<token::NotEqualToken>(*lookahead)) {
     if (util::instance_of<ast::ExpressionNode>(*i)) {
       // L <- E
-      ast::ExpressionNode *e = (ast::ExpressionNode *) stack.back();
+      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack.back());
       stack.pop_back();
-      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(e->GetOperand());
+      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(e->GetOperand());
       stack.push_back(f);
       return true;
     } else if (util::instance_of<ast::VariableNode>(*i)) {
       // L <- V
-      ast::VariableNode *v = (ast::VariableNode *) stack.back();
+      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
-      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(v);
+      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(v);
       stack.push_back(f);
       return true;
     } else if (util::instance_of<ast::ConstantNode>(*i)) {
       // L <- C
-      ast::ConstantNode *c = (ast::ConstantNode *) stack.back();
+      std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack.back());
       stack.pop_back();
-      ast::RelationalFactorNode *f = new ast::RelationalFactorNode(c);
+      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(c);
       stack.push_back(f);
       return true;
     }
@@ -521,86 +521,86 @@ bool SimpleParser::Check() {
   if (util::instance_of<token::RightParenToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kGreater
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreater
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L > L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::GreaterNode *b = new ast::GreaterNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::GreaterNode> b = std::make_shared<ast::GreaterNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLesser
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L < L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::LesserNode *b = new ast::LesserNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::LesserNode> b = std::make_shared<ast::LesserNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kEqual
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kEqual
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L == L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::EqualsNode *b = new ast::EqualsNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::EqualsNode> b = std::make_shared<ast::EqualsNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kGreaterEqual
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreaterEqual
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L >= L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::GreaterEqualsNode *b = new ast::GreaterEqualsNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::GreaterEqualsNode> b = std::make_shared<ast::GreaterEqualsNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kLesserEqual
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesserEqual
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L <= L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::LesserEqualsNode *b = new ast::LesserEqualsNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::LesserEqualsNode> b = std::make_shared<ast::LesserEqualsNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && ((ast::SymbolNode *) *std::next(i, 1))->GetType() == ast::SymbolType::kNotEqual
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNotEqual
       && util::instance_of<ast::RelationalFactorNode>(*std::next(i, 2))) {
       // R <- L == L
-      ast::RelationalFactorNode *f1 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f1 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::RelationalFactorNode *f2 = (ast::RelationalFactorNode *) stack.back();
+      std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      ast::NotEqualsNode *b = new ast::NotEqualsNode(f2, f1);
-      ast::RelationalExpressionNode *e = new ast::RelationalExpressionNode(b);
+      std::shared_ptr<ast::NotEqualsNode> b = std::make_shared<ast::NotEqualsNode>(f2, f1);
+      std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
     }
@@ -608,70 +608,70 @@ bool SimpleParser::Check() {
   // conditional expressions
   if (util::instance_of<token::RightParenToken>(*lookahead)) {
     if (stack.size() >= 4
-      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && ((ast::SymbolNode *) *std::next(i, 3))->GetType() == ast::SymbolType::kNot) {
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kNot) {
       // O <- ! ( O )
       stack.pop_back();
-      ast::ConditionalExpressionNode *n = (ast::ConditionalExpressionNode *) stack.back();
+      std::shared_ptr<ast::ConditionalExpressionNode> n = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
       stack.pop_back();
-      ast::NotNode *u = new ast::NotNode(n->GetOperand());
-      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(u);
+      std::shared_ptr<ast::NotNode> u = std::make_shared<ast::NotNode>(n->GetOperand());
+      std::shared_ptr<ast::ConditionalExpressionNode> e = std::make_shared<ast::ConditionalExpressionNode>(u);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 7
-      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && ((ast::SymbolNode *) *std::next(i, 3))->GetType() == ast::SymbolType::kAnd
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && ((ast::SymbolNode *) *std::next(i, 4))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kAnd
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 4)))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 5))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && ((ast::SymbolNode *) *std::next(i, 6))->GetType() == ast::SymbolType::kLeftParen) {
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 6)))->GetType() == ast::SymbolType::kLeftParen) {
       // O <- ( O ) && ( O )
       stack.pop_back();
-      ast::ConditionalExpressionNode *n1 = (ast::ConditionalExpressionNode *) stack.back();
+      std::shared_ptr<ast::ConditionalExpressionNode> n1 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
       stack.pop_back();
       stack.pop_back();
-      ast::ConditionalExpressionNode *n2 = (ast::ConditionalExpressionNode *) stack.back();
+      std::shared_ptr<ast::ConditionalExpressionNode> n2 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::AndNode *b = new ast::AndNode(n2->GetOperand(), n1->GetOperand());
-      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(b);
+      std::shared_ptr<ast::AndNode> b = std::make_shared<ast::AndNode>(n2->GetOperand(), n1->GetOperand());
+      std::shared_ptr<ast::ConditionalExpressionNode> e = std::make_shared<ast::ConditionalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 7
-      && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && ((ast::SymbolNode *) *std::next(i, 3))->GetType() == ast::SymbolType::kOr
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && ((ast::SymbolNode *) *std::next(i, 4))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kOr
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 4)))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 5))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && ((ast::SymbolNode *) *std::next(i, 6))->GetType() == ast::SymbolType::kLeftParen) {
-      // O <- ( O ) || ( O )
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 6)))->GetType() == ast::SymbolType::kLeftParen) {
+      // O <- (O) || (O)
       stack.pop_back();
-      ast::ConditionalExpressionNode *n1 = (ast::ConditionalExpressionNode *) stack.back();
-      stack.pop_back();
-      stack.pop_back();
+      std::shared_ptr<ast::ConditionalExpressionNode> n1 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
       stack.pop_back();
       stack.pop_back();
-      ast::ConditionalExpressionNode *n2 = (ast::ConditionalExpressionNode *) stack.back();
       stack.pop_back();
       stack.pop_back();
-      ast::OrNode *b = new ast::OrNode(n2->GetOperand(), n1->GetOperand());
-      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(b);
+      std::shared_ptr<ast::ConditionalExpressionNode> n2 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
+      stack.pop_back();
+      stack.pop_back();
+      std::shared_ptr<ast::OrNode> b = std::make_shared<ast::OrNode>(n2->GetOperand(), n1->GetOperand());
+      std::shared_ptr<ast::ConditionalExpressionNode> e = std::make_shared<ast::ConditionalExpressionNode>(b);
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 4
       && util::instance_of<ast::RelationalExpressionNode>(*i)) {
       // O <- R
-      ast::RelationalExpressionNode *r = (ast::RelationalExpressionNode *) stack.back();
+      std::shared_ptr<ast::RelationalExpressionNode> r = std::static_pointer_cast<ast::RelationalExpressionNode>(stack.back());
       stack.pop_back();
-      ast::ConditionalExpressionNode *e = new ast::ConditionalExpressionNode(r->GetOperand());
+      std::shared_ptr<ast::ConditionalExpressionNode> e = std::make_shared<ast::ConditionalExpressionNode>(r->GetOperand());
       stack.push_back(e);
       return true;
     }
@@ -742,9 +742,9 @@ bool SimpleParser::Check() {
     || util::instance_of<token::RightParenToken>(*lookahead)) {
     if (util::instance_of<ast::NameNode>(*i)) {
       // V <- N
-      ast::NameNode *n = (ast::NameNode *) stack.back();
+      std::shared_ptr<ast::NameNode> n = std::static_pointer_cast<ast::NameNode>(stack.back());
       stack.pop_back();
-      ast::VariableNode *v = new ast::VariableNode(n->GetName());
+      std::shared_ptr<ast::VariableNode> v = std::make_shared<ast::VariableNode>(n->GetName());
       stack.push_back(v);
       return true;
     }
@@ -754,9 +754,9 @@ bool SimpleParser::Check() {
     if (util::instance_of<ast::IdentifierNode>(*i)) {
       // if not identifier then
       // N <- id
-      ast::IdentifierNode *id = (ast::IdentifierNode *) stack.back();
+      std::shared_ptr<ast::IdentifierNode> id = std::static_pointer_cast<ast::IdentifierNode>(stack.back());
       stack.pop_back();
-      ast::NameNode *n = new ast::NameNode(id->GetValue());
+      std::shared_ptr<ast::NameNode> n = std::make_shared<ast::NameNode>(id->GetValue());
       stack.push_back(n);
       return true;
     }

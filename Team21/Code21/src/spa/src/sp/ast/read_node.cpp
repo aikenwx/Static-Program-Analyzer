@@ -1,11 +1,11 @@
 #include "read_node.h"
 
 namespace ast {
-ReadNode::ReadNode(VariableNode *var) {
+ReadNode::ReadNode(std::shared_ptr<VariableNode> var) {
   this->var = var;
 }
 
-VariableNode *ReadNode::GetVariable() {
+std::shared_ptr<VariableNode> ReadNode::GetVariable() {
   return var;
 }
 

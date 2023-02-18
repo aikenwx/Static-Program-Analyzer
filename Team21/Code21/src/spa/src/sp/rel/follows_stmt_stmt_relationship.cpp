@@ -21,15 +21,15 @@ EntityType FollowsStmtStmtRelationship::secondEntityType() {
   return resolveEntityType(secondStatementNode_);
 };
 
-FollowsStmtStmtRelationship* FollowsStmtStmtRelationship::CreateRelationship(
-    ast::StatementNode* firstStatementNode,
-    ast::StatementNode* secondStatementNode) {
-  return new FollowsStmtStmtRelationship(firstStatementNode, secondStatementNode);
+std::unique_ptr<FollowsStmtStmtRelationship> FollowsStmtStmtRelationship::CreateRelationship(
+    std::shared_ptr<ast::StatementNode> firstStatementNode,
+    std::shared_ptr<ast::StatementNode> secondStatementNode) {
+  return std::unique_ptr<FollowsStmtStmtRelationship>(new FollowsStmtStmtRelationship(firstStatementNode, secondStatementNode));
 };
 
 FollowsStmtStmtRelationship::FollowsStmtStmtRelationship(
-    ast::StatementNode* firstStatementNode,
-    ast::StatementNode* secondStatementNode) {
+    std::shared_ptr<ast::StatementNode> firstStatementNode,
+    std::shared_ptr<ast::StatementNode> secondStatementNode) {
   firstStatementNode_ = firstStatementNode;
   secondStatementNode_ = secondStatementNode;
 };

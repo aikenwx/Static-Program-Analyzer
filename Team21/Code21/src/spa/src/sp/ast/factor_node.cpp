@@ -1,11 +1,11 @@
 #include "factor_node.h"
 
 namespace ast {
-FactorNode::FactorNode(INode *operand) {
+FactorNode::FactorNode(std::shared_ptr<INode> operand) {
   this->operand = operand;
 }
 
-INode *FactorNode::GetOperand() {
+std::shared_ptr<INode> FactorNode::GetOperand() {
   return operand;
 }
 

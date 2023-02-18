@@ -1,11 +1,11 @@
 #include "relational_factor_node.h"
 
 namespace ast {
-RelationalFactorNode::RelationalFactorNode(INode *operand) {
+RelationalFactorNode::RelationalFactorNode(std::shared_ptr<INode> operand) {
   this->operand = operand;
 }
 
-INode *RelationalFactorNode::GetOperand() {
+std::shared_ptr<INode> RelationalFactorNode::GetOperand() {
   return operand;
 }
 

@@ -1,11 +1,11 @@
 #include "not_node.h"
 
 namespace ast {
-NotNode::NotNode(INode *operand) {
+NotNode::NotNode(std::shared_ptr<INode> operand) {
   this->operand = operand;
 }
 
-INode *NotNode::GetOperand() {
+std::shared_ptr<INode> NotNode::GetOperand() {
   return operand;
 }
 

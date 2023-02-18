@@ -1,15 +1,18 @@
 #pragma once
+
+#include <memory>
+
 #include "i_node.h"
 
 namespace ast {
 class RelationalExpressionNode : public INode {
 public:
-  RelationalExpressionNode (INode *operand);
+  RelationalExpressionNode (std::shared_ptr<INode> operand);
 
-  INode *GetOperand();
+  std::shared_ptr<INode> GetOperand();
   std::string ToString() const override;
 
 private:
-  INode *operand;
+  std::shared_ptr<INode> operand;
 };
 }

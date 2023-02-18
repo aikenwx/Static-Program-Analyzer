@@ -1,11 +1,11 @@
 #include "conditional_expression_node.h"
 
 namespace ast {
-ConditionalExpressionNode::ConditionalExpressionNode(INode *operand) {
+ConditionalExpressionNode::ConditionalExpressionNode(std::shared_ptr<INode> operand) {
 	this->operand = operand;
 }
 
-INode *ConditionalExpressionNode::GetOperand() {
+std::shared_ptr<INode> ConditionalExpressionNode::GetOperand() {
 	return operand;
 }
 

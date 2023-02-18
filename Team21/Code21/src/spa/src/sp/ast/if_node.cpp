@@ -1,13 +1,13 @@
 #include "if_node.h"
 
 namespace ast {
-IfNode::IfNode(std::shared_ptr<ConditionalExpressionNode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els) {
+IfNode::IfNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els) {
   this->condition = condition;
   this->then = then;
   this->els = els;
 }
 
-std::shared_ptr<ConditionalExpressionNode> IfNode::GetCondition() {
+std::shared_ptr<INode> IfNode::GetCondition() {
   return condition;
 }
 

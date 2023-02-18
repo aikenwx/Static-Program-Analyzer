@@ -1,12 +1,12 @@
 #include "while_node.h"
 
 namespace ast {
-WhileNode::WhileNode(std::shared_ptr<ConditionalExpressionNode> condition, std::shared_ptr<StatementListNode> body) {
+WhileNode::WhileNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> body) {
   this->condition = condition;
   this->body = body;
 }
 
-std::shared_ptr<ConditionalExpressionNode> WhileNode::GetCondition() {
+std::shared_ptr<INode> WhileNode::GetCondition() {
   return condition;
 }
 

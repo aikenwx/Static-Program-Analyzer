@@ -278,8 +278,8 @@ bool SimpleParser::Check() {
     if (stack.size() >= 2
       && util::instance_of<ast::StatementListNode>(*i)
       && util::instance_of<ast::ContainerStatementNode>(*std::next(i, 1))) {
-      // S+ <Sc S+
-      std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack.back());
+      // S+ <- Sc S+
+      std::shared_ptr<ast::StatementNode> sl = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
       std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
       stack.pop_back();
@@ -608,10 +608,10 @@ bool SimpleParser::Check() {
   // conditional expressions
   if (util::instance_of<token::RightParenToken>(*lookahead)) {
     if (stack.size() >= 4
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNot) {
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kNot) {
       // O <- ! ( O )
       stack.pop_back();
       std::shared_ptr<ast::ConditionalExpressionNode> n = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
@@ -623,13 +623,13 @@ bool SimpleParser::Check() {
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 7
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kAnd
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLeftParen) {
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kAnd
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 4)))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 5))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 6)))->GetType() == ast::SymbolType::kLeftParen) {
       // O <- ( O ) && ( O )
       stack.pop_back();
       std::shared_ptr<ast::ConditionalExpressionNode> n1 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
@@ -645,13 +645,13 @@ bool SimpleParser::Check() {
       stack.push_back(e);
       return true;
     } else if (stack.size() >= 7
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kOr
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 2))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLeftParen) {
+      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 3)))->GetType() == ast::SymbolType::kOr
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 4)))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 5))
+      && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 6)))->GetType() == ast::SymbolType::kLeftParen) {
       // O <- (O) || (O)
       stack.pop_back();
       std::shared_ptr<ast::ConditionalExpressionNode> n1 = std::static_pointer_cast<ast::ConditionalExpressionNode>(stack.back());
@@ -675,6 +675,61 @@ bool SimpleParser::Check() {
       stack.push_back(e);
       return true;
     }
+  }
+  // if/while
+  if (stack.size() > 7
+    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *std::next(i))->GetType() == ast::SymbolType::kRightBrace
+    && util::instance_of<ast::StatementListNode>(*std::next(i, 1))
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftBrace
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 3)) && ((ast::SymbolNode *) *std::next(i, 3))->GetType() == ast::SymbolType::kRightParen
+    && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 4))
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 5)) && ((ast::SymbolNode *) *std::next(i, 5))->GetType() == ast::SymbolType::kLeftParen
+    && util::instance_of<ast::NamedNode>(*std::next(i, 6)) && ((ast::NamedNode *) *std::next(i, 6))->GetName() == "while") {
+    // Sc(w) <- while ( O ) { S+ }
+    // Currently a named node instead of identifier node
+    stack.pop_back();
+    ast::StatementListNode *s = (ast::StatementListNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::ConditionalExpressionNode *e = (ast::ConditionalExpressionNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::WhileNode *w = new ast::WhileNode(e->GetOperand(), s);
+    stack.push_back(w);
+  } else if (stack.size() > 12
+    && util::instance_of<ast::SymbolNode>(*i) && ((ast::SymbolNode *) *i)->GetType() == ast::SymbolType::kRightBrace
+    && util::instance_of<ast::StatementListNode>(*std::next(i, 1))
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && ((ast::SymbolNode *) *std::next(i, 2))->GetType() == ast::SymbolType::kLeftBrace
+    && util::instance_of<ast::NamedNode>(*std::next(i, 3)) && ((ast::NamedNode *) *std::next(i, 3))->GetName() == "else"
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 4)) && ((ast::SymbolNode *) *std::next(i, 4))->GetType() == ast::SymbolType::kRightBrace
+    && util::instance_of<ast::StatementListNode>(*std::next(i, 5))
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 6)) && ((ast::SymbolNode *) *std::next(i, 6))->GetType() == ast::SymbolType::kLeftBrace
+    && util::instance_of<ast::NamedNode>(*std::next(i, 7)) && ((ast::NamedNode *) *std::next(i, 7))->GetName() == "then"
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 8)) && ((ast::SymbolNode *) *std::next(i, 8))->GetType() == ast::SymbolType::kRightParen
+    && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 9))
+    && util::instance_of<ast::SymbolNode>(*std::next(i, 10)) && ((ast::SymbolNode *) *std::next(i, 10))->GetType() == ast::SymbolType::kLeftParen
+    && util::instance_of<ast::NamedNode>(*std::next(i, 11)) && ((ast::NamedNode *) *std::next(i, 11))->GetName() == "if") {
+    // Sc(i) -> if ( O ) then { S+ } else { S+ }
+    // Currently a named node instead of identifier node
+    stack.pop_back();
+    ast::StatementListNode *s1 = (ast::StatementListNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::StatementListNode *s2 = (ast::StatementListNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::ConditionalExpressionNode *e = (ast::ConditionalExpressionNode *) stack.back();
+    stack.pop_back();
+    stack.pop_back();
+    stack.pop_back();
+    ast::IfNode *w = new ast::IfNode(e->GetOperand(), s2, s1);
+    stack.push_back(w);
   }
   // variable
   if (util::instance_of<token::EqualToken>(*lookahead)

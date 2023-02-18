@@ -6,15 +6,15 @@
 namespace ast {
 class IfNode : public ContainerStatementNode {
 public:
-  IfNode(std::shared_ptr<ConditionalExpressionNode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els);
+  IfNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els);
 
-  std::shared_ptr<ConditionalExpressionNode> GetCondition();
+  std::shared_ptr<INode> GetCondition();
   std::shared_ptr<StatementListNode> GetThen();
   std::shared_ptr<StatementListNode> GetElse();
   std::string ToString() const override;
 
 private:
-  std::shared_ptr<ConditionalExpressionNode> condition;
+  std::shared_ptr<INode> condition;
   std::shared_ptr<StatementListNode> then;
   std::shared_ptr<StatementListNode> els;
 };

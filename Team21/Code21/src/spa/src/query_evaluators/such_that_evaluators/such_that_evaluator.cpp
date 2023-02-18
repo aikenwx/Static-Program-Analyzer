@@ -41,8 +41,7 @@ ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship
   }
 
   for (auto relation : relationships) {
-    auto
-        res = {*(relation->getLeftHandEntity()->getEntityValue()), *(relation->getRightHandEntity()->getEntityValue())};
+    auto res = {*relation->getLeftHandEntity()->getEntityValue(), *relation->getRightHandEntity()->getEntityValue()};
     result.AddResult({res});
   }
   return result;

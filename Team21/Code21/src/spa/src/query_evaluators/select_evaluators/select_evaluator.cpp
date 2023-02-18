@@ -6,7 +6,7 @@ namespace qps {
 ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
   ClauseResult clause_result({declaration_.getSynonym()});
   for (auto entity : entities) {
-    clause_result.AddResult({*(entity->getEntityValue())});
+    clause_result.AddResult({*entity->getEntityValue()});
   }
   return clause_result;
 }

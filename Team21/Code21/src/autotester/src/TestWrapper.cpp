@@ -106,15 +106,13 @@ void TestWrapper::parse(std::string filename) {
   for (auto &rel : followsRelationships) {
     rel::FollowsStmtStmtRelationship *followsRel =
         static_cast<rel::FollowsStmtStmtRelationship *>(rel);
-    PopFacade->storeFollowsRelationship(
-        followsRel->firstStatementNumber(), followsRel->secondStatementNumber());
+    PopFacade->storeFollowsRelationship(followsRel->firstStatementNumber(), followsRel->secondStatementNumber());
   }
 
   for (auto &rel : parentRelationships) {
     rel::ParentStmtStmtRelationship *parentRel =
         static_cast<rel::ParentStmtStmtRelationship *>(rel);
-    PopFacade->storeParentRelationship(
-        parentRel->firstStatementNumber(), parentRel->secondStatementNumber());
+    PopFacade->storeParentRelationship(parentRel->firstStatementNumber(), parentRel->secondStatementNumber());
   }
 
   for (auto &rel : modifiesRelationships) {
@@ -126,8 +124,7 @@ void TestWrapper::parse(std::string filename) {
     } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(rel)) {
       rel::ModifiesStmtVarRelationship *modifiesRel =
           static_cast<rel::ModifiesStmtVarRelationship *>(rel);
-      PopFacade->storeStatementModifiesVariableRelationship(
-          modifiesRel->statementNumber(), modifiesRel->variableName());
+      PopFacade->storeStatementModifiesVariableRelationship(modifiesRel->statementNumber(),
     }
   }
 
@@ -140,8 +137,8 @@ void TestWrapper::parse(std::string filename) {
     } else if (util::instance_of<rel::UsesStmtVarRelationship>(rel)) {
       rel::UsesStmtVarRelationship *usesRel =
           static_cast<rel::UsesStmtVarRelationship *>(rel);
-      PopFacade->storeStatementUsesVariableRelationship(
-          usesRel->statementNumber(), usesRel->variableName());
+      PopFacade->storeStatementUsesVariableRelationship(usesRel->statementNumber(),
+                                                        usesRel->variableName());
     }
   }
 }

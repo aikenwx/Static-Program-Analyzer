@@ -1,11 +1,11 @@
 #include "such_that_evaluator_factory.h"
+
 #include "parent_evaluator.h"
 #include "follows_evaluator.h"
 #include "uses_evaluator.h"
 #include "modifies_evaluator.h"
 #include "parent_star_evaluator.h"
 #include "follows_star_evaluator.h"
-
 #include "query/query_exceptions.h"
 
 namespace qps {

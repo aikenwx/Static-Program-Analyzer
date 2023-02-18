@@ -1,31 +1,10 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "PKB/PKB.h"
-#include "query/ref.h"
 #include "query/query.h"
-#include "query/such_that_clause.h"
-#include "query/declaration.h"
-#include "query_evaluators/query_evaluator.h"
-#include "query_evaluators/QPS.h"
-#include "PopulatePKBHelper.h"
 #include "query/validation/SemanticValidator.h"
 #include "query_preprocess/query_parser.h"
 #include "query_preprocess/query_tokenizer.h"
-
-using Data = std::unordered_map<qps::DesignEntity, std::unordered_set<std::string>>;
-
-void PopulateEntities(PopulatePKBHelper &pkb_helper, Data &data) {
-  pkb_helper.AddVariables(data[qps::DesignEntity::VARIABLE]);
-  pkb_helper.AddConstants(data[qps::DesignEntity::CONSTANT]);
-  pkb_helper.AddAssignments(data[qps::DesignEntity::ASSIGN]);
-  pkb_helper.AddRead(data[qps::DesignEntity::READ]);
-  pkb_helper.AddPrint(data[qps::DesignEntity::PRINT]);
-  pkb_helper.AddIf(data[qps::DesignEntity::IF]);
-  pkb_helper.AddWhile(data[qps::DesignEntity::WHILE]);
-  pkb_helper.AddCalls(data[qps::DesignEntity::CALL]);
-  pkb_helper.AddProcedures(data[qps::DesignEntity::PROCEDURE]);
-}
 
 qps::Query buildQuery(std::string str) {
   std::string dupeInput(str);
@@ -33,36 +12,6 @@ qps::Query buildQuery(std::string str) {
   std::vector<std::string> tokenList = tokenizer.tokenize();
   qps::QueryParser parser(tokenList);
   return parser.parse();
-}
-
-std::unordered_set<std::string> RunSelect(qps::DesignEntity entity_type, std::string synonym, QueryFacade *pkb) {
-  qps::Synonym s{std::move(synonym)};
-  qps::Declaration dec{entity_type, s};
-  qps::Query query{dec};
-  qps::QueryEvaluator evaluator(query);
-  auto var_result = evaluator.evaluateQuery(*pkb);
-  return var_result;
-}
-
-std::unordered_set<std::string> RunSuchThat(qps::DesignEntity entity_type, std::string synonym,
-                                            qps::Relationship relation, qps::Ref arg1, qps::Ref arg2,
-                                            QueryFacade *pkb) {
-  qps::Synonym s{std::move(synonym)};
-  qps::Declaration dec{entity_type, s};
-  std::vector<qps::Declaration> decl_lst = {dec};
-  qps::SuchThatClause clause{relation, std::move(arg1), std::move(arg2), decl_lst};
-  std::vector<qps::SuchThatClause> clauses = {clause};
-  qps::Query query{decl_lst, clauses, {}, dec};
-  qps::QueryEvaluator evaluator(query);
-  auto var_result = evaluator.evaluateQuery(*pkb);
-  return var_result;
-}
-
-std::unordered_set<std::string> RunQuery(std::string query_str, QueryFacade &pkb) {
-  std::list<std::string> results;
-  qps::QPS::evaluate(query_str, results, pkb);
-  std::unordered_set<std::string> result_set(results.begin(), results.end());
-  return result_set;
 }
 
 TEST_CASE("Queries can be built from parsing and tokenising from inputs") {

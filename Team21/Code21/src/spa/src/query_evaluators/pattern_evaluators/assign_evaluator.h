@@ -6,17 +6,19 @@
 
 namespace qps {
 
-    class AssignEvaluator : public PatternEvaluator {
-    public:
-        AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
-            : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-        std::vector<Entity> CallPkb(QueryFacade& pkb) override;
+class AssignEvaluator : public PatternEvaluator {
+ public:
+  AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
+      : PatternEvaluator(std::move(clause), std::move(declarations)) {}
+  std::vector<Entity *> CallPkb(QueryFacade &pkb) override;
 
-        int AssignEvaluator::postfixHelper(char a);
+  int postfixHelper(char a);
 
-        std::string AssignEvaluator::makePostfix(std::string str);
+  std::string makePostfix(std::string str);
 
-        std::vector<Entity> AssignEvaluator::checkExpressionContained(std::vector<AssignStatement> pkb_res, std::string postfix, bool is_partial);
-    };
+  std::vector<Entity *> checkExpressionContained(std::vector<Entity *> pkb_res,
+                                                 std::string postfix,
+                                                 bool is_partial);
+};
 
 } // qps

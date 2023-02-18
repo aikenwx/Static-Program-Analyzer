@@ -7,11 +7,10 @@
 
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
-
 class PKBtestHelpers {
-public:
+   public:
     static bool relationshipEqualsRelationship(Relationship *relationship1, Relationship *relationship2);
+    static void deleteRelationship(Relationship *relationship);
 };
 
-
-#endif //SPA_PKBTESTHELPERS_H
+#endif  // SPA_PKBTESTHELPERS_H

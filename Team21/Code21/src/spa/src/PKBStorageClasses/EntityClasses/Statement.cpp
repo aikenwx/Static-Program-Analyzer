@@ -3,6 +3,10 @@
 //
 #include "Statement.h"
 
-std::string Statement::getEntityValue() {
-    return std::to_string(statementNumber);
+std::string * Statement::getEntityValue() {
+    return this->statementNumberString.get();
 };
+
+const int Statement::getStatementNumber() {
+    return this->statementNumber;
+}

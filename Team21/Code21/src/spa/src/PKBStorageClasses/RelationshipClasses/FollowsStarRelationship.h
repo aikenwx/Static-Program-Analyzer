@@ -2,21 +2,21 @@
 // Created by Aiken Wong on 3/2/23.
 //
 
-#ifndef SPA_FOLLOWSRELATIONSHIP_H
-#define SPA_FOLLOWSRELATIONSHIP_H
+#ifndef SPA_FOLLOWSSTARRELATIONSHIP_H
+#define SPA_FOLLOWSSTARRELATIONSHIP_H
 
 
 #include "Relationship.h"
 #include "../EntityClasses/Statement.h"
 #include <memory>
 
-class FollowsRelationship : public Relationship {
+class FollowsStarRelationship : public Relationship {
 private:
     Statement* followedStatement;
     Statement* followerStatement;
 
 public:
-    FollowsRelationship(Statement *followedStatement, Statement *followerStatement);
+    FollowsStarRelationship(Statement *followedStatement, Statement *followerStatement);
     bool containsEntityOnLeftHand(Entity *entity) override;
     bool containsEntityOnRightHand(Entity *entity) override;
     RelationshipType getRelationshipType() override;
@@ -25,4 +25,4 @@ public:
 };
 
 
-#endif //SPA_FOLLOWSRELATIONSHIP_H
+#endif //SPA_FOLLOWSSTARRELATIONSHIP_H

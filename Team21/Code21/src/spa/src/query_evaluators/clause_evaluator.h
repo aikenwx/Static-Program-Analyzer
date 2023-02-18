@@ -1,5 +1,7 @@
 #pragma once
 
+#include <variant>
+
 #include "synonym_table.h"
 #include "query/design_entity.h"
 #include "PKB/QueryFacade.h"

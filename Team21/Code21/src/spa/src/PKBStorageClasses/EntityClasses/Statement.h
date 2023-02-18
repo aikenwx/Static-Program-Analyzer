@@ -1,16 +1,22 @@
 #ifndef SPA_STATEMENT_H
 #define SPA_STATEMENT_H
 
-
-#include "Entity.h"
+#include <memory>
 #include <string>
 
-class Statement : public Entity {
+#include "Entity.h"
 
-protected:
+class Statement : public Entity {
+   protected:
     int statementNumber;
-public:
-    std::string getEntityValue() override;
+    std::shared_ptr<std::string> statementNumberString;
+
+   public:
+
+    virtual ~Statement() {};
+    std::string * getEntityValue() override;
+
+    const int getStatementNumber();
 
     virtual EntityType getEntityType() override = 0;
 };

@@ -1,9 +1,10 @@
 //
 // Created by Aiken Wong on 3/2/23.
 //
-#include <stdexcept>
-
 #include "ModifiesRelationship.h"
+
+#include <memory>
+#include <stdexcept>
 
 bool ModifiesRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->modifier->equals(entity);
@@ -14,7 +15,6 @@ bool ModifiesRelationship::containsEntityOnRightHand(Entity *entity) {
 }
 
 ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedVariable) {
-
     // modifier can only be Statement or Procedure
     if (!Entity::isStatementType(modifier->getEntityType()) && modifier->getEntityType() != EntityType::PROCEDURE) {
         throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
@@ -35,4 +35,3 @@ Entity *ModifiesRelationship::getLeftHandEntity() {
 Entity *ModifiesRelationship::getRightHandEntity() {
     return this->modifiedVariable;
 }
-

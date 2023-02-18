@@ -43,7 +43,7 @@ SynonymTable HashJoin::operator()(const SynonymTable &hash_table, const SynonymT
       for (const auto &proble_table_syn : probe_table_unique_syns_) {
         row.push_back(probe_table.GetCell(proble_table_syn, probe_row_idx));
       }
-      joined_table.AddRow(row);
+      joined_table.AddRow(std::move(row));
     }
   }
   return joined_table;

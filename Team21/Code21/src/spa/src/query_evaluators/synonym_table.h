@@ -35,7 +35,7 @@ class SynonymTable {
   bool HasSynonym(const Synonym &synonym) const;
   bool Empty() const;
   size_t NumRows() const;
-  void AddRow(const Row &row);
+  void AddRow(Row row);
 
   ResultSet Extract(const Synonym &synonym);
 

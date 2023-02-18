@@ -1,9 +1,9 @@
-#include "algorithm"
-#include <numeric>
-
 #include "join.h"
 
+#include <numeric>
+
 #include "constraints_solver.h"
+
 namespace qps {
 
 SynonymTable ConstraintsSolver::solve(const std::vector<SynonymTable> &evaluators) {

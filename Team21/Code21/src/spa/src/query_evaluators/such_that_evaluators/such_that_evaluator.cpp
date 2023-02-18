@@ -50,7 +50,7 @@ ClauseEvaluator::ClauseResult SuchThatEvaluator::ConstructResult(const std::vect
     SynonymTable::Row row;
     if (left_syn) row.push_back(*relation->getLeftHandEntity()->getEntityValue());
     if (right_syn) row.push_back(*relation->getRightHandEntity()->getEntityValue());
-    result.AddRow(row);
+    result.AddRow(std::move(row));
   }
   return result;
 }

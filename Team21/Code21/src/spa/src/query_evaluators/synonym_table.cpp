@@ -24,7 +24,7 @@ const std::vector<SynonymTable::Row> &SynonymTable::GetResults() const {
   return rows_;
 }
 
-void SynonymTable::AddRow(const Row &row) {
+void SynonymTable::AddRow(Row row) {
   if (row.size() != synonym_idx_.size()) {
     throw std::invalid_argument("Row does not match synonym header size");
   }
@@ -63,32 +63,4 @@ bool SynonymTable::Empty() const {
 size_t SynonymTable::NumRows() const {
   return rows_.size();
 }
-
-
-//
-//// Simple nested loop join operation -> and not very fast implementation of that either
-//SynonymTable NestedLoopJoin(const SynonymTable& table1, const SynonymTable& table2) {
-//  auto common_synonyms = GetCommonSynonyms(table1, table2);
-//  auto is_equal = [&](size_t table1_row_idx, size_t table2_row_idx) {
-//    for (const auto& syn: common_synonyms) {
-//      if(table1.GetCell(syn, table1_row_idx) != table2.GetCell(syn, table2_row_idx)) {
-//        return false;
-//      }
-//    }
-//    return true;
-//  };
-//
-//  std::vector<std::pair<size_t, size_t>> join_row_idxs;
-//  for(int table1_row_idx = 0; table1_row_idx < table1.NumRows()) {
-//    for(int table2_row_idx = 0; table2_row_idx < table2.NumRows()) {
-//      if(is_equal(table1_row_idx, table2_row_idx)) {
-//        join_row_idxs.push_back({table1_row_idx, table2_row_idx});
-//      }
-//    }
-//  }
-//
-//  SynonymTable joined_table = ConstructJoinTable()
-
-//}
-
 } // qps

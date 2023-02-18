@@ -1,5 +1,7 @@
 #include "join.h"
 
+#include <algorithm>
+
 namespace qps {
 void HashJoin::ConstructHashedTable(const SynonymTable &hash_table) {
   for (size_t row_idx = 0; row_idx < hash_table.NumRows(); row_idx++) {

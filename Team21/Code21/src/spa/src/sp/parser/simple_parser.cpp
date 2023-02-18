@@ -64,8 +64,7 @@ using namespace util;
 
 namespace parser {
 std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
-  std::unique_ptr<token::Token> e = std::make_unique<EndToken>();
-  input.push_back(e);
+  input.push_back(std::make_unique<EndToken>());
   (void) stack.empty();
   statementCounter = 0;
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {

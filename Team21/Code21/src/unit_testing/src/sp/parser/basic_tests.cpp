@@ -26,7 +26,7 @@ procedure print {
   std::vector<std::unique_ptr<token::Token>> tokens =
       tokenizer.tokenize(program);
   SimpleParser parser = SimpleParser();
-  ast::INode *root = parser.Parse(tokens)->GetRoot();
+  std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
   REQUIRE(util::instance_of<ast::ProgramNode>(root));
 };
 }  // namespace parser

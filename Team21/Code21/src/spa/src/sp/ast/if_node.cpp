@@ -1,13 +1,13 @@
 #include "if_node.h"
 
 namespace ast {
-IfNode::IfNode(ConditionalExpressionNode *condition, StatementListNode *then, StatementListNode *els) {
+IfNode::IfNode(INode *condition, StatementListNode *then, StatementListNode *els) {
   this->condition = condition;
   this->then = then;
   this->els = els;
 }
 
-ConditionalExpressionNode *IfNode::GetCondition() {
+INode *IfNode::GetCondition() {
   return condition;
 }
 

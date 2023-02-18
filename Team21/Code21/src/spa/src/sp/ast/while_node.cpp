@@ -1,12 +1,12 @@
 #include "while_node.h"
 
 namespace ast {
-WhileNode::WhileNode(ConditionalExpressionNode *condition, StatementListNode *body) {
+WhileNode::WhileNode(INode *condition, StatementListNode *body) {
   this->condition = condition;
   this->body = body;
 }
 
-ConditionalExpressionNode *WhileNode::GetCondition() {
+INode *WhileNode::GetCondition() {
   return condition;
 }
 

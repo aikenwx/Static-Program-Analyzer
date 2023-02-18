@@ -6,15 +6,15 @@
 namespace ast {
 class IfNode : public ContainerStatementNode {
 public:
-  IfNode(ConditionalExpressionNode *condition, StatementListNode *then, StatementListNode *els);
+  IfNode(INode *condition, StatementListNode *then, StatementListNode *els);
 
-  ConditionalExpressionNode *GetCondition();
+  INode *GetCondition();
   StatementListNode *GetThen();
   StatementListNode *GetElse();
   std::string ToString() const override;
 
 private:
-  ConditionalExpressionNode *condition;
+  INode *condition;
   StatementListNode *then;
   StatementListNode *els;
 };

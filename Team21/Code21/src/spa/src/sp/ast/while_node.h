@@ -6,14 +6,14 @@
 namespace ast {
 class WhileNode : public ContainerStatementNode {
 public:
-  WhileNode(ConditionalExpressionNode *condition, StatementListNode *body);
+  WhileNode(INode *condition, StatementListNode *body);
 
-  ConditionalExpressionNode *GetCondition();
+  INode *GetCondition();
   StatementListNode *GetBody();;
   std::string ToString() const override;
 
 private:
-  ConditionalExpressionNode *condition;
+  INode *condition;
   StatementListNode *body;
 };
 }

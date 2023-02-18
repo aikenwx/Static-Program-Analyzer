@@ -1,16 +1,19 @@
 #pragma once
+
+#include <memory>
+
 #include "statement_node.h"
 #include "variable_node.h"
 
 namespace ast {
 class PrintNode : public StatementNode {
 public:
-  PrintNode(VariableNode *var);
+  PrintNode(std::shared_ptr<VariableNode> var);
 
-  VariableNode *GetVariable();
+  std::shared_ptr<VariableNode> GetVariable();
   std::string ToString() const override;
 
 private:
-  VariableNode *var;
+  std::shared_ptr<VariableNode> var;
 };
 }

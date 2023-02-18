@@ -1,4 +1,7 @@
 #pragma once
+
+#include <memory>
+
 #include "expression_node.h"
 #include "statement_node.h"
 #include "variable_node.h"
@@ -6,14 +9,14 @@
 namespace ast {
 class AssignNode : public StatementNode {
 public:
-  AssignNode(VariableNode *var, ExpressionNode *exp);
+  AssignNode(std::shared_ptr<VariableNode> var, std::shared_ptr<ExpressionNode> exp);
 
-  VariableNode *GetVariable();
-  INode *GetAssignment();
+  std::shared_ptr<VariableNode> GetVariable();
+  std::shared_ptr<INode> GetAssignment();
   std::string ToString() const override;
 
 private:
-  VariableNode *var;
-  INode *assignment;
+  std::shared_ptr<VariableNode> var;
+  std::shared_ptr<INode> assignment;
 };
 }

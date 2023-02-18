@@ -1,16 +1,16 @@
 #include "assign_node.h"
 
 namespace ast {
-AssignNode::AssignNode(VariableNode *var, ExpressionNode *exp) {
+AssignNode::AssignNode(std::shared_ptr<VariableNode> var, std::shared_ptr<ExpressionNode> exp) {
   this->var = var;
   this->assignment = exp->GetOperand();
 }
 
-VariableNode *AssignNode::GetVariable() {
+std::shared_ptr<VariableNode> AssignNode::GetVariable() {
   return var;
 }
 
-INode *AssignNode::GetAssignment() {
+std::shared_ptr<INode> AssignNode::GetAssignment() {
   return assignment;
 }
 

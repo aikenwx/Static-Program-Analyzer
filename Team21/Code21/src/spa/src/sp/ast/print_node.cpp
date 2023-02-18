@@ -1,11 +1,11 @@
 #include "print_node.h"
 
 namespace ast {
-PrintNode::PrintNode(VariableNode *var) {
+PrintNode::PrintNode(std::shared_ptr<VariableNode> var) {
   this->var = var;
 }
 
-VariableNode *PrintNode::GetVariable() {
+std::shared_ptr<VariableNode> PrintNode::GetVariable() {
   return var;
 }
 

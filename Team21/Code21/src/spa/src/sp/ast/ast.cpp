@@ -1,11 +1,11 @@
 #include "ast.h"
 
 namespace ast {
-INode *AST::GetRoot() {
+std::shared_ptr<INode> AST::GetRoot() {
   return this->root;
 }
 
-void AST::SetRoot(INode *node) {
+void AST::SetRoot(std::shared_ptr<INode> node) {
   root = node;
 }
 }

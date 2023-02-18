@@ -1,11 +1,11 @@
 #include "expression_node.h"
 
 namespace ast {
-ExpressionNode::ExpressionNode(INode *operand) {
+ExpressionNode::ExpressionNode(std::shared_ptr<INode> operand) {
   this->operand = operand;
 }
 
-INode *ExpressionNode::GetOperand() {
+std::shared_ptr<INode> ExpressionNode::GetOperand() {
   return operand;
 }
 

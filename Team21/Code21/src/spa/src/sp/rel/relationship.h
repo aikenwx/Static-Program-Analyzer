@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "../ast/procedure_node.h"
@@ -19,10 +20,10 @@ class StmtVarRelationship : public Relationship {
   virtual EntityType entityType() = 0;
   virtual std::string variableName() = 0;
   // static StmtVarRelationship CreateRelationship(
-  //     ast::StatementNode* statement, std::string variableName);
+  //     std::shared_ptr<ast::StatementNode> statement, std::string variableName);
 
  private:
-  ast::StatementNode* statementNode_;
+  std::shared_ptr<ast::StatementNode> statementNode_;
   std::string variableName_;
 };
 
@@ -45,21 +46,21 @@ class StmtStmtRelationship : public Relationship {
   virtual EntityType firstEntityType() = 0;
   virtual EntityType secondEntityType() = 0;
   // static StmtStmtRelationship CreateRelationship(
-  //     ast::StatementNode* firstStatement, ast::StatementNode*
+  //     std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode>
   //     secondStatement);
 
  private:
-  ast::StatementNode* firstStatementNode_;
-  ast::StatementNode* secondStatementNode_;
+  std::shared_ptr<ast::StatementNode> firstStatementNode_;
+  std::shared_ptr<ast::StatementNode> secondStatementNode_;
 };
 
 class StmtRelationship : public Relationship {
  public:
   virtual int statementNumber() = 0;
   virtual EntityType entityType() = 0;
-  // static StmtRelationship CreateRelationship(ast::StatementNode* statement);
+  // static StmtRelationship CreateRelationship(std::shared_ptr<ast::StatementNode> statement);
 
  private:
-  ast::StatementNode* statementNode_;
+  std::shared_ptr<ast::StatementNode> statementNode_;
 };
 }  // namespace rel

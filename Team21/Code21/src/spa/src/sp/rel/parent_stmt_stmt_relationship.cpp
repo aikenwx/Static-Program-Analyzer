@@ -20,14 +20,14 @@ EntityType ParentStmtStmtRelationship::secondEntityType() {
   return resolveEntityType(secondStatementNode_);
 };
 
-ParentStmtStmtRelationship*
+std::unique_ptr<ParentStmtStmtRelationship>
 ParentStmtStmtRelationship::CreateRelationship(
-    ast::StatementNode* firstStatement, ast::StatementNode* secondStatement) {
-  return new ParentStmtStmtRelationship(firstStatement, secondStatement);
+    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
+  return std::unique_ptr<ParentStmtStmtRelationship>(new ParentStmtStmtRelationship(firstStatement, secondStatement));
 };
 
 ParentStmtStmtRelationship::ParentStmtStmtRelationship(
-    ast::StatementNode* firstStatement, ast::StatementNode* secondStatement) {
+    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
   firstStatementNode_ = firstStatement;
   secondStatementNode_ = secondStatement;
 };

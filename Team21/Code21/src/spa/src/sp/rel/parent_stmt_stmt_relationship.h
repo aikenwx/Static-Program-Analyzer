@@ -11,14 +11,14 @@ class ParentStmtStmtRelationship : public StmtStmtRelationship {
   int secondStatementNumber() override;
   EntityType firstEntityType() override;
   EntityType secondEntityType() override;
-  static ParentStmtStmtRelationship* CreateRelationship(
-      ast::StatementNode* firstStatement, ast::StatementNode* secondStatement);
+  static std::unique_ptr<ParentStmtStmtRelationship> CreateRelationship(
+      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement);
 
  private:
   ParentStmtStmtRelationship(
-      ast::StatementNode* firstStatement, ast::StatementNode* secondStatement
+      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement
   );
-  ast::StatementNode* firstStatementNode_;
-  ast::StatementNode* secondStatementNode_;
+  std::shared_ptr<ast::StatementNode> firstStatementNode_;
+  std::shared_ptr<ast::StatementNode> secondStatementNode_;
 };
 }  // namespace rel

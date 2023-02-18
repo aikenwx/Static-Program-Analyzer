@@ -6,10 +6,10 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship*>>
-DirectlyUsesExtractor::HandlePrintNode(std::vector<ast::INode*> parents,
-                                       ast::PrintNode* node) {
-  std::vector<rel::Relationship*> relationships;
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
+DirectlyUsesExtractor::HandlePrintNode(std::vector<std::shared_ptr<ast::INode>> parents,
+                                       std::shared_ptr<ast::PrintNode> node) {
+  std::vector<std::unique_ptr<rel::Relationship>> relationships;
 
   relationships.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
       node, node->GetVariable()->GetName()));
@@ -18,7 +18,7 @@ DirectlyUsesExtractor::HandlePrintNode(std::vector<ast::INode*> parents,
     if (util::instance_of<ast::ProcedureNode>(*it)) {
       relationships.push_back(
           rel::UsesProcVarRelationship::CreateRelationship(
-              static_cast<ast::ProcedureNode*>(*it)->GetName(),
+              std::static_pointer_cast<ast::ProcedureNode>(*it)->GetName(),
               node->GetVariable()->GetName()));
       break; // no nested procedures
     }

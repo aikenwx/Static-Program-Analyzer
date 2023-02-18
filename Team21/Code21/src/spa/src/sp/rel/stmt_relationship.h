@@ -11,22 +11,22 @@ class PrintStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
   EntityType entityType() override;
-  static PrintStmtRelationship* CreateRelationship(
-      ast::PrintNode* statementNode);
+  static std::unique_ptr<PrintStmtRelationship> CreateRelationship(
+      std::shared_ptr<ast::PrintNode> statementNode);
 
  private:
-  PrintStmtRelationship(ast::PrintNode* statementNode);
-  ast::PrintNode* statementNode_;
+  PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode);
+  std::shared_ptr<ast::PrintNode> statementNode_;
 };
 
 class ReadStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
   EntityType entityType() override;
-  static ReadStmtRelationship* CreateRelationship(ast::ReadNode* statementNode);
+  static std::unique_ptr<ReadStmtRelationship> CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode);
 
  private:
-  ReadStmtRelationship(ast::ReadNode* statementNode);
-  ast::StatementNode* statementNode_;
+  ReadStmtRelationship(std::shared_ptr<ast::ReadNode> statementNode);
+  std::shared_ptr<ast::StatementNode> statementNode_;
 };
 }  // namespace rel

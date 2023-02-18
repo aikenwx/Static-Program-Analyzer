@@ -178,10 +178,10 @@ procedure computeCentroid {
     normSq = cenX * cenX + cenY * cenY;
 })";
 
-  tokenizer::SimpleTokenizer* tokenizer =
-      tokenizer::SimpleTokenizer::getInstance();
+  tokenizer::SimpleTokenizer tokenizer =
+      tokenizer::SimpleTokenizer();
 
-  std::vector<token::Token*> tokens = tokenizer->tokenize(program);
+  std::vector<std::unique_ptr<token::Token>> tokens = tokenizer.tokenize(program);
 
   REQUIRE(verifyTokenizerOutput(tokens, expectedTokenStrings));
 };
@@ -197,10 +197,10 @@ TEST_CASE("Tokenizer can tokenize a simple, minified program", "[tokenizer]") {
       "readPoint;}if(count==0)then{flag=1;}else{cenX=cenX/count;cenY=cenY/"
       "count;}normSq=cenX*cenX+cenY*cenY;}";
 
-  tokenizer::SimpleTokenizer* tokenizer =
-      tokenizer::SimpleTokenizer::getInstance();
+  tokenizer::SimpleTokenizer tokenizer =
+      tokenizer::SimpleTokenizer();
 
-  std::vector<token::Token*> tokens = tokenizer->tokenize(program);
+  std::vector<std::unique_ptr<token::Token>> tokens = tokenizer.tokenize(program);
 
   REQUIRE(verifyTokenizerOutput(tokens, expectedTokenStrings));
 };

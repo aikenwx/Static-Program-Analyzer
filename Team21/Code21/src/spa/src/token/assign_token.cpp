@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
+const std::unique_ptr<Token> AssignToken::createToken(std::string str) {
+  assert(str == "=");
+  return std::unique_ptr<AssignToken>(new AssignToken());
+};
+
 AssignToken::AssignToken(){};
 
 const std::string AssignToken::getValue() { return "="; };
-
-const AssignToken* AssignToken::createToken(std::string str) {
-  assert(str == "=");
-  if (instance_ == nullptr) instance_ = new AssignToken();
-  return instance_;
-};
-
-AssignToken* AssignToken::instance_ = nullptr;
 }  // namespace token

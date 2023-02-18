@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
+const std::unique_ptr<Token> ModuloToken::createToken(std::string str) {
+  assert(str == "%");
+  return std::unique_ptr<ModuloToken>(new ModuloToken());
+};
+
 ModuloToken::ModuloToken() {};
 
 const std::string ModuloToken::getValue() { return "%"; };
-
-const ModuloToken* ModuloToken::createToken(std::string str) {
-  assert(str == "%");
-  if (instance_ == nullptr) instance_ = new ModuloToken();
-  return instance_;
-};
-
-ModuloToken* ModuloToken::instance_ = nullptr;
 }  // namespace token

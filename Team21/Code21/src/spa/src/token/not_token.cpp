@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
+const std::unique_ptr<Token> NotToken::createToken(std::string str) {
+  assert(str == "!");
+  return std::unique_ptr<NotToken>(new NotToken());
+};
+
 NotToken::NotToken(){};
 
 const std::string NotToken::getValue() { return "!"; };
-
-const NotToken* NotToken::createToken(std::string str) {
-  assert(str == "!");
-  if (instance_ == nullptr) instance_ = new NotToken();
-  return instance_;
-};
-
-NotToken* NotToken::instance_ = nullptr;
 }  // namespace token

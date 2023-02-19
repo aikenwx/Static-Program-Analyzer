@@ -14,6 +14,6 @@ public:
   std::string ToString() const override;
 
 private:
-  std::shared_ptr<Procedure> proc;
+  std::shared_ptr<ProcedureNode> proc;
 };
 }

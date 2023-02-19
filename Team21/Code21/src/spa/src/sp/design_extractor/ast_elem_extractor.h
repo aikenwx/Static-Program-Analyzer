@@ -14,7 +14,7 @@ class AstElemExtractor : public Extractor {
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleWhileNode(
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> node) override;
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleContainerStatementNode(
-      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ContainerStatementNode> node) {
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ContainerStatementNode> node) override {
     return std::nullopt;
   };
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleConstantNode(

@@ -1,7 +1,6 @@
 #include <string>
 
 #include "parent_stmt_stmt_relationship.h"
-#include "util.h"
 
 namespace rel {
 int ParentStmtStmtRelationship::firstStatementNumber() {

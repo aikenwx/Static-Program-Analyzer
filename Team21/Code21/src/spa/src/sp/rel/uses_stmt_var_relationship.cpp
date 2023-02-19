@@ -1,7 +1,6 @@
 #include <string>
 
 #include "uses_stmt_var_relationship.h"
-#include "util.h"
 
 namespace rel {
 int UsesStmtVarRelationship::statementNumber() {

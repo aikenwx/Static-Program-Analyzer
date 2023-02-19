@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "util.h"
-
 namespace rel {
 int FollowsStmtStmtRelationship::firstStatementNumber() {
   return firstStatementNode_->GetStatementNumber();

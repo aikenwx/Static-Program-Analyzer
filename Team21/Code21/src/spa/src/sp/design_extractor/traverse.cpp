@@ -1,4 +1,5 @@
 #include "extractor.h"
+#include "sp/ast/binary_operation_node.h"
 #include "util/instance_of.h"
 
 namespace design_extractor {
@@ -72,13 +73,6 @@ std::vector<std::unique_ptr<rel::Relationship>> _Traverse(
     relationships.insert(relationships.end(), std::make_move_iterator(res.begin()), std::make_move_iterator(res.end()));
     parents.pop_back();
   } else if (util::instance_of<ast::BinaryOperationNode>(node)) {
-    std::optional<std::vector<std::unique_ptr<rel::Relationship>>> newRels =
-        extractor->HandleBinaryOperationNode(
-            parents, std::static_pointer_cast<ast::BinaryOperationNode>(node));
-    if (newRels.has_value()) {
-      relationships.insert(relationships.end(), std::make_move_iterator(newRels.value().begin()), std::make_move_iterator(newRels.value().end()));
-    }
-
     parents.push_back(node);
     std::vector<std::unique_ptr<rel::Relationship>> res = _Traverse(
         parents, std::static_pointer_cast<ast::BinaryOperationNode>(node)->GetLeft(),

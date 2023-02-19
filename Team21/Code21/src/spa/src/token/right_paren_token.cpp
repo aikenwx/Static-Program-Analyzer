@@ -13,5 +13,5 @@ const std::unique_ptr<Token> RightParenToken::createToken(
 
 RightParenToken::RightParenToken(){};
 
-const std::string RightParenToken::getValue() { return ")"; };
+const std::string RightParenToken::GetValue() { return ")"; };
 }  // namespace token

@@ -19,5 +19,5 @@ const std::unique_ptr<Token> IdentifierToken::createToken(
 
 IdentifierToken::IdentifierToken(std::string value) { this->value = value; }
 
-const std::string IdentifierToken::getValue() { return this->value; }
+const std::string IdentifierToken::GetValue() { return this->value; }
 }  // namespace token

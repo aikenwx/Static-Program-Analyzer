@@ -19,5 +19,5 @@ const std::unique_ptr<Token> IntegerToken::createToken(std::string str) {
 
 IntegerToken::IntegerToken(std::string value) { this->value = value; }
 
-const std::string IntegerToken::getValue() { return this->value; }
+const std::string IntegerToken::GetValue() { return this->value; }
 }  // namespace token

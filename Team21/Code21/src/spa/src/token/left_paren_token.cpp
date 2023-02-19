@@ -12,5 +12,5 @@ const std::unique_ptr<Token> LeftParenToken::createToken(std::string str) {
 
 LeftParenToken::LeftParenToken(){};
 
-const std::string LeftParenToken::getValue() { return "("; };
+const std::string LeftParenToken::GetValue() { return "("; };
 }  // namespace token

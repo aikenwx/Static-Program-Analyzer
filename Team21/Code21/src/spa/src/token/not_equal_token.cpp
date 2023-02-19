@@ -12,5 +12,5 @@ const std::unique_ptr<Token> NotEqualToken::createToken(std::string str) {
 
 NotEqualToken::NotEqualToken(){};
 
-const std::string NotEqualToken::getValue() { return "!="; };
+const std::string NotEqualToken::GetValue() { return "!="; };
 }  // namespace token

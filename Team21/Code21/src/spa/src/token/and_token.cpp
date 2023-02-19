@@ -12,5 +12,5 @@ const std::unique_ptr<Token> AndToken::createToken(std::string str) {
 
 AndToken::AndToken(){};
 
-const std::string AndToken::getValue() { return "&&"; };
+const std::string AndToken::GetValue() { return "&&"; };
 }  // namespace token

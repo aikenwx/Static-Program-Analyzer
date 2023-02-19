@@ -12,5 +12,5 @@ const std::unique_ptr<Token> AssignToken::createToken(std::string str) {
 
 AssignToken::AssignToken(){};
 
-const std::string AssignToken::getValue() { return "="; };
+const std::string AssignToken::GetValue() { return "="; };
 }  // namespace token

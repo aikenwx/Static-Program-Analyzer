@@ -11,5 +11,5 @@ const std::unique_ptr<Token> MinusToken::createToken(std::string str) {
 
 MinusToken::MinusToken(){};
 
-const std::string MinusToken::getValue() { return "-"; };
+const std::string MinusToken::GetValue() { return "-"; };
 }  // namespace token

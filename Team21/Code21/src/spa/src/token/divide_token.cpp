@@ -12,5 +12,5 @@ const std::unique_ptr<Token> DivideToken::createToken(std::string str) {
 
 DivideToken::DivideToken(){};
 
-const std::string DivideToken::getValue() { return "/"; };
+const std::string DivideToken::GetValue() { return "/"; };
 }  // namespace token

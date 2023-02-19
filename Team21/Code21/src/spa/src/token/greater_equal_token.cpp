@@ -11,5 +11,5 @@ const std::unique_ptr<Token> GreaterEqualToken::createToken(std::string str) {
 
 GreaterEqualToken::GreaterEqualToken(){};
 
-const std::string GreaterEqualToken::getValue() { return ">="; };
+const std::string GreaterEqualToken::GetValue() { return ">="; };
 }  // namespace token

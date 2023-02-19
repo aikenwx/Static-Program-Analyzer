@@ -13,5 +13,5 @@ const std::unique_ptr<Token> SemicolonToken::createToken(
 
 SemicolonToken::SemicolonToken(){};
 
-const std::string SemicolonToken::getValue() { return ";"; };
+const std::string SemicolonToken::GetValue() { return ";"; };
 }  // namespace token

@@ -12,5 +12,5 @@ const std::unique_ptr<Token> ModuloToken::createToken(std::string str) {
 
 ModuloToken::ModuloToken() {};
 
-const std::string ModuloToken::getValue() { return "%"; };
+const std::string ModuloToken::GetValue() { return "%"; };
 }  // namespace token

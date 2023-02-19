@@ -12,5 +12,5 @@ const std::unique_ptr<Token> PlusToken::createToken(std::string str) {
 
 PlusToken::PlusToken(){};
 
-const std::string PlusToken::getValue() { return "+"; };
+const std::string PlusToken::GetValue() { return "+"; };
 }  // namespace token

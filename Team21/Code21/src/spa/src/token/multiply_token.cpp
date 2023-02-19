@@ -12,5 +12,5 @@ const std::unique_ptr<Token> MultiplyToken::createToken(std::string str) {
 
 MultiplyToken::MultiplyToken(){};
 
-const std::string MultiplyToken::getValue() { return "*"; };
+const std::string MultiplyToken::GetValue() { return "*"; };
 }  // namespace token

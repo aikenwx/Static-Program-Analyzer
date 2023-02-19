@@ -12,5 +12,5 @@ const std::unique_ptr<Token> NotToken::createToken(std::string str) {
 
 NotToken::NotToken(){};
 
-const std::string NotToken::getValue() { return "!"; };
+const std::string NotToken::GetValue() { return "!"; };
 }  // namespace token

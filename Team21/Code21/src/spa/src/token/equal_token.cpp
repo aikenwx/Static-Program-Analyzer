@@ -12,5 +12,5 @@ const std::unique_ptr<Token> EqualToken::createToken(std::string str) {
 
 EqualToken::EqualToken(){};
 
-const std::string EqualToken::getValue() { return "=="; };
+const std::string EqualToken::GetValue() { return "=="; };
 }  // namespace token

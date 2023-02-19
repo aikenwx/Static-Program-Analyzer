@@ -24,6 +24,6 @@ private:
 
 class EndToken : public token::Token {
 public:
-  const std::string getValue() override;
+  const std::string GetValue() override;
 };
 }

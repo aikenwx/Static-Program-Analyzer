@@ -12,5 +12,5 @@ const std::unique_ptr<Token> LeftBraceToken::createToken(std::string str) {
 
 LeftBraceToken::LeftBraceToken(){};
 
-const std::string LeftBraceToken::getValue() { return "{"; };
+const std::string LeftBraceToken::GetValue() { return "{"; };
 }  // namespace token

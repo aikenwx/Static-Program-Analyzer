@@ -12,5 +12,5 @@ const std::unique_ptr<Token> LessThanToken::createToken(std::string str) {
 
 LessThanToken::LessThanToken(){};
 
-const std::string LessThanToken::getValue() { return "<"; };
+const std::string LessThanToken::GetValue() { return "<"; };
 }  // namespace token

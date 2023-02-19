@@ -8,7 +8,7 @@ namespace token {
 class LessThanToken : public Token {
  public:
   static const std::unique_ptr<Token> createToken(std::string);
-  const std::string getValue() override;
+  const std::string GetValue() override;
 
  private:
   LessThanToken();

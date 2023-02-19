@@ -75,7 +75,7 @@ ast::AST *SimpleParser::Parse(std::vector<token::Token *> input) {
 void SimpleParser::Shift() {
   // This code is neither DRY nor open for extension
   if (util::instance_of<token::IdentifierToken>(*lookahead)) {
-    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->GetValue());
     stack.push_back(id);
   } else if (util::instance_of<token::IntegerToken>(*lookahead)) {
     // Unimplemented
@@ -142,7 +142,7 @@ void SimpleParser::Shift() {
     return;
   } else {
     // Default implementation but should not reach here
-    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->getValue());
+    ast::IdentifierNode *id = new ast::IdentifierNode((*lookahead)->GetValue());
     stack.push_back(id);
     assert(false);
   }
@@ -287,7 +287,7 @@ bool SimpleParser::Check() {
   return false;
 }
 
-const std::string EndToken::getValue() {
+const std::string EndToken::GetValue() {
   return "$";
 }
 }

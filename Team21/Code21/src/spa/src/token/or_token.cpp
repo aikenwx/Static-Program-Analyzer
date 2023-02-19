@@ -12,5 +12,5 @@ const std::unique_ptr<Token> OrToken::createToken(std::string str) {
 
 OrToken::OrToken(){};
 
-const std::string OrToken::getValue() { return "||"; };
+const std::string OrToken::GetValue() { return "||"; };
 }  // namespace token

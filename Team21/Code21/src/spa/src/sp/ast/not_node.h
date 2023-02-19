@@ -2,17 +2,13 @@
 
 #include <memory>
 
-#include "i_node.h"
+#include "unary_operation_node.h"
 
 namespace ast {
-class NotNode : public INode {
+class NotNode : public UnaryOperationNode {
 public:
-  NotNode(std::shared_ptr<INode> operand);
+  using UnaryOperationNode::UnaryOperationNode;
 
-  std::shared_ptr<INode> GetOperand();
   std::string ToString() const override;
-
-private:
-  std::shared_ptr<INode> operand;
 };
 }

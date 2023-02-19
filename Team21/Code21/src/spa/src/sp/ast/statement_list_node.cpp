@@ -27,6 +27,15 @@ int StatementListNode::GetEndStatementNumber() {
   return endStatementNumber;
 }
 
+void StatementListNode::IncrementStatementNumbers(int value) {
+  for (auto i = statements.begin(); i < statements.end(); i++) {
+    (*i)->SetStatementNumber((*i)->GetStatementNumber() + value);
+  }
+  // Stack implementation
+  startStatementNumber = statements.back()->GetStatementNumber();
+  endStatementNumber = statements.front()->GetStatementNumber();
+}
+
 std::string StatementListNode::ToString() const {
   std::string str = "stmtLst:\n{\n";
   for (auto i = statements.rbegin(); i < statements.rend(); i++) {

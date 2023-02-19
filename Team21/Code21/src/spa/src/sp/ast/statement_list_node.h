@@ -13,6 +13,7 @@ public:
   std::string ToString() const override;
   int GetStartStatementNumber();
   int GetEndStatementNumber();
+  void IncrementStatementNumbers(int value);
 
 private:
   std::vector<std::shared_ptr<StatementNode>> statements;

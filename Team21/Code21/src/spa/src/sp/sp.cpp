@@ -4,6 +4,8 @@
 #include <queue>
 #include <unordered_set>
 
+#include "exceptions/semantic_error.h"
+#include "exceptions/syntax_error.h"
 #include "sp/ast/ast.h"
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
@@ -30,6 +32,24 @@
 #include "util/unique_ptr_cast.h"
 
 namespace sp {
+bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
+  if (!util::instance_of<ast::ProgramNode>(root)) {
+    throw exceptions::SyntaxError("unknown syntax error");
+  }
+
+  std::shared_ptr<ast::ProgramNode> programNode =
+      std::static_pointer_cast<ast::ProgramNode>(root);
+
+  std::unordered_set<std::string> procedures;
+  for (const auto& procNode : programNode->GetProcedures()) {
+    if (procedures.find(procNode->GetName()) != procedures.end()) {
+      throw exceptions::SemanticError("duplicate procedure name");
+    }
+    procedures.insert(procNode->GetName());
+  }
+  return true;
+}
+
 bool SP::process(std::string program, PKB* pkb) {
   // tokenize the string
   tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
@@ -40,9 +60,7 @@ bool SP::process(std::string program, PKB* pkb) {
   parser::SimpleParser parser = parser::SimpleParser();
   std::unique_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
 
-  if (!util::instance_of<ast::ProgramNode>(ast->GetRoot())) {
-    throw std::runtime_error("AST root is not a ProgramNode");
-  }
+  VerifyAstRoot(ast->GetRoot());
 
   std::shared_ptr<ast::ProgramNode> programNode =
       std::static_pointer_cast<ast::ProgramNode>(ast->GetRoot());

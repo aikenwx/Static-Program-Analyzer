@@ -61,20 +61,19 @@ bool SP::process(std::string program, PKB* pkb) {
   // put AST entities into PKB
   PopulateFacade* PopFacade = pkb->getPopulateFacade();
   for (auto&& rel : astElemRelationships) {
-    // pretty nasty, but it'll work for now
-    if (util::instance_of<rel::PrintStmtRelationship>(rel)) {
+    if (rel->relationshipType() == rel::RelationshipType::PRINT_STMT) {
       PopFacade->storePrintStatement(
           std::static_pointer_cast<rel::PrintStmtRelationship>(std::move(rel))->statementNumber());
-    } else if (util::instance_of<rel::ReadStmtRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::READ_STMT) {
       PopFacade->storeReadStatement(
           std::static_pointer_cast<rel::ReadStmtRelationship>(std::move(rel))->statementNumber());
-    } else if (util::instance_of<rel::ConstRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::CONST) {
       PopFacade->storeConstant(
           std::static_pointer_cast<rel::ConstRelationship>(std::move(rel))->value());
-    } else if (util::instance_of<rel::ProcRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       PopFacade->storeProcedure(
           std::static_pointer_cast<rel::ProcRelationship>(std::move(rel))->procedureName());
-    } else if (util::instance_of<rel::VarRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::VAR) {
       PopFacade->storeVariable(
           std::static_pointer_cast<rel::VarRelationship>(std::move(rel))->variableName());
     }
@@ -137,12 +136,12 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   for (auto& rel : modifiesRelationships) {
-    if (util::instance_of<rel::ModifiesProcVarRelationship>(rel)) {
+    if (rel->relationshipType() == rel::RelationshipType::MODIFIES_PROC_VAR) {
       std::unique_ptr<rel::ModifiesProcVarRelationship> modifiesRel =
           std::static_pointer_cast<rel::ModifiesProcVarRelationship>(std::move(rel));
       PopFacade->storeProcedureModifiesVariableRelationship(
           modifiesRel->procedureName(), modifiesRel->variableName());
-    } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::MODIFIES_STMT_VAR) {
       std::unique_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
           std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementModifiesVariableRelationship(
@@ -151,12 +150,12 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   for (auto& rel : usesRelationships) {
-    if (util::instance_of<rel::UsesProcVarRelationship>(rel)) {
+    if (rel->relationshipType() == rel::RelationshipType::USES_PROC_VAR) {
       std::unique_ptr<rel::UsesProcVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesProcVarRelationship>(std::move(rel));
       PopFacade->storeProcedureUsesVariableRelationship(
           usesRel->procedureName(), usesRel->variableName());
-    } else if (util::instance_of<rel::UsesStmtVarRelationship>(rel)) {
+    } else if (rel->relationshipType() == rel::RelationshipType::USES_STMT_VAR) {
       std::unique_ptr<rel::UsesStmtVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementUsesVariableRelationship(

@@ -81,20 +81,59 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // put relationships into PKB
+  // optimization: use vecs of ints because we're told that we won't have more than 500 stmts
+  // also, add an extra 10% just in case
+
+  // followsRels[secondStmtNum] = firstStmtNum (or 0 if it doesn't have a preceding stmt)
+  std::vector<int> followsRels;
+  followsRels.reserve(550);
+
+  // parentRels[childStmtNum] = parentStmtNum (or 0 if it doesn't have a parent stmt)
+  std::vector<int> parentRels;
+  parentRels.reserve(550);
+
   for (auto& rel : followsRelationships) {
     std::unique_ptr<rel::FollowsStmtStmtRelationship> followsRel =
         std::static_pointer_cast<rel::FollowsStmtStmtRelationship>(std::move(rel));
-    PopFacade->storeFollowsRelationship(
-        followsRel->firstStatementNumber(), followsRel->firstEntityType(),
-        followsRel->secondStatementNumber(), followsRel->secondEntityType());
+    followsRels[followsRel->secondStatementNumber()] = followsRel->firstStatementNumber();
   }
 
   for (auto& rel : parentRelationships) {
     std::unique_ptr<rel::ParentStmtStmtRelationship> parentRel =
         std::static_pointer_cast<rel::ParentStmtStmtRelationship>(std::move(rel));
-    PopFacade->storeParentRelationship(
-        parentRel->firstStatementNumber(), parentRel->firstEntityType(),
-        parentRel->secondStatementNumber(), parentRel->secondEntityType());
+    parentRels[parentRel->secondStatementNumber()] = parentRel->firstStatementNumber();
+  }
+
+  for (int i = 0; i < followsRels.size(); i++) {
+    // for each stmt i...
+    if (followsRels[i] != 0) {
+      // store preceding(i) -> i follows and follows* relationship
+      PopFacade->storeFollowsRelationship(followsRels[i], i);
+      PopFacade->storeFollowsStarRelationship(followsRels[i], i);
+
+      // store preceding(preceding(i)) -> i follows* relationship
+      int nextRelIdx = followsRels[i];
+      while (followsRels[nextRelIdx] != 0) {
+        PopFacade->storeFollowsStarRelationship(followsRels[nextRelIdx], i);
+        nextRelIdx = followsRels[nextRelIdx];
+      }
+    }
+  }
+
+  for (int i = 0; i < parentRels.size(); i++) {
+    // for each stmt i...
+    if (parentRels[i] != 0) {
+      // store parent(i) -> i parent and parent* relationship
+      PopFacade->storeParentRelationship(parentRels[i], i);
+      PopFacade->storeParentStarRelationship(parentRels[i], i);
+
+      // store parent(parent(i)) -> i parent* relationship
+      int nextRelIdx = parentRels[i];
+      while (parentRels[nextRelIdx] != 0) {
+        PopFacade->storeParentStarRelationship(parentRels[nextRelIdx], i);
+        nextRelIdx = parentRels[nextRelIdx];
+      }
+    }
   }
 
   for (auto& rel : modifiesRelationships) {

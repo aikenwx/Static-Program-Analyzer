@@ -10,7 +10,6 @@ namespace rel {
 class PrintStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
-  EntityType entityType() override;
   static std::unique_ptr<PrintStmtRelationship> CreateRelationship(
       std::shared_ptr<ast::PrintNode> statementNode);
 
@@ -22,7 +21,6 @@ class PrintStmtRelationship : public StmtRelationship {
 class ReadStmtRelationship : public StmtRelationship {
  public:
   int statementNumber() override;
-  EntityType entityType() override;
   static std::unique_ptr<ReadStmtRelationship> CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode);
 
  private:

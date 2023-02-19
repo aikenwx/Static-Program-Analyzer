@@ -8,7 +8,6 @@ namespace rel {
 class ModifiesStmtVarRelationship : public StmtVarRelationship {
  public:
   int statementNumber() override;
-  EntityType entityType() override;
   std::string variableName() override;
   static std::unique_ptr<ModifiesStmtVarRelationship> CreateRelationship(
       std::shared_ptr<ast::StatementNode> statementNode, std::string variableName);

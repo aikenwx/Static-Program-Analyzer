@@ -8,10 +8,6 @@ int ModifiesStmtVarRelationship::statementNumber() {
   return statementNode_->GetStatementNumber();
 };
 
-EntityType ModifiesStmtVarRelationship::entityType() {
-  return resolveEntityType(statementNode_);
-};
-
 std::string ModifiesStmtVarRelationship::variableName() {
   return variableName_;
 };

@@ -9,8 +9,6 @@ class FollowsStmtStmtRelationship : public StmtStmtRelationship {
  public:
   int firstStatementNumber() override;
   int secondStatementNumber() override;
-  EntityType firstEntityType() override;
-  EntityType secondEntityType() override;
   static std::unique_ptr<FollowsStmtStmtRelationship> CreateRelationship(
       std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement);
 

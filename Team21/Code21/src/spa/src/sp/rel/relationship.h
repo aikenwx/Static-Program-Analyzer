@@ -17,7 +17,6 @@ class StmtVarRelationship : public Relationship {
  public:
   virtual int statementNumber() = 0;
   // TODO: return PKBStorageClasses/EntityClasses/Entity.h?
-  virtual EntityType entityType() = 0;
   virtual std::string variableName() = 0;
   // static StmtVarRelationship CreateRelationship(
   //     std::shared_ptr<ast::StatementNode> statement, std::string variableName);
@@ -43,8 +42,6 @@ class StmtStmtRelationship : public Relationship {
  public:
   virtual int firstStatementNumber() = 0;
   virtual int secondStatementNumber() = 0;
-  virtual EntityType firstEntityType() = 0;
-  virtual EntityType secondEntityType() = 0;
   // static StmtStmtRelationship CreateRelationship(
   //     std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode>
   //     secondStatement);
@@ -57,7 +54,6 @@ class StmtStmtRelationship : public Relationship {
 class StmtRelationship : public Relationship {
  public:
   virtual int statementNumber() = 0;
-  virtual EntityType entityType() = 0;
   // static StmtRelationship CreateRelationship(std::shared_ptr<ast::StatementNode> statement);
 
  private:

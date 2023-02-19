@@ -13,8 +13,6 @@ class EndToken : public Token {
   static const std::unique_ptr<Token> CreateToken(std::string);
   const TokenType GetType() override { return TokenType::END; }
   const std::string GetValue() override;
-
- private:
   EndToken();
 };
 }  // namespace token

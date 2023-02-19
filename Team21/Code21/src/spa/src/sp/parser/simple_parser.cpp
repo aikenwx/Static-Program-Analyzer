@@ -3,6 +3,7 @@
 #include "token/and_token.h"
 #include "token/assign_token.h"
 #include "token/divide_token.h"
+#include "token/end_token.h"
 #include "token/equal_token.h"
 #include "token/greater_equal_token.h"
 #include "token/greater_than_token.h"
@@ -29,7 +30,7 @@ using namespace util;
 
 namespace parser {
 std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
-  input.push_back(std::make_unique<EndToken>());
+  input.push_back(std::make_unique<token::EndToken>());
   stack.clear();
   statementCounter = 0;
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {
@@ -64,10 +65,10 @@ std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token:
 void SimpleParser::Shift() {
   // This code is neither DRY nor open for extension
   if (util::instance_of<token::IdentifierToken>(*lookahead)) {
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
   } else if (util::instance_of<token::IntegerToken>(*lookahead)) {
-    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((*lookahead)->getValue()));
+    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((*lookahead)->GetValue()));
     stack.push_back(c);
   } else if (util::instance_of<token::AndToken>(*lookahead)) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAnd);
@@ -129,12 +130,12 @@ void SimpleParser::Shift() {
   } else if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kSemicolon);
     stack.push_back(sym);
-  } else if (util::instance_of<EndToken>(*lookahead)) {
+  } else if (util::instance_of<token::EndToken>(*lookahead)) {
     // end token
     return;
   } else {
     // Default implementation but should not reach here
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
     assert(false);
   }
@@ -197,7 +198,7 @@ void SimpleParser::Success() {
 bool SimpleParser::Check() {
   auto i = stack.rbegin();
   // program
-  if (util::instance_of<EndToken>(*lookahead)) {
+  if (util::instance_of<token::EndToken>(*lookahead)) {
     // When token has reached end
     if (stack.size() >= 2
       && util::instance_of<ast::ProgramNode>(*i)

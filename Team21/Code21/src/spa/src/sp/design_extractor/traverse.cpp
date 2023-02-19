@@ -22,6 +22,7 @@ bool appendNewRelationships(
   relationships.insert(relationships.end(),
                        std::make_move_iterator(newRels.begin()),
                        std::make_move_iterator(newRels.end()));
+  return true;
 }
 
 std::vector<std::unique_ptr<rel::Relationship>> _Traverse(

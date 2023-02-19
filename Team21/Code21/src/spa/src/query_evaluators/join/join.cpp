@@ -39,9 +39,13 @@ SynonymTable HashJoin::operator()(const SynonymTable &hash_table, const SynonymT
     auto matched_key = hashed_records_.find(GetHashKey(probe_table, common_synonyms_, probe_row_idx));
     if (matched_key == hashed_records_.end()) continue;
     for (auto hashed_table_idx : matched_key->second) {
-      SynonymTable::Row row(hash_table_rows[hashed_table_idx].begin(), hash_table_rows[hashed_table_idx].end());
-      for (const auto &proble_table_syn : probe_table_unique_syns_) {
-        row.push_back(probe_table.GetCell(proble_table_syn, probe_row_idx));
+      SynonymTable::Row row;
+      for (const auto &syn : all_synonyms_) {
+        if (hash_table.HasSynonym(syn)) {
+          row.push_back(hash_table.GetCell(syn, hashed_table_idx));
+        } else {
+          row.push_back(probe_table.GetCell(syn, probe_row_idx));
+        }
       }
       joined_table.AddRow(std::move(row));
     }

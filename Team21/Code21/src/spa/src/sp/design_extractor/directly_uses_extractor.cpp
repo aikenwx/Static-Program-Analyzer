@@ -26,13 +26,4 @@ DirectlyUsesExtractor::HandlePrintNode(std::vector<std::shared_ptr<ast::INode>> 
   }
   return relationships;
 }
-
-DirectlyUsesExtractor* DirectlyUsesExtractor::instance_ = nullptr;
-
-DirectlyUsesExtractor* DirectlyUsesExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new DirectlyUsesExtractor();
-  }
-  return instance_;
-}
 }  // namespace design_extractor

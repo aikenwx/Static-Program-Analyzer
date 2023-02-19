@@ -42,11 +42,6 @@ class FollowsExtractor : public Extractor {
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> node) override {
     return std::nullopt;
   };
-  static FollowsExtractor* GetInstance();
-  void operator=(const FollowsExtractor&) = delete;
-
- private:
   FollowsExtractor() = default;
-  static FollowsExtractor* instance_;
 };
 }  // namespace design_extractor

@@ -42,13 +42,4 @@ std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor:
   vec.push_back(rel::VarRelationship::CreateRelationship(variable_node->GetName()));
   return vec;
 }
-
-AstElemExtractor* AstElemExtractor::instance_ = nullptr;
-
-AstElemExtractor* AstElemExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new AstElemExtractor();
-  }
-  return instance_;
-}
 }  // namespace design_extractor

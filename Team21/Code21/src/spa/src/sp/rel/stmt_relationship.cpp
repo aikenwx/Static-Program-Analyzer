@@ -1,20 +1,12 @@
 #include "stmt_relationship.h"
 
 namespace rel {
-int PrintStmtRelationship::statementNumber() {
-  return statementNode_->GetStatementNumber();
-};
-
 std::unique_ptr<PrintStmtRelationship> PrintStmtRelationship::CreateRelationship(std::shared_ptr<ast::PrintNode> statementNode) {
   return std::unique_ptr<PrintStmtRelationship>(new PrintStmtRelationship(statementNode));
 };
 
 PrintStmtRelationship::PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode) {
   statementNode_ = statementNode;
-};
-
-int ReadStmtRelationship::statementNumber() {
-  return statementNode_->GetStatementNumber();
 };
 
 std::unique_ptr<ReadStmtRelationship> ReadStmtRelationship::CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode) {

@@ -3,7 +3,8 @@
 #include "query_preprocess/query_tokenizer.h"
 #include "query_preprocess/query_parser.h"
 #include "query_evaluator.h"
-#include "query/validation/SemanticValidator.h"
+#include "query_validation/SemanticValidator.h"
+#include "query_validation/SyntacticValidator.h"
 
 namespace qps {
 void QPS::evaluate(std::string &query_str, std::list<std::string> &results, QueryFacade &pkb) {
@@ -12,9 +13,11 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     QueryParser parser(tokenizer.tokenize());
     Query query(parser.parse());
     SemanticValidator validator(query);
+    SyntacticValidator validator2(query);
     QueryEvaluator evaluator(query);
 
     validator.validateQuery();
+    validator2.validateQuery();
     for (const auto &str : evaluator.EvaluateQuery(pkb)) {
       results.push_back(str);
     }

@@ -27,23 +27,35 @@ EntityManager::~EntityManager() {
 }
 
 void EntityManager::storeConstant(std::shared_ptr<Constant> constant) {
-    this->validateDuplicateStore(constant->getConstantNumber(), &this->constantValueToConstantStore);
+    if (this->checkIfEntityIsDuplicate(constant->getConstantNumber(), &this->constantValueToConstantStore)) {
+        return;
+    }
+
     constantValueToConstantStore.insert({constant->getConstantNumber(), std::shared_ptr<Constant>(constant)});
     this->storeInEntityTypeToEntityStore(constant.get());
 }
 
 void EntityManager::storeVariable(std::shared_ptr<Variable> variable) {
-    this->validateDuplicateStore(*variable->getEntityValue(), &this->variableNameToVariableStore);
+    if (this->checkIfEntityIsDuplicate(*variable->getEntityValue(), &this->variableNameToVariableStore)) {
+        return;
+    }
+
     variableNameToVariableStore.insert({*variable->getEntityValue(), std::shared_ptr<Variable>(variable)});
     this->storeInEntityTypeToEntityStore(variable.get());
 }
 void EntityManager::storeProcedure(std::shared_ptr<Procedure> procedure) {
-    this->validateDuplicateStore(*procedure->getEntityValue(), &this->procedureNameToProcedureStore);
+    if (this->checkIfEntityIsDuplicate(*procedure->getEntityValue(), &this->procedureNameToProcedureStore)) {
+        return;
+    }
+
     procedureNameToProcedureStore.insert({*procedure->getEntityValue(), std::shared_ptr<Procedure>(procedure)});
     this->storeInEntityTypeToEntityStore(procedure.get());
 }
 void EntityManager::storeStatement(std::shared_ptr<Statement> statement) {
-    this->validateDuplicateStore(statement->getStatementNumber(), &this->statementNumberToStatementStore);
+    if (this->checkIfEntityIsDuplicate(statement->getStatementNumber(), &this->statementNumberToStatementStore)) {
+        return;
+    }
+
     statementNumberToStatementStore.insert({statement->getStatementNumber(), std::shared_ptr<Statement>(statement)});
     this->storeInEntityTypeToEntityStore(statement.get());
 }
@@ -116,8 +128,9 @@ void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType
 }
 
 template <typename T, typename S>
-void EntityManager::validateDuplicateStore(T hash, std::unordered_map<T, S>* entityStore) {
+bool EntityManager::checkIfEntityIsDuplicate(T hash, std::unordered_map<T, S>* entityStore) {
     if (entityStore->find(hash) != entityStore->end()) {
-        throw std::runtime_error("Duplicate entity already exists in the storage");
+        return true;
     }
+    return false;
 }

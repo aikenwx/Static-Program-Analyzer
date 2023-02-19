@@ -549,3 +549,124 @@ TEST_CASE("QPS can work with different combinations of parent") {
     }
   }
 }
+
+TEST_CASE("QPS can work with different combinations of parentStar") {
+    qps_test::PopulatePKBHelper pkb_helper;
+    auto data = PopulateEntities(pkb_helper);
+    QueryFacade* pkb_querier = pkb_helper.GetQuerier();
+
+    pkb_helper.AddParentStar({ {5, 6}, {5, 11}, {5, 12}, {5, 13}, {5, 14},
+                          {6, 7}, {6, 8}, {6, 9}, {6, 10},
+                          {15, 16}, {15, 18}, {15, 19}, {15, 20},
+                          {16, 17}, {5, 7}, {5, 8}, {5, 9}, {5, 10}, {15, 17}
+        });
+
+
+    SECTION("Both Synonyms") {
+        SECTION("Look for nested child statements under while") {
+            std::unordered_set<std::string> expected{ "6", "7", "8", "9", "10", "11", "12", "13", "14", "17" };
+            REQUIRE(qps_test::RunQuery("stmt s; while w; Select s such that ParentT(w, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for nested child statements under if") {
+            std::unordered_set<std::string> expected{ "7", "8", "9", "10", "16", "17", "18", "19", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s; if f; Select s such that ParentT(f, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for nested child statements under any container stmt") {
+            std::unordered_set<std::string>
+                expected{ "6", "11", "12", "13", "14", "17", "7", "8", "9", "10", "16", "18", "19", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s, s1; Select s such that ParentT(s1, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for call nested statements under while") {
+            std::unordered_set<std::string> expected{ "8", "14" };
+            REQUIRE(qps_test::RunQuery("while w; call c; Select c such that ParentT(w, c)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on right, wild card on left") {
+        SECTION("All nested child statements") {
+            std::unordered_set<std::string>
+                expected{ "6", "11", "12", "13", "14", "17", "7", "8", "9", "10", "16", "18", "19", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that ParentT(_, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("All assign nested child statements") {
+            std::unordered_set<std::string> expected{ "7", "11", "12", "13", "18", "19", "20", "17" };
+            REQUIRE(qps_test::RunQuery("assign a; Select a such that ParentT(_, a)", *pkb_querier) == expected);
+        }
+
+        SECTION("All print nested child statements") {
+            std::unordered_set<std::string> expected{ "9" };
+            REQUIRE(qps_test::RunQuery("print pn; Select pn such that ParentT(_, pn)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, wild card on right") {
+        SECTION("Statement on left") {
+            std::unordered_set<std::string> expected{ "5", "6", "15", "16" };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that ParentT(s, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("While on left") {
+            std::unordered_set<std::string> expected{ "5", "16" };
+            REQUIRE(qps_test::RunQuery("while w; Select w such that ParentT(w, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("If on left") {
+            std::unordered_set<std::string> expected{ "6", "15" };
+            REQUIRE(qps_test::RunQuery("if f; Select f such that ParentT(f, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("Non container stmt on left") {
+            std::unordered_set<std::string> expected{};
+            REQUIRE(qps_test::RunQuery("assign a; Select a such that ParentT(a, _)", *pkb_querier) == expected);
+            REQUIRE(qps_test::RunQuery("call c; Select c such that ParentT(c, _)", *pkb_querier) == expected);
+            REQUIRE(qps_test::RunQuery("print pn; Select pn such that ParentT(pn, _)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, literal on right") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "5", "6"};
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that ParentT(s, 7)", *pkb_querier) == expected);
+
+        expected = { "15", "16" };
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that ParentT(s, 17)", *pkb_querier) == expected);
+    }
+
+    SECTION("Synonym on right, literal on left") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "7", "11", "12", "13" };
+        REQUIRE(qps_test::RunQuery("assign a; Select a such that ParentT(5, a)", *pkb_querier) == expected);
+
+        expected = { "8", "14" };
+        REQUIRE(qps_test::RunQuery("call c; Select c such that ParentT(5, c)", *pkb_querier) == expected);
+    }
+
+    SECTION("Evaluates to true") {
+        SECTION("Both wildcards") {
+            REQUIRE(qps_test::RunQuery("variable v; Select v such that ParentT(_, _)", *pkb_querier)
+                == data[qps::DesignEntity::VARIABLE]);
+        }
+
+        SECTION("Both literals") {
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that ParentT(5, 7)", *pkb_querier)
+                == data[qps::DesignEntity::PROCEDURE]);
+
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that ParentT(15, 17)", *pkb_querier)
+                == data[qps::DesignEntity::CONSTANT]);
+        }
+    }
+
+    SECTION("Evaluates to false") {
+        SECTION("Both literals") {
+            std::unordered_set<std::string> empty{};
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that ParentT(10, 9)", *pkb_querier)
+                == empty);
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that ParentT(5, 4)", *pkb_querier)
+                == empty);
+        }
+    }
+}

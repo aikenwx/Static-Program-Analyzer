@@ -5,8 +5,8 @@
 #include "tokenizer/simple_tokenizer.h"
 #include "sp/ast/ast.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
-#include "sp/design_extractor/directly_modifies_extractor.h"
-#include "sp/design_extractor/directly_uses_extractor.h"
+#include "sp/design_extractor/stmt_modifies_extractor.h"
+#include "sp/design_extractor/stmt_uses_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/traverse.h"
@@ -52,11 +52,11 @@ bool SP::process(std::string program, PKB* pkb) {
   std::vector<std::unique_ptr<rel::Relationship>> modifiesRelationships =
       design_extractor::Traverse(
           ast->GetRoot(),
-          std::make_shared<design_extractor::DirectlyModifiesExtractor>());
+          std::make_shared<design_extractor::StmtModifiesExtractor>());
   std::vector<std::unique_ptr<rel::Relationship>> usesRelationships =
       design_extractor::Traverse(
           ast->GetRoot(),
-          std::make_shared<design_extractor::DirectlyUsesExtractor>());
+          std::make_shared<design_extractor::StmtUsesExtractor>());
 
   // put AST entities into PKB
   PopulateFacade* PopFacade = pkb->getPopulateFacade();

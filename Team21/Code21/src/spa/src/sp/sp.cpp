@@ -61,7 +61,19 @@ bool SP::process(std::string program, PKB* pkb) {
   // put AST entities into PKB
   PopulateFacade* PopFacade = pkb->getPopulateFacade();
   for (auto&& rel : astElemRelationships) {
-    if (rel->relationshipType() == rel::RelationshipType::PRINT_STMT) {
+    if (rel->relationshipType() == rel::RelationshipType::ASSIGN_STMT) {
+      PopFacade->storeAssignmentStatement(
+          std::static_pointer_cast<rel::AssignStmtRelationship>(std::move(rel))->statementNumber());
+    } else if (rel->relationshipType() == rel::RelationshipType::CALL_STMT) {
+      PopFacade->storeCallStatement(
+          std::static_pointer_cast<rel::CallStmtRelationship>(std::move(rel))->statementNumber());
+    } else if (rel->relationshipType() == rel::RelationshipType::IF_STMT) {
+      PopFacade->storeIfStatement(
+          std::static_pointer_cast<rel::IfStmtRelationship>(std::move(rel))->statementNumber());
+    } else if (rel->relationshipType() == rel::RelationshipType::WHILE_STMT) {
+      PopFacade->storeWhileStatement(
+          std::static_pointer_cast<rel::WhileStmtRelationship>(std::move(rel))->statementNumber());
+    } else if (rel->relationshipType() == rel::RelationshipType::PRINT_STMT) {
       PopFacade->storePrintStatement(
           std::static_pointer_cast<rel::PrintStmtRelationship>(std::move(rel))->statementNumber());
     } else if (rel->relationshipType() == rel::RelationshipType::READ_STMT) {

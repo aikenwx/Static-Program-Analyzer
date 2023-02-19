@@ -125,7 +125,10 @@ bool SP::process(std::string program, PKB* pkb) {
       procedureByName[procName] = procNode;
 
       int startStmtNum = procNode->GetStartStatementNumber();
-      int endStmtNum = procNode->GetEndStatementNumber();
+      int endStmtNum = procNode->GetEndStatementNumber();\
+      if (procedureRels.size() <= endStmtNum) {
+        procedureRels.resize(endStmtNum + 1);
+      }
       for (int i = startStmtNum; i <= endStmtNum; i++) {
         procedureRels[i] = procName;
       }

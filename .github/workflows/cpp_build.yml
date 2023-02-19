@@ -6,22 +6,21 @@ jobs:
   build:
     strategy:
       matrix:
-        include:
-          - cxx: clang++-14
-            platform: ubuntu-latest
-            other_pkgs: clang-14
-            std: 17
-            cmake_configurations:
-          - cxx: cl
-            platform: windows-latest
-            std: 17
-            cmake_configurations:
-          - cxx: clang++
-            platform: macos-latest
-            other_pkgs: llvm@14
-            std: 17
-            cmake_configurations:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
+        std: [17]
+        include:
+          - platform: ubuntu-latest
+            cxx: clang++-14
+            other_pkgs: clang-14
+            cmake_configurations:
+          - platform: windows-latest
+            cxx: cl
+            cmake_configurations:
+          - platform: macos-latest
+            cxx: clang++
+            other_pkgs: llvm@14
+            cmake_configurations:
     runs-on: ${{ matrix.platform }}
 
     steps:

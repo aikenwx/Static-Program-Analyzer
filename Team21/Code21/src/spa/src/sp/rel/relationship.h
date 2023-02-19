@@ -24,6 +24,7 @@ enum RelationshipType {
   CONST,
   PROC,
   VAR,
+  ASSIGN_EXP,
 };
 
 class Relationship {

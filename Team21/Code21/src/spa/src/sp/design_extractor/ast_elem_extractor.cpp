@@ -53,7 +53,7 @@ std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor:
 std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleProcedureNode(
     std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ProcedureNode> procedure_node) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
-  vec.push_back(rel::ProcRelationship::CreateRelationship(procedure_node->GetName()));
+  vec.push_back(rel::ProcRelationship::CreateRelationship(procedure_node));
   return vec;
 }
 

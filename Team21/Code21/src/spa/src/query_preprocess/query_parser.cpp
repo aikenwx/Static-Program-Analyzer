@@ -21,14 +21,14 @@ namespace qps {
 		return (peek() == "");
 	}
 
-	bool QueryParser::isTokenAllDigits(std::string str) {
+	bool QueryParser::isTokenValidInteger(std::string str) {
 		for (int i = 0; i < str.length(); i++) {
 			if (!std::isdigit(str[i])) {
 				return false;
 			}
 		}
 		if (str.length() > 1 && str[0] == '0') {
-			throw QueryException(ErrorType::Syntactic, "Invalid Query Syntax. Integer cannot have leading zero");
+			return false;
 		}
 		return str.length() != 0;
 	}
@@ -56,7 +56,7 @@ namespace qps {
 		} else if (isSameToken("_")) {
 			next();
 			return Underscore();
-		} else if (isTokenAllDigits(peek())) {
+		} else if (isTokenValidInteger(peek())) {
 			return std::stoi(next());
 		} else {
 			throw QueryException(ErrorType::Syntactic, "Invalid representation for Ref: (" + peek() + ")");

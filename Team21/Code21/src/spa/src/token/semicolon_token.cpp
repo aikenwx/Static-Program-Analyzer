@@ -5,15 +5,13 @@
 #include <string>
 
 namespace token {
-SemicolonToken::SemicolonToken(){};
-
-const std::string SemicolonToken::getValue() { return ";"; };
-
-const SemicolonToken* SemicolonToken::createToken(std::string str) {
+const std::unique_ptr<Token> SemicolonToken::CreateToken(
+    std::string str) {
   assert(str == ";");
-  if (instance_ == nullptr) instance_ = new SemicolonToken();
-  return instance_;
+  return std::unique_ptr<SemicolonToken>(new SemicolonToken());
 };
 
-SemicolonToken* SemicolonToken::instance_ = nullptr;
+SemicolonToken::SemicolonToken(){};
+
+const std::string SemicolonToken::GetValue() { return ";"; };
 }  // namespace token

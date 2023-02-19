@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-NotEqualToken::NotEqualToken(){};
-
-const std::string NotEqualToken::getValue() { return "!="; };
-
-const NotEqualToken* NotEqualToken::createToken(std::string str) {
+const std::unique_ptr<Token> NotEqualToken::CreateToken(std::string str) {
   assert(str == "!=");
-  if (instance_ == nullptr) instance_ = new NotEqualToken();
-  return instance_;
+  return std::unique_ptr<NotEqualToken>(new NotEqualToken());
 };
 
-NotEqualToken* NotEqualToken::instance_ = nullptr;
+NotEqualToken::NotEqualToken(){};
+
+const std::string NotEqualToken::GetValue() { return "!="; };
 }  // namespace token

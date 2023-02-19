@@ -8,6 +8,7 @@
 #include "../token/and_token.h"
 #include "../token/assign_token.h"
 #include "../token/divide_token.h"
+#include "../token/end_token.h"
 #include "../token/equal_token.h"
 #include "../token/greater_equal_token.h"
 #include "../token/greater_than_token.h"
@@ -31,51 +32,53 @@
 #include "util/is_integer.h"
 
 namespace token_factory {
-token::Token* SimpleTokenFactory::createToken(std::string value) {
+std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string value) {
   if (value == "{") {
-    return (token::Token*)token::LeftBraceToken::createToken(value);
+    return token::LeftBraceToken::CreateToken(value);
   } else if (value == "}") {
-    return (token::Token*)token::RightBraceToken::createToken(value);
+    return token::RightBraceToken::CreateToken(value);
   } else if (value == "(") {
-    return (token::Token*)token::LeftParenToken::createToken(value);
+    return token::LeftParenToken::CreateToken(value);
   } else if (value == ")") {
-    return (token::Token*)token::RightParenToken::createToken(value);
+    return token::RightParenToken::CreateToken(value);
   } else if (value == ";") {
-    return (token::Token*)token::SemicolonToken::createToken(value);
+    return token::SemicolonToken::CreateToken(value);
   } else if (value == "+") {
-    return (token::Token*)token::PlusToken::createToken(value);
+    return token::PlusToken::CreateToken(value);
   } else if (value == "-") {
-    return (token::Token*)token::MinusToken::createToken(value);
+    return token::MinusToken::CreateToken(value);
   } else if (value == "*") {
-    return (token::Token*)token::MultiplyToken::createToken(value);
+    return token::MultiplyToken::CreateToken(value);
   } else if (value == "/") {
-    return (token::Token*)token::DivideToken::createToken(value);
+    return token::DivideToken::CreateToken(value);
   } else if (value == "%") {
-    return (token::Token*)token::ModuloToken::createToken(value);
+    return token::ModuloToken::CreateToken(value);
   } else if (value == "==") {
-    return (token::Token*)token::EqualToken::createToken(value);
+    return token::EqualToken::CreateToken(value);
   } else if (value == "!=") {
-    return (token::Token*)token::NotEqualToken::createToken(value);
+    return token::NotEqualToken::CreateToken(value);
   } else if (value == "<") {
-    return (token::Token*)token::LessThanToken::createToken(value);
+    return token::LessThanToken::CreateToken(value);
   } else if (value == "<=") {
-    return (token::Token*)token::LessEqualToken::createToken(value);
+    return token::LessEqualToken::CreateToken(value);
   } else if (value == ">") {
-    return (token::Token*)token::GreaterThanToken::createToken(value);
+    return token::GreaterThanToken::CreateToken(value);
   } else if (value == ">=") {
-    return (token::Token*)token::GreaterEqualToken::createToken(value);
+    return token::GreaterEqualToken::CreateToken(value);
   } else if (value == "!") {
-    return (token::Token*)token::NotToken::createToken(value);
+    return token::NotToken::CreateToken(value);
   } else if (value == "=") {
-    return (token::Token*)token::AssignToken::createToken(value);
+    return token::AssignToken::CreateToken(value);
   } else if (value == "&&") {
-    return (token::Token*)token::AndToken::createToken(value);
+    return token::AndToken::CreateToken(value);
   } else if (value == "||") {
-    return (token::Token*)token::OrToken::createToken(value);
+    return token::OrToken::CreateToken(value);
+  } else if (value == "\0") {
+    return token::EndToken::CreateToken(value);
   } else if (util::is_integer(value)) {
-    return (token::Token*)token::IntegerToken::createToken(value);
+    return token::IntegerToken::CreateToken(value);
   } else {
-    return (token::Token*)token::IdentifierToken::createToken(value);
+    return token::IdentifierToken::CreateToken(value);
   }
 };
 
@@ -111,15 +114,6 @@ CheckSymbolResult SimpleTokenFactory::checkSymbol(const std::string& value) {
 }
 
 SimpleTokenFactory::SimpleTokenFactory() {}
-
-SimpleTokenFactory* SimpleTokenFactory::getInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new SimpleTokenFactory();
-  }
-  return instance_;
-}
-
-SimpleTokenFactory* SimpleTokenFactory::instance_ = nullptr;
 
 const std::unordered_map<char, std::vector<std::string>>
     SimpleTokenFactory::kSymbolTokens{

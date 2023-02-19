@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-OrToken::OrToken(){};
-
-const std::string OrToken::getValue() { return "||"; };
-
-const OrToken* OrToken::createToken(std::string str) {
+const std::unique_ptr<Token> OrToken::CreateToken(std::string str) {
   assert(str == "||");
-  if (instance_ == nullptr) instance_ = new OrToken();
-  return instance_;
+  return std::unique_ptr<OrToken>(new OrToken());
 };
 
-OrToken* OrToken::instance_ = nullptr;
+OrToken::OrToken(){};
+
+const std::string OrToken::GetValue() { return "||"; };
 }  // namespace token

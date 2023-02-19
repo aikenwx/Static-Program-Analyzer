@@ -13,8 +13,7 @@ std::string IdentifierNode::GetValue() {
   return value;
 }
 
-std::ostream &IdentifierNode::Write(std::ostream &out) const {
-  out << "Identifier" << "\n";
-  return out;
+std::string IdentifierNode::ToString() const {
+  return "Identifier:" + value + "\n";
 }
 }

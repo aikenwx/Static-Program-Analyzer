@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-MultiplyToken::MultiplyToken(){};
-
-const std::string MultiplyToken::getValue() { return "*"; };
-
-const MultiplyToken* MultiplyToken::createToken(std::string str) {
+const std::unique_ptr<Token> MultiplyToken::CreateToken(std::string str) {
   assert(str == "*");
-  if (instance_ == nullptr) instance_ = new MultiplyToken();
-  return instance_;
+  return std::unique_ptr<MultiplyToken>(new MultiplyToken());
 };
 
-MultiplyToken* MultiplyToken::instance_ = nullptr;
+MultiplyToken::MultiplyToken(){};
+
+const std::string MultiplyToken::GetValue() { return "*"; };
 }  // namespace token

@@ -7,8 +7,9 @@
 namespace token {
 class IntegerToken : public Token {
  public:
-  static const IntegerToken* createToken(std::string);
-  const std::string getValue() override;
+  static const std::unique_ptr<Token> CreateToken(std::string);
+  const TokenType GetType() override { return TokenType::INTEGER; }
+  const std::string GetValue() override;
 
  private:
   IntegerToken(std::string value);

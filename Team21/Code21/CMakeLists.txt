@@ -19,6 +19,7 @@ if(NOT MSVC)
   set(CMAKE_EXE_LINKER_FLAGS "-no-pie")
 endif()
 
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 

@@ -1,6 +1,7 @@
 #include "simple_tokenizer.h"
 
 #include <deque>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -8,10 +9,11 @@
 #include "../token_factory/simple_token_factory.h"
 
 namespace tokenizer {
-std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program) {
-  token_factory::SimpleTokenFactory* factory =
-      token_factory::SimpleTokenFactory::getInstance();
-  std::vector<token::Token*> tokens;
+std::vector<std::unique_ptr<token::Token>> SimpleTokenizer::tokenize(
+    const std::string& program) {
+  token_factory::SimpleTokenFactory factory =
+      token_factory::SimpleTokenFactory();
+  std::vector<std::unique_ptr<token::Token>> tokens;
 
   std::string::const_iterator it = program.cbegin();
   std::vector<char> buffer;
@@ -24,7 +26,7 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
     if (!buffer.empty()) {
       std::string value(buffer.begin(),
                         len != -1 ? buffer.begin() + len : buffer.end());
-      tokens.push_back(factory->createToken(value));
+      tokens.push_back(factory.CreateToken(value));
       it -= buffer.size() - value.size();
       buffer.clear();
       isValidSymbolPrefix = false;
@@ -36,7 +38,7 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
     const char& c = *it;
     it++;
 
-    if (factory->isWhitespace(c)) {
+    if (factory.isWhitespace(c)) {
       // if we get a whitespace, then it's definitely the end of a token
       tokenize();
       continue;
@@ -45,7 +47,7 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
     if (!isValidSymbolPrefix) {
       // if this is currently not a valid symbol prefix char
       // (e.g. buffer has nothing, int, or identifier)
-      if (factory->isSymbolPrefixChar(c)) {
+      if (factory.isSymbolPrefixChar(c)) {
         // and we get a symbol prefix char...
         // then this is the start of a new token
         tokenize();
@@ -62,7 +64,7 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
       // if it *was* (or is) a valid symbol prefix, then check if it's still
       // one
       auto checkSymbolResult =
-          factory->checkSymbol(std::string(buffer.begin(), buffer.end()));
+          factory.checkSymbol(std::string(buffer.begin(), buffer.end()));
       if (!checkSymbolResult.isValidPrefix) {
         // if it's no longer a valid prefix...
         if (lastValidSymbolLen == -1) {
@@ -95,13 +97,4 @@ std::vector<token::Token*> SimpleTokenizer::tokenize(const std::string& program)
 }
 
 SimpleTokenizer::SimpleTokenizer() {}
-
-SimpleTokenizer* SimpleTokenizer::getInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new SimpleTokenizer();
-  }
-  return instance_;
-}
-
-SimpleTokenizer* SimpleTokenizer::instance_ = nullptr;
 }  // namespace tokenizer

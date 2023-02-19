@@ -1,11 +1,10 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 namespace ast {
 class INode {
 public:
-  //virtual void Execute() = 0;
-
   /*
     Method for accepting visitors
   */
@@ -13,6 +12,6 @@ public:
 
   friend std::ostream &operator<<(std::ostream &out, const INode &node);
 
-  virtual std::ostream &Write(std::ostream &out) const = 0;
+  virtual std::string ToString() const = 0;
 };
 }

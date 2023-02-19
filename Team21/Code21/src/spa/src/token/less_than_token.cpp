@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-LessThanToken::LessThanToken(){};
-
-const std::string LessThanToken::getValue() { return "<"; };
-
-const LessThanToken* LessThanToken::createToken(std::string str) {
+const std::unique_ptr<Token> LessThanToken::CreateToken(std::string str) {
   assert(str == "<");
-  if (instance_ == nullptr) instance_ = new LessThanToken();
-  return instance_;
+  return std::unique_ptr<LessThanToken>(new LessThanToken());
 };
 
-LessThanToken* LessThanToken::instance_ = nullptr;
+LessThanToken::LessThanToken(){};
+
+const std::string LessThanToken::GetValue() { return "<"; };
 }  // namespace token

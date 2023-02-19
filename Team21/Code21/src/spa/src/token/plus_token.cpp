@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-PlusToken::PlusToken(){};
-
-const std::string PlusToken::getValue() { return "+"; };
-
-const PlusToken* PlusToken::createToken(std::string str) {
+const std::unique_ptr<Token> PlusToken::CreateToken(std::string str) {
   assert(str == "+");
-  if (instance_ == nullptr) instance_ = new PlusToken();
-  return instance_;
+  return std::unique_ptr<PlusToken>(new PlusToken());
 };
 
-PlusToken* PlusToken::instance_ = nullptr;
+PlusToken::PlusToken(){};
+
+const std::string PlusToken::GetValue() { return "+"; };
 }  // namespace token

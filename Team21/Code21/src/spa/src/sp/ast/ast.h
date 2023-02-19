@@ -1,13 +1,16 @@
 #pragma once
+
+#include <memory>
+
 #include "i_node.h"
 
 namespace ast {
 class AST {
 public:
-  INode *GetRoot();
-  void SetRoot(INode *node);
+  std::shared_ptr<INode> GetRoot();
+  void SetRoot(std::shared_ptr<INode> node);
 
 private:
-  INode *root;
+  std::shared_ptr<INode> root;
 };
 }

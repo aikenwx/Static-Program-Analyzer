@@ -1,7 +1,6 @@
 #include <string>
 
 #include "parent_stmt_stmt_relationship.h"
-#include "util.h"
 
 namespace rel {
 int ParentStmtStmtRelationship::firstStatementNumber() {
@@ -12,22 +11,14 @@ int ParentStmtStmtRelationship::secondStatementNumber() {
   return secondStatementNode_->GetStatementNumber();
 };
 
-EntityType ParentStmtStmtRelationship::firstEntityType() {
-  return resolveEntityType(firstStatementNode_);
-};
-
-EntityType ParentStmtStmtRelationship::secondEntityType() {
-  return resolveEntityType(secondStatementNode_);
-};
-
-ParentStmtStmtRelationship*
+std::unique_ptr<ParentStmtStmtRelationship>
 ParentStmtStmtRelationship::CreateRelationship(
-    ast::StatementNode* firstStatement, ast::StatementNode* secondStatement) {
-  return new ParentStmtStmtRelationship(firstStatement, secondStatement);
+    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
+  return std::unique_ptr<ParentStmtStmtRelationship>(new ParentStmtStmtRelationship(firstStatement, secondStatement));
 };
 
 ParentStmtStmtRelationship::ParentStmtStmtRelationship(
-    ast::StatementNode* firstStatement, ast::StatementNode* secondStatement) {
+    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
   firstStatementNode_ = firstStatement;
   secondStatementNode_ = secondStatement;
 };

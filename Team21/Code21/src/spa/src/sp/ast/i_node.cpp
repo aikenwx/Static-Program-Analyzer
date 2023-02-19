@@ -2,7 +2,7 @@
 
 namespace ast {
 std::ostream &operator<<(std::ostream &out, const INode &node) {
-  node.Write(out);
+  out << node.ToString();
   return out;
 }
 }

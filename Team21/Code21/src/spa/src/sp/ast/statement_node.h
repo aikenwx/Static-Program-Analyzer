@@ -6,7 +6,7 @@ class StatementNode : public INode {
 public:
   int GetStatementNumber();
   void SetStatementNumber(int statementNumber);
-  virtual std::ostream &Write(std::ostream &out) const override = 0;
+  virtual std::string ToString() const override = 0;
 
 protected:
   int statementNumber;

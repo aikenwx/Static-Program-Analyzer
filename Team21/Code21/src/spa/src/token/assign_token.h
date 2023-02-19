@@ -5,13 +5,13 @@
 #include "token.h"
 
 namespace token {
-class AssignToken : public SymbolToken {
+class AssignToken : public Token {
  public:
-  static const AssignToken* createToken(std::string);
-  const std::string getValue() override;
+  static const std::unique_ptr<Token> CreateToken(std::string);
+  const TokenType GetType() override { return TokenType::ASSIGN; }
+  const std::string GetValue() override;
 
  private:
   AssignToken();
-  static AssignToken* instance_;
 };
 }  // namespace token

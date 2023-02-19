@@ -4,15 +4,12 @@
 #include "greater_equal_token.h"
 
 namespace token {
-GreaterEqualToken::GreaterEqualToken(){};
-
-const std::string GreaterEqualToken::getValue() { return ">="; };
-
-const GreaterEqualToken* GreaterEqualToken::createToken(std::string str) {
+const std::unique_ptr<Token> GreaterEqualToken::CreateToken(std::string str) {
   assert(str == ">=");
-  if (instance_ == nullptr) instance_ = new GreaterEqualToken();
-  return instance_;
+  return std::unique_ptr<GreaterEqualToken>(new GreaterEqualToken());
 };
 
-GreaterEqualToken* GreaterEqualToken::instance_ = nullptr;
+GreaterEqualToken::GreaterEqualToken(){};
+
+const std::string GreaterEqualToken::GetValue() { return ">="; };
 }  // namespace token

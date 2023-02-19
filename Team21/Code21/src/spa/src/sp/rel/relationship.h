@@ -73,9 +73,7 @@ class StmtStmtRelationship : public Relationship {
 
 class StmtRelationship : public Relationship {
  public:
-  int statementNumber();
-  // static StmtRelationship
-  // CreateRelationship(std::shared_ptr<ast::StatementNode> statement);
+  virtual int statementNumber() = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;

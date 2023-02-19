@@ -1,11 +1,11 @@
 #include "statement_list_node.h"
 
 namespace ast {
-void StatementListNode::AddStatement(std::shared_ptr<INode> node) {
+void StatementListNode::AddStatement(std::shared_ptr<StatementNode> node) {
   statements.push_back(node);
 }
 
-std::vector<std::shared_ptr<INode>> StatementListNode::GetStatements() {
+std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
   return statements;
 }
 

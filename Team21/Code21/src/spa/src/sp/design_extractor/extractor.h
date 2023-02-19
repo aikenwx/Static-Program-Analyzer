@@ -7,7 +7,6 @@
 #include "../ast/ast.h"
 #include "../ast/assign_node.h"
 #include "../ast/call_node.h"
-#include "../ast/container_statement_node.h"
 #include "../ast/if_node.h"
 #include "../ast/while_node.h"
 #include "../ast/constant_node.h"
@@ -26,7 +25,6 @@ class Extractor {
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleCallNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::CallNode> node) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleIfNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::IfNode> node) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleWhileNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleContainerStatementNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ContainerStatementNode> node) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleConstantNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ConstantNode> node) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandlePrintNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::PrintNode> node) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleProcedureNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ProcedureNode> node) = 0;

@@ -23,10 +23,6 @@ class FollowsExtractor : public Extractor {
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> node) override {
     return std::nullopt;
   };
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleContainerStatementNode(
-      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ContainerStatementNode> node) override {
-    return std::nullopt;
-  };
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleConstantNode(
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ConstantNode> node) override {
     return std::nullopt;

@@ -7,10 +7,13 @@
 namespace rel {
 class ModifiesProcVarRelationship : public ProcVarRelationship {
  public:
-  std::string procedureName() override;
-  std::string variableName() override;
   static std::unique_ptr<ModifiesProcVarRelationship> CreateRelationship(
       std::string procedureName, std::string variableName);
+  std::string procedureName() override;
+  std::string variableName() override;
+  RelationshipType relationshipType() override {
+    return RelationshipType::MODIFIES_PROC_VAR;
+  };
 
  private:
   ModifiesProcVarRelationship(std::string procedureName,

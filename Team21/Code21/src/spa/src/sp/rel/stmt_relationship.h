@@ -14,6 +14,7 @@ namespace rel {
 class AssignStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<AssignStmtRelationship> CreateRelationship(std::shared_ptr<ast::AssignNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::ASSIGN_STMT; };
 
  private:
   AssignStmtRelationship(std::shared_ptr<ast::AssignNode> statementNode);
@@ -23,6 +24,7 @@ class AssignStmtRelationship : public StmtRelationship {
 class CallStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<CallStmtRelationship> CreateRelationship(std::shared_ptr<ast::CallNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::CALL_STMT; };
 
  private:
   CallStmtRelationship(std::shared_ptr<ast::CallNode> statementNode);
@@ -32,6 +34,7 @@ class CallStmtRelationship : public StmtRelationship {
 class IfStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<IfStmtRelationship> CreateRelationship(std::shared_ptr<ast::IfNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::IF_STMT; };
 
  private:
   IfStmtRelationship(std::shared_ptr<ast::IfNode> statementNode);
@@ -41,6 +44,7 @@ class IfStmtRelationship : public StmtRelationship {
 class WhileStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<WhileStmtRelationship> CreateRelationship(std::shared_ptr<ast::WhileNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::WHILE_STMT; };
 
  private:
   WhileStmtRelationship(std::shared_ptr<ast::WhileNode> statementNode);
@@ -51,6 +55,7 @@ class PrintStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<PrintStmtRelationship> CreateRelationship(
       std::shared_ptr<ast::PrintNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::PRINT_STMT; };
 
  private:
   PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode);
@@ -60,6 +65,7 @@ class PrintStmtRelationship : public StmtRelationship {
 class ReadStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<ReadStmtRelationship> CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode);
+  RelationshipType relationshipType() override { return RelationshipType::READ_STMT; };
 
  private:
   ReadStmtRelationship(std::shared_ptr<ast::ReadNode> statementNode);

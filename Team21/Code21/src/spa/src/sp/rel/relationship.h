@@ -8,9 +8,28 @@
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 
 namespace rel {
+enum RelationshipType {
+  USES_PROC_VAR,
+  USES_STMT_VAR,
+  MODIFIES_PROC_VAR,
+  MODIFIES_STMT_VAR,
+  FOLLOWS_STMT_STMT,
+  PARENT_STMT_STMT,
+  ASSIGN_STMT,
+  CALL_STMT,
+  IF_STMT,
+  WHILE_STMT,
+  PRINT_STMT,
+  READ_STMT,
+  CONST,
+  PROC,
+  VAR,
+};
+
 class Relationship {
-  public:
-    virtual ~Relationship() = default;
+ public:
+  virtual ~Relationship() = default;
+  virtual RelationshipType relationshipType() = 0;
 };
 
 class StmtVarRelationship : public Relationship {
@@ -19,7 +38,8 @@ class StmtVarRelationship : public Relationship {
   // TODO: return PKBStorageClasses/EntityClasses/Entity.h?
   virtual std::string variableName() = 0;
   // static StmtVarRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> statement, std::string variableName);
+  //     std::shared_ptr<ast::StatementNode> statement, std::string
+  //     variableName);
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;
@@ -43,8 +63,8 @@ class StmtStmtRelationship : public Relationship {
   virtual int firstStatementNumber() = 0;
   virtual int secondStatementNumber() = 0;
   // static StmtStmtRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode>
-  //     secondStatement);
+  //     std::shared_ptr<ast::StatementNode> firstStatement,
+  //     std::shared_ptr<ast::StatementNode> secondStatement);
 
  private:
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
@@ -54,7 +74,8 @@ class StmtStmtRelationship : public Relationship {
 class StmtRelationship : public Relationship {
  public:
   int statementNumber();
-  // static StmtRelationship CreateRelationship(std::shared_ptr<ast::StatementNode> statement);
+  // static StmtRelationship
+  // CreateRelationship(std::shared_ptr<ast::StatementNode> statement);
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;

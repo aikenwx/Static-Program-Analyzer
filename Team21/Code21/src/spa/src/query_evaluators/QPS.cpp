@@ -18,7 +18,7 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
 
     validator.validateQuery();
     validator2.validateQuery();
-    for (const auto &str : evaluator.evaluateQuery(pkb)) {
+    for (const auto &str : evaluator.EvaluateQuery(pkb)) {
       results.push_back(str);
     }
   } catch (qps::QueryException &e) {

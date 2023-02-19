@@ -15,11 +15,11 @@ class PatternEvaluator : public ClauseEvaluator {
 
   ClauseResult Evaluate(QueryFacade &pkb) override;
 
-  virtual std::vector<Entity *> CallPkb(QueryFacade &pkb) = 0;
+  virtual std::vector<Relationship *> CallPkb(QueryFacade &pkb) = 0;
 
  private:
 
-  ClauseResult ConstructResult(const std::vector<Entity *> &);
+  ClauseResult ConstructResult(const std::vector<Relationship *> &);
 
   std::vector<Declaration> declarations_;
 

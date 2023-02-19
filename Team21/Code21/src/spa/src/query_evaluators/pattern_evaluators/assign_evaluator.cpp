@@ -5,35 +5,33 @@
 #include <cctype>
 
 namespace qps {
-std::vector<Entity *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
-  std::vector<Entity *> res;
-  Ref ref = clause_.getArg1();
-  std::vector<Entity *> pkb_res;
-  if (std::holds_alternative<QuotedIdentifier>(ref)) {
-    auto pkb_mid =
-        pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType::ASSIGN_STATEMENT, EntityType::VARIABLE);
-    for (auto stmt : *pkb_mid) {
-      if (stmt->getRightHandEntity()->getEntityValue() == std::get<QuotedIdentifier>(ref).getQuotedId()) {
-        pkb_res.push_back(stmt->getLeftHandEntity());
-      }
-    }
-  } else {
-    auto pkb_mid = pkb.getAllAssignStatements();
-    for (auto stmt : *pkb_mid) {
-      pkb_res.push_back(stmt);
+std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
+  std::vector<ModifiesRelationship *> modifies_relationships;
+  Ref ref1 = clause_.getArg1();
+
+  auto all_assignment_variable_pairs =
+      pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType::ASSIGN_STATEMENT, EntityType::VARIABLE);
+  for (const auto &row : *all_assignment_variable_pairs) {
+    if (std::holds_alternative<QuotedIdentifier>(ref1)
+        && *row->getRightHandEntity()->getEntityValue() != std::get<QuotedIdentifier>(ref1).getQuotedId()) {
+      continue;
+    } else {
+      modifies_relationships.push_back(row);
     }
   }
+
   ExpressionSpec expr = clause_.getArg2();
-  if (std::holds_alternative<Underscore>(expr)) {
-    res.assign(pkb_res.begin(), pkb_res.end());
-    return res;
-  } else {
+  if (std::holds_alternative<Expression>(expr)) {
     Expression express = std::get<Expression>(expr);
     std::string infix = express.getExpression();
     bool is_partial = express.isExpressionPartial();
     std::string postfix = makePostfix(infix);
-    return checkExpressionContained(pkb_res, postfix, is_partial);
+    modifies_relationships = checkExpressionContained(modifies_relationships, postfix, is_partial);
   }
+
+  std::vector<Relationship *> res;
+  res.assign(modifies_relationships.begin(), modifies_relationships.end());
+  return res;
 }
 
 int AssignEvaluator::postfixHelper(char a) {
@@ -111,27 +109,20 @@ std::string AssignEvaluator::makePostfix(std::string s) {
   return postfixed;
 }
 
-std::vector<Entity *> AssignEvaluator::checkExpressionContained(std::vector<Entity *> pkb_res,
-                                                                std::string postfix,
-                                                                bool is_partial) {
-  return {};
-  // Comment out first as uses methods from PKB version 2
-  /*std::vector<Entity> results;
-  if (is_partial) {
-      for (auto stmt : pkb_res) {
-          size_t len = (stmt -> getPostFixExpression()).find(postfix);
-          if (len > 0) {
-              results.push_back(stmt);
-          }
-      }
+std::vector<ModifiesRelationship *> AssignEvaluator::checkExpressionContained(std::vector<ModifiesRelationship *> assignment_modifies,
+                                                                              std::string postfix,
+                                                                              bool is_partial) {
+  std::vector<ModifiesRelationship *> filtered_relationships;
+  for (auto relationship : assignment_modifies) {
+    auto assignment_stmt = dynamic_cast<AssignStatement *>(relationship->getLeftHandEntity());
+    auto post_fix_espression = *assignment_stmt->getPostFixExpression();
+    bool expression_contained =
+        (is_partial && post_fix_espression.find(postfix) != std::string::npos) || (postfix == post_fix_espression);
+    if (expression_contained) {
+      filtered_relationships.push_back(relationship);
+    }
   }
-  else {
-      for (auto stmt : pkb_res) {
-          if (postfix == (stmt -> getPostFixExpression())) {
-              results.push_back(stmt);
-          }
-      }
-  }
-  return results;*/
+  return filtered_relationships;
+
 }
 } // qps

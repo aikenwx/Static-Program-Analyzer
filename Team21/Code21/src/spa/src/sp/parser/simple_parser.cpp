@@ -65,10 +65,10 @@ std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token:
 void SimpleParser::Shift() {
   // This code is neither DRY nor open for extension
   if (util::instance_of<token::IdentifierToken>(*lookahead)) {
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
   } else if (util::instance_of<token::IntegerToken>(*lookahead)) {
-    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((*lookahead)->getValue()));
+    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((*lookahead)->GetValue()));
     stack.push_back(c);
   } else if (util::instance_of<token::AndToken>(*lookahead)) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAnd);
@@ -135,7 +135,7 @@ void SimpleParser::Shift() {
     return;
   } else {
     // Default implementation but should not reach here
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->getValue());
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
     assert(false);
   }

@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "util.h"
-
 namespace rel {
 int FollowsStmtStmtRelationship::firstStatementNumber() {
   return firstStatementNode_->GetStatementNumber();
@@ -11,14 +9,6 @@ int FollowsStmtStmtRelationship::firstStatementNumber() {
 
 int FollowsStmtStmtRelationship::secondStatementNumber() {
   return secondStatementNode_->GetStatementNumber();
-};
-
-EntityType FollowsStmtStmtRelationship::firstEntityType() {
-  return resolveEntityType(secondStatementNode_);
-};
-
-EntityType FollowsStmtStmtRelationship::secondEntityType() {
-  return resolveEntityType(secondStatementNode_);
 };
 
 std::unique_ptr<FollowsStmtStmtRelationship> FollowsStmtStmtRelationship::CreateRelationship(

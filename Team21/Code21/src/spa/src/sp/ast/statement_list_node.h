@@ -2,7 +2,6 @@
 #include <memory>
 #include <vector>
 
-#include "i_node.h"
 #include "statement_node.h"
 
 namespace ast {

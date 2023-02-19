@@ -1,12 +1,36 @@
 #include "stmt_relationship.h"
 
 namespace rel {
-int PrintStmtRelationship::statementNumber() {
-  return statementNode_->GetStatementNumber();
+std::unique_ptr<AssignStmtRelationship> AssignStmtRelationship::CreateRelationship(std::shared_ptr<ast::AssignNode> statementNode) {
+  return std::unique_ptr<AssignStmtRelationship>(new AssignStmtRelationship(statementNode));
 };
 
-EntityType PrintStmtRelationship::entityType() {
-  return EntityType::PRINT_STATEMENT;
+AssignStmtRelationship::AssignStmtRelationship(std::shared_ptr<ast::AssignNode> statementNode) {
+  statementNode_ = statementNode;
+};
+
+std::unique_ptr<CallStmtRelationship> CallStmtRelationship::CreateRelationship(std::shared_ptr<ast::CallNode> statementNode) {
+  return std::unique_ptr<CallStmtRelationship>(new CallStmtRelationship(statementNode));
+};
+
+CallStmtRelationship::CallStmtRelationship(std::shared_ptr<ast::CallNode> statementNode) {
+  statementNode_ = statementNode;
+};
+
+std::unique_ptr<IfStmtRelationship> IfStmtRelationship::CreateRelationship(std::shared_ptr<ast::IfNode> statementNode) {
+  return std::unique_ptr<IfStmtRelationship>(new IfStmtRelationship(statementNode));
+};
+
+IfStmtRelationship::IfStmtRelationship(std::shared_ptr<ast::IfNode> statementNode) {
+  statementNode_ = statementNode;
+};
+
+std::unique_ptr<WhileStmtRelationship> WhileStmtRelationship::CreateRelationship(std::shared_ptr<ast::WhileNode> statementNode) {
+  return std::unique_ptr<WhileStmtRelationship>(new WhileStmtRelationship(statementNode));
+};
+
+WhileStmtRelationship::WhileStmtRelationship(std::shared_ptr<ast::WhileNode> statementNode) {
+  statementNode_ = statementNode;
 };
 
 std::unique_ptr<PrintStmtRelationship> PrintStmtRelationship::CreateRelationship(std::shared_ptr<ast::PrintNode> statementNode) {
@@ -15,14 +39,6 @@ std::unique_ptr<PrintStmtRelationship> PrintStmtRelationship::CreateRelationship
 
 PrintStmtRelationship::PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode) {
   statementNode_ = statementNode;
-};
-
-int ReadStmtRelationship::statementNumber() {
-  return statementNode_->GetStatementNumber();
-};
-
-EntityType ReadStmtRelationship::entityType() {
-  return EntityType::READ_STATEMENT;
 };
 
 std::unique_ptr<ReadStmtRelationship> ReadStmtRelationship::CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode) {

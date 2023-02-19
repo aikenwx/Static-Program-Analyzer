@@ -648,7 +648,7 @@ TEST_CASE("Retrieve Statement Follows Call") {
     delete printStatement;
 }
 
-TEST_CASE("Duplicate Relationship throws error") {
+TEST_CASE("Duplicate Relationship has no effect") {
     RelationshipManager *relationshipManager = new RelationshipManager();
     WhileStatement *whileStatement = new WhileStatement(1);
     WhileStatement *whileStatement2 = new WhileStatement(2);
@@ -657,7 +657,17 @@ TEST_CASE("Duplicate Relationship throws error") {
     std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
 
     relationshipManager->storeRelationship(relationship);
-    REQUIRE_THROWS(relationshipManager->storeRelationship(relationship2));
+    relationshipManager->storeRelationship(relationship2);
+    REQUIRE(relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->size() == 1);
+    REQUIRE(relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->at(0) ==
+            relationship.get());
+
+    RelationshipLiteralHashkeyGenerator generator;
+
+    std::string stmtNumber1 = "1";
+    std::string stmtNumber2 = "2";
+
+    REQUIRE(relationshipManager->getRelationshipByLiterals(generator.getHashKey(FOLLOWS_STAR, WHILE_STATEMENT, &stmtNumber1, WHILE_STATEMENT, &stmtNumber2)) == relationship.get());
 
     delete relationshipManager;
     delete whileStatement;

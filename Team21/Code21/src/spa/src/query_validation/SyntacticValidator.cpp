@@ -10,6 +10,29 @@ namespace qps {
 		return true;
 	}
 
+	bool SyntacticValidator::isFactorValidInteger(std::string str) {
+		for (int i = 0; i < str.length(); i++) {
+			if (!std::isdigit(str[i])) {
+				return false;
+			}
+		}
+		if (str.length() > 1 && str[0] == '0') {
+			return false;
+		}
+		return str.length() != 0;
+	}
+
+	bool SyntacticValidator::isValidFactor(std::string str) {
+		if (isFactorValidInteger(str)) {
+			return true;
+		} else if (std::regex_match(str, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"))) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
 	void SyntacticValidator::checkSuchThatCorrectRefTypes() {
 		std::vector<SuchThatClause> such = getQuery().getSuchThatClause();
 		for (int i = 0; i < such.size(); i++) {
@@ -43,6 +66,13 @@ namespace qps {
 			if (std::holds_alternative<StatementNumber>(ref3)) {
 				throw  QueryException(ErrorType::Syntactic, "Syntactic error. The first argument is not of correct ref type for assign clause");
 			}
+			ExpressionSpec exprSpec = patt[i].getArg2();
+			if (std::holds_alternative<Expression>(exprSpec)) {
+				Expression expr = std::get<Expression>(exprSpec);
+				if (!isValidFactor(expr.getExpression())) {
+					throw  QueryException(ErrorType::Syntactic, "Syntactic error. Incorrect form for expression");
+				}
+			}		
 		}
 	}
 }

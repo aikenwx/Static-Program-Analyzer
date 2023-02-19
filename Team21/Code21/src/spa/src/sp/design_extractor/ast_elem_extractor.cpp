@@ -7,6 +7,34 @@
 #include "../rel/relationship.h"
 
 namespace design_extractor {
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleAssignNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::AssignNode> assign_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::AssignStmtRelationship::CreateRelationship(assign_node));
+  return vec;
+}
+
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleCallNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::CallNode> call_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::CallStmtRelationship::CreateRelationship(call_node));
+  return vec;
+}
+
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleIfNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::IfNode> if_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::IfStmtRelationship::CreateRelationship(if_node));
+  return vec;
+}
+
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleWhileNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> while_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::WhileStmtRelationship::CreateRelationship(while_node));
+  return vec;
+}
+
 std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
 AstElemExtractor::HandleConstantNode(std::vector<std::shared_ptr<ast::INode>> parents,
                                      std::shared_ptr<ast::ConstantNode> constant_node) {

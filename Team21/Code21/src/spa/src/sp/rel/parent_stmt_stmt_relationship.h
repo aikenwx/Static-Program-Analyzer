@@ -7,12 +7,11 @@
 namespace rel {
 class ParentStmtStmtRelationship : public StmtStmtRelationship {
  public:
-  int firstStatementNumber() override;
-  int secondStatementNumber() override;
-  EntityType firstEntityType() override;
-  EntityType secondEntityType() override;
   static std::unique_ptr<ParentStmtStmtRelationship> CreateRelationship(
       std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement);
+  int firstStatementNumber() override;
+  int secondStatementNumber() override;
+  RelationshipType relationshipType() override { return RelationshipType::PARENT_STMT_STMT; };
 
  private:
   ParentStmtStmtRelationship(

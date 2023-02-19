@@ -1,7 +1,6 @@
 #include <string>
 
 #include "parent_stmt_stmt_relationship.h"
-#include "util.h"
 
 namespace rel {
 int ParentStmtStmtRelationship::firstStatementNumber() {
@@ -10,14 +9,6 @@ int ParentStmtStmtRelationship::firstStatementNumber() {
 
 int ParentStmtStmtRelationship::secondStatementNumber() {
   return secondStatementNode_->GetStatementNumber();
-};
-
-EntityType ParentStmtStmtRelationship::firstEntityType() {
-  return resolveEntityType(firstStatementNode_);
-};
-
-EntityType ParentStmtStmtRelationship::secondEntityType() {
-  return resolveEntityType(secondStatementNode_);
 };
 
 std::unique_ptr<ParentStmtStmtRelationship>

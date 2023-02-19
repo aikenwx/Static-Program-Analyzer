@@ -10,7 +10,7 @@ std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
 FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode>> parents,
                                           std::shared_ptr<ast::StatementListNode> node) {
   std::vector<std::unique_ptr<rel::Relationship>> relationships;
-  std::vector<std::shared_ptr<ast::INode>> statements = node->GetStatements();
+  std::vector<std::shared_ptr<ast::StatementNode>> statements = node->GetStatements();
   if (statements.size() <= 1) {
     // no Follows relationship possible in this statement list
     return std::nullopt;
@@ -18,11 +18,11 @@ FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode
 
   // nb: `StatementListNode` stores statements in reverse order
   auto it = statements.crbegin();
-  std::shared_ptr<ast::StatementNode> first = std::static_pointer_cast<ast::StatementNode>(*it);
+  std::shared_ptr<ast::StatementNode> first = *it;
   it++;
 
   for (; it != statements.crend(); it++) {
-    std::shared_ptr<ast::StatementNode> second = std::static_pointer_cast<ast::StatementNode>(*it);
+    std::shared_ptr<ast::StatementNode> second = *it;
     relationships.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));
     first = second;

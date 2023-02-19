@@ -6,77 +6,448 @@
 #include "QPSUtilities.h"
 #include "query/design_entity.h"
 
-//Sample program
 //procedure computeCentroid {
-//    01      count = 0;
-//    02      cenX = 0;
-//    03      cenY = 0;
-//    04      call readPoint;
-//    05      while ((x != 0) && (y != 0)) {
-//      06          count = count + 1;
-//      07          cenX = cenX + x;
-//      08          cenY = cenY + y;
-//      09          call readPoint;
-//    }
-//    10      if (count == 0) then {
-//      11          flag = 1;
+//  count = 0; 01
+//  cenX = 0; 02
+//  cenY = 0; 03
+//  call readPoint; 04
+//
+//  while((x != 0) && (y != 0)) { 05
+//    if (y != 0) then { 06
+//      z = cenX + cenY; 07
+//      call readPoint; 08
+//      print z; 09
 //    } else {
-//      12          cenX = cenX / count;
-//      13          cenY = cenY / count;
+//       read count; 10
 //    }
-//    14      normSq = cenX * cenX + cenY * cenY;
+//    count = count + 1; 11
+//    cenX = cenX + x; 12
+//    cenY = cenY + y; 13
+//    call readPoint; 14
+//  }
+//
+//  if (count == 0) then { 15
+//    while (flag == 0) { 16
+//      flag = 2; 17
+//    }
+//    flag = 1; 18
+//  } else {
+//    cenX = cenX / count; 19
+//    cenY = cenY / count; 20
+//  }
+//  normSq = cenX * cenX + cenY * cenY; 21
 //}
-TEST_CASE("QPS can work with different combinations of parent") {
+
+
+
+qps_test::PopulatePKBHelper::Data PopulateEntities(qps_test::PopulatePKBHelper &pkb_helper) {
   qps_test::PopulatePKBHelper::Data data;
-  data[qps::DesignEntity::VARIABLE] = {"count", "cenX", "cenY", "flag", "cenX", "cenY", "x", "y"};
-  data[qps::DesignEntity::CONSTANT] = {"0", "1"};
-  data[qps::DesignEntity::ASSIGN] = {"1", "2", "3", "6", "7", "8", "11", "12", "13", "14"};
-  data[qps::DesignEntity::READ] = {};
-  data[qps::DesignEntity::CALL] = {"4", "9"};
-  data[qps::DesignEntity::IF] = {"10"};
-  data[qps::DesignEntity::WHILE] = {"5"};
-  data[qps::DesignEntity::PRINT] = {};
+  data[qps::DesignEntity::VARIABLE] = {"count", "cenX", "cenY", "flag", "x", "y", "z", "normSq"};
+  data[qps::DesignEntity::CONSTANT] = {"0", "1", "2"};
+  data[qps::DesignEntity::ASSIGN] = {"1", "2", "3", "7", "11", "12", "13", "17", "18", "19", "20", "21"};
+  data[qps::DesignEntity::READ] = {"10"};
+  data[qps::DesignEntity::CALL] = {"4", "8", "14"};
+  data[qps::DesignEntity::IF] = {"6", "15"};
+  data[qps::DesignEntity::WHILE] = {"5", "16"};
+  data[qps::DesignEntity::PRINT] = {"9"};
   data[qps::DesignEntity::PROCEDURE] = {"computeCentroid", "readPoint"};
 
-  qps_test::PopulatePKBHelper pkb_helper;
+  data[qps::DesignEntity::STMT] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                                   "13", "14", "15", "16", "17", "18", "19", "20", "21"};
+
   pkb_helper.PopulateEntities(data);
+
+  return data;
+}
+
+TEST_CASE("QPS can work with different combinations of modifies") {
+  qps_test::PopulatePKBHelper pkb_helper;
+  auto data = PopulateEntities(pkb_helper);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
-  pkb_helper.AddParent({{5, 6}, {5, 7}, {5, 8}, {5, 9}, {10, 11}, {10, 12}, {10, 13}});
+  pkb_helper.AddStatementModifies({{1, "count"}, {2, "cenX"}, {3, "cenY"}, {5, "count"}, {5, "cenX"},
+                                   {5, "cenY"}, {5, "z"}, {6, "z"}, {6, "count"}, {7, "z"}, {10, "count"},
+                                   {11, "count"}, {12, "cenX"}, {13, "cenY"},
+                                   {15, "flag"}, {15, "cenX"}, {15, "cenY"}, {16, "flag"}, {17, "flag"}, {18, "flag"},
+                                   {19, "cenX"}, {20, "cenY"},
+                                   {21, "normSq"}
+                                  });
+  pkb_helper.AddProcedureModifies({{"computeCentroid", "count"}, {"computeCentroid", "cenX"},
+                                   {"computeCentroid", "cenY"}, {"computeCentroid", "z"},
+                                   {"computeCentroid", "flag"},
+                                   {"computeCentroid", "normSq"}});
+
+  SECTION("Both Synonyms") {
+    SECTION("All variables modified in a statement") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "flag", "normSq", "z"};
+      REQUIRE(qps_test::RunQuery("variable v; stmt s; Select v such that Modifies(s, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables modified in a procedure") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "flag", "normSq", "z"};
+      REQUIRE(
+          qps_test::RunQuery("procedure p; variable v; Select v such that Modifies(p, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All statements modifiying a variable") {
+      std::unordered_set<std::string>
+          expected{"1", "2", "3", "5", "6", "7", "10", "11", "12", "13", "15", "16", "17", "18", "19", "20", "21"};
+      REQUIRE(qps_test::RunQuery("variable v; stmt s; Select s such that Modifies(s, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All assigns modifying a variable") {
+      REQUIRE(qps_test::RunQuery("variable v; assign a; Select a such that Modifies(a, v)", *pkb_querier)
+                  == data[qps::DesignEntity::ASSIGN]);
+    }
+
+    SECTION("All whiles modifying a variable") {
+      std::unordered_set<std::string> expected{"5", "16"};
+      REQUIRE(qps_test::RunQuery("variable v; while w; Select w such that Modifies(w, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs modifying a variable") {
+      std::unordered_set<std::string> expected{"6", "15"};
+      REQUIRE(qps_test::RunQuery("variable v; if f; Select f such that Modifies(f, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All procedures modifying a variable") {
+      std::unordered_set<std::string> expected{"computeCentroid"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; procedure p; Select p such that Modifies(p, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, wild card on left") {
+    SECTION("All variables being modified") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "flag", "normSq", "z"};
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Modifies(_, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, wild card on right") {
+    SECTION("All procedures modifying a variable") {
+      std::unordered_set<std::string> expected{"computeCentroid"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Modifies(p, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All statements modifying a variable") {
+      std::unordered_set<std::string>
+          expected{"1", "2", "3", "5", "6", "7", "10", "11", "12", "13", "15", "16", "17", "18", "19", "20", "21"};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Modifies(s, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All assignments modifying a variable") {
+      REQUIRE(qps_test::RunQuery("assign a; Select a such that Modifies(a, _)", *pkb_querier)
+                  == data[qps::DesignEntity::ASSIGN]);
+    }
+
+    SECTION("All reads modifiying a variable") {
+      std::unordered_set<std::string> expected{"10"};
+      REQUIRE(qps_test::RunQuery("read r; Select r such that Modifies(r, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All whiles using a variable") {
+      std::unordered_set<std::string> expected{"5", "16"};
+      REQUIRE(qps_test::RunQuery("while w; Select w such that Modifies(w, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs using a variable") {
+      std::unordered_set<std::string> expected{"6", "15"};
+      REQUIRE(qps_test::RunQuery("if f; Select f such that Modifies(f, _)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, literal on right") {
+    SECTION("All statements modifying a specific variable") {
+      std::unordered_set<std::string> expected{"2", "5", "12", "15", "19"};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Modifies(s, \"cenX\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs modifying a specific variable") {
+      std::unordered_set<std::string> expected{"6"};
+      REQUIRE(qps_test::RunQuery("if f; Select f such that Modifies(f, \"z\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All whiles modifying a specific variable") {
+      std::unordered_set<std::string> expected{"5"};
+      REQUIRE(qps_test::RunQuery("while w; Select w such that Modifies(w, \"count\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All stmts modifying a specific variable") {
+      std::unordered_set<std::string> empty{};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Modifies(s, \"x\")", *pkb_querier) == empty);
+    }
+  }
+
+  SECTION("Synonym on right, literal on left") {
+    SECTION("All variables modified by a specific procedure") {
+      std::unordered_set<std::string> expected{"count", "cenX", "cenY", "flag", "normSq", "z"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Modifies(\"computeCentroid\", v)", *pkb_querier)
+              == expected);
+    }
+
+    SECTION("All variables modified by a specific if") {
+      std::unordered_set<std::string> expected{"count", "z"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Modifies(6, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables modified by a specific while") {
+      std::unordered_set<std::string> expected{"count", "z", "cenX", "cenY"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Modifies(5, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Evaluates to true") {
+    SECTION("Read statement modifies a variable") {
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Modifies(10, \"count\")", *pkb_querier)
+                  == data[qps::DesignEntity::VARIABLE]);
+    }
+
+    SECTION("While statement modifies a variable") {
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Modifies(5, \"cenX\")", *pkb_querier)
+                  == data[qps::DesignEntity::VARIABLE]);
+    }
+
+    SECTION("If statement modifies a variable") {
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Modifies(6, \"z\")", *pkb_querier)
+                  == data[qps::DesignEntity::STMT]);
+    }
+
+  }
+
+  SECTION("Evaluates to false") {
+    std::unordered_set<std::string> empty{};
+    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Modifies(s, \"x\")", *pkb_querier)
+                == empty);
+    REQUIRE(qps_test::RunQuery("if f; Select f such that Modifies(15, \"z\")", *pkb_querier)
+                == empty);
+  }
+}
+
+TEST_CASE("QPS can work with different combinations of uses") {
+  qps_test::PopulatePKBHelper pkb_helper;
+  auto data = PopulateEntities(pkb_helper);
+  QueryFacade *pkb_querier = pkb_helper.GetQuerier();
+
+  pkb_helper.AddStatementUses({{7, "cenX"}, {7, "cenY"}, {9, "z"}, {11, "count"}, {12, "cenX"}, {12, "x"},
+                               {13, "cenY"}, {13, "y"}, {6, "cenX"}, {6, "cenY"}, {6, "z"},
+                               {5, "count"}, {5, "cenX"}, {5, "x"}, {5, "cenY"}, {5, "y"}, {5, "z"},
+                               {19, "cenX"}, {19, "count"}, {20, "count"}, {20, "cenY"},
+                               {15, "cenX"}, {15, "count"}, {15, "cenY"},
+                               {21, "cenX"}, {21, "cenY"}
+                              });
+
+  pkb_helper.AddProcedureUses({{"computeCentroid", "cenX"}, {"computeCentroid", "cenY"}, {"computeCentroid", "count"},
+                               {"computeCentroid", "x"}, {"computeCentroid", "y"},
+                               {"computeCentroid", "z"}
+                              });
+
+  SECTION("Both Synonyms") {
+    SECTION("All variables used in a statement") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "x", "y", "z"};
+      REQUIRE(qps_test::RunQuery("variable v; stmt s; Select v such that Uses(s, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables used in a procedure") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "x", "y", "z"};
+      REQUIRE(qps_test::RunQuery("procedure p; variable v; Select v such that Uses(p, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All statements using a variable") {
+      std::unordered_set<std::string> expected{"7", "9", "11", "12", "13", "6", "5", "19", "20", "15", "21"};
+      REQUIRE(qps_test::RunQuery("variable v; stmt s; Select s such that Uses(s, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All assigns using a variable") {
+      std::unordered_set<std::string> expected{"7", "11", "12", "13", "19", "20", "21"};
+      REQUIRE(qps_test::RunQuery("variable v; assign a; Select a such that Uses(a, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All whiles using a variable") {
+      std::unordered_set<std::string> expected{"5"};
+      REQUIRE(qps_test::RunQuery("variable v; while w; Select w such that Uses(w, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs using a variable") {
+      std::unordered_set<std::string> expected{"6", "15"};
+      REQUIRE(qps_test::RunQuery("variable v; if f; Select f such that Uses(f, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All procedures using a variable") {
+      std::unordered_set<std::string> expected{"computeCentroid"};
+      REQUIRE(qps_test::RunQuery("variable v; procedure p; Select p such that Uses(p, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, wild card on left") {
+    SECTION("All variables used") {
+      std::unordered_set<std::string>
+          expected{"count", "cenX", "cenY", "x", "y", "z"};
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Uses(_, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, wild card on right") {
+    SECTION("All procedures using a variable") {
+      std::unordered_set<std::string> expected{"computeCentroid"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Uses(p, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All statements using a variable") {
+      std::unordered_set<std::string> expected{"7", "9", "11", "12", "13", "6", "5", "19", "20", "15", "21"};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Uses(s, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All assignments using a variable") {
+      std::unordered_set<std::string> expected{"7", "11", "12", "13", "19", "20", "21"};
+      REQUIRE(qps_test::RunQuery("assign a; Select a such that Uses(a, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All prints using a variable") {
+      std::unordered_set<std::string> expected{"9"};
+      REQUIRE(qps_test::RunQuery("print pn; Select pn such that Uses(pn, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All whiles using a variable") {
+      std::unordered_set<std::string> expected{"5"};
+      REQUIRE(qps_test::RunQuery("while w; Select w such that Uses(w, _)", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs using a variable") {
+      std::unordered_set<std::string> expected{"6", "15"};
+      REQUIRE(qps_test::RunQuery("if f; Select f such that Uses(f, _)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, literal on right") {
+    SECTION("All statements using a specific variable") {
+      std::unordered_set<std::string> expected{"5", "6", "7", "12", "19", "21", "15"};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Uses(s, \"cenX\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All ifs using a specific variable") {
+      std::unordered_set<std::string> expected{"6"};
+      REQUIRE(qps_test::RunQuery("if f; Select f such that Uses(f, \"z\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All whiles using a specific variable") {
+      std::unordered_set<std::string> expected{"5"};
+      REQUIRE(qps_test::RunQuery("while w; Select w such that Uses(w, \"count\")", *pkb_querier) == expected);
+    }
+
+    SECTION("All stmts using a specific variable") {
+      std::unordered_set<std::string> empty{};
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Uses(s, \"normSq\")", *pkb_querier) == empty);
+    }
+  }
+
+  SECTION("Synonym on right, literal on left") {
+    SECTION("All variables used by a specific procedure") {
+      std::unordered_set<std::string> expected{"count", "cenX", "cenY", "x", "y", "z"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Uses(\"computeCentroid\", v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables used by a specific if") {
+      std::unordered_set<std::string> expected{"cenX", "cenY", "z"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Uses(6, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables used by a specific while") {
+      std::unordered_set<std::string> expected{"count", "cenX", "cenY", "x", "y", "z"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Uses(5, v)", *pkb_querier) == expected);
+    }
+
+    SECTION("All variables used by a specific assign") {
+      std::unordered_set<std::string> expected{"cenX", "cenY"};
+      REQUIRE(
+          qps_test::RunQuery("variable v; Select v such that Uses(21, v)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Evaluates to true") {
+    SECTION("Print statement modifies a variable") {
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Uses(9, \"z\")", *pkb_querier)
+                  == data[qps::DesignEntity::VARIABLE]);
+    }
+
+    SECTION("While statement uses a variable") {
+      REQUIRE(qps_test::RunQuery("variable v; Select v such that Uses(5, \"cenX\")", *pkb_querier)
+                  == data[qps::DesignEntity::VARIABLE]);
+    }
+
+    SECTION("If statement uses a variable") {
+      REQUIRE(qps_test::RunQuery("stmt s; Select s such that Uses(6, \"cenX\")", *pkb_querier)
+                  == data[qps::DesignEntity::STMT]);
+    }
+
+  }
+
+  SECTION("Evaluates to false") {
+    std::unordered_set<std::string> empty{};
+    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Uses(s, \"normSq\")", *pkb_querier)
+                == empty);
+    REQUIRE(qps_test::RunQuery("if f; Select f such that Uses(6, \"count\")", *pkb_querier)
+                == empty);
+  }
+}
+
+TEST_CASE("QPS can work with different combinations of parent") {
+  qps_test::PopulatePKBHelper pkb_helper;
+  auto data = PopulateEntities(pkb_helper);
+  QueryFacade *pkb_querier = pkb_helper.GetQuerier();
+
+  pkb_helper.AddParent({{5, 6}, {5, 11}, {5, 12}, {5, 13}, {5, 14},
+                        {6, 7}, {6, 8}, {6, 9}, {6, 10},
+                        {15, 16}, {15, 18}, {15, 19}, {15, 20},
+                        {16, 17}
+                       });
+
 
   SECTION("Both Synonyms") {
     SECTION("Look for child statements under while") {
-      std::unordered_set<std::string> expected{"6", "7", "8", "9"};
+      std::unordered_set<std::string> expected{"6", "11", "12", "13", "14", "17"};
       REQUIRE(qps_test::RunQuery("stmt s; while w; Select s such that Parent(w, s)", *pkb_querier) == expected);
     }
 
     SECTION("Look for child statements under if") {
-      std::unordered_set<std::string> expected{"11", "12", "13"};
+      std::unordered_set<std::string> expected{"7", "8", "9", "10", "16", "18", "19", "20"};
       REQUIRE(qps_test::RunQuery("stmt s; if f; Select s such that Parent(f, s)", *pkb_querier) == expected);
     }
 
     SECTION("Look for child statements under any container stmt") {
-      std::unordered_set<std::string> expected{"11", "12", "13", "6", "7", "8", "9"};
+      std::unordered_set<std::string>
+          expected{"6", "11", "12", "13", "14", "17", "7", "8", "9", "10", "16", "18", "19", "20"};
       REQUIRE(qps_test::RunQuery("stmt s, s1; Select s such that Parent(s1, s)", *pkb_querier) == expected);
     }
 
     SECTION("Look for call statements under any container stmt") {
-      std::unordered_set<std::string> expected{"9"};
+      std::unordered_set<std::string> expected{"8", "14"};
       REQUIRE(qps_test::RunQuery("stmt s1; call c; Select c such that Parent(s1, c)", *pkb_querier) == expected);
     }
 
     SECTION("Look for assign statements under any container stmt") {
-      std::unordered_set<std::string> expected{"11", "12", "13", "6", "7", "8"};
+      std::unordered_set<std::string> expected{"7", "11", "12", "13", "18", "19", "20", "17"};
       REQUIRE(qps_test::RunQuery("stmt s1; assign a; Select a such that Parent(s1, a)", *pkb_querier) == expected);
     }
 
     SECTION("Look for call statements under a while") {
-      std::unordered_set<std::string> expected{"9"};
+      std::unordered_set<std::string> expected{"14"};
       REQUIRE(qps_test::RunQuery("while w; call c; Select c such that Parent(w, c)", *pkb_querier) == expected);
     }
 
     SECTION("Look for call statements under a if") {
-      std::unordered_set<std::string> expected{};
+      std::unordered_set<std::string> expected{"8"};
       REQUIRE(qps_test::RunQuery("if f; call c; Select c such that Parent(f, c)", *pkb_querier) == expected);
     }
 
@@ -88,34 +459,35 @@ TEST_CASE("QPS can work with different combinations of parent") {
 
   SECTION("Synonym on right, wild card on left") {
     SECTION("All child statements") {
-      std::unordered_set<std::string> expected{"11", "12", "13", "6", "7", "8", "9"};
+      std::unordered_set<std::string>
+          expected{"6", "11", "12", "13", "14", "17", "7", "8", "9", "10", "16", "18", "19", "20"};
       REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(_, s)", *pkb_querier) == expected);
     }
 
     SECTION("All assign child statements") {
-      std::unordered_set<std::string> expected{"11", "12", "13", "6", "7", "8"};
+      std::unordered_set<std::string> expected{"7", "11", "12", "13", "18", "19", "20", "17"};
       REQUIRE(qps_test::RunQuery("assign a; Select a such that Parent(_, a)", *pkb_querier) == expected);
     }
 
     SECTION("All print child statements") {
-      std::unordered_set<std::string> expected{};
+      std::unordered_set<std::string> expected{"9"};
       REQUIRE(qps_test::RunQuery("print pn; Select pn such that Parent(_, pn)", *pkb_querier) == expected);
     }
   }
 
   SECTION("Synonym on left, wild card on right") {
     SECTION("Statement on left") {
-      std::unordered_set<std::string> expected{"5", "10"};
+      std::unordered_set<std::string> expected{"5", "6", "15", "16"};
       REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(s, _)", *pkb_querier) == expected);
     }
 
     SECTION("While on left") {
-      std::unordered_set<std::string> expected{"5"};
+      std::unordered_set<std::string> expected{"5", "16"};
       REQUIRE(qps_test::RunQuery("while w; Select w such that Parent(w, _)", *pkb_querier) == expected);
     }
 
     SECTION("If on left") {
-      std::unordered_set<std::string> expected{"10"};
+      std::unordered_set<std::string> expected{"6", "15"};
       REQUIRE(qps_test::RunQuery("if f; Select f such that Parent(f, _)", *pkb_querier) == expected);
     }
 
@@ -131,26 +503,25 @@ TEST_CASE("QPS can work with different combinations of parent") {
     std::unordered_set<std::string> empty{};
     std::unordered_set<std::string> expected{"5"};
     REQUIRE(qps_test::RunQuery("while w; Select w such that Parent(w, 6)", *pkb_querier) == expected);
-    REQUIRE(qps_test::RunQuery("while w; Select w such that Parent(w, 9)", *pkb_querier) == expected);
-    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(s, 9)", *pkb_querier) == expected);
-    REQUIRE(qps_test::RunQuery("while w; Select w such that Parent(w, 10)", *pkb_querier) == empty);
+    REQUIRE(qps_test::RunQuery("while w; Select w such that Parent(w, 12)", *pkb_querier) == expected);
+    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(s, 14)", *pkb_querier) == expected);
 
-    expected = {"10"};
-    REQUIRE(qps_test::RunQuery("if ifs; Select ifs such that Parent(ifs, 6)", *pkb_querier) == empty);
-    REQUIRE(qps_test::RunQuery("if ifs; Select ifs such that Parent(ifs, 12)", *pkb_querier) == expected);
-    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(s, 12)", *pkb_querier) == expected);
+    expected = {"6"};
+    REQUIRE(qps_test::RunQuery("if ifs; Select ifs such that Parent(ifs, 7)", *pkb_querier) == expected);
+    REQUIRE(qps_test::RunQuery("if ifs; Select ifs such that Parent(ifs, 10)", *pkb_querier) == expected);
+    REQUIRE(qps_test::RunQuery("stmt s; Select s such that Parent(s, 9)", *pkb_querier) == expected);
   }
 
   SECTION("Synonym on right, literal on left") {
     std::unordered_set<std::string> empty{};
-    std::unordered_set<std::string> expected{"6", "7", "8"};
+    std::unordered_set<std::string> expected{"11", "12", "13"};
     REQUIRE(qps_test::RunQuery("assign a; Select a such that Parent(5, a)", *pkb_querier) == expected);
 
-    expected = {"9"};
+    expected = {"14"};
     REQUIRE(qps_test::RunQuery("call c; Select c such that Parent(5, c)", *pkb_querier) == expected);
 
-    expected = {"11", "12", "13"};
-    REQUIRE(qps_test::RunQuery("assign a; Select a such that Parent(10, a)", *pkb_querier) == expected);
+    expected = {"18", "19", "20"};
+    REQUIRE(qps_test::RunQuery("assign a; Select a such that Parent(15, a)", *pkb_querier) == expected);
   }
 
   SECTION("Evaluates to true") {
@@ -160,10 +531,10 @@ TEST_CASE("QPS can work with different combinations of parent") {
     }
 
     SECTION("Both literals") {
-      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Parent(10, 11)", *pkb_querier)
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Parent(6, 7)", *pkb_querier)
                   == data[qps::DesignEntity::PROCEDURE]);
 
-      REQUIRE(qps_test::RunQuery("constant c; Select c such that Parent(5, 8)", *pkb_querier)
+      REQUIRE(qps_test::RunQuery("constant c; Select c such that Parent(5, 11)", *pkb_querier)
                   == data[qps::DesignEntity::CONSTANT]);
     }
   }

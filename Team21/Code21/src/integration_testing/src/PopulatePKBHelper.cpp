@@ -35,6 +35,7 @@ class PopulatePKBHelper {
     AddWhile(data[qps::DesignEntity::WHILE]);
     AddCalls(data[qps::DesignEntity::CALL]);
     AddProcedures(data[qps::DesignEntity::PROCEDURE]);
+
   }
 
   void AddPostFixExpressions(const std::vector<std::pair<int, std::string>> &assignments) {

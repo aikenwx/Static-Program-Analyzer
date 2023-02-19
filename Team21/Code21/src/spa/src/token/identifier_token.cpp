@@ -8,7 +8,7 @@
 #include "util/is_identifier.h"
 
 namespace token {
-const std::unique_ptr<Token> IdentifierToken::createToken(
+const std::unique_ptr<Token> IdentifierToken::CreateToken(
     std::string str) {
   assert(str.length() > 0);  // invariant: non-zero length
   if (!util::is_identifier(str)) {

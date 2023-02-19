@@ -26,7 +26,7 @@ std::vector<std::unique_ptr<token::Token>> SimpleTokenizer::tokenize(
     if (!buffer.empty()) {
       std::string value(buffer.begin(),
                         len != -1 ? buffer.begin() + len : buffer.end());
-      tokens.push_back(factory.createToken(value));
+      tokens.push_back(factory.CreateToken(value));
       it -= buffer.size() - value.size();
       buffer.clear();
       isValidSymbolPrefix = false;

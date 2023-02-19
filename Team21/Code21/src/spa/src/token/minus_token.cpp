@@ -4,7 +4,7 @@
 #include "minus_token.h"
 
 namespace token {
-const std::unique_ptr<Token> MinusToken::createToken(std::string str) {
+const std::unique_ptr<Token> MinusToken::CreateToken(std::string str) {
   assert(str == "-");
   return std::unique_ptr<MinusToken>(new MinusToken());
 };

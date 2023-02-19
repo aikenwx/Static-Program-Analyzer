@@ -5,8 +5,8 @@
 namespace token {
 class Token {
  public:
-  static const std::unique_ptr<Token> createToken(std::string);
+  static const std::unique_ptr<Token> CreateToken(std::string);
   virtual ~Token(){};
-  virtual const std::string getValue() = 0;
+  virtual const std::string GetValue() = 0;
 };
 }  // namespace token

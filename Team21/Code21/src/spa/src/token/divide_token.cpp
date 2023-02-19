@@ -5,7 +5,7 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> DivideToken::createToken(std::string str) {
+const std::unique_ptr<Token> DivideToken::CreateToken(std::string str) {
   assert(str == "/");
   return std::unique_ptr<DivideToken>(new DivideToken());
 };

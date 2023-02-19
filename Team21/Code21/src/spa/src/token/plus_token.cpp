@@ -5,7 +5,7 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> PlusToken::createToken(std::string str) {
+const std::unique_ptr<Token> PlusToken::CreateToken(std::string str) {
   assert(str == "+");
   return std::unique_ptr<PlusToken>(new PlusToken());
 };

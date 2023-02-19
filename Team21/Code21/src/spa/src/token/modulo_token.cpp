@@ -5,7 +5,7 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> ModuloToken::createToken(std::string str) {
+const std::unique_ptr<Token> ModuloToken::CreateToken(std::string str) {
   assert(str == "%");
   return std::unique_ptr<ModuloToken>(new ModuloToken());
 };

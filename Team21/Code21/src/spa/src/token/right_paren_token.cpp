@@ -5,7 +5,7 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> RightParenToken::createToken(
+const std::unique_ptr<Token> RightParenToken::CreateToken(
     std::string str) {
   assert(str == ")");
   return std::unique_ptr<RightParenToken>(new RightParenToken());

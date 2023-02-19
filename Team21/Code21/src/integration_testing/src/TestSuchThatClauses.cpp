@@ -670,3 +670,220 @@ TEST_CASE("QPS can work with different combinations of parentStar") {
         }
     }
 }
+
+TEST_CASE("QPS can work with different combinations of follows") {
+    qps_test::PopulatePKBHelper pkb_helper;
+    auto data = PopulateEntities(pkb_helper);
+    QueryFacade* pkb_querier = pkb_helper.GetQuerier();
+
+    pkb_helper.AddFollows({ {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 15}, {15, 21},
+                          {6, 11}, {11, 12}, {12, 13}, {13, 14},
+                          {7, 8}, {8, 9},
+                          {16, 18}, {19, 20}
+        });
+
+
+    SECTION("Both Synonyms") {
+        SECTION("Look for calls that follow assigns") {
+            std::unordered_set<std::string> expected{ "4", "8", "14" };
+            REQUIRE(qps_test::RunQuery("call c; assign a; Select c such that Follows(a, c)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for stmts that follows another stmts") {
+            std::unordered_set<std::string> expected{ "2", "3", "4", "5", "15", "21", "11", "12", "13", "14", "8", "9", "18", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s, f; Select s such that Follows(f, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for assigns that followed by another assigns") {
+            std::unordered_set<std::string> expected{ "1", "2", "11", "12", "19" };
+            REQUIRE(qps_test::RunQuery("assign a, b; Select a such that Follows(a, b)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on right, wild card on left") {
+        SECTION("All stmts that follows another stmts") {
+            std::unordered_set<std::string> expected{ "2", "3", "4", "5", "15", "21", "11", "12", "13", "14", "8", "9", "18", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that Follows(_, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("All assigns follow stmt") {
+            std::unordered_set<std::string> expected{ "2", "3", "21", "11", "12", "13", "18", "20" };
+            REQUIRE(qps_test::RunQuery("assign a; Select a such that Follows(_, a)", *pkb_querier) == expected);
+        }
+
+        SECTION("All print follow stmt") {
+            std::unordered_set<std::string> expected{ "9" };
+            REQUIRE(qps_test::RunQuery("print pn; Select pn such that Follows(_, pn)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, wild card on right") {
+        SECTION("Statement on left") {
+            std::unordered_set<std::string> expected{ { "1", "2", "3", "4", "5", "15", "6", "11", "12", "13", "7", "8", "16", "19" } };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that Follows(s, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("While on left") {
+            std::unordered_set<std::string> expected{ "5", "16" };
+            REQUIRE(qps_test::RunQuery("while w; Select w such that Follows(w, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("If on left") {
+            std::unordered_set<std::string> expected{ "15" , "6"};
+            REQUIRE(qps_test::RunQuery("if f; Select f such that Follows(f, _)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, literal on right") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "7" };
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that Follows(s, 8)", *pkb_querier) == expected);
+
+        expected = { "16" };
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that Follows(s, 18)", *pkb_querier) == expected);
+    }
+
+    SECTION("Synonym on right, literal on left") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "15" };
+        REQUIRE(qps_test::RunQuery("if f; Select f such that Follows(5, f)", *pkb_querier) == expected);
+
+        expected = { "9" };
+        REQUIRE(qps_test::RunQuery("print pn; Select pn such that Follows(8, pn)", *pkb_querier) == expected);
+    }
+
+    SECTION("Evaluates to true") {
+        SECTION("Both wildcards") {
+            REQUIRE(qps_test::RunQuery("variable v; Select v such that Follows(_, _)", *pkb_querier)
+                == data[qps::DesignEntity::VARIABLE]);
+        }
+
+        SECTION("Both literals") {
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that Follows(5, 15)", *pkb_querier)
+                == data[qps::DesignEntity::PROCEDURE]);
+
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that Follows(19, 20)", *pkb_querier)
+                == data[qps::DesignEntity::CONSTANT]);
+        }
+    }
+
+    SECTION("Evaluates to false") {
+        SECTION("Both literals") {
+            std::unordered_set<std::string> empty{};
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that Follows(10, 9)", *pkb_querier)
+                == empty);
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that Follows(5, 4)", *pkb_querier)
+                == empty);
+        }
+    }
+}
+
+TEST_CASE("QPS can work with different combinations of followsStar") {
+    qps_test::PopulatePKBHelper pkb_helper;
+    auto data = PopulateEntities(pkb_helper);
+    QueryFacade* pkb_querier = pkb_helper.GetQuerier();
+
+    pkb_helper.AddFollows({ {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 15}, {15, 21},
+                          {6, 11}, {11, 12}, {12, 13}, {13, 14},
+                          {7, 8}, {8, 9},
+                          {16, 18}, {19, 20}, {1, 3}, {1, 4}, {1, 5}, {1, 15}, {1, 21},
+                          {2, 4}, {2, 5}, {2, 15}, {2, 21}, {3, 5}, {3, 15}, {3, 21},
+                          {4, 15}, {4, 21}, {5, 21}, {7, 9},
+                          {6, 12}, {6, 13}, {6, 14}, {11, 13}, {11, 14}, {12, 14}
+        });
+
+
+    SECTION("Both Synonyms") {
+        SECTION("Look for calls that followsT assigns") {
+            std::unordered_set<std::string> expected{ "4", "8", "14" };
+            REQUIRE(qps_test::RunQuery("call c; assign a; Select c such that FollowsT(a, c)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for stmts that followsT another stmts") {
+            std::unordered_set<std::string> expected{ "2", "3", "4", "5", "15", "21", "11", "12", "13", "14", "8", "9", "18", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s, f; Select s such that FollowsT(f, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("Look for assigns that followsTed by another assigns") {
+            std::unordered_set<std::string> expected{ "1", "2", "3", "11", "12", "19" };
+            REQUIRE(qps_test::RunQuery("assign a, b; Select a such that FollowsT(a, b)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on right, wild card on left") {
+        SECTION("All stmts that followsT another stmts") {
+            std::unordered_set<std::string> expected{ "2", "3", "4", "5", "15", "21", "11", "12", "13", "14", "8", "9", "18", "20" };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that FollowsT(_, s)", *pkb_querier) == expected);
+        }
+
+        SECTION("All assigns follow stmt") {
+            std::unordered_set<std::string> expected{ "2", "3", "21", "11", "12", "13", "18", "20" };
+            REQUIRE(qps_test::RunQuery("assign a; Select a such that FollowsT(_, a)", *pkb_querier) == expected);
+        }
+
+        SECTION("All print follow stmt") {
+            std::unordered_set<std::string> expected{ "9" };
+            REQUIRE(qps_test::RunQuery("print pn; Select pn such that FollowsT(_, pn)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, wild card on right") {
+        SECTION("Statement on left") {
+            std::unordered_set<std::string> expected{ { "1", "2", "3", "4", "5", "15", "6", "11", "12", "13", "7", "8", "16", "19" } };
+            REQUIRE(qps_test::RunQuery("stmt s; Select s such that FollowsT(s, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("While on left") {
+            std::unordered_set<std::string> expected{ "5", "16" };
+            REQUIRE(qps_test::RunQuery("while w; Select w such that FollowsT(w, _)", *pkb_querier) == expected);
+        }
+
+        SECTION("If on left") {
+            std::unordered_set<std::string> expected{ "15" , "6" };
+            REQUIRE(qps_test::RunQuery("if f; Select f such that FollowsT(f, _)", *pkb_querier) == expected);
+        }
+    }
+
+    SECTION("Synonym on left, literal on right") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "15", "1", "2", "3", "4", "5" };
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that FollowsT(s, 21)", *pkb_querier) == expected);
+
+        expected = { "13", "6", "11", "12" };
+        REQUIRE(qps_test::RunQuery("stmt s; Select s such that FollowsT(s, 14)", *pkb_querier) == expected);
+    }
+
+    SECTION("Synonym on right, literal on left") {
+        std::unordered_set<std::string> empty{};
+        std::unordered_set<std::string> expected{ "15" };
+        REQUIRE(qps_test::RunQuery("if f; Select f such that FollowsT(2, f)", *pkb_querier) == expected);
+
+        expected = { "9" };
+        REQUIRE(qps_test::RunQuery("print pn; Select pn such that FollowsT(7, pn)", *pkb_querier) == expected);
+    }
+
+    SECTION("Evaluates to true") {
+        SECTION("Both wildcards") {
+            REQUIRE(qps_test::RunQuery("variable v; Select v such that FollowsT(_, _)", *pkb_querier)
+                == data[qps::DesignEntity::VARIABLE]);
+        }
+
+        SECTION("Both literals") {
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that FollowsT(1, 15)", *pkb_querier)
+                == data[qps::DesignEntity::PROCEDURE]);
+
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that FollowsT(6, 14)", *pkb_querier)
+                == data[qps::DesignEntity::CONSTANT]);
+        }
+    }
+
+    SECTION("Evaluates to false") {
+        SECTION("Both literals") {
+            std::unordered_set<std::string> empty{};
+            REQUIRE(qps_test::RunQuery("procedure p; Select p such that FollowsT(1, 6)", *pkb_querier)
+                == empty);
+            REQUIRE(qps_test::RunQuery("constant c; Select c such that FollowsT(15, 17)", *pkb_querier)
+                == empty);
+        }
+    }
+}

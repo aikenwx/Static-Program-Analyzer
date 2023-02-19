@@ -12,6 +12,7 @@ public:
   std::shared_ptr<StatementListNode> GetThen();
   std::shared_ptr<StatementListNode> GetElse();
   std::string ToString() const override;
+  int GetEndStatementNumber() override;
 
 private:
   std::shared_ptr<INode> condition;

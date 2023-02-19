@@ -3,6 +3,7 @@
 #include "token/and_token.h"
 #include "token/assign_token.h"
 #include "token/divide_token.h"
+#include "token/end_token.h"
 #include "token/equal_token.h"
 #include "token/greater_equal_token.h"
 #include "token/greater_than_token.h"
@@ -29,7 +30,7 @@ using namespace util;
 
 namespace parser {
 std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
-  input.push_back(std::make_unique<EndToken>());
+  input.push_back(std::make_unique<token::EndToken>());
   stack.clear();
   statementCounter = 0;
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {
@@ -129,7 +130,7 @@ void SimpleParser::Shift() {
   } else if (util::instance_of<token::SemicolonToken>(*lookahead)) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kSemicolon);
     stack.push_back(sym);
-  } else if (util::instance_of<EndToken>(*lookahead)) {
+  } else if (util::instance_of<token::EndToken>(*lookahead)) {
     // end token
     return;
   } else {
@@ -197,7 +198,7 @@ void SimpleParser::Success() {
 bool SimpleParser::Check() {
   auto i = stack.rbegin();
   // program
-  if (util::instance_of<EndToken>(*lookahead)) {
+  if (util::instance_of<token::EndToken>(*lookahead)) {
     // When token has reached end
     if (stack.size() >= 2
       && util::instance_of<ast::ProgramNode>(*i)
@@ -257,7 +258,7 @@ bool SimpleParser::Check() {
     }
     if (util::instance_of<ast::ContainerStatementNode>(*i)) {
       // S+ <- Sc
-      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
+      std::shared_ptr<ast::ContainerStatementNode> s = std::static_pointer_cast<ast::ContainerStatementNode>(stack.back());
       stack.pop_back();
       std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
       sl->AddStatement(s);
@@ -273,6 +274,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       stack.pop_back();
       std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
+      s->SetStatementNumber(sl->GetStartStatementNumber() - 1);
       stack.pop_back();
       sl->AddStatement(s);
       stack.push_back(sl);
@@ -283,6 +285,7 @@ bool SimpleParser::Check() {
       // S+ <- S ;
       stack.pop_back();
       std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack.back());
+      s->SetStatementNumber(statementCounter);
       stack.pop_back();
       std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
       sl->AddStatement(s);
@@ -300,7 +303,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       stack.pop_back();
       std::shared_ptr<ast::ReadNode> r = std::make_shared<ast::ReadNode>(v);
-      r->SetStatementNumber(++statementCounter);
+      statementCounter++;
       stack.push_back(r);
       return true;
     } else if (stack.size() >= 2
@@ -311,7 +314,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       stack.pop_back();
       std::shared_ptr<ast::PrintNode> p = std::make_shared<ast::PrintNode>(v);
-      p->SetStatementNumber(++statementCounter);
+      statementCounter++;
       stack.push_back(p);
       return true;
     }
@@ -466,7 +469,7 @@ bool SimpleParser::Check() {
       std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
       stack.pop_back();
       std::shared_ptr<ast::AssignNode> a = std::make_shared<ast::AssignNode>(v, e);
-      a->SetStatementNumber(++statementCounter);
+      statementCounter++;
       stack.push_back(a);
       return true;
     }
@@ -726,6 +729,7 @@ bool SimpleParser::Check() {
     stack.pop_back();
     stack.pop_back();
     std::shared_ptr<ast::WhileNode> w = std::make_shared<ast::WhileNode>(e->GetOperand(), s);
+    statementCounter++;
     stack.push_back(w);
     return true;
   } else if (stack.size() >= 12
@@ -759,6 +763,7 @@ bool SimpleParser::Check() {
     stack.pop_back();
     stack.pop_back();
     std::shared_ptr<ast::IfNode> f = std::make_shared<ast::IfNode>(e->GetOperand(), s2, s1);
+    statementCounter++;
     stack.push_back(f);
     return true;
   }

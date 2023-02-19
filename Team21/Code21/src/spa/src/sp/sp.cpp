@@ -5,6 +5,7 @@
 #include <unordered_set>
 
 #include "sp/ast/ast.h"
+#include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
@@ -12,6 +13,7 @@
 #include "sp/design_extractor/stmt_uses_extractor.h"
 #include "sp/design_extractor/traverse.h"
 #include "sp/parser/simple_parser.h"
+#include "sp/rel/assign_exp_relationship.h"
 #include "sp/rel/const_relationship.h"
 #include "sp/rel/follows_stmt_stmt_relationship.h"
 #include "sp/rel/modifies_proc_var_relationship.h"
@@ -61,6 +63,12 @@ bool SP::process(std::string program, PKB* pkb) {
       design_extractor::Traverse(
           ast->GetRoot(),
           std::make_shared<design_extractor::StmtUsesExtractor>());
+
+  // process AST to get assign node <-> expression reprs
+  std::vector<std::unique_ptr<rel::Relationship>> assignExpRelationships =
+      design_extractor::Traverse(
+          ast->GetRoot(),
+          std::make_shared<design_extractor::AssignExpExtractor>());
 
   // postprocess relationships
   // optimization?: use vecs of ints because we're told that we won't have more
@@ -256,8 +264,7 @@ bool SP::process(std::string program, PKB* pkb) {
 
   // store Uses into PKB
   for (auto& rel : usesRelationships) {
-    if (rel->relationshipType() ==
-               rel::RelationshipType::USES_STMT_VAR) {
+    if (rel->relationshipType() == rel::RelationshipType::USES_STMT_VAR) {
       std::unique_ptr<rel::UsesStmtVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesStmtVarRelationship>(
               std::move(rel));
@@ -294,6 +301,14 @@ bool SP::process(std::string program, PKB* pkb) {
     } else {
       throw std::runtime_error("Invalid Uses relationship type");
     }
+  }
+
+  // store assign postfix exps into PKB
+  for (auto& rel : assignExpRelationships) {
+    std::unique_ptr<rel::AssignExpRelationship> assignExpRel =
+        std::static_pointer_cast<rel::AssignExpRelationship>(std::move(rel));
+    PopFacade->storeAssignStatementPostfixExpression(
+        assignExpRel->statementNumber(), assignExpRel->postfixExp());
   }
 
   return true;

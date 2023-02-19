@@ -34,7 +34,7 @@
 namespace sp {
 bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   if (!util::instance_of<ast::ProgramNode>(root)) {
-    throw exceptions::SyntaxError("unknown syntax error");
+    throw exceptions::SyntaxError("Unknown syntax error");
   }
 
   std::shared_ptr<ast::ProgramNode> programNode =
@@ -43,7 +43,7 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   std::unordered_set<std::string> procedures;
   for (const auto& procNode : programNode->GetProcedures()) {
     if (procedures.find(procNode->GetName()) != procedures.end()) {
-      throw exceptions::SemanticError("duplicate procedure name");
+      throw exceptions::SemanticError("Duplicate procedure name");
     }
     procedures.insert(procNode->GetName());
   }

@@ -20,5 +20,5 @@ TEST_CASE("SP should terminate if there are non-unique procedure names") {
 
   sp::SP sp = sp::SP();
 
-  REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SemanticError, Catch::Message("Semantic error: duplicate procedure name"));
+  REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SemanticError, Catch::Message("Semantic error: Duplicate procedure name"));
 }

@@ -1,8 +1,6 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "PKB/PKB.h"
-#include "query/ref.h"
 #include "query/query.h"
 #include "query/such_that_clause.h"
 #include "query/declaration.h"
@@ -216,5 +214,5 @@ TEST_CASE("QPS parse and can retrieve design entities") {
     stmts.insert(data[qps::DesignEntity::CALL].begin(), data[qps::DesignEntity::CALL].end());
 
     REQUIRE(RunQuery("stmt s; Select s", *pkb_querier) == stmts);
-  }
-}
+   }
+   

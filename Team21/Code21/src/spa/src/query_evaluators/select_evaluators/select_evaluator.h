@@ -12,10 +12,9 @@ class SelectEvaluator : public ClauseEvaluator {
   ~SelectEvaluator() override = default;
 
   ClauseResult Evaluate(QueryFacade &pkb) override;
-  ClauseResult ConstructResult(const std::vector<Entity *> &entities);
-
  private:
   Declaration declaration_;
+  ClauseResult ConstructResult(const std::vector<Entity *> &entities);
 };
 
 } // qps

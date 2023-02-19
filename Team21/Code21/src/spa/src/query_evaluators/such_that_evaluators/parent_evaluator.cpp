@@ -12,20 +12,11 @@ std::vector<::Relationship *> ParentEvaluator::CallPkb(QueryFacade &pkb, EntityT
 }
 
 std::vector<EntityType> ParentEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return SuchThatEvaluator::CONTAINER_TYPES;
-  }
+  return SuchThatEvaluator::CONTAINER_TYPES;
 }
 
-// TODO: Refactor some repetition of code
 std::vector<EntityType> ParentEvaluator::GetRightHandTypes(Ref &right_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return {EntityType::STATEMENT};
-  }
+  return {EntityType::STATEMENT};
 }
 
 } // qps

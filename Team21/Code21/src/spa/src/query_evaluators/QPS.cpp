@@ -23,9 +23,9 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     }
   } catch (qps::QueryException &e) {
     if (e.getType() == ErrorType::Syntactic) {
-        results.emplace_back("SyntaxError");
+      results.emplace_back("SyntaxError");
     } else {
-        results.emplace_back("SemanticError");
+      results.emplace_back("SemanticError");
     }
     return;
   }

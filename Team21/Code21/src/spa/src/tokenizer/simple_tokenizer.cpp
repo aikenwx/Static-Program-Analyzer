@@ -70,7 +70,7 @@ std::vector<std::unique_ptr<token::Token>> SimpleTokenizer::tokenize(
         if (lastValidSymbolLen == -1) {
           // and there's no buffer prefix that's a valid symbol (?!?)
           // then it's probably invalid syntax
-          throw exceptions::SyntaxError("Invalid syntax");
+          throw exceptions::SyntaxError("Unexpected symbol");
         } else {
           // we have a valid symbol in the prefix
           tokenize(lastValidSymbolLen);

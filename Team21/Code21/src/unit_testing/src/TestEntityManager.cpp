@@ -188,10 +188,10 @@ TEST_CASE("Storing duplicate entity handled correctly") {
     std::shared_ptr<ReadStatement> readStatement2 = std::make_shared<ReadStatement>(1);
     entityManager->storeStatement(readStatement);
     entityManager->storeStatement(readStatement2);
-    
+
     REQUIRE(entityManager->getEntitiesByType(EntityType::READ_STATEMENT)->size() == 1);
     REQUIRE(entityManager->getEntitiesByType(EntityType::STATEMENT)->size() == 1);
-    REQUIRE(entityManager->getEntitiesByType(EntityType::READ_STATEMENT)->at(0)->equals(readStatement.get()));   
+    REQUIRE(entityManager->getEntitiesByType(EntityType::READ_STATEMENT)->at(0)->equals(readStatement.get()));
     REQUIRE(entityManager->getStatementByStatementNumber(1)->equals(readStatement2.get()));
 
     delete entityManager;

@@ -27,6 +27,9 @@ namespace qps {
 				return false;
 			}
 		}
+		if (str.length() > 1 && str[0] == '0') {
+			throw QueryException(ErrorType::Syntactic, "Invalid Query Syntax. Integer cannot have leading zero");
+		}
 		return str.length() != 0;
 	}
 
@@ -154,7 +157,7 @@ namespace qps {
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
 		if (declaration->getDesignEntity() != DesignEntity::ASSIGN) {
-			throw QueryException(ErrorType::Semantic, "Invalid syntax for pattern assign with synonym: " + syn);
+			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern assign with synonym: " + syn);
 		}
 
 		assertNextToken("(");

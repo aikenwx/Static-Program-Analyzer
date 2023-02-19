@@ -8,6 +8,7 @@ namespace token {
 class OrToken : public Token {
  public:
   static const std::unique_ptr<Token> CreateToken(std::string);
+  const TokenType GetType() override { return TokenType::OR; }
   const std::string GetValue() override;
 
  private:

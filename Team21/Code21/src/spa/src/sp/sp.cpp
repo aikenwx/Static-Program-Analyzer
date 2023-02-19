@@ -146,8 +146,7 @@ bool SP::process(std::string program, PKB* pkb) {
       std::unique_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
           std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementModifiesVariableRelationship(
-          modifiesRel->statementNumber(), modifiesRel->entityType(),
-          modifiesRel->variableName());
+          modifiesRel->statementNumber(), modifiesRel->variableName());
     }
   }
 
@@ -161,8 +160,7 @@ bool SP::process(std::string program, PKB* pkb) {
       std::unique_ptr<rel::UsesStmtVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementUsesVariableRelationship(
-          usesRel->statementNumber(), usesRel->entityType(),
-          usesRel->variableName());
+          usesRel->statementNumber(), usesRel->variableName());
     }
   }
 

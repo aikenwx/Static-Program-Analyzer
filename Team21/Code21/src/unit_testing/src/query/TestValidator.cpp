@@ -131,7 +131,7 @@ TEST_CASE("Semantic validation for queries") {
 TEST_CASE("Syntactic validation for queries") {
     using Catch::Matchers::Contains;
 
-    SECTION("check parent cannot have quoted identifier as argument") {
+    SECTION("check parent cannot have quoted identifier as argument 2") {
         std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent (s, \"hoho\")");
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SyntacticValidator validator(dupeQuery);
@@ -139,11 +139,18 @@ TEST_CASE("Syntactic validation for queries") {
         REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Syntactic error. The argument is not of correct ref type for Parent"));
     }
 
-    SECTION("check follow* cannot have quoted identifier as argument") {
+    SECTION("check follow* cannot have quoted identifier as argument 2") {
         std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Follows* (s, \"hijuyg\")");
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SyntacticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Syntactic error. The argument is not of correct ref type for Follows*"));
+    }
+
+    SECTION("check follow cannot have quoted identifier as argument 1") {
+        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Follows (\"h\", s)");
+        qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+        qps::SyntacticValidator validator(dupeQuery);
+        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Syntactic error. The argument is not of correct ref type for Follows"));
     }
 
     SECTION("check modifies cannot have statement number as argument 2") {
@@ -161,9 +168,9 @@ TEST_CASE("Syntactic validation for queries") {
     }
 
     SECTION("check AssignPattern have correct ref types") {
-        std::string dupeInput("stmt s; procedure s; variable v; assign a; Select s pattern a (1000, \"x+Y*Z\")");
+        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s pattern a (1000, \"x+Y*Z\")");
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
-        qps::SemanticValidator validator(dupeQuery);
-        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("There is duplicate declaration found for s"));
+        qps::SyntacticValidator validator(dupeQuery);
+        REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Syntactic error. The first argument is not of correct ref type for assign clause"));
     }
 }

@@ -72,7 +72,7 @@ namespace qps {
 				if (!isValidFactor(expr.getExpression())) {
 					throw  QueryException(ErrorType::Syntactic, "Syntactic error. Incorrect form for expression");
 				}
-			}	
+			}
 		}
 	}
 }

@@ -5,12 +5,12 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> AndToken::createToken(std::string str) {
+const std::unique_ptr<Token> AndToken::CreateToken(std::string str) {
   assert(str == "&&");
   return std::unique_ptr<AndToken>(new AndToken());
 };
 
 AndToken::AndToken(){};
 
-const std::string AndToken::getValue() { return "&&"; };
+const std::string AndToken::GetValue() { return "&&"; };
 }  // namespace token

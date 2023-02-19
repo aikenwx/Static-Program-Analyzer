@@ -122,7 +122,7 @@ void TestWrapper::parse(std::string filename) {
         parentRel->secondStatementNumber(), parentRel->secondEntityType());
   }
 
-  for (auto& rel : modifiesRelationships) {
+  for (auto &rel : modifiesRelationships) {
     if (util::instance_of<rel::ModifiesProcVarRelationship>(rel)) {
       std::unique_ptr<rel::ModifiesProcVarRelationship> modifiesRel =
           std::static_pointer_cast<rel::ModifiesProcVarRelationship>(std::move(rel));
@@ -137,7 +137,7 @@ void TestWrapper::parse(std::string filename) {
     }
   }
 
-  for (auto& rel : usesRelationships) {
+  for (auto &rel : usesRelationships) {
     if (util::instance_of<rel::UsesProcVarRelationship>(rel)) {
       std::unique_ptr<rel::UsesProcVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesProcVarRelationship>(std::move(rel));
@@ -154,7 +154,7 @@ void TestWrapper::parse(std::string filename) {
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   qps::QPS::evaluate(query, results, *pkb_->getQueryFacade());
   // call your evaluator to evaluate the query here
   // ...code to evaluate query...

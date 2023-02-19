@@ -3,15 +3,15 @@
 #include "query/design_entity.h"
 
 namespace qps {
-ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
-  ClauseResult clause_result({declaration_.getSynonym()});
+ClauseEvaluator::ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
+  SynonymTable clause_result({declaration_.getSynonym()});
   for (auto entity : entities) {
-    clause_result.AddResult({entity->getEntityValue()});
+    clause_result.AddRow({*(entity->getEntityValue())});
   }
   return clause_result;
 }
 
-ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
+ClauseEvaluator::ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<Entity *> entities;
 
   auto add_entity = [&](auto vec) {

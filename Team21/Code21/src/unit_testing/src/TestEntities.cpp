@@ -1,18 +1,15 @@
 // add guards
 
-
-#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
-#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "PKBStorageClasses/EntityClasses/IfStatement.h"
-#include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
-#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
-#include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "PKBStorageClasses/EntityClasses/Procedure.h"
-#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
-
-
+#include "PKBStorageClasses/EntityClasses/Entity.h"
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
+#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
+#include "PKBStorageClasses/EntityClasses/Procedure.h"
+#include "PKBStorageClasses/EntityClasses/ReadStatement.h"
+#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 #include "catch.hpp"
 
 using namespace std;
@@ -24,10 +21,9 @@ TEST_CASE("Entities can instantiate") {
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     Constant *constant = new Constant(1);
-
 
     delete printStatement;
     delete readStatement;
@@ -47,21 +43,19 @@ TEST_CASE("Entities retrieve their stored values") {
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure("procedure");
-    Variable *variable = new Variable("variable");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Variable *variable = new Variable(new std::string("variable"));
     Constant *constant = new Constant(1);
 
-
-    REQUIRE(printStatement->getEntityValue() == "2");
-    REQUIRE(readStatement->getEntityValue() == "3");
-    REQUIRE(assignStatement->getEntityValue() == "4");
-    REQUIRE(callStatement->getEntityValue() == "5");
-    REQUIRE(whileStatement->getEntityValue() == "6");
-    REQUIRE(ifStatement->getEntityValue() == "7");
-    REQUIRE(procedure->getEntityValue() == "procedure");
-    REQUIRE(variable->getEntityValue() == "variable");
-    REQUIRE(constant->getEntityValue() == "1");
-
+    REQUIRE(*printStatement->getEntityValue() == "2");
+    REQUIRE(*readStatement->getEntityValue() == "3");
+    REQUIRE(*assignStatement->getEntityValue() == "4");
+    REQUIRE(*callStatement->getEntityValue() == "5");
+    REQUIRE(*whileStatement->getEntityValue() == "6");
+    REQUIRE(*ifStatement->getEntityValue() == "7");
+    REQUIRE(*procedure->getEntityValue() == "procedure");
+    REQUIRE(*variable->getEntityValue() == "variable");
+    REQUIRE(*constant->getEntityValue() == "1");
 
     delete printStatement;
     delete readStatement;
@@ -99,13 +93,13 @@ TEST_CASE("Entities can be compared") {
     IfStatement *ifStatement2 = new IfStatement(7);
     IfStatement *ifStatement3 = new IfStatement(8);
 
-    Variable *variable = new Variable("variable");
-    Variable *variable2 = new Variable("variable");
-    Variable *variable3 = new Variable("variable2");
+    Variable *variable = new Variable(new std::string("variable"));
+    Variable *variable2 = new Variable(new std::string("variable"));
+    Variable *variable3 = new Variable(new std::string("variable2"));
 
-    Procedure *procedure = new Procedure("procedure");
-    Procedure *procedure2 = new Procedure("procedure");
-    Procedure *procedure3 = new Procedure("procedure2");
+    Procedure *procedure = new Procedure(new std::string("procedure"));
+    Procedure *procedure2 = new Procedure(new std::string("procedure"));
+    Procedure *procedure3 = new Procedure(new std::string("procedure2"));
 
     Constant *constant = new Constant(1);
     Constant *constant2 = new Constant(1);
@@ -120,7 +114,7 @@ TEST_CASE("Entities can be compared") {
     REQUIRE(procedure->equals(procedure));
     REQUIRE(variable->equals(variable));
     REQUIRE(constant->equals(constant));
-
+    printStatement->equals(printStatement2);
     REQUIRE(printStatement->equals(printStatement2));
     REQUIRE(readStatement->equals(readStatement2));
     REQUIRE(assignStatement->equals(assignStatement2));
@@ -160,4 +154,35 @@ TEST_CASE("Entities can be compared") {
     delete procedure;
     delete variable;
     delete constant;
+    delete printStatement2;
+    delete readStatement2;
+    delete assignStatement2;
+    delete callStatement2;
+    delete whileStatement2;
+    delete ifStatement2;
+    delete procedure2;
+    delete variable2;
+    delete constant2;
+    delete printStatement3;
+    delete readStatement3;
+    delete assignStatement3;
+    delete callStatement3;
+    delete whileStatement3;
+    delete ifStatement3;
+    delete procedure3;
+    delete variable3;
+    delete constant3;
+}
+
+TEST_CASE("Assign Statement stores post-fix expression") {
+    AssignStatement *assignStatement = new AssignStatement(4);
+    assignStatement->setPostfixExpression(new std::string("xy+"));
+    REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
+    delete assignStatement;
+}
+
+TEST_CASE("Assign Statement throws error if getting post-fix expression before setting") {
+    AssignStatement *assignStatement = new AssignStatement(4);
+    REQUIRE_THROWS(assignStatement->getPostFixExpression());
+    delete assignStatement;
 }

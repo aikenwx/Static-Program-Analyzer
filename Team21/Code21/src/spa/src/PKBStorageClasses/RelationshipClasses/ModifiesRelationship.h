@@ -7,12 +7,14 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Variable.h"
+#include <memory>
 
 class ModifiesRelationship : public Relationship {
 private:
     // Can be Statement or Procedure
-    Entity *modifier;
-    Variable *modifiedVariable;
+
+    Entity* modifier;
+    Variable* modifiedVariable;
 
 public:
     ModifiesRelationship(Entity *modifier, Variable *modifiedVariable);

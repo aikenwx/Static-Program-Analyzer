@@ -8,12 +8,13 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Variable.h"
+#include <memory>
 
 class UsesRelationship : public Relationship {
 private:
     // Can be Statement or Procedure
-    Entity *user;
-    Variable *usedVariable;
+    Entity* user;
+    Variable* usedVariable;
 
 public:
     UsesRelationship(Entity *user, Variable *usedVariable);

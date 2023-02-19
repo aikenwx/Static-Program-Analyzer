@@ -800,8 +800,4 @@ bool SimpleParser::Check() {
   }
   return false;
 }
-
-const std::string EndToken::getValue() {
-  return "$";
-}
 }

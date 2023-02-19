@@ -24,7 +24,8 @@ class SuchThatEvaluator : public ClauseEvaluator {
 
  private:
   bool Filter(::Relationship &relationship);
-
+  std::vector<EntityType> ResolveLeftTypes(Ref &left_arg);
+  std::vector<EntityType> ResolveRightTypes(Ref &right_arg);
   ClauseResult ConstructResult(const std::vector<::Relationship *> &);
   SuchThatClause clause_;
   std::vector<Declaration> declarations_;

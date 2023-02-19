@@ -8,11 +8,12 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Statement.h"
+#include <memory>
 
 class FollowsRelationship : public Relationship {
 private:
-    Statement *followedStatement;
-    Statement *followerStatement;
+    Statement* followedStatement;
+    Statement* followerStatement;
 
 public:
     FollowsRelationship(Statement *followedStatement, Statement *followerStatement);

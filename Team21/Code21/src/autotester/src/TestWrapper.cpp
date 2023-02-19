@@ -62,18 +62,18 @@ void TestWrapper::parse(std::string filename) {
   std::unique_ptr<ast::AST> ast = parser.Parse(tokens);
 
   // process AST to get elements
-  std::vector<rel::Relationship*> astElemRelationships =
+  std::vector<rel::Relationship *> astElemRelationships =
       design_extractor::Traverse(
           ast->GetRoot(), design_extractor::AstElemExtractor::GetInstance());
 
   // process AST to find relationships
-  std::vector<rel::Relationship*> followsRelationships =
+  std::vector<rel::Relationship *> followsRelationships =
       design_extractor::Traverse(
           ast->GetRoot(), design_extractor::FollowsExtractor::GetInstance());
-  std::vector<rel::Relationship*> parentRelationships =
+  std::vector<rel::Relationship *> parentRelationships =
       design_extractor::Traverse(
           ast->GetRoot(), design_extractor::ParentExtractor::GetInstance());
-  std::vector<rel::Relationship*> modifiesRelationships =
+  std::vector<rel::Relationship *> modifiesRelationships =
       design_extractor::Traverse(
           ast->GetRoot(),
           design_extractor::DirectlyModifiesExtractor::GetInstance());
@@ -83,77 +83,71 @@ void TestWrapper::parse(std::string filename) {
           design_extractor::DirectlyUsesExtractor::GetInstance());
 
   // put AST entities into PKB
-  PopulateFacade* PopFacade = pkb_->getPopulateFacade();
+  PopulateFacade *PopFacade = pkb_->getPopulateFacade();
   for (auto rel : astElemRelationships) {
     // pretty nasty, but it'll work for now
     if (util::instance_of<rel::PrintStmtRelationship>(rel)) {
       PopFacade->storePrintStatement(
-          static_cast<rel::PrintStmtRelationship*>(rel)->statementNumber());
+          static_cast<rel::PrintStmtRelationship *>(rel)->statementNumber());
     } else if (util::instance_of<rel::ReadStmtRelationship>(rel)) {
       PopFacade->storeReadStatement(
-          static_cast<rel::ReadStmtRelationship*>(rel)->statementNumber());
+          static_cast<rel::ReadStmtRelationship *>(rel)->statementNumber());
     } else if (util::instance_of<rel::ConstRelationship>(rel)) {
       PopFacade->storeConstant(
-          static_cast<rel::ConstRelationship*>(rel)->value());
+          static_cast<rel::ConstRelationship *>(rel)->value());
     } else if (util::instance_of<rel::ProcRelationship>(rel)) {
       PopFacade->storeProcedure(
-          static_cast<rel::ProcRelationship*>(rel)->procedureName());
+          static_cast<rel::ProcRelationship *>(rel)->procedureName());
     } else if (util::instance_of<rel::VarRelationship>(rel)) {
       PopFacade->storeVariable(
-          static_cast<rel::VarRelationship*>(rel)->variableName());
+          static_cast<rel::VarRelationship *>(rel)->variableName());
     }
   }
 
   // put relationships into PKB
-  for (auto& rel : followsRelationships) {
-    rel::FollowsStmtStmtRelationship* followsRel =
-        static_cast<rel::FollowsStmtStmtRelationship*>(rel);
-    PopFacade->storeFollowsRelationship(
-        followsRel->firstStatementNumber(), followsRel->firstEntityType(),
-        followsRel->secondStatementNumber(), followsRel->secondEntityType());
+  for (auto &rel : followsRelationships) {
+    rel::FollowsStmtStmtRelationship *followsRel =
+        static_cast<rel::FollowsStmtStmtRelationship *>(rel);
+    PopFacade->storeFollowsRelationship(followsRel->firstStatementNumber(), followsRel->secondStatementNumber());
   }
 
-  for (auto& rel : parentRelationships) {
-    rel::ParentStmtStmtRelationship* parentRel =
-        static_cast<rel::ParentStmtStmtRelationship*>(rel);
-    PopFacade->storeParentRelationship(
-        parentRel->firstStatementNumber(), parentRel->firstEntityType(),
-        parentRel->secondStatementNumber(), parentRel->secondEntityType());
+  for (auto &rel : parentRelationships) {
+    rel::ParentStmtStmtRelationship *parentRel =
+        static_cast<rel::ParentStmtStmtRelationship *>(rel);
+    PopFacade->storeParentRelationship(parentRel->firstStatementNumber(), parentRel->secondStatementNumber());
   }
 
-  for (auto& rel : modifiesRelationships) {
+  for (auto &rel : modifiesRelationships) {
     if (util::instance_of<rel::ModifiesProcVarRelationship>(rel)) {
-      rel::ModifiesProcVarRelationship* modifiesRel =
-          static_cast<rel::ModifiesProcVarRelationship*>(rel);
+      rel::ModifiesProcVarRelationship *modifiesRel =
+          static_cast<rel::ModifiesProcVarRelationship *>(rel);
       PopFacade->storeProcedureModifiesVariableRelationship(
           modifiesRel->procedureName(), modifiesRel->variableName());
     } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(rel)) {
-      rel::ModifiesStmtVarRelationship* modifiesRel =
-          static_cast<rel::ModifiesStmtVarRelationship*>(rel);
-      PopFacade->storeStatementModifiesVariableRelationship(
-          modifiesRel->statementNumber(), modifiesRel->entityType(),
-          modifiesRel->variableName());
+      rel::ModifiesStmtVarRelationship *modifiesRel =
+          static_cast<rel::ModifiesStmtVarRelationship *>(rel);
+      PopFacade->storeStatementModifiesVariableRelationship(modifiesRel->statementNumber(),
+                                                            modifiesRel->variableName());
     }
   }
 
-  for (auto& rel : usesRelationships) {
+  for (auto &rel : usesRelationships) {
     if (util::instance_of<rel::UsesProcVarRelationship>(rel)) {
       rel::UsesProcVarRelationship* usesRel =
           static_cast<rel::UsesProcVarRelationship*>(rel);
       PopFacade->storeProcedureUsesVariableRelationship(
           usesRel->procedureName(), usesRel->variableName());
     } else if (util::instance_of<rel::UsesStmtVarRelationship>(rel)) {
-      rel::UsesStmtVarRelationship* usesRel =
-          static_cast<rel::UsesStmtVarRelationship*>(rel);
-      PopFacade->storeStatementUsesVariableRelationship(
-          usesRel->statementNumber(), usesRel->entityType(),
-          usesRel->variableName());
+      rel::UsesStmtVarRelationship *usesRel =
+          static_cast<rel::UsesStmtVarRelationship *>(rel);
+      PopFacade->storeStatementUsesVariableRelationship(usesRel->statementNumber(),
+                                                        usesRel->variableName());
     }
   }
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   qps::QPS::evaluate(query, results, *pkb_->getQueryFacade());
   // call your evaluator to evaluate the query here
   // ...code to evaluate query...

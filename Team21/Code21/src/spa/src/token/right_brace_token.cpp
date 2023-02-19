@@ -5,12 +5,12 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> RightBraceToken::createToken(std::string str) {
+const std::unique_ptr<Token> RightBraceToken::CreateToken(std::string str) {
   assert(str == "}");
   return std::unique_ptr<RightBraceToken>(new RightBraceToken());
 };
 
 RightBraceToken::RightBraceToken(){};
 
-const std::string RightBraceToken::getValue() { return "}"; };
+const std::string RightBraceToken::GetValue() { return "}"; };
 }  // namespace token

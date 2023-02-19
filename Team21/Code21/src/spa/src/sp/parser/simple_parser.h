@@ -21,9 +21,4 @@ private:
   void Reject();
   bool Check();
 };
-
-class EndToken : public token::Token {
-public:
-  const std::string getValue() override;
-};
 }

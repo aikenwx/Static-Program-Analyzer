@@ -8,6 +8,7 @@
 #include "../token/and_token.h"
 #include "../token/assign_token.h"
 #include "../token/divide_token.h"
+#include "../token/end_token.h"
 #include "../token/equal_token.h"
 #include "../token/greater_equal_token.h"
 #include "../token/greater_than_token.h"
@@ -31,51 +32,53 @@
 #include "util/is_integer.h"
 
 namespace token_factory {
-std::unique_ptr<token::Token> SimpleTokenFactory::createToken(std::string value) {
+std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string value) {
   if (value == "{") {
-    return token::LeftBraceToken::createToken(value);
+    return token::LeftBraceToken::CreateToken(value);
   } else if (value == "}") {
-    return token::RightBraceToken::createToken(value);
+    return token::RightBraceToken::CreateToken(value);
   } else if (value == "(") {
-    return token::LeftParenToken::createToken(value);
+    return token::LeftParenToken::CreateToken(value);
   } else if (value == ")") {
-    return token::RightParenToken::createToken(value);
+    return token::RightParenToken::CreateToken(value);
   } else if (value == ";") {
-    return token::SemicolonToken::createToken(value);
+    return token::SemicolonToken::CreateToken(value);
   } else if (value == "+") {
-    return token::PlusToken::createToken(value);
+    return token::PlusToken::CreateToken(value);
   } else if (value == "-") {
-    return token::MinusToken::createToken(value);
+    return token::MinusToken::CreateToken(value);
   } else if (value == "*") {
-    return token::MultiplyToken::createToken(value);
+    return token::MultiplyToken::CreateToken(value);
   } else if (value == "/") {
-    return token::DivideToken::createToken(value);
+    return token::DivideToken::CreateToken(value);
   } else if (value == "%") {
-    return token::ModuloToken::createToken(value);
+    return token::ModuloToken::CreateToken(value);
   } else if (value == "==") {
-    return token::EqualToken::createToken(value);
+    return token::EqualToken::CreateToken(value);
   } else if (value == "!=") {
-    return token::NotEqualToken::createToken(value);
+    return token::NotEqualToken::CreateToken(value);
   } else if (value == "<") {
-    return token::LessThanToken::createToken(value);
+    return token::LessThanToken::CreateToken(value);
   } else if (value == "<=") {
-    return token::LessEqualToken::createToken(value);
+    return token::LessEqualToken::CreateToken(value);
   } else if (value == ">") {
-    return token::GreaterThanToken::createToken(value);
+    return token::GreaterThanToken::CreateToken(value);
   } else if (value == ">=") {
-    return token::GreaterEqualToken::createToken(value);
+    return token::GreaterEqualToken::CreateToken(value);
   } else if (value == "!") {
-    return token::NotToken::createToken(value);
+    return token::NotToken::CreateToken(value);
   } else if (value == "=") {
-    return token::AssignToken::createToken(value);
+    return token::AssignToken::CreateToken(value);
   } else if (value == "&&") {
-    return token::AndToken::createToken(value);
+    return token::AndToken::CreateToken(value);
   } else if (value == "||") {
-    return token::OrToken::createToken(value);
+    return token::OrToken::CreateToken(value);
+  } else if (value == "\0") {
+    return token::EndToken::CreateToken(value);
   } else if (util::is_integer(value)) {
-    return token::IntegerToken::createToken(value);
+    return token::IntegerToken::CreateToken(value);
   } else {
-    return token::IdentifierToken::createToken(value);
+    return token::IdentifierToken::CreateToken(value);
   }
 };
 

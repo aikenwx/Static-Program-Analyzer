@@ -9,7 +9,7 @@
 #include "integer_token.h"
 
 namespace token {
-const std::unique_ptr<Token> IntegerToken::createToken(std::string str) {
+const std::unique_ptr<Token> IntegerToken::CreateToken(std::string str) {
   assert(util::is_integer(str));  // invariant: length > 0, all digits
   if (str[0] == '0' && str.length() > 1) {
     throw exceptions::SyntaxError("Non-zero integer cannot start with 0");
@@ -19,5 +19,5 @@ const std::unique_ptr<Token> IntegerToken::createToken(std::string str) {
 
 IntegerToken::IntegerToken(std::string value) { this->value = value; }
 
-const std::string IntegerToken::getValue() { return this->value; }
+const std::string IntegerToken::GetValue() { return this->value; }
 }  // namespace token

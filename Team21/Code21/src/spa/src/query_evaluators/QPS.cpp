@@ -15,14 +15,14 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     QueryEvaluator evaluator(query);
 
     validator.validateQuery();
-    for (const auto &str : evaluator.evaluateQuery(pkb)) {
+    for (const auto &str : evaluator.EvaluateQuery(pkb)) {
       results.push_back(str);
     }
   } catch (qps::QueryException &e) {
     if (e.getType() == ErrorType::Syntactic) {
-        results.emplace_back("SyntaxError");
+      results.emplace_back("SyntaxError");
     } else {
-        results.emplace_back("SemanticError");
+      results.emplace_back("SemanticError");
     }
     return;
   }

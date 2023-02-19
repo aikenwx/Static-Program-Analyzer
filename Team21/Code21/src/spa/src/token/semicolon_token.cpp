@@ -5,7 +5,7 @@
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> SemicolonToken::createToken(
+const std::unique_ptr<Token> SemicolonToken::CreateToken(
     std::string str) {
   assert(str == ";");
   return std::unique_ptr<SemicolonToken>(new SemicolonToken());
@@ -13,5 +13,5 @@ const std::unique_ptr<Token> SemicolonToken::createToken(
 
 SemicolonToken::SemicolonToken(){};
 
-const std::string SemicolonToken::getValue() { return ";"; };
+const std::string SemicolonToken::GetValue() { return ";"; };
 }  // namespace token

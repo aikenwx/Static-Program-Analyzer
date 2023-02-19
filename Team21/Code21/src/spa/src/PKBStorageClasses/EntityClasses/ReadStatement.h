@@ -4,11 +4,10 @@
 #include "Statement.h"
 
 class ReadStatement : public Statement {
-public:
+   public:
     ReadStatement(int statementNumber);
 
     EntityType getEntityType() override;
 };
-
 
 #endif

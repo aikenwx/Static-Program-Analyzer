@@ -9,20 +9,11 @@ std::vector<::Relationship *> FollowsEvaluator::CallPkb(QueryFacade &pkb, Entity
 }
 
 std::vector<EntityType> FollowsEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return {EntityType::STATEMENT};
-  }
+  return {EntityType::STATEMENT};
 }
 
-// TODO: Refactor some repetition of code
 std::vector<EntityType> FollowsEvaluator::GetRightHandTypes(Ref &right_arg) {
-  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
-    return {FindEntityType(*syn)};
-  } else {
-    return {EntityType::STATEMENT};
-  }
+  return {EntityType::STATEMENT};
 }
 
 } // qps

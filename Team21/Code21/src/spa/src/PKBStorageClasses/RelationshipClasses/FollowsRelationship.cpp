@@ -3,6 +3,7 @@
 //
 
 #include "FollowsRelationship.h"
+#include <memory>
 
 bool FollowsRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->followedStatement->equals(entity);

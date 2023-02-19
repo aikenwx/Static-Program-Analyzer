@@ -8,6 +8,7 @@
 #include "../token/and_token.h"
 #include "../token/assign_token.h"
 #include "../token/divide_token.h"
+#include "../token/end_token.h"
 #include "../token/equal_token.h"
 #include "../token/greater_equal_token.h"
 #include "../token/greater_than_token.h"
@@ -72,6 +73,8 @@ std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string value)
     return token::AndToken::CreateToken(value);
   } else if (value == "||") {
     return token::OrToken::CreateToken(value);
+  } else if (value == "\0") {
+    return token::EndToken::CreateToken(value);
   } else if (util::is_integer(value)) {
     return token::IntegerToken::CreateToken(value);
   } else {

@@ -7,6 +7,7 @@ enum TokenType {
   AND,
   ASSIGN,
   DIVIDE,
+  END, // special token denoting end of input, used in parser
   EQUAL,
   GREATER_EQUAL,
   GREATER_THAN,

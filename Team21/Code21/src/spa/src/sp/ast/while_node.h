@@ -11,6 +11,7 @@ public:
   std::shared_ptr<INode> GetCondition();
   std::shared_ptr<StatementListNode> GetBody();;
   std::string ToString() const override;
+  int GetEndStatementNumber() override;
 
 private:
   std::shared_ptr<INode> condition;

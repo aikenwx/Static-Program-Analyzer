@@ -6,5 +6,6 @@ namespace ast {
 class ContainerStatementNode : public StatementNode {
 public:
   virtual std::string ToString() const override = 0;
+  virtual int GetEndStatementNumber() = 0;
 };
 }

@@ -1,20 +1,20 @@
 #include "statement_list_node.h"
 
 namespace ast {
-void StatementListNode::AddStatement(INode *node) {
+void StatementListNode::AddStatement(std::shared_ptr<INode> node) {
   statements.push_back(node);
 }
 
-std::vector<INode*>* StatementListNode::GetStatements() {
-  return &statements;
+std::vector<std::shared_ptr<INode>> StatementListNode::GetStatements() {
+  return statements;
 }
 
-std::ostream &StatementListNode::Write(std::ostream &out) const {
-  out << "stmtLst:" << "\n{";
+std::string StatementListNode::ToString() const {
+  std::string str = "stmtLst:\n{\n";
   for (auto i = statements.rbegin(); i < statements.rend(); i++) {
-    (*i)->Write(out);
+    str += (*i)->ToString();
   }
-  out << "}" << "\n";
-  return out;
+  str += "}\n";
+  return str;
 }
 }

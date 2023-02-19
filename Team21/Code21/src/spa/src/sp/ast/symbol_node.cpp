@@ -9,8 +9,8 @@ SymbolType SymbolNode::GetType() {
   return type;
 }
 
-std::ostream &SymbolNode::Write(std::ostream &out) const {
-  out << "Symbol" << "\n";
-  return out;
+std::string SymbolNode::ToString() const {
+  // TODO differentiate symbols
+  return "symbol:\n";
 }
 }

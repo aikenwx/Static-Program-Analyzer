@@ -2,20 +2,20 @@
 
 namespace ast {
 // Handles procedures like a stack LIFO
-void ProgramNode::AddProcedure(INode* procedure) {
+void ProgramNode::AddProcedure(std::shared_ptr<INode> procedure) {
   procedures.push_back(procedure);
 }
 
-std::vector<INode*> *ProgramNode::GetProcedures() {
-  return &procedures;
+std::vector<std::shared_ptr<INode>> ProgramNode::GetProcedures() {
+  return procedures;
 }
 
-std::ostream &ProgramNode::Write(std::ostream &out) const {
-  out << "program:" << "\n{";
+std::string ProgramNode::ToString() const {
+  std::string str = "program:\n{\n";
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
-    (*i)->Write(out);
+    str += (*i)->ToString();
   }
-  out << "}" << "\n";
-  return out;
+  str += "}\n";
+  return str;
 }
 }

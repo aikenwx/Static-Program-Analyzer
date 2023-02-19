@@ -10,13 +10,13 @@ class UsesStmtVarRelationship : public StmtVarRelationship {
   int statementNumber() override;
   EntityType entityType() override;
   std::string variableName() override;
-  static UsesStmtVarRelationship* CreateRelationship(
-      ast::StatementNode* statementNode, std::string variableName);
+  static std::unique_ptr<UsesStmtVarRelationship> CreateRelationship(
+      std::shared_ptr<ast::StatementNode> statementNode, std::string variableName);
 
  private:
-  UsesStmtVarRelationship(ast::StatementNode* statementNode,
+  UsesStmtVarRelationship(std::shared_ptr<ast::StatementNode> statementNode,
                           std::string variableName);
-  ast::StatementNode* statementNode_;
+  std::shared_ptr<ast::StatementNode> statementNode_;
   std::string variableName_;
 };
 }  // namespace rel

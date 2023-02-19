@@ -1,18 +1,15 @@
 #include "procedure_node.h"
 
 namespace ast {
-ProcedureNode::ProcedureNode(std::string name, StatementListNode *statements) : NamedNode(name) {
+ProcedureNode::ProcedureNode(std::string name, std::shared_ptr<StatementListNode> statements) : NamedNode(name) {
   this->statements = statements;
 }
 
-StatementListNode *ProcedureNode::GetStatements() {
+std::shared_ptr<StatementListNode> ProcedureNode::GetStatements() {
   return statements;
 }
 
-std::ostream &ProcedureNode::Write(std::ostream &out) const {
-  out << "procedure:" << name << "\n{";
-  statements->Write(out);
-  out << "}" << "\n";
-  return out;
+std::string ProcedureNode::ToString() const {
+  return "procedure:\n{\n" + statements->ToString() + "}\n";
 }
 }

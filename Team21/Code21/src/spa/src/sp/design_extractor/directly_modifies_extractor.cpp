@@ -6,10 +6,10 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship*>>
-DirectlyModifiesExtractor::HandleReadNode(std::vector<ast::INode*> parents,
-                                          ast::ReadNode* node) {
-  std::vector<rel::Relationship*> relationships;
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
+DirectlyModifiesExtractor::HandleReadNode(std::vector<std::shared_ptr<ast::INode>> parents,
+                                          std::shared_ptr<ast::ReadNode> node) {
+  std::vector<std::unique_ptr<rel::Relationship>> relationships;
 
   relationships.push_back(rel::ModifiesStmtVarRelationship::CreateRelationship(
       node, node->GetVariable()->GetName()));
@@ -18,21 +18,12 @@ DirectlyModifiesExtractor::HandleReadNode(std::vector<ast::INode*> parents,
     if (util::instance_of<ast::ProcedureNode>(*it)) {
       relationships.push_back(
           rel::ModifiesProcVarRelationship::CreateRelationship(
-              static_cast<ast::ProcedureNode*>(*it)->GetName(),
+              std::static_pointer_cast<ast::ProcedureNode>(*it)->GetName(),
               node->GetVariable()->GetName()));
       break; // no nested procedures
     }
     // no container statements (if, while) yet
   }
   return relationships;
-}
-
-DirectlyModifiesExtractor* DirectlyModifiesExtractor::instance_ = nullptr;
-
-DirectlyModifiesExtractor* DirectlyModifiesExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new DirectlyModifiesExtractor();
-  }
-  return instance_;
 }
 }  // namespace design_extractor

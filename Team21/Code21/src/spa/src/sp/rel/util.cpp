@@ -5,7 +5,7 @@
 #include "util/instance_of.h"
 
 namespace rel {
-EntityType resolveEntityType(ast::StatementNode* statementNode) {
+EntityType resolveEntityType(std::shared_ptr<ast::StatementNode> statementNode) {
   if (util::instance_of<ast::PrintNode>(statementNode)) {
     return EntityType::PRINT_STATEMENT;
   } else if (util::instance_of<ast::ReadNode>(statementNode)) {

@@ -7,26 +7,27 @@ namespace qps {
 PatternEvaluator::PatternEvaluator(PatternClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-ClauseResult PatternEvaluator::Evaluate(QueryFacade &pkb) {
-  std::vector<Entity *> filtered_statements;
-  auto res = CallPkb(pkb);
-  for (auto statements : res) {
-    filtered_statements.push_back(statements);
-  }
-  return qps::PatternEvaluator::ConstructResult(filtered_statements);
+ClauseEvaluator::ClauseResult PatternEvaluator::Evaluate(QueryFacade &pkb) {
+  return qps::PatternEvaluator::ConstructResult(CallPkb(pkb));
 }
 
-ClauseResult PatternEvaluator::ConstructResult(const std::vector<Entity *> &statements) {
-  ClauseResult result;
+ClauseEvaluator::ClauseResult PatternEvaluator::ConstructResult(const std::vector<Relationship *> &statements) {
+  std::vector<Synonym> syns;
+  syns.push_back(clause_.getAssign());
+
+  bool lhs_syn = false;
   Ref ref = clause_.getArg1();
   if (Synonym *syn = std::get_if<Synonym>(&ref)) {
-    result.AddSynonym(*syn, 0);
+    syns.push_back(*syn);
+    lhs_syn = true;
   }
 
+  SynonymTable table(syns);
   for (auto ans : statements) {
-    auto res = {ans->getEntityValue()};
-    result.AddResult({res});
+    SynonymTable::Row row = {*ans->getLeftHandEntity()->getEntityValue()};
+    if (lhs_syn) row.push_back(*ans->getRightHandEntity()->getEntityValue());
+    table.AddRow(row);
   }
-  return result;
+  return table;
 }
 } // qps

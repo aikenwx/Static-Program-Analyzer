@@ -37,6 +37,12 @@ class PopulatePKBHelper {
     AddProcedures(data[qps::DesignEntity::PROCEDURE]);
   }
 
+  void AddPostFixExpressions(const std::vector<std::pair<int, std::string>> &assignments) {
+    for (const auto &[stmt, postfix] : assignments) {
+      pkb_->getPopulateFacade()->storeAssignStatementPostfixExpression(stmt, postfix);
+    }
+  }
+
   void AddStatementModifies(const std::vector<std::pair<int, std::string>> &modifies) {
     for (const auto &[stmt, var_name] : modifies) {
       pkb_->getPopulateFacade()->storeStatementModifiesVariableRelationship(stmt, var_name);

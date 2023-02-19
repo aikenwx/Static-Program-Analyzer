@@ -65,7 +65,7 @@ std::string AssignExpToPostfixExp(std::shared_ptr<ast::INode> node) {
   std::string postfixExp = "";
 
   while (!postfixExpStack.empty()) {
-    postfixExp += postfixExpStack.top() + " ";
+    postfixExp += (postfixExpStack.top() + " ");
     postfixExpStack.pop();
   }
 

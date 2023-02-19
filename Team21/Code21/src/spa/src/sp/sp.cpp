@@ -40,6 +40,15 @@ bool SP::process(std::string program, PKB* pkb) {
   parser::SimpleParser parser = parser::SimpleParser();
   std::unique_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
 
+  if (!util::instance_of<ast::ProgramNode>(ast->GetRoot())) {
+    throw std::runtime_error("AST root is not a ProgramNode");
+  }
+
+  std::shared_ptr<ast::ProgramNode> programNode =
+      std::static_pointer_cast<ast::ProgramNode>(ast->GetRoot());
+
+  int totalStatementCount = programNode->GetTotalStatementCount();
+
   // process AST to get elements
   std::vector<std::unique_ptr<rel::Relationship>> astElemRelationships =
       design_extractor::Traverse(
@@ -72,17 +81,17 @@ bool SP::process(std::string program, PKB* pkb) {
 
   // postprocess relationships
   // optimization?: use vecs of ints because we're told that we won't have more
-  // than 500 stmts also, add an extra 10% just in case
+  // than 500 stmts
 
   // followsRels[secondStmtNum] = firstStmtNum (or 0 if it doesn't have a
   // preceding stmt)
   std::vector<int> followsRels;
-  followsRels.reserve(550);
+  followsRels.resize(totalStatementCount + 1);
 
   // parentRels[childStmtNum] = parentStmtNum (or 0 if it doesn't have a parent
   // stmt)
   std::vector<int> parentRels;
-  parentRels.reserve(550);
+  parentRels.resize(totalStatementCount + 1);
 
   // procedureByName[procName] = ProcedureNode
   std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
@@ -95,7 +104,7 @@ bool SP::process(std::string program, PKB* pkb) {
   //
   // TODO: consider using an interval/range tree
   std::vector<std::string> procedureRels;
-  procedureRels.reserve(550);
+  procedureRels.resize(totalStatementCount + 1);
 
   // calledBy[calledProcNode] = std::vec<ProcedureNode> that call calledProcNode
   // it's kinda icky, but...
@@ -125,10 +134,7 @@ bool SP::process(std::string program, PKB* pkb) {
       procedureByName[procName] = procNode;
 
       int startStmtNum = procNode->GetStartStatementNumber();
-      int endStmtNum = procNode->GetEndStatementNumber();\
-      if (procedureRels.size() <= endStmtNum) {
-        procedureRels.resize(endStmtNum + 1);
-      }
+      int endStmtNum = procNode->GetEndStatementNumber();
       for (int i = startStmtNum; i <= endStmtNum; i++) {
         procedureRels[i] = procName;
       }

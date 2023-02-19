@@ -23,6 +23,7 @@ namespace qps {
 	}
 
 	bool SyntacticValidator::isValidFactor(std::string str) {
+		str.erase(remove_if(str.begin(), str.end(), isspace), str.end());
 		if (isFactorValidInteger(str)) {
 			return true;
 		} else if (std::regex_match(str, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"))) {

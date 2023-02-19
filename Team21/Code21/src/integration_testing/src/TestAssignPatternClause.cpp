@@ -43,6 +43,7 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
       expected = { "1", "3", "4" };
       REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_, _\" 2\"_)", *pkb_querier) == expected);
       REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_, _\" 2         \"_)", *pkb_querier) == expected);
+      REQUIRE(qps_test::RunQuery("assign   a   ;   Select    a       pattern   a   ( _   , _\" 2         \"_)", *pkb_querier) == expected);
 
   }
 

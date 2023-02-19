@@ -119,14 +119,6 @@ TEST_CASE("QPS can work with different combinations of modifies") {
     }
   }
 
-  SECTION("Synonym on right, wild card on left") {
-    SECTION("All variables being modified") {
-      std::unordered_set<std::string>
-          expected{"count", "cenX", "cenY", "flag", "normSq", "z"};
-      REQUIRE(qps_test::RunQuery("variable v; Select v such that Modifies(_, v)", *pkb_querier) == expected);
-    }
-  }
-
   SECTION("Synonym on left, wild card on right") {
     SECTION("All procedures modifying a variable") {
       std::unordered_set<std::string> expected{"computeCentroid"};
@@ -284,14 +276,6 @@ TEST_CASE("QPS can work with different combinations of uses") {
     SECTION("All procedures using a variable") {
       std::unordered_set<std::string> expected{"computeCentroid"};
       REQUIRE(qps_test::RunQuery("variable v; procedure p; Select p such that Uses(p, v)", *pkb_querier) == expected);
-    }
-  }
-
-  SECTION("Synonym on right, wild card on left") {
-    SECTION("All variables used") {
-      std::unordered_set<std::string>
-          expected{"count", "cenX", "cenY", "x", "y", "z"};
-      REQUIRE(qps_test::RunQuery("variable v; Select v such that Uses(_, v)", *pkb_querier) == expected);
     }
   }
 

@@ -38,10 +38,9 @@ std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb)
   auto final_table =
       tables_.empty() ? std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)) : ConstraintsSolver::solve(tables_);
   if (final_table.Empty() || !final_table.HasSynonym(target)) {
-    return {};
-  } else {
-    return final_table.Extract(target);
+    final_table = std::get<SynonymTable>(select_evalautor_->Evaluate(pkb));
   }
+  return final_table.Extract(target);
 }
 
 std::unordered_set<std::string> QueryEvaluator::EvaluateQuery(QueryFacade &pkb) {

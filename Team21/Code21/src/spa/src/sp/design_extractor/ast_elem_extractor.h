@@ -5,9 +5,16 @@
 namespace design_extractor {
 class AstElemExtractor : public Extractor {
  public:
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleBinaryOperationNode(
-      std::vector<std::shared_ptr<ast::INode>> parents,
-      std::shared_ptr<ast::BinaryOperationNode> node) override {
+  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleAssignNode(
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::AssignNode> node) override;
+  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleCallNode(
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::CallNode> node) override;
+  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleIfNode(
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::IfNode> node) override;
+  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleWhileNode(
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> node) override;
+  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleContainerStatementNode(
+      std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ContainerStatementNode> node) {
     return std::nullopt;
   };
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleConstantNode(

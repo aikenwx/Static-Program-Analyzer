@@ -16,7 +16,7 @@ bool CheckRootIsNodeType(std::string input) {
   std::vector<std::unique_ptr<token::Token>> tokens =
     tokenizer.tokenize(input);
   std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
-  std::cout << root->ToString() << std::endl;
+  //std::cout << root->ToString() << std::endl;
   return util::instance_of<T>(root);
 }
 

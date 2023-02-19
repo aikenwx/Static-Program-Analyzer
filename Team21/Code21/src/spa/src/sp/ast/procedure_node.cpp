@@ -12,4 +12,12 @@ std::shared_ptr<StatementListNode> ProcedureNode::GetStatements() {
 std::string ProcedureNode::ToString() const {
   return "procedure:\n{\n" + statements->ToString() + "}\n";
 }
+
+int ProcedureNode::GetStartStatementNumber() {
+  return statements->GetStartStatementNumber();
+}
+
+int ProcedureNode::GetEndStatementNumber() {
+  return statements->GetEndStatementNumber();
+}
 }

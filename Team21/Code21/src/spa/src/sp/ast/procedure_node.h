@@ -14,6 +14,8 @@ public:
   // Format is a stack
   std::shared_ptr<StatementListNode> GetStatements();
   std::string ToString() const override;
+  int GetStartStatementNumber();
+  int GetEndStatementNumber();
 
 private:
   // Creates some coupling with statement list node

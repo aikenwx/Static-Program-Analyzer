@@ -37,6 +37,16 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
 
   }
 
+  SECTION("Check if it allows Whitespaces (including multiple spaces, tabs, or no spaces)") {
+      std::unordered_set<std::string> expected{ "1", "2", "4" };
+      REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_,     _     \"1 \"_)", *pkb_querier) == expected);
+      expected = { "1", "3", "4" };
+      REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_, _\" 2\"_)", *pkb_querier) == expected);
+      REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_, _\" 2         \"_)", *pkb_querier) == expected);
+      REQUIRE(qps_test::RunQuery("assign   a   ;   Select    a       pattern   a   ( _   , _\" 2         \"_)", *pkb_querier) == expected);
+
+  }
+
   SECTION("Can do partial match for a single variable name") {
     std::unordered_set<std::string> expected{"2", "4"};
     REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(_, _\"count\"_)", *pkb_querier) == expected);

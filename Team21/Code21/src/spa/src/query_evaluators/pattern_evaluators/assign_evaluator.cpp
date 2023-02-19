@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <cctype>
+#include <algorithm>
 
 namespace qps {
 std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
@@ -47,11 +48,13 @@ int AssignEvaluator::postfixHelper(char a) {
 std::string AssignEvaluator::makePostfix(std::string s) {
   std::stack<char> stck;
   std::string postfixed;
-
+  s.erase(remove_if(s.begin(), s.end(), isspace), s.end());
   int i = 0;
   int last = s.length() - 1;
   while (i < s.length()) {
-    if (isalpha(s[i])) {
+    if (s[i] == ' ') {
+        i++;
+    } else if (isalpha(s[i])) {
       postfixed += "\"";
       postfixed += s[i];
       i++;
@@ -91,7 +94,7 @@ std::string AssignEvaluator::makePostfix(std::string s) {
       if (s[i + 1] == ')') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. operator is followed by )");
       }
-      while ((postfixHelper(s[i]) <= postfixHelper(stck.top())) && !stck.empty()) {
+      while (!stck.empty() && (postfixHelper(s[i]) <= postfixHelper(stck.top()))) {
         postfixed += stck.top();
         stck.pop();
       }

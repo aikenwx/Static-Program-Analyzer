@@ -42,11 +42,6 @@ class ParentExtractor : public Extractor {
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> node) override {
     return std::nullopt;
   };
-  static ParentExtractor* GetInstance();
-  void operator=(const ParentExtractor&) = delete;
-
- private:
   ParentExtractor() = default;
-  static ParentExtractor* instance_;
 };
 }  // namespace design_extractor

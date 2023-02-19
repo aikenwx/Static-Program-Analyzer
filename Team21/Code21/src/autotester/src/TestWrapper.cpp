@@ -27,6 +27,7 @@
 #include "token/token.h"
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
+#include "util/unique_ptr_cast.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
@@ -59,63 +60,63 @@ void TestWrapper::parse(std::string filename) {
 
   // parse tokens into AST
   parser::SimpleParser parser = parser::SimpleParser();
-  std::unique_ptr<ast::AST> ast = parser.Parse(tokens);
+  std::unique_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
 
   // process AST to get elements
-  std::vector<rel::Relationship*> astElemRelationships =
+  std::vector<std::unique_ptr<rel::Relationship>> astElemRelationships =
       design_extractor::Traverse(
-          ast->GetRoot(), design_extractor::AstElemExtractor::GetInstance());
+          ast->GetRoot(), std::make_shared<design_extractor::AstElemExtractor>());
 
   // process AST to find relationships
-  std::vector<rel::Relationship*> followsRelationships =
+  std::vector<std::unique_ptr<rel::Relationship>> followsRelationships =
       design_extractor::Traverse(
-          ast->GetRoot(), design_extractor::FollowsExtractor::GetInstance());
-  std::vector<rel::Relationship*> parentRelationships =
+          ast->GetRoot(), std::make_shared<design_extractor::FollowsExtractor>());
+  std::vector<std::unique_ptr<rel::Relationship>> parentRelationships =
       design_extractor::Traverse(
-          ast->GetRoot(), design_extractor::ParentExtractor::GetInstance());
-  std::vector<rel::Relationship*> modifiesRelationships =
-      design_extractor::Traverse(
-          ast->GetRoot(),
-          design_extractor::DirectlyModifiesExtractor::GetInstance());
-  std::vector<rel::Relationship*> usesRelationships =
+          ast->GetRoot(), std::make_shared<design_extractor::ParentExtractor>());
+  std::vector<std::unique_ptr<rel::Relationship>> modifiesRelationships =
       design_extractor::Traverse(
           ast->GetRoot(),
-          design_extractor::DirectlyUsesExtractor::GetInstance());
+          std::make_shared<design_extractor::DirectlyModifiesExtractor>());
+  std::vector<std::unique_ptr<rel::Relationship>> usesRelationships =
+      design_extractor::Traverse(
+          ast->GetRoot(),
+          std::make_shared<design_extractor::DirectlyUsesExtractor>());
 
   // put AST entities into PKB
   PopulateFacade* PopFacade = pkb_->getPopulateFacade();
-  for (auto rel : astElemRelationships) {
+  for (auto&& rel : astElemRelationships) {
     // pretty nasty, but it'll work for now
     if (util::instance_of<rel::PrintStmtRelationship>(rel)) {
       PopFacade->storePrintStatement(
-          static_cast<rel::PrintStmtRelationship*>(rel)->statementNumber());
+          std::static_pointer_cast<rel::PrintStmtRelationship>(std::move(rel))->statementNumber());
     } else if (util::instance_of<rel::ReadStmtRelationship>(rel)) {
       PopFacade->storeReadStatement(
-          static_cast<rel::ReadStmtRelationship*>(rel)->statementNumber());
+          std::static_pointer_cast<rel::ReadStmtRelationship>(std::move(rel))->statementNumber());
     } else if (util::instance_of<rel::ConstRelationship>(rel)) {
       PopFacade->storeConstant(
-          static_cast<rel::ConstRelationship*>(rel)->value());
+          std::static_pointer_cast<rel::ConstRelationship>(std::move(rel))->value());
     } else if (util::instance_of<rel::ProcRelationship>(rel)) {
       PopFacade->storeProcedure(
-          static_cast<rel::ProcRelationship*>(rel)->procedureName());
+          std::static_pointer_cast<rel::ProcRelationship>(std::move(rel))->procedureName());
     } else if (util::instance_of<rel::VarRelationship>(rel)) {
       PopFacade->storeVariable(
-          static_cast<rel::VarRelationship*>(rel)->variableName());
+          std::static_pointer_cast<rel::VarRelationship>(std::move(rel))->variableName());
     }
   }
 
   // put relationships into PKB
   for (auto& rel : followsRelationships) {
-    rel::FollowsStmtStmtRelationship* followsRel =
-        static_cast<rel::FollowsStmtStmtRelationship*>(rel);
+    std::unique_ptr<rel::FollowsStmtStmtRelationship> followsRel =
+        std::static_pointer_cast<rel::FollowsStmtStmtRelationship>(std::move(rel));
     PopFacade->storeFollowsRelationship(
         followsRel->firstStatementNumber(), followsRel->firstEntityType(),
         followsRel->secondStatementNumber(), followsRel->secondEntityType());
   }
 
   for (auto& rel : parentRelationships) {
-    rel::ParentStmtStmtRelationship* parentRel =
-        static_cast<rel::ParentStmtStmtRelationship*>(rel);
+    std::unique_ptr<rel::ParentStmtStmtRelationship> parentRel =
+        std::static_pointer_cast<rel::ParentStmtStmtRelationship>(std::move(rel));
     PopFacade->storeParentRelationship(
         parentRel->firstStatementNumber(), parentRel->firstEntityType(),
         parentRel->secondStatementNumber(), parentRel->secondEntityType());
@@ -123,13 +124,13 @@ void TestWrapper::parse(std::string filename) {
 
   for (auto& rel : modifiesRelationships) {
     if (util::instance_of<rel::ModifiesProcVarRelationship>(rel)) {
-      rel::ModifiesProcVarRelationship* modifiesRel =
-          static_cast<rel::ModifiesProcVarRelationship*>(rel);
+      std::unique_ptr<rel::ModifiesProcVarRelationship> modifiesRel =
+          std::static_pointer_cast<rel::ModifiesProcVarRelationship>(std::move(rel));
       PopFacade->storeProcedureModifiesVariableRelationship(
           modifiesRel->procedureName(), modifiesRel->variableName());
     } else if (util::instance_of<rel::ModifiesStmtVarRelationship>(rel)) {
-      rel::ModifiesStmtVarRelationship* modifiesRel =
-          static_cast<rel::ModifiesStmtVarRelationship*>(rel);
+      std::unique_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
+          std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementModifiesVariableRelationship(
           modifiesRel->statementNumber(), modifiesRel->entityType(),
           modifiesRel->variableName());
@@ -138,13 +139,13 @@ void TestWrapper::parse(std::string filename) {
 
   for (auto& rel : usesRelationships) {
     if (util::instance_of<rel::UsesProcVarRelationship>(rel)) {
-      rel::UsesProcVarRelationship* usesRel =
-          static_cast<rel::UsesProcVarRelationship*>(rel);
+      std::unique_ptr<rel::UsesProcVarRelationship> usesRel =
+          std::static_pointer_cast<rel::UsesProcVarRelationship>(std::move(rel));
       PopFacade->storeProcedureUsesVariableRelationship(
           usesRel->procedureName(), usesRel->variableName());
     } else if (util::instance_of<rel::UsesStmtVarRelationship>(rel)) {
-      rel::UsesStmtVarRelationship* usesRel =
-          static_cast<rel::UsesStmtVarRelationship*>(rel);
+      std::unique_ptr<rel::UsesStmtVarRelationship> usesRel =
+          std::static_pointer_cast<rel::UsesStmtVarRelationship>(std::move(rel));
       PopFacade->storeStatementUsesVariableRelationship(
           usesRel->statementNumber(), usesRel->entityType(),
           usesRel->variableName());

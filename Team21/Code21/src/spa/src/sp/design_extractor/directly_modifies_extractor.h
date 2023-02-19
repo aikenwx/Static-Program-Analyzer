@@ -48,11 +48,6 @@ class DirectlyModifiesExtractor : public Extractor {
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> node) override {
     return std::nullopt;
   };
-  static DirectlyModifiesExtractor* GetInstance();
-  void operator=(const DirectlyModifiesExtractor&) = delete;
-
- private:
   DirectlyModifiesExtractor() = default;
-  static DirectlyModifiesExtractor* instance_;
 };
 }  // namespace design_extractor

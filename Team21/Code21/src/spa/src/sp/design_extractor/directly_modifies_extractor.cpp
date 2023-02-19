@@ -26,13 +26,4 @@ DirectlyModifiesExtractor::HandleReadNode(std::vector<std::shared_ptr<ast::INode
   }
   return relationships;
 }
-
-DirectlyModifiesExtractor* DirectlyModifiesExtractor::instance_ = nullptr;
-
-DirectlyModifiesExtractor* DirectlyModifiesExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new DirectlyModifiesExtractor();
-  }
-  return instance_;
-}
 }  // namespace design_extractor

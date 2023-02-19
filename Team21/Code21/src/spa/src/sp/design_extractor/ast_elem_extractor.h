@@ -32,11 +32,6 @@ class AstElemExtractor : public Extractor {
   };
   std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleVariableNode(
       std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> node) override;
-  static AstElemExtractor* GetInstance();
-  void operator=(const AstElemExtractor&) = delete;
-
- private:
   AstElemExtractor() = default;
-  static AstElemExtractor* instance_;
 };
 }  // namespace design_extractor

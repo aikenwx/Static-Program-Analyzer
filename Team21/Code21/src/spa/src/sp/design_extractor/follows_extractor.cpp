@@ -30,13 +30,4 @@ FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode
 
   return relationships;
 }
-
-FollowsExtractor* FollowsExtractor::instance_ = nullptr;
-
-FollowsExtractor* FollowsExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new FollowsExtractor();
-  }
-  return instance_;
-}
 }  // namespace design_extractor

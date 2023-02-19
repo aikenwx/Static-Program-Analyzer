@@ -23,7 +23,7 @@ class QueryParser {
 		std::string next();
 		bool isEnd();
 
-		bool isTokenAllDigits(std::string str);
+		bool isTokenValidInteger(std::string str);
 		bool isSameToken(std::string str);
 		bool assertNextToken(std::string str);
 

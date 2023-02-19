@@ -19,14 +19,17 @@ namespace qps {
 		//checks that all synonyms in clauses are from declarations
 		void checkIfSynonymContainedInDeclaration();
 
+		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
+
 		//check that the pattern clause has a syn-assign that is a pattern declaration
 		void checkPatternClauseSynAssign();
 
 		//checks that no wild card as first argument for modifies and uses
 		void checkNoWildCardFirstArgModifiesUses();
 
-		//checks that synonyms delcared in such that clause for relationships(e.g. parent) have the correct design entity types for that relation
+		//checks that synonyms declared in such that clause for relationships(e.g. parent) have the correct design entity types for that relation
 		void checkRelationSynonymMatchDesignEntity();
 
+		void checkSynonymStatementHelper(DesignEntity d, std::string relStr);
 	};
 }

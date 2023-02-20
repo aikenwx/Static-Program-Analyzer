@@ -35,9 +35,14 @@ void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
 
 std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb) {
   auto target = query_.getSelectClause().getSynonym();
-  auto final_table =
-      tables_.empty() ? std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)) : ConstraintsSolver::solve(tables_);
-  if (final_table.Empty() || !final_table.HasSynonym(target)) {
+  if (tables_.empty()) {
+    return std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)).Extract(target);
+  }
+  auto final_table = ConstraintsSolver::solve(tables_);
+  if (final_table.Empty()) {
+    return {};
+  }
+  if (!final_table.HasSynonym(target)) {
     final_table = std::get<SynonymTable>(select_evalautor_->Evaluate(pkb));
   }
   return final_table.Extract(target);

@@ -43,6 +43,10 @@ ClauseEvaluator::ClauseResult SuchThatEvaluator::ConstructResult(const std::vect
     syns.push_back(*syn);
   }
 
+  if (left_syn && right_syn && syns[0] == syns[1]) {
+    return false;
+  }
+
   if (!left_syn && !right_syn) return !relationships.empty();
 
   SynonymTable result(syns);

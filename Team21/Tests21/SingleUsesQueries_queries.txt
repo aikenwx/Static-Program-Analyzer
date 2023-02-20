@@ -11,7 +11,7 @@ x, z, y
 3 - 2 syns: select variables used by read
 variable v; read r;
 Select v such that Uses(r, v)
-None
+none
 5000
 4 - 2 syns: select variables used by while
 variable v; while w;

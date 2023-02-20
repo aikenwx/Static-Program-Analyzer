@@ -335,7 +335,13 @@ bool SimpleParser::Reduce() {
     || util::instance_of<token::MinusToken>(*lookahead)
     || util::instance_of<token::MultiplyToken>(*lookahead)
     || util::instance_of<token::DivideToken>(*lookahead)
-    || util::instance_of<token::ModuloToken>(*lookahead)) {
+    || util::instance_of<token::ModuloToken>(*lookahead)
+    || util::instance_of<token::LessThanToken>(*lookahead)
+    || util::instance_of<token::GreaterThanToken>(*lookahead)
+    || util::instance_of<token::EqualToken>(*lookahead)
+    || util::instance_of<token::LessEqualToken>(*lookahead)
+    || util::instance_of<token::GreaterEqualToken>(*lookahead)
+    || util::instance_of<token::NotEqualToken>(*lookahead)) {
     if (util::instance_of<ast::VariableNode>(*i)) {
       // F <- V
       std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack.back());
@@ -371,7 +377,13 @@ bool SimpleParser::Reduce() {
     || util::instance_of<token::MinusToken>(*lookahead)
     || util::instance_of<token::MultiplyToken>(*lookahead)
     || util::instance_of<token::DivideToken>(*lookahead)
-    || util::instance_of<token::ModuloToken>(*lookahead)) {
+    || util::instance_of<token::ModuloToken>(*lookahead)
+    || util::instance_of<token::LessThanToken>(*lookahead)
+    || util::instance_of<token::GreaterThanToken>(*lookahead)
+    || util::instance_of<token::EqualToken>(*lookahead)
+    || util::instance_of<token::LessEqualToken>(*lookahead)
+    || util::instance_of<token::GreaterEqualToken>(*lookahead)
+    || util::instance_of<token::NotEqualToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMultiply
@@ -427,7 +439,13 @@ bool SimpleParser::Reduce() {
   if (util::instance_of<token::RightParenToken>(*lookahead)
     || util::instance_of<token::SemicolonToken>(*lookahead)
     || util::instance_of<token::PlusToken>(*lookahead)
-    || util::instance_of<token::MinusToken>(*lookahead)) {
+    || util::instance_of<token::MinusToken>(*lookahead)
+    || util::instance_of<token::LessThanToken>(*lookahead)
+    || util::instance_of<token::GreaterThanToken>(*lookahead)
+    || util::instance_of<token::EqualToken>(*lookahead)
+    || util::instance_of<token::LessEqualToken>(*lookahead)
+    || util::instance_of<token::GreaterEqualToken>(*lookahead)
+    || util::instance_of<token::NotEqualToken>(*lookahead)) {
     if (stack.size() >= 3
       && util::instance_of<ast::TermNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kPlus

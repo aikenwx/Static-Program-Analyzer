@@ -10,11 +10,11 @@ procedure program1 {
     } else {
       count = 2;
     }
-    
+
     while(count < 10) {
        count = 11;
     }
-	
+
     while (x != 1000) {
         x = x+y%20;
 	  z = z/6-x*2;

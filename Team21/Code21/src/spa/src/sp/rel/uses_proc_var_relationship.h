@@ -7,10 +7,11 @@
 namespace rel {
 class UsesProcVarRelationship : public ProcVarRelationship {
  public:
+  static std::unique_ptr<UsesProcVarRelationship> CreateRelationship(
+      std::string procedureName, std::string variableName);
   std::string procedureName() override;
   std::string variableName() override;
-  static UsesProcVarRelationship* CreateRelationship(
-      std::string procedureName, std::string variableName);
+  RelationshipType relationshipType() override { return RelationshipType::USES_PROC_VAR; };
 
  private:
   UsesProcVarRelationship(std::string procedureName, std::string variableName);

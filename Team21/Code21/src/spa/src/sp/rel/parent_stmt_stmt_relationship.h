@@ -7,18 +7,17 @@
 namespace rel {
 class ParentStmtStmtRelationship : public StmtStmtRelationship {
  public:
+  static std::unique_ptr<ParentStmtStmtRelationship> CreateRelationship(
+      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement);
   int firstStatementNumber() override;
   int secondStatementNumber() override;
-  EntityType firstEntityType() override;
-  EntityType secondEntityType() override;
-  static ParentStmtStmtRelationship* CreateRelationship(
-      ast::StatementNode* firstStatement, ast::StatementNode* secondStatement);
+  RelationshipType relationshipType() override { return RelationshipType::PARENT_STMT_STMT; };
 
  private:
   ParentStmtStmtRelationship(
-      ast::StatementNode* firstStatement, ast::StatementNode* secondStatement
+      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement
   );
-  ast::StatementNode* firstStatementNode_;
-  ast::StatementNode* secondStatementNode_;
+  std::shared_ptr<ast::StatementNode> firstStatementNode_;
+  std::shared_ptr<ast::StatementNode> secondStatementNode_;
 };
 }  // namespace rel

@@ -1,19 +1,24 @@
 #pragma once
+
+#include <memory>
 #include <string>
+
 #include "named_node.h"
 #include "statement_list_node.h"
 
 namespace ast {
 class ProcedureNode : public NamedNode {
 public:
-  ProcedureNode(std::string name, StatementListNode *statements);
+  ProcedureNode(std::string name, std::shared_ptr<StatementListNode> statements);
 
   // Format is a stack
-  StatementListNode *GetStatements();
-  std::ostream &Write(std::ostream &out) const override;
+  std::shared_ptr<StatementListNode> GetStatements();
+  std::string ToString() const override;
+  int GetStartStatementNumber();
+  int GetEndStatementNumber();
 
 private:
   // Creates some coupling with statement list node
-  StatementListNode *statements;
+  std::shared_ptr<StatementListNode> statements;
 };
 }

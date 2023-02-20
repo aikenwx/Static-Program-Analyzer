@@ -1,17 +1,20 @@
 #pragma once
+
+#include <memory>
+
 #include "i_node.h"
 
 namespace ast {
 class BinaryOperationNode : public INode {
 public:
-  BinaryOperationNode(INode *left, INode *right);
+  BinaryOperationNode(std::shared_ptr<INode> left, std::shared_ptr<INode> right);
 
-  INode *GetLeft();
-  INode *GetRight();
-  std::ostream &Write(std::ostream &out) const override;
+  std::shared_ptr<INode> GetLeft();
+  std::shared_ptr<INode> GetRight();
+  virtual std::string ToString() const override = 0;
 
-private:
-  INode *left;
-  INode *right;
+protected:
+  std::shared_ptr<INode> left;
+  std::shared_ptr<INode> right;
 };
 }

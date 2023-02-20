@@ -1,3 +1,6 @@
+#pragma once
+
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,10 +10,7 @@
 namespace tokenizer {
 class SimpleTokenizer : public Tokenizer {
  public:
-  std::vector<token::Token*> tokenize(const std::string& program) override;
-  static SimpleTokenizer* getInstance();
- private:
+  std::vector<std::unique_ptr<token::Token>> tokenize(const std::string& program) override;
   SimpleTokenizer();
-  static SimpleTokenizer* instance_;
 };
 }  // namespace tokenizer

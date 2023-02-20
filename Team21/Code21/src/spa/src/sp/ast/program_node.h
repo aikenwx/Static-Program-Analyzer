@@ -1,15 +1,19 @@
 #pragma once
+
+#include <memory>
 #include <vector>
-#include "i_node.h"
+
+#include "procedure_node.h"
 
 namespace ast {
 class ProgramNode : public INode {
 public:
-  void AddProcedure(INode *procedure);
-  std::vector<INode *> *GetProcedures();
-  std::ostream &Write(std::ostream &out) const override;
+  void AddProcedure(std::shared_ptr<ProcedureNode> procedure);
+  std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
+  std::string ToString() const override;
+  int GetTotalStatementCount();
 
 private:
-  std::vector<INode *> procedures;
+  std::vector<std::shared_ptr<ProcedureNode> > procedures;
 };
 }

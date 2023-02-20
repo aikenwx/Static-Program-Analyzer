@@ -4,15 +4,12 @@
 #include "greater_than_token.h"
 
 namespace token {
-GreaterThanToken::GreaterThanToken(){};
-
-const std::string GreaterThanToken::getValue() { return ">"; };
-
-const GreaterThanToken* GreaterThanToken::createToken(std::string str) {
+const std::unique_ptr<Token> GreaterThanToken::CreateToken(std::string str) {
   assert(str == ">");
-  if (instance_ == nullptr) instance_ = new GreaterThanToken();
-  return instance_;
+  return std::unique_ptr<GreaterThanToken>(new GreaterThanToken());
 };
 
-GreaterThanToken* GreaterThanToken::instance_ = nullptr;
+GreaterThanToken::GreaterThanToken(){};
+
+const std::string GreaterThanToken::GetValue() { return ">"; };
 }  // namespace token

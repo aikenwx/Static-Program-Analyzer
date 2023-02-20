@@ -1,16 +1,23 @@
 #pragma once
+#include <memory>
 #include <vector>
-#include "i_node.h"
+
+#include "statement_node.h"
 
 namespace ast {
 class StatementListNode : public INode {
 public:
-  void AddStatement(INode *node);
+  void AddStatement(std::shared_ptr<StatementNode> node);
   // Format is a stack, i.e. statements are stored in reverse order
-  std::vector<INode *> *GetStatements();
-  std::ostream &Write(std::ostream &out) const override;
+  std::vector<std::shared_ptr<StatementNode>> GetStatements();
+  std::string ToString() const override;
+  int GetStartStatementNumber();
+  int GetEndStatementNumber();
+  void IncrementStatementNumbers(int value);
 
 private:
-  std::vector<INode *> statements;
+  std::vector<std::shared_ptr<StatementNode>> statements;
+  int startStatementNumber;
+  int endStatementNumber;
 };
 }

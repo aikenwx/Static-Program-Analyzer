@@ -9,12 +9,12 @@ const std::vector<EntityType>
 SuchThatEvaluator::SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
+ClauseEvaluator::ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<::Relationship *> filtered_relationships;
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
-  auto left_hand = GetLeftHandTypes(ref1);
-  auto right_hand = GetRightHandTypes(ref2);
+  auto left_hand = ResolveLeftTypes(ref1);
+  auto right_hand = ResolveRightTypes(ref2);
   for (auto left : left_hand) {
     for (auto right : right_hand) {
       auto res = CallPkb(pkb, left, right);
@@ -28,21 +28,33 @@ ClauseResult SuchThatEvaluator::Evaluate(QueryFacade &pkb) {
   return qps::SuchThatEvaluator::ConstructResult(filtered_relationships);
 }
 
-ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) {
-  ClauseResult result;
+ClauseEvaluator::ClauseResult SuchThatEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
+  std::vector<Synonym> syns;
+  bool left_syn = false;
+  bool right_syn = false;
   if (Synonym *syn = std::get_if<Synonym>(&ref1)) {
-    result.AddSynonym(*syn, 0);
+    left_syn = true;
+    syns.push_back(*syn);
   }
-
   if (Synonym *syn = std::get_if<Synonym>(&ref2)) {
-    result.AddSynonym(*syn, 1);
+    right_syn = true;
+    syns.push_back(*syn);
   }
 
+  if (left_syn && right_syn && syns[0] == syns[1]) {
+    return false;
+  }
+
+  if (!left_syn && !right_syn) return !relationships.empty();
+
+  SynonymTable result(syns);
   for (auto relation : relationships) {
-    auto res = {relation->getLeftHandEntity()->getEntityValue(), relation->getRightHandEntity()->getEntityValue()};
-    result.AddResult({res});
+    SynonymTable::Row row;
+    if (left_syn) row.push_back(*relation->getLeftHandEntity()->getEntityValue());
+    if (right_syn) row.push_back(*relation->getRightHandEntity()->getEntityValue());
+    result.AddRow(std::move(row));
   }
   return result;
 }
@@ -53,25 +65,25 @@ bool SuchThatEvaluator::Filter(::Relationship &relationship) {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref1)) {
-    if (relationship.getLeftHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (*(relationship.getLeftHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref2)) {
-    if (relationship.getRightHandEntity()->getEntityValue() != std::to_string(*stmt_num)) {
+    if (*(relationship.getRightHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref1)) {
-    if (relationship.getLeftHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (*(relationship.getLeftHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
       return true;
     }
   }
 
   if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref2)) {
-    if (relationship.getRightHandEntity()->getEntityValue() != quoted_identifier->getQuotedId()) {
+    if (*(relationship.getRightHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
       return true;
     }
   }
@@ -86,5 +98,19 @@ EntityType SuchThatEvaluator::FindEntityType(Synonym &syn) {
     throw std::invalid_argument("Synonym in clause not in query declaration");
   }
 }
+std::vector<EntityType> SuchThatEvaluator::ResolveLeftTypes(Ref &left_arg) {
+  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
+    return {FindEntityType(*syn)};
+  } else {
+    return GetLeftHandTypes(left_arg);
+  }
+}
 
+std::vector<EntityType> SuchThatEvaluator::ResolveRightTypes(Ref &right_arg) {
+  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
+    return {FindEntityType(*syn)};
+  } else {
+    return GetRightHandTypes(right_arg);
+  }
+}
 } // qps

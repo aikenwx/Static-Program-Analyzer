@@ -1,18 +1,39 @@
 #pragma once
+#include <memory>
 #include <string>
 
 namespace token {
-class Token {
- public:
-  virtual const std::string getValue() = 0;
-  static const Token* createToken(std::string str);
+enum TokenType {
+  AND,
+  ASSIGN,
+  DIVIDE,
+  END, // special token denoting end of input, used in parser
+  EQUAL,
+  GREATER_EQUAL,
+  GREATER_THAN,
+  IDENTIFIER,
+  INTEGER,
+  LEFT_BRACE,
+  LEFT_PAREN,
+  LESS_EQUAL,
+  LESS_THAN,
+  MINUS,
+  MODULO,
+  MULTIPLY,
+  NOT_EQUAL,
+  NOT,
+  OR,
+  PLUS,
+  RIGHT_BRACE,
+  RIGHT_PAREN,
+  SEMICOLON,
 };
 
-class SymbolToken : public Token {
+class Token {
  public:
-  void operator=(const SymbolToken&) = delete;
-
- private:
-  static SymbolToken* instance_;
+  static const std::unique_ptr<Token> CreateToken(std::string);
+  virtual ~Token(){};
+  virtual const TokenType GetType() = 0;
+  virtual const std::string GetValue() = 0;
 };
 }  // namespace token

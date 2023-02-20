@@ -5,15 +5,13 @@
 #include <string>
 
 namespace token {
-RightParenToken::RightParenToken(){};
-
-const std::string RightParenToken::getValue() { return ")"; };
-
-const RightParenToken* RightParenToken::createToken(std::string str) {
+const std::unique_ptr<Token> RightParenToken::CreateToken(
+    std::string str) {
   assert(str == ")");
-  if (instance_ == nullptr) instance_ = new RightParenToken();
-  return instance_;
+  return std::unique_ptr<RightParenToken>(new RightParenToken());
 };
 
-RightParenToken* RightParenToken::instance_ = nullptr;
+RightParenToken::RightParenToken(){};
+
+const std::string RightParenToken::GetValue() { return ")"; };
 }  // namespace token

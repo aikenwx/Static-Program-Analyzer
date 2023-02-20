@@ -7,43 +7,67 @@
 #include "../rel/relationship.h"
 
 namespace design_extractor {
-std::optional<std::vector<rel::Relationship*>>
-AstElemExtractor::HandleConstantNode(std::vector<ast::INode*> parents,
-                                     ast::ConstantNode* constant_node) {
-  return std::vector<rel::Relationship*>{
-      rel::ConstRelationship::CreateRelationship(constant_node->GetValue())};
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleAssignNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::AssignNode> assign_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::AssignStmtRelationship::CreateRelationship(assign_node));
+  return vec;
 }
 
-std::optional<std::vector<rel::Relationship*>> AstElemExtractor::HandlePrintNode(
-    std::vector<ast::INode*> parents, ast::PrintNode* print_node) {
-  return std::vector<rel::Relationship*>{
-      rel::PrintStmtRelationship::CreateRelationship(print_node)};
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleCallNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::CallNode> call_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::CallStmtRelationship::CreateRelationship(call_node));
+  return vec;
 }
 
-std::optional<std::vector<rel::Relationship*>> AstElemExtractor::HandleProcedureNode(
-    std::vector<ast::INode*> parents, ast::ProcedureNode* procedure_node) {
-  return std::vector<rel::Relationship*>{
-      rel::ProcRelationship::CreateRelationship(procedure_node->GetName())};
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleIfNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::IfNode> if_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::IfStmtRelationship::CreateRelationship(if_node));
+  return vec;
 }
 
-std::optional<std::vector<rel::Relationship*>> AstElemExtractor::HandleReadNode(
-    std::vector<ast::INode*> parents, ast::ReadNode* read_node) {
-  return std::vector<rel::Relationship*>{
-      rel::ReadStmtRelationship::CreateRelationship(read_node)};
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleWhileNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> while_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::WhileStmtRelationship::CreateRelationship(while_node));
+  return vec;
 }
 
-std::optional<std::vector<rel::Relationship*>> AstElemExtractor::HandleVariableNode(
-    std::vector<ast::INode*> parents, ast::VariableNode* variable_node) {
-  return std::vector<rel::Relationship*>{
-      rel::VarRelationship::CreateRelationship(variable_node->GetName())};
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
+AstElemExtractor::HandleConstantNode(std::vector<std::shared_ptr<ast::INode>> parents,
+                                     std::shared_ptr<ast::ConstantNode> constant_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::ConstRelationship::CreateRelationship(constant_node->GetValue()));
+  return vec;
 }
 
-AstElemExtractor* AstElemExtractor::instance_ = nullptr;
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandlePrintNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::PrintNode> print_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::PrintStmtRelationship::CreateRelationship(print_node));
+  return vec;
+}
 
-AstElemExtractor* AstElemExtractor::GetInstance() {
-  if (instance_ == nullptr) {
-    instance_ = new AstElemExtractor();
-  }
-  return instance_;
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleProcedureNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ProcedureNode> procedure_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::ProcRelationship::CreateRelationship(procedure_node));
+  return vec;
+}
+
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleReadNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ReadNode> read_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::ReadStmtRelationship::CreateRelationship(read_node));
+  return vec;
+}
+
+std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleVariableNode(
+    std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> variable_node) {
+  std::vector<std::unique_ptr<rel::Relationship>> vec;
+  vec.push_back(rel::VarRelationship::CreateRelationship(variable_node->GetName()));
+  return vec;
 }
 }  // namespace design_extractor

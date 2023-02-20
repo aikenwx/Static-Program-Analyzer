@@ -4,15 +4,12 @@
 #include "minus_token.h"
 
 namespace token {
-MinusToken::MinusToken(){};
-
-const std::string MinusToken::getValue() { return "-"; };
-
-const MinusToken* MinusToken::createToken(std::string str) {
+const std::unique_ptr<Token> MinusToken::CreateToken(std::string str) {
   assert(str == "-");
-  if (instance_ == nullptr) instance_ = new MinusToken();
-  return instance_;
+  return std::unique_ptr<MinusToken>(new MinusToken());
 };
 
-MinusToken* MinusToken::instance_ = nullptr;
+MinusToken::MinusToken(){};
+
+const std::string MinusToken::GetValue() { return "-"; };
 }  // namespace token

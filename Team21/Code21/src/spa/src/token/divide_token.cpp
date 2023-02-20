@@ -5,15 +5,12 @@
 #include <string>
 
 namespace token {
-DivideToken::DivideToken(){};
-
-const std::string DivideToken::getValue() { return "/"; };
-
-const DivideToken* DivideToken::createToken(std::string str) {
+const std::unique_ptr<Token> DivideToken::CreateToken(std::string str) {
   assert(str == "/");
-  if (instance_ == nullptr) instance_ = new DivideToken();
-  return instance_;
+  return std::unique_ptr<DivideToken>(new DivideToken());
 };
 
-DivideToken* DivideToken::instance_ = nullptr;
+DivideToken::DivideToken(){};
+
+const std::string DivideToken::GetValue() { return "/"; };
 }  // namespace token

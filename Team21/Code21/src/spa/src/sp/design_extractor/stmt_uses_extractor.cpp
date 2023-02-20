@@ -24,8 +24,8 @@ StmtUsesExtractor::HandleVariableNode(
       if (level == 1) {
         // possibly LHS or RHS
         // so, either `node` was in the LHS, or `node` *IS* the RHS
-        if (util::instance_of<ast::VariableNode>(assign->GetVariable()) &&
-            std::static_pointer_cast<ast::VariableNode>(assign->GetVariable())
+        if (util::instance_of<ast::VariableNode>(assign->GetAssignment()) &&
+            std::static_pointer_cast<ast::VariableNode>(assign->GetAssignment())
                     ->GetName() == node->GetName()) {
           // TODO possible to optimize this with ptr equality check?
           relationships.push_back(

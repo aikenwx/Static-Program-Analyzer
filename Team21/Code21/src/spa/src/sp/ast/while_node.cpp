@@ -4,8 +4,7 @@ namespace ast {
 WhileNode::WhileNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> body) {
   this->condition = condition;
   this->body = body;
-  this->statementNumber = this->body->GetStartStatementNumber();
-  this->body->IncrementStatementNumbers(1);
+  IncrementStatementNumber(1);
 }
 
 std::shared_ptr<INode> WhileNode::GetCondition() {
@@ -22,5 +21,10 @@ std::string WhileNode::ToString() const {
 
 int WhileNode::GetEndStatementNumber() {
   return body->GetEndStatementNumber();
+}
+
+void WhileNode::IncrementStatementNumber(int value) {
+  statementNumber = body->GetStartStatementNumber();
+  body->IncrementStatementNumbers(value);
 }
 }

@@ -255,6 +255,34 @@ TEST_CASE(
 };
 
 TEST_CASE(
+  "Parser correctly parses conditional expressions with expression in LHS",
+  "[Parser]") {
+  std::string input = R"(x + 2 < 4))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+};
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expression with braces in LHS",
+  "[Parser]") {
+  std::string input = R"((((y - 3))) < 1))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+};
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expression in RHS",
+  "[Parser]") {
+  std::string input = R"(x < 4 + y))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+};
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expression with braces in RHS",
+  "[Parser]") {
+  std::string input = R"(z < (((x + y + 0)))))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+};
+
+TEST_CASE(
   "Parser correctly parses conditional expressions with not",
   "[Parser]") {
   std::string input = R"(!(x < 0)))";

@@ -115,7 +115,7 @@ SimpleTokenFactory::SimpleTokenFactory() {}
 
 const std::unordered_map<char, std::vector<std::string>>
     SimpleTokenFactory::kSymbolTokens{
-        {'+', {"++", "+"}}, {'-', {"--", "-"}}, {'*', {"*"}},
+        {'+', {"+"}}, {'-', {"-"}}, {'*', {"*"}},
         {'/', {"/"}},       {'%', {"%"}},       {'(', {"("}},
         {')', {")"}},       {'{', {"{"}},       {'}', {"}"}},
         {';', {";"}},       {'=', {"==", "="}}, {'!', {"!=", "!"}},

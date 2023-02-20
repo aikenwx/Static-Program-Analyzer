@@ -16,7 +16,6 @@ bool CheckRootIsNodeType(std::string input) {
   std::vector<std::unique_ptr<token::Token>> tokens =
     tokenizer.tokenize(input);
   std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
-  //std::cout << root->ToString() << std::endl;
   return util::instance_of<T>(root);
 }
 
@@ -28,8 +27,6 @@ bool CheckStatementCount(std::string program, int count) {
   std::vector<std::unique_ptr<token::Token>> tokens =
     tokenizer.tokenize(program);
   std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
-  /*std::cout << root->ToString() << std::endl;
-  std::cout << std::static_pointer_cast<ast::ProgramNode>(root)->GetTotalStatementCount() << std::endl;*/
   return std::static_pointer_cast<ast::ProgramNode>(root)->GetTotalStatementCount() == count;
 }
 

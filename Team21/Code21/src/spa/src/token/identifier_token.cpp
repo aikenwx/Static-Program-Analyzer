@@ -1,7 +1,5 @@
 #include "identifier_token.h"
 
-#include <assert.h>
-
 #include <string>
 
 #include "exceptions/syntax_error.h"
@@ -10,8 +8,7 @@
 namespace token {
 const std::unique_ptr<Token> IdentifierToken::CreateToken(
     std::string str) {
-  assert(str.length() > 0);  // invariant: non-zero length
-  if (!util::is_identifier(str)) {
+  if (!util::is_identifier(str)) { // checks for zero-length str
     throw exceptions::SyntaxError("Invalid identifier");
   }
   return std::unique_ptr<IdentifierToken>(new IdentifierToken(str));;

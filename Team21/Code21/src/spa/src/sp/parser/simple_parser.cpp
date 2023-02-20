@@ -29,21 +29,26 @@
 using namespace util;
 
 namespace parser {
+/*
+* Parses a given list of tokens representing a SIMPLE program into an
+* abstract syntax tree. Uses shift-reduce parsing with one token lookahead.
+*/
 std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
+  // Push end token to mark end of token list
   input.push_back(std::make_unique<token::EndToken>());
+  // Initialize fields for parsing
   stack.clear();
   statementCounter = 0;
+  // Iterate through token list
   for (lookahead = input.begin(); lookahead < input.end(); lookahead++) {
     // If empty stack, can just shift
     if (stack.size() == 0) {
       Shift();
       continue;
     }
-
-    while (Check()) {
-
-    }
-
+    // Checks and reduces any nodes on the stack
+    while (Reduce());
+    // Shifts the next token to the stack
     Shift();
   }
   std::unique_ptr<ast::AST> ast;
@@ -52,7 +57,6 @@ std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token:
     Reject();
     ast = std::make_unique<ast::AST>();
     ast->SetRoot(stack.front());
-    //assert(false);
     return ast;
   }
   // Success condition
@@ -62,8 +66,14 @@ std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token:
   return ast;
 }
 
+/*
+* Shifts a token into the parse stack and converts it to a node object.
+*/
 void SimpleParser::Shift() {
-  // This code is neither DRY nor open for extension
+  /*
+  * If statements trade open-closed for single-responsibility and interface segregation
+  * between tokenizer and parser. Since grammar is fixed, open-closed not as necessary.
+  */
   if (util::instance_of<token::IdentifierToken>(*lookahead)) {
     std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
@@ -131,7 +141,7 @@ void SimpleParser::Shift() {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kSemicolon);
     stack.push_back(sym);
   } else if (util::instance_of<token::EndToken>(*lookahead)) {
-    // end token
+    // No need to include end token in AST
     return;
   } else {
     // Default implementation but should not reach here
@@ -141,20 +151,15 @@ void SimpleParser::Shift() {
   }
 }
 
-void SimpleParser::Reduce() {
+// No functionality at the moment
+void SimpleParser::Reject() {}
 
-}
-
-void SimpleParser::Reject() {
-
-}
-
-void SimpleParser::Success() {
-
-}
+// No functionality at the moment
+void SimpleParser::Success() {}
 
 /*
-  Grammar rules:
+* Does reduction on parse stack according to matching grammar.
+* Grammar rules:
   Pr -> P Pr <$>
   Pr -> P <$>
   P -> procedure N { S+ }
@@ -195,7 +200,11 @@ void SimpleParser::Success() {
   N -> id <!id>
   C -> int
 */
-bool SimpleParser::Check() {
+bool SimpleParser::Reduce() {
+  /*
+  * If statements required for pattern matching, can improve open-closed
+  * through chain of responsibility in the future.
+  */
   auto i = stack.rbegin();
   // program
   if (util::instance_of<token::EndToken>(*lookahead)) {

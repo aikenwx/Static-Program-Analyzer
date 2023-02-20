@@ -18,9 +18,8 @@ private:
   int statementCounter;
 
   void Shift();
-  void Reduce();
+  bool Reduce();
   void Success();
   void Reject();
-  bool Check();
 };
 }

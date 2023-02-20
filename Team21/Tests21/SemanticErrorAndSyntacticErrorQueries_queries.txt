@@ -1,0 +1,130 @@
+1 - relationship(literal, literal) pattern(literal, int)
+assign a;
+Select a such that Follows*(1, 4) pattern a("a", 2)
+SyntaxError
+5000
+2 - relationship(literal, literal) pattern(int, wildcard)
+assign a;
+Select a such that Follows*(1, 25) pattern a(1, _)
+SyntaxError
+5000
+3 - relationship(literal, literal) pattern(int, int)
+assign a;
+Select a such that Follows*(1, 9) pattern a(1, 0)
+SyntaxError
+5000
+4 - Follows*(quotedIdentifier, synonym) pattern(literal, wildcard)
+assign a; variable v;
+Select a such that Follows*("x", a) pattern a("x", _)
+SyntaxError
+5000
+5 - Follows*(literal,quotedIdentifier) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Follows*(11, "x") pattern a(v, _)
+SyntaxError
+5000
+6 - Follows(quotedIdentifier, synonym) pattern(literal, wildcard)
+assign a; variable v;
+Select a such that Follows("x", a) pattern a("x", _)
+SyntaxError
+5000
+7 - Follows(literal,quotedIdentifier) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Follows(11, "x") pattern a(v, _)
+SyntaxError
+5000
+8 - Parent*(quotedIdentifier, synonym) pattern(literal, wildcard)
+assign a; variable v;
+Select a such that Parent*("x", a) pattern a("x", _)
+SyntaxError
+5000
+9 - Parent*(literal,quotedIdentifier) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Parent*(11, "x") pattern a(v, _)
+SyntaxError
+5000
+10 - Parent(quotedIdentifier, synonym) pattern(literal, wildcard)
+assign a; variable v;
+Select a such that Parent("x", a) pattern a("x", _)
+SyntaxError
+5000
+11 - Parent(literal,quotedIdentifier) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Parent(11, "x") pattern a(v, _)
+SyntaxError
+5000
+12 - relationship(literal, synonym) nonAssignPattern(wildcard, subexpression)
+assign a; while w;
+Select a such that Follows*(1, a) pattern w(_, _"x"_)
+SemanticError
+5000
+13 - Modifies*(synonym, literal) pattern(literal, wildcard)
+assign a;
+Select a such that Modifies*(a, 4) pattern a("x", _)
+SyntaxError
+5000
+14 - Modifies(synonym, literal) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Modifies(a, 3) pattern a(v, _)
+SyntaxError
+5000
+15 - Uses*(synonym, literal) pattern(wildcard, subexpression)
+assign a, a1; variable v, v1;
+Select v such that Uses*(a1, 1) pattern a(_, _"2"_)
+SyntaxError
+5000
+16 - Uses(synonym, literal) pattern(synonym, subexpression)
+assign a; read r; variable v;
+Select v such that Uses(a, 100) pattern a(v, _"2"_)
+SyntaxError
+5000
+17 - Unexpected character
+assign a; print p;
+Select a such that Frrrollows*(p, a) pattern a(_, "x")
+SyntaxError
+5000
+18 - more unexpected character
+assign a; while w;
+Select w sucfdfh that Follows*(a, w) pattern a(_, _)
+SyntaxError
+5000
+18 - more unexpected character 2
+assign a; while w;
+Selecasdsadt w such that Follows*(a, w) pattern a(_, _)
+SyntaxError
+5000
+19 - more unexpected character 3
+assiasdasdgn a; while w;
+Select w such that Follows*(a, w) pattern a(_, _)
+SyntaxError
+5000
+20 - more unexpected character 4
+assign a, while; while w, asd dsdsdsdsdsdsd;
+Select w such that Follows*(a, w) pattern a(_, _)
+SyntaxError
+5000
+21 - invalid expression
+assign a; while w;
+Select w such that Follows*(a, w) pattern a(_, "x+?k")
+SyntaxError
+5000
+22 - Double declaration
+assign a, a; while w;
+Select w such that Follows*(a, w) pattern a(_, "1")
+SemanticError
+5000
+23 - Double declaration 2
+assign a; while w; read w;
+Select w such that Follows*(a, w) pattern a(_, "3")
+SemanticError
+5000
+24 - Synonym used not declared
+assign a; while w;
+Select x such that Follows*(a, w) pattern a(_, "4")
+SemanticError
+5000
+25 - - Synonym used not declared
+assign a; while w;
+Select x such that Follows*(a, w) pattern a(_, "4")
+SemanticError
+5000

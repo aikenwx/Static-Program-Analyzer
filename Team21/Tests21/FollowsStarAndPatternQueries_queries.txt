@@ -1,0 +1,60 @@
+1 - relationship(literal, literal) pattern(literal, fullexpression)
+assign a;
+Select a such that Follows*(1, 4) pattern a("a", _"2"_)
+none
+5000
+2 - relationship(literal, literal) pattern(literal, wildcard)
+assign a;
+Select a such that Follows*(1, 25) pattern a("x", _)
+2, 12, 19
+5000
+3 - relationship(literal, literal) pattern(wildcard, fullexpression)
+assign a;
+Select a such that Follows*(1, 9) pattern a(_, _"0"_)
+2
+5000
+4 - relationship(literal, synonym) pattern(literal, wildcard)
+assign a; variable v;
+Select a such that Follows*(1, a) pattern a("x", _)
+2
+5000
+5 - relationship(literal, synonym) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Follows*(11, a) pattern a(v, _)
+y, i
+5000
+6 - relationship(literal, synonym) pattern(wildcard, subexpression)
+assign a;
+Select a such that Follows*(1, a) pattern a(_, _"x"_)
+24, 25
+5000
+7 - relationship(synonym, literal) pattern(literal, wildcard)
+assign a;
+Select a such that Follows*(a, 4) pattern a("x", _)
+2
+5000
+8 - relationship(synonym, literal) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Follows*(a, 6) pattern a(v, _)
+x, y, z
+5000
+9 - relationship(synonym, literal) pattern(wildcard, subexpression)
+assign a; variable v;
+Select v such that Follows*(a, 4) pattern a(_, _"2"_)
+a, count, i, x, y, z
+5000
+10 - relationship(synonym, synonym) pattern(synonym, subexpression)
+assign a; read r; variable v;
+Select v such that Follows*(a, r) pattern a(v, _"2"_)
+y, z
+5000
+11 - relationship(synonym, synonym) pattern(wildcard, fullexpression)
+assign a; print p;
+Select a such that Follows*(p, a) pattern a(_, "x")
+none
+5000
+12 - relationship(synonym, synonym) pattern(wildcard, wildcard)
+assign a; while w;
+Select w such that Follows*(a, w) pattern a(_, _)
+9, 11
+5000

@@ -255,6 +255,33 @@ TEST_CASE(
 };
 
 TEST_CASE(
+  "Parser correctly parses conditional expressions with rel_factor of type expr on LHS",
+  "[Parser]") {
+  std::string input = R"((x + 2) < 0))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(x + 2 < 0))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with rel_factor of type expr on RHS",
+  "[Parser]") {
+  std::string input = R"(y < (5 + x)))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(y < 5 + x))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with rel_factor of type expr on LHS and RHS",
+  "[Parser]") {
+  std::string input = R"((x + 7) < (5 * a)))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(x + 7 < 5 * a))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
+
+TEST_CASE(
   "Parser correctly parses conditional expressions with not",
   "[Parser]") {
   std::string input = R"(!(x < 0)))";

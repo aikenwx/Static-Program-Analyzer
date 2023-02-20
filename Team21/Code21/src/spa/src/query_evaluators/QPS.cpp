@@ -12,12 +12,12 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     QueryTokenizer tokenizer(query_str);
     QueryParser parser(tokenizer.tokenize());
     Query query(parser.parse());
-    SemanticValidator validator(query);
-    SyntacticValidator validator2(query);
+    SemanticValidator validatorSemantic(query);
+    SyntacticValidator validatorSyntactic(query);
     QueryEvaluator evaluator(query);
 
-    validator.validateQuery();
-    validator2.validateQuery();
+    validatorSyntactic.validateQuery();
+    validatorSemantic.validateQuery();
     for (const auto &str : evaluator.EvaluateQuery(pkb)) {
       results.push_back(str);
     }

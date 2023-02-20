@@ -89,7 +89,17 @@ namespace qps {
 
 	void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
 		std::vector<SuchThatClause> s = getQuery().getSuchThatClause();
+		std::vector<PatternClause> p = getQuery().getPatternClause();
 		std::vector<Declaration> declr = getQuery().getDeclarations();
+		for (int i = 0; i < p.size(); i++) {
+			if (std::holds_alternative<Synonym>(p[i].getArg1())) {
+				Synonym syn = std::get<Synonym>(p[i].getArg1());
+				DesignEntity patternArgSyn = Declaration::findDeclarationWithSynonym(declr, syn).value().getDesignEntity();
+				if (patternArgSyn != DesignEntity::VARIABLE) {
+					throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for pattern argument 1");
+				}
+			}
+		}
 		for (int i = 0; i < s.size(); i++) {
 			Relationship rel = s[i].getRelationship();
 			std::string relStr = getStringFromRelationship(rel);

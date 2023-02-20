@@ -78,6 +78,13 @@ TEST_CASE("Semantic validation for queries") {
             Contains("Semantic error. Invalid syntax for pattern assign with synonym"));
     }
 
+    SECTION("check that pattern clause if have synonym, it is variable") {
+        std::string dupeInput("stmt s; procedure p; variable v; assign a; constant c; Select s pattern a (c, _)");
+        qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+        qps::SemanticValidator validator(dupeQuery);
+        REQUIRE_THROWS_WITH(validator.validateQuery(),
+            Contains("Semantic error. Wrong design entity type for pattern argument 1"));
+    }
 
     SECTION("check that parent relationship have synonym of correct entity type") {
         std::string dupeInput("stmt s; procedure p; variable v; assign a; Select s such that Parent(p, _)");

@@ -4,13 +4,12 @@
 #include <sstream>
 
 #include "PKB/PKB.h"
-#include "query/query_exceptions.h"
 #include "query_evaluators/QPS.h"
 #include "sp/sp.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
-AbstractWrapper* WrapperFactory::wrapper = 0;
-AbstractWrapper* WrapperFactory::createWrapper() {
+AbstractWrapper *WrapperFactory::wrapper = 0;
+AbstractWrapper *WrapperFactory::createWrapper() {
   if (wrapper == 0) wrapper = new TestWrapper;
   return wrapper;
 }

@@ -211,7 +211,7 @@ SCENARIO("TokenFactory should correctly identify symbols",
       token_factory::SimpleTokenFactory token_factory =
           token_factory::SimpleTokenFactory();
       WHEN("checkSymbol() is called with this string") {
-        std::string invalidToken = token + token[-1];
+        std::string invalidToken = token + token[token.size() - 1];
         THEN("checkSymbol() should return {false, false}") {
           token_factory::CheckSymbolResult result =
               token_factory.checkSymbol(invalidToken);

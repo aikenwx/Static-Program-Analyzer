@@ -29,7 +29,7 @@ Select a such that Follows*(1, a) pattern a(_, _"x"_)
 24, 25
 5000
 7 - relationship(synonym, literal) pattern(literal, wildcard)
-assign a; 
+assign a;
 Select a such that Follows*(a, 4) pattern a("x", _)
 2
 5000

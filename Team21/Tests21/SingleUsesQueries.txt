@@ -61,7 +61,7 @@ x, y, z
 12 - left literal right syn: select all variables used in if
 variable v;
 Select v such that Uses(6, v)
-count 
+count
 5000
 13 - left literal right syn: select all variables used in assignment
 variable v;

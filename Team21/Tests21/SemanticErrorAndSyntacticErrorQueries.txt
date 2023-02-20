@@ -59,7 +59,7 @@ Select a such that Follows*(1, a) pattern w(_, _"x"_)
 SemanticError
 5000
 13 - Modifies*(synonym, literal) pattern(literal, wildcard)
-assign a; 
+assign a;
 Select a such that Modifies*(a, 4) pattern a("x", _)
 SyntaxError
 5000

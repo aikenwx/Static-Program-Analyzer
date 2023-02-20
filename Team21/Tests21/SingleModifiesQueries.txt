@@ -48,7 +48,7 @@ variable v; if f;
 Select f such that Modifies(f, "count")
 6
 5000
-10 - left syn right wildcard select print that modifies 
+10 - left syn right wildcard select print that modifies
 variable v; print pn;
 Select pn such that Modifies(pn, _)
 none
@@ -61,7 +61,7 @@ x, z, a, y
 12 - left literal right syn select all variables modifies in if
 variable v;
 Select v such that Modifies(14, v)
-a, x, y 
+a, x, y
 5000
 13 - left literal right wildcard select all variables modified in while
 variable v;

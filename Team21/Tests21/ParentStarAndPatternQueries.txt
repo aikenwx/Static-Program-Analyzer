@@ -1,10 +1,10 @@
 2 - relationship(literal, literal) pattern(literal, subexpression)
-assign a; 
+assign a;
 Select a such that Parent*(1, 2) pattern a("x", _"0"_)
 none
 5000
 3 - relationship(literal, literal) pattern(literal, wildcard)
-assign a; print p; 
+assign a; print p;
 Select p such that Parent*(11, 18) pattern a("x", _)
 5, 16, 18, 20
 5000

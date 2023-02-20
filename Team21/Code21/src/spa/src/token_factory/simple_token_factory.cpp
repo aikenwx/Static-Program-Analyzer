@@ -73,8 +73,6 @@ std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string value)
     return token::AndToken::CreateToken(value);
   } else if (value == "||") {
     return token::OrToken::CreateToken(value);
-  } else if (value == "\0") {
-    return token::EndToken::CreateToken(value);
   } else if (util::is_integer(value)) {
     return token::IntegerToken::CreateToken(value);
   } else {
@@ -117,7 +115,7 @@ SimpleTokenFactory::SimpleTokenFactory() {}
 
 const std::unordered_map<char, std::vector<std::string>>
     SimpleTokenFactory::kSymbolTokens{
-        {'+', {"++", "+"}}, {'-', {"--", "-"}}, {'*', {"*"}},
+        {'+', {"+"}}, {'-', {"-"}}, {'*', {"*"}},
         {'/', {"/"}},       {'%', {"%"}},       {'(', {"("}},
         {')', {")"}},       {'{', {"{"}},       {'}', {"}"}},
         {';', {";"}},       {'=', {"==", "="}}, {'!', {"!=", "!"}},

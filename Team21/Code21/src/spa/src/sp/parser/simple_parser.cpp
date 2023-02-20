@@ -562,7 +562,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::GreaterNode> b = std::make_shared<ast::GreaterNode>(f2, f1);
+      std::shared_ptr<ast::GreaterNode> b = std::make_shared<ast::GreaterNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
@@ -576,7 +576,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::LesserNode> b = std::make_shared<ast::LesserNode>(f2, f1);
+      std::shared_ptr<ast::LesserNode> b = std::make_shared<ast::LesserNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
@@ -590,7 +590,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::EqualsNode> b = std::make_shared<ast::EqualsNode>(f2, f1);
+      std::shared_ptr<ast::EqualsNode> b = std::make_shared<ast::EqualsNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
@@ -604,7 +604,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::GreaterEqualsNode> b = std::make_shared<ast::GreaterEqualsNode>(f2, f1);
+      std::shared_ptr<ast::GreaterEqualsNode> b = std::make_shared<ast::GreaterEqualsNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
@@ -618,7 +618,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::LesserEqualsNode> b = std::make_shared<ast::LesserEqualsNode>(f2, f1);
+      std::shared_ptr<ast::LesserEqualsNode> b = std::make_shared<ast::LesserEqualsNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;
@@ -632,7 +632,7 @@ bool SimpleParser::Check() {
       stack.pop_back();
       std::shared_ptr<ast::RelationalFactorNode> f2 = std::static_pointer_cast<ast::RelationalFactorNode>(stack.back());
       stack.pop_back();
-      std::shared_ptr<ast::NotEqualsNode> b = std::make_shared<ast::NotEqualsNode>(f2, f1);
+      std::shared_ptr<ast::NotEqualsNode> b = std::make_shared<ast::NotEqualsNode>(f2->GetOperand(), f1->GetOperand());
       std::shared_ptr<ast::RelationalExpressionNode> e = std::make_shared<ast::RelationalExpressionNode>(b);
       stack.push_back(e);
       return true;

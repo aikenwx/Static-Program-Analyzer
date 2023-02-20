@@ -12,6 +12,7 @@ public:
   std::shared_ptr<StatementListNode> GetBody();;
   std::string ToString() const override;
   int GetEndStatementNumber() override;
+  void IncrementStatementNumber(int value) override;
 
 private:
   std::shared_ptr<INode> condition;

@@ -5,9 +5,7 @@ IfNode::IfNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNo
   this->condition = condition;
   this->then = then;
   this->els = els;
-  this->statementNumber = this->then->GetStartStatementNumber();
-  this->then->IncrementStatementNumbers(1);
-  this->els->IncrementStatementNumbers(1);
+  IncrementStatementNumber(1);
 }
 
 std::shared_ptr<INode> IfNode::GetCondition() {
@@ -28,5 +26,11 @@ std::string IfNode::ToString() const {
 
 int IfNode::GetEndStatementNumber() {
   return els->GetEndStatementNumber();
+}
+
+void IfNode::IncrementStatementNumber(int value) {
+  statementNumber = then->GetStartStatementNumber();
+  then->IncrementStatementNumbers(value);
+  els->IncrementStatementNumbers(value);
 }
 }

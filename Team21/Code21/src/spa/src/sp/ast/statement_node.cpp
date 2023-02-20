@@ -8,4 +8,8 @@ int StatementNode::GetStatementNumber() {
 void StatementNode::SetStatementNumber(int statementNumber) {
   this->statementNumber = statementNumber;
 }
+
+void StatementNode::IncrementStatementNumber(int value) {
+  statementNumber += value;
+}
 }

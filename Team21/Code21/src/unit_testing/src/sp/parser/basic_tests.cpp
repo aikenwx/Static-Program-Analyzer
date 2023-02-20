@@ -87,6 +87,48 @@ TEST_CASE(
   REQUIRE(CheckRootIsProgram(program));
 };
 
+TEST_CASE(
+  "Parser correctly parses a valid program with nested if statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    if (x > 0) then {
+      if (a == 3) then {
+        read a;
+      } else {
+        if (c > 4) then {
+          a = 3 * 2;
+        } else {
+          x = 1;
+        }
+      }
+    } else {
+      if (y < 2) then {
+        print y;
+      } else {
+        z = 3;
+      }
+    }
+})";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with nested while statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    while (x < 0) {
+      read a;
+      while (y > 0) {
+        z = z + 1;
+        while (z < 0) {
+          print a;
+        }
+      }
+    }
+})";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
 /*
 * Grammar test cases
 */
@@ -286,5 +328,47 @@ TEST_CASE(
     print endline;
 })";
   REQUIRE(CheckStatementCount(program, 3));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with nested if statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    if (x > 0) then {
+      if (a == 3) then {
+        read a;
+      } else {
+        if (c > 4) then {
+          a = 3 * 2;
+        } else {
+          x = 1;
+        }
+      }
+    } else {
+      if (y < 2) then {
+        print y;
+      } else {
+        z = 3;
+      }
+    }
+})";
+  REQUIRE(CheckStatementCount(program, 9));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with nested while statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    while (x < 0) {
+      read a;
+      while (y > 0) {
+        z = z + 1;
+        while (z < 0) {
+          print a;
+        }
+      }
+    }
+})";
+  REQUIRE(CheckStatementCount(program, 6));
 };
 }  // namespace parser

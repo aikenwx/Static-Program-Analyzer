@@ -29,11 +29,15 @@ int StatementListNode::GetEndStatementNumber() {
 
 void StatementListNode::IncrementStatementNumbers(int value) {
   for (auto i = statements.begin(); i < statements.end(); i++) {
-    (*i)->SetStatementNumber((*i)->GetStatementNumber() + value);
+    (*i)->IncrementStatementNumber(value);
   }
   // Stack implementation
   startStatementNumber = statements.back()->GetStatementNumber();
-  endStatementNumber = statements.front()->GetStatementNumber();
+  if (util::instance_of<ContainerStatementNode>(statements.front())) {
+    endStatementNumber = std::static_pointer_cast<ContainerStatementNode>(statements.front())->GetEndStatementNumber();
+  } else {
+    endStatementNumber = statements.front()->GetStatementNumber();
+  }
 }
 
 std::string StatementListNode::ToString() const {

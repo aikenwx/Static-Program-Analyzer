@@ -24,8 +24,17 @@ bool CheckRootIsProgram(std::string program) {
   return CheckRootIsNodeType<ast::ProgramNode>(program);
 }
 
+bool CheckStatementCount(std::string program, int count) {
+  std::vector<std::unique_ptr<token::Token>> tokens =
+    tokenizer.tokenize(program);
+  std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
+  /*std::cout << root->ToString() << std::endl;
+  std::cout << std::static_pointer_cast<ast::ProgramNode>(root)->GetTotalStatementCount() << std::endl;*/
+  return std::static_pointer_cast<ast::ProgramNode>(root)->GetTotalStatementCount() == count;
+}
+
 /*
-* General Program Test Cases
+* General program test cases
 */
 TEST_CASE(
   "Parser correctly parses a valid program with a read statement",
@@ -78,8 +87,50 @@ TEST_CASE(
   REQUIRE(CheckRootIsProgram(program));
 };
 
+TEST_CASE(
+  "Parser correctly parses a valid program with nested if statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    if (x > 0) then {
+      if (a == 3) then {
+        read a;
+      } else {
+        if (c > 4) then {
+          a = 3 * 2;
+        } else {
+          x = 1;
+        }
+      }
+    } else {
+      if (y < 2) then {
+        print y;
+      } else {
+        z = 3;
+      }
+    }
+})";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with nested while statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    while (x < 0) {
+      read a;
+      while (y > 0) {
+        z = z + 1;
+        while (z < 0) {
+          print a;
+        }
+      }
+    }
+})";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
 /*
-* Grammar Test Cases
+* Grammar test cases
 */
 TEST_CASE(
   "Parser correctly parses constants",
@@ -96,7 +147,7 @@ TEST_CASE(
 };
 
 /*
-* Expression Test Cases
+* Expression test cases
 */
 TEST_CASE(
   "Parser correctly parses expressions with one constant",
@@ -154,8 +205,11 @@ TEST_CASE(
   REQUIRE(CheckRootIsNodeType<ast::ExpressionNode>(input));
 };
 
+/*
+* Assign test cases
+*/
 TEST_CASE(
-  "Parser correctly parses assigns",
+  "Parser correctly parses assign",
   "[Parser]") {
   std::string input = R"(b = 1;)";
   REQUIRE(CheckRootIsNodeType<ast::AssignNode>(input));
@@ -222,5 +276,99 @@ TEST_CASE(
   "[Parser]") {
   std::string input = R"((x < 7) || (a > 3)))";
   REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+};
+
+/*
+* Statement number test cases
+*/
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a simple valid program",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    read x;
+})";
+  REQUIRE(CheckStatementCount(program, 1));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a longer valid program",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    read x;
+    print y;
+    z = 3;
+    read a;
+    print b;
+    c = 40;
+})";
+  REQUIRE(CheckStatementCount(program, 6));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with an if statement",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    read firstline;
+    if (x > 0) then {
+      print positive;
+    } else {
+      read nonpositive;
+    }
+})";
+  REQUIRE(CheckStatementCount(program, 4));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with a while statement",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    while (y > 0) {
+      x = y + 1;
+    }
+    print endline;
+})";
+  REQUIRE(CheckStatementCount(program, 3));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with nested if statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    if (x > 0) then {
+      if (a == 3) then {
+        read a;
+      } else {
+        if (c > 4) then {
+          a = 3 * 2;
+        } else {
+          x = 1;
+        }
+      }
+    } else {
+      if (y < 2) then {
+        print y;
+      } else {
+        z = 3;
+      }
+    }
+})";
+  REQUIRE(CheckStatementCount(program, 9));
+};
+
+TEST_CASE(
+  "Parser correctly assigns statement numbers to a valid program with nested while statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    while (x < 0) {
+      read a;
+      while (y > 0) {
+        z = z + 1;
+        while (z < 0) {
+          print a;
+        }
+      }
+    }
+})";
+  REQUIRE(CheckStatementCount(program, 6));
 };
 }  // namespace parser

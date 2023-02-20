@@ -1,11 +1,9 @@
-#include "PKB/PKB.h"
 #include "catch.hpp"
+
+#include "PKB/PKB.h"
 #include "sp/sp.h"
 
-using namespace std;
-void require(bool b) { REQUIRE(b); }
-
-TEST_CASE("SP can process and store a simple program into PKB") {
+TEST_CASE("SP can process a simple program") {
   std::string program = R"(procedure main {
     x = 1;
     read y;

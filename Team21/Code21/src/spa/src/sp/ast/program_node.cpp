@@ -2,11 +2,11 @@
 
 namespace ast {
 // Handles procedures like a stack LIFO
-void ProgramNode::AddProcedure(std::shared_ptr<INode> procedure) {
+void ProgramNode::AddProcedure(std::shared_ptr<ProcedureNode> procedure) {
   procedures.push_back(procedure);
 }
 
-std::vector<std::shared_ptr<INode>> ProgramNode::GetProcedures() {
+std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() {
   return procedures;
 }
 
@@ -17,5 +17,9 @@ std::string ProgramNode::ToString() const {
   }
   str += "}\n";
   return str;
+}
+
+int ProgramNode::GetTotalStatementCount() {
+  return procedures.front()->GetEndStatementNumber();
 }
 }

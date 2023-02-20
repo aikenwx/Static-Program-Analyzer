@@ -1,0 +1,120 @@
+2 - relationship(literal, literal) pattern(literal, subexpression)
+assign a; 
+Select a such that Parent*(1, 2) pattern a("x", _"0"_)
+none
+5000
+3 - relationship(literal, literal) pattern(literal, wildcard)
+assign a; print p; 
+Select p such that Parent*(11, 18) pattern a("x", _)
+5, 16, 18, 20
+5000
+5 - relationship(literal, literal) pattern(synonym, subexpression)
+assign a; variable v;
+Select v such that Parent*(11, 16) pattern a(v, _"0"_)
+x
+5000
+6 - relationship(literal, literal) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Parent*(14, 18) pattern a(v, _)
+count, x, y, z, a, i
+5000
+8 - relationship(literal, literal) pattern(wildcard, subexpression)
+assign a;
+Select a such that Parent*(17, 18) pattern a(_, _"x"_)
+12, 13, 19, 21, 24, 25
+5000
+9 - relationship(literal, literal) pattern(wildcard, wildcard)
+assign a;
+Select a such that Parent*(20, 21) pattern a(_, _)
+none
+5000
+11 - relationship(literal, synonym) pattern(literal, subexpression)
+assign a; variable v;
+Select a such that Parent*(11, a) pattern a("x", _"x"_)
+12, 19
+5000
+12 - relationship(literal, synonym) pattern(literal, wildcard)
+assign a;
+Select a such that Parent*(11, a) pattern a("y", _)
+22
+5000
+14 - relationship(literal, synonym) pattern(synonym, subexpression)
+assign a; variable v;
+Select v such that Parent*(14, a) pattern a(v, _"x"_)
+a, x
+5000
+15 - relationship(literal, synonym) pattern(synonym, wildcard)
+assign a; variable v;
+Select v such that Parent*(14, a) pattern a(v, _)
+x, a, y
+5000
+17 - relationship(literal, synonym) pattern(wildcard, subexpression)
+assign a; variable v;
+Select a such that Parent*(17, a) pattern a(_, _"x"_)
+19
+5000
+18 - relationship(literal, synonym) pattern(wildcard, wildcard)
+assign a; variable v; print p;
+Select p such that Parent*(17, p) pattern a(_, _)
+18
+5000
+20 - relationship(synonym, literal) pattern(literal, subexpression)
+assign a; variable v; while w;
+Select w such that Parent*(w, 18) pattern a("x", _"x"_)
+11, 17
+5000
+21 - relationship(synonym, literal) pattern(literal, wildcard)
+assign a; variable v; if i;
+Select i such that Parent*(i, 18) pattern a("y", _)
+14
+5000
+23 - relationship(synonym, literal) pattern(synonym, subexpression)
+assign a; variable v; stmt s;
+Select s such that Parent*(s, 21) pattern a(v, _"x"_)
+11, 14
+5000
+24 - relationship(synonym, literal) pattern(synonym, wildcard)
+assign a; variable v; stmt s;
+Select s such that Parent*(s, 21) pattern a(v, _)
+11, 14
+5000
+26 - relationship(synonym, literal) pattern(wildcard, subexpression)
+assign a; variable v; while w;
+Select w such that Parent*(w, 10) pattern a(_, _"x"_)
+9
+5000
+27 - relationship(synonym, literal) pattern(wildcard, wildcard)
+assign a; if i;
+Select i such that Parent*(i, 8) pattern a(_, _)
+6
+5000
+29 - relationship(synonym, synonym) pattern(literal, subexpression)
+assign a; variable v; while w;
+Select w such that Parent*(w, a) pattern a("x", _"x"_)
+11, 17
+5000
+30 - relationship(synonym, synonym) pattern(literal, wildcard)
+assign a; variable v; if i;
+Select i such that Parent*(i, a) pattern a("y", _)
+14
+5000
+32 - relationship(synonym, synonym) pattern(synonym, subexpression)
+assign a; variable v; stmt s;
+Select v such that Parent*(s, s) pattern a(v, _"x"_)
+none
+5000
+33 - relationship(synonym, synonym) pattern(synonym, wildcard)
+assign a; variable v; stmt s;
+Select v such that Parent*(s, a) pattern a(v, _)
+count, x, z, a, y
+5000
+35 - relationship(synonym, synonym) pattern(wildcard, subexpression)
+assign a; variable v; while w;
+Select w such that Parent*(w, a) pattern a(_, _"x"_)
+11, 17
+5000
+36 - relationship(synonym, synonym) pattern(wildcard, wildcard)
+assign a; if i;
+Select i such that Parent*(a, i) pattern a(_, _)
+none
+5000

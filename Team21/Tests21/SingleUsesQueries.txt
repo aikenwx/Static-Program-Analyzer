@@ -1,0 +1,100 @@
+1 - 2 syns: select variables used by assignments
+variable v; assign a;
+Select v such that Uses(a, v)
+x, y, z
+5000
+2 - 2 syns: select variables used by print
+variable v; print pn;
+Select v such that Uses(pn, v)
+x, z, y
+5000
+3 - 2 syns: select variables used by read
+variable v; read r;
+Select v such that Uses(r, v)
+None
+5000
+4 - 2 syns: select variables used by while
+variable v; while w;
+Select v such that Uses(w, v)
+count, x, y, z
+5000
+4 - 2 syns: select variables used by if
+variable v; if f;
+Select v such that Uses(f, v)
+count, x, y, z
+5000
+5 - 2 syns: select variables used by any statement
+variable v; stmt s;
+Select v such that Uses(s, v)
+count, x, y, z
+5000
+6 - left syn right wildcard: select statements that use a variable
+variable v; stmt s;
+Select s such that Uses(s, _)
+5, 6, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 24, 25
+5000
+7 - left syn right literal: select statements that use "x"
+variable v; stmt s;
+Select s such that Uses(s, "x")
+5, 11, 12, 13, 14, 17, 19, 20, 21, 24, 25
+5000
+8 - left syn right literal: select while that use "count"
+variable v; while w;
+Select w such that Uses(w, "count")
+9
+5000
+9 - left syn right literal select if that use "z"
+variable v; if f;
+Select f such that Uses(f, "z")
+14
+5000
+10 - left syn right literal select print that use "x"
+variable v; print pn;
+Select pn such that Uses(pn, "x")
+5, 20
+5000
+11 - left literal right syn: select all variables used in while
+variable v;
+Select v such that Uses(11, v)
+x, y, z
+5000
+12 - left literal right syn: select all variables used in if
+variable v;
+Select v such that Uses(6, v)
+count 
+5000
+13 - left literal right syn: select all variables used in assignment
+variable v;
+Select v such that Uses(12, v)
+x, y
+5000
+14 - left literal right wildcard: select all variables used in assignment
+variable v;
+Select v such that Uses(13, _)
+count, i, a, z, y, x
+5000
+15 - left literal right wildcard: select all variables used in while
+variable v;
+Select v such that Uses(17, _)
+count, i, a, z, y, x
+5000
+16 - left literal right wildcard: select all variables used in if
+variable v;
+Select v such that Uses(14, _)
+z, y, x, count, i, a
+5000
+17 - left literal right literal print true
+variable v;
+Select v such that Uses(9, "count")
+count, x, y, z, a, i
+5000
+18 - left literal right literal assign true
+constant c;
+Select c such that Uses(16, "z")
+0, 1, 2, 4, 5, 10, 11, 20, 1000, 2000, 6
+5000
+18 - left literal right literal while false
+while w;
+Select w such that Uses(23, "i")
+none
+5000

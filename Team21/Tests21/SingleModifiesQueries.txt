@@ -1,0 +1,85 @@
+1 - 2 syns select variables: modified by assignments
+variable v; assign a;
+Select v such that Modifies(a, v)
+x, y, z, count, i, a
+5000
+2 - 2 syns select variables modified by print
+variable v; print pn;
+Select v such that Modifies(pn, v)
+none
+5000
+3 - 2 syns select variables modified by read
+variable v; read r;
+Select v such that Modifies(r, v)
+count, a, i
+5000
+4 - 2 syns select variables modified by while
+variable v; while w;
+Select v such that Modifies(w, v)
+x, z, a, y, count
+5000
+4 - 2 syns select variables modified by if
+variable v; if f;
+Select v such that Modifies(f, v)
+count, a, y, x
+5000
+5 - 2 syns select variables modified by any statement
+variable v; stmt s;
+Select v such that Modifies(s, v)
+x, y, z, count, i, a
+5000
+6 - left syn right wildcard select statements that modify a variable
+variable v; stmt s;
+Select s such that Modifies(s, _)
+1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 19, 21, 22, 23, 24, 25
+5000
+7 - left syn right literal select statements that modify i
+variable v; stmt s;
+Select s such that Modifies(s, "i")
+23, 25
+5000
+8 - left syn right literal select while that modify y
+variable v; while w;
+Select w such that Modifies(w, "y")
+11
+5000
+9 - left syn right literal select if that modify couunt
+variable v; if f;
+Select f such that Modifies(f, "count")
+6
+5000
+10 - left syn right wildcard select print that modifies 
+variable v; print pn;
+Select pn such that Modifies(pn, _)
+none
+5000
+11 - left literal right syn select all variables modifies in while
+variable v;
+Select v such that Modifies(11, v)
+x, z, a, y
+5000
+12 - left literal right syn select all variables modifies in if
+variable v;
+Select v such that Modifies(14, v)
+a, x, y 
+5000
+13 - left literal right wildcard select all variables modified in while
+variable v;
+Select v such that Modifies(17, _)
+a, x, count, i, y, z
+5000
+14 - left literal right wildcard select all variables modified in if
+variable v;
+Select v such that Modifies(6, _)
+a, i, x, y, z, count
+5000
+15 - left literal right literal read false
+constant c;
+Select c such that Modifies(16, "z")
+none
+5000
+16 - left literal right literal while false
+variable v;
+Select v such that Modifies(20, "x")
+none
+5000

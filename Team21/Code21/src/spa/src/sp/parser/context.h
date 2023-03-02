@@ -14,6 +14,7 @@ public:
   template<typename T>
   bool IsLookaheadTypeOf();
   std::shared_ptr< std::vector<std::shared_ptr<ast::INode>>> GetStack();
+  int &GetStatementCounter();
 
 private:
   friend class SimpleChainParser;

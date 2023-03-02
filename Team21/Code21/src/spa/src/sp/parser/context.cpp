@@ -10,4 +10,8 @@ bool Context::IsLookaheadTypeOf() {
 std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> Context::GetStack() {
   return std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>>(stack);
 }
+
+int Context::GetStatementCounter() {
+  return statementCounter;
+}
 }

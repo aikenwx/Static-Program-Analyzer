@@ -58,9 +58,9 @@ class QueryFacade {
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
     UsesRelationship* getStatementUsesVariableRelationship(int statementNumber, std::string variableName);
-    ModifiesRelationship* getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
+    UsesRelationship * getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
     ParentRelationship* getParentRelationship(int parentStatementNumber, int childStatementNumber);
-    ParentRelationship* getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
+    FollowsRelationship * getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
     ParentStarRelationship* getParentStarRelationship(int parentStatementNumber, int childStatementNumber);
     FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
 

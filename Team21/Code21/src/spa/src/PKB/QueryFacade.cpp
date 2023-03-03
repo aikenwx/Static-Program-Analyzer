@@ -125,7 +125,7 @@ UsesRelationship * QueryFacade::getProcedureUsesVariableRelationship(std::string
     RelationshipLiteralHashkeyGenerator hashkeyGenerator;
 
     std::string hashkey = hashkeyGenerator.getProcedureUsesVariableHashKey(&procedureName, &variableName);
-    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    return (UsesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
 }
 
 ParentRelationship *QueryFacade::getParentRelationship(int parentStatementNumber, int childStatementNumber) {
@@ -139,7 +139,7 @@ FollowsRelationship * QueryFacade::getFollowsRelationship(int firstStatementNumb
     RelationshipLiteralHashkeyGenerator hashkeyGenerator;
 
     std::string hashkey = hashkeyGenerator.getFollowsRelationshipHashKey(firstStatementNumber, secondStatementNumber);
-    return (ParentRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    return (FollowsRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
 }
 
 ParentStarRelationship *QueryFacade::getParentStarRelationship(int parentStatementNumber, int childStatementNumber) {

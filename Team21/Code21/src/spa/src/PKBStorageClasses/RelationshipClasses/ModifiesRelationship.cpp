@@ -3,7 +3,6 @@
 //
 #include "ModifiesRelationship.h"
 
-#include <memory>
 #include <stdexcept>
 
 bool ModifiesRelationship::containsEntityOnLeftHand(Entity *entity) {

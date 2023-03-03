@@ -5,8 +5,6 @@
 #ifndef SPA_PARENTSTARRELATIONSHIP_H
 #define SPA_PARENTSTARRELATIONSHIP_H
 
-#include <memory>
-
 #include "../EntityClasses/Statement.h"
 #include "Relationship.h"
 

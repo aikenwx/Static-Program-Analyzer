@@ -8,7 +8,6 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Variable.h"
-#include <memory>
 
 class UsesRelationship : public Relationship {
 private:

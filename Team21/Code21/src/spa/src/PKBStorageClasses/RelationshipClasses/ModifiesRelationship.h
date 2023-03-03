@@ -7,7 +7,6 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Variable.h"
-#include <memory>
 
 class ModifiesRelationship : public Relationship {
 private:

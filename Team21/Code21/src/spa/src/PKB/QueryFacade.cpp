@@ -24,7 +24,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "RelationshipLiteralHashkeyGenerator.h"
 
 QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager) {
     this->entityManager = entityManager;
@@ -100,58 +99,112 @@ std::vector<FollowsStarRelationship *> *QueryFacade::getFollowsStarRelationships
         RelationshipType::FOLLOWS_STAR, leftEntityType, rightEntityType);
 }
 
-ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+std::vector<CallsRelationship *> *QueryFacade::getAllCallsRelationships() {
+    return (std::vector<CallsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+        RelationshipType::CALLS, EntityType::PROCEDURE, EntityType::PROCEDURE);
+}
 
-    std::string hashkey = hashkeyGenerator.getStatementModifiesVariableHashKey(statementNumber, &variableName);
-    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+std::vector<CallsStarRelationship *> *QueryFacade::getAllCallsStarRelationships() {
+    return (std::vector<CallsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+        RelationshipType::CALLS_STAR, EntityType::PROCEDURE, EntityType::PROCEDURE);
+}
+
+ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
+    Statement *statement = entityManager->getStatementByStatementNumber(statementNumber);
+    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    if (statement == nullptr || variable == nullptr) {
+        return nullptr;
+    }
+    ModifiesRelationship relationship = ModifiesRelationship(statement, variable);
+    return (ModifiesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
 ModifiesRelationship *QueryFacade::getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getProcedureModifiesVariableHashKey(&procedureName, &variableName);
-    return (ModifiesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    Procedure *procedure = entityManager->getProcedureByProcedureName(procedureName);
+    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    if (procedure == nullptr || variable == nullptr) {
+        return nullptr;
+    }
+    ModifiesRelationship relationship = ModifiesRelationship(procedure, variable);
+    return (ModifiesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
 UsesRelationship *QueryFacade::getStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getStatementUsesVariableHashKey(statementNumber, &variableName);
-    return (UsesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    Statement *statement = entityManager->getStatementByStatementNumber(statementNumber);
+    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    if (statement == nullptr || variable == nullptr) {
+        return nullptr;
+    }
+    UsesRelationship relationship = UsesRelationship(statement, variable);
+    return (UsesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
-UsesRelationship * QueryFacade::getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getProcedureUsesVariableHashKey(&procedureName, &variableName);
-    return (UsesRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+UsesRelationship *QueryFacade::getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
+    Procedure *procedure = entityManager->getProcedureByProcedureName(procedureName);
+    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    if (procedure == nullptr || variable == nullptr) {
+        return nullptr;
+    }
+    UsesRelationship relationship = UsesRelationship(procedure, variable);
+    return (UsesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
 ParentRelationship *QueryFacade::getParentRelationship(int parentStatementNumber, int childStatementNumber) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getParentRelationshipHashKey(parentStatementNumber, childStatementNumber);
-    return (ParentRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    Statement *parentStatement = entityManager->getStatementByStatementNumber(parentStatementNumber);
+    Statement *childStatement = entityManager->getStatementByStatementNumber(childStatementNumber);
+    if (parentStatement == nullptr || childStatement == nullptr) {
+        return nullptr;
+    }
+    ParentRelationship relationship = ParentRelationship(parentStatement, childStatement);
+    return (ParentRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
-FollowsRelationship * QueryFacade::getFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getFollowsRelationshipHashKey(firstStatementNumber, secondStatementNumber);
-    return (FollowsRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+FollowsRelationship *QueryFacade::getFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
+    Statement *firstStatement = entityManager->getStatementByStatementNumber(firstStatementNumber);
+    Statement *secondStatement = entityManager->getStatementByStatementNumber(secondStatementNumber);
+    if (firstStatement == nullptr || secondStatement == nullptr) {
+        return nullptr;
+    }
+    FollowsRelationship relationship = FollowsRelationship(firstStatement, secondStatement);
+    return (FollowsRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
 ParentStarRelationship *QueryFacade::getParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
-
-    std::string hashkey = hashkeyGenerator.getParentStarRelationshipHashKey(parentStatementNumber, childStatementNumber);
-    return (ParentStarRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+    Statement *parentStatement = entityManager->getStatementByStatementNumber(parentStatementNumber);
+    Statement *childStatement = entityManager->getStatementByStatementNumber(childStatementNumber);
+    if (parentStatement == nullptr || childStatement == nullptr) {
+        return nullptr;
+    }
+    ParentStarRelationship relationship = ParentStarRelationship(parentStatement, childStatement);
+    return (ParentStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }
 
 FollowsStarRelationship *QueryFacade::getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
-    RelationshipLiteralHashkeyGenerator hashkeyGenerator;
+    Statement *firstStatement = entityManager->getStatementByStatementNumber(firstStatementNumber);
+    Statement *secondStatement = entityManager->getStatementByStatementNumber(secondStatementNumber);
+    if (firstStatement == nullptr || secondStatement == nullptr) {
+        return nullptr;
+    }
+    FollowsStarRelationship relationship = FollowsStarRelationship(firstStatement, secondStatement);
+    return (FollowsStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+}
 
-    std::string hashkey = hashkeyGenerator.getFollowsStarRelationshipHashKey(firstStatementNumber, secondStatementNumber);
-    return (FollowsStarRelationship *)this->relationshipManager->getRelationshipByLiterals(hashkey);
+CallsRelationship *QueryFacade::getCallsRelationship(std::string callerName, std::string calleeName) {
+    Procedure *callerProcedure = entityManager->getProcedureByProcedureName(callerName);
+    Procedure *calleeProcedure = entityManager->getProcedureByProcedureName(calleeName);
+    if (callerProcedure == nullptr || calleeProcedure == nullptr) {
+        return nullptr;
+    }
+    CallsRelationship relationship = CallsRelationship(callerProcedure, calleeProcedure);
+    return (CallsRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+}
+
+CallsStarRelationship *QueryFacade::getCallsStarRelationship(std::string callerName, std::string calleeName) {
+    Procedure *callerProcedure = entityManager->getProcedureByProcedureName(callerName);
+    Procedure *calleeProcedure = entityManager->getProcedureByProcedureName(calleeName);
+    if (callerProcedure == nullptr || calleeProcedure == nullptr) {
+        return nullptr;
+    }
+    CallsStarRelationship relationship = CallsStarRelationship(callerProcedure, calleeProcedure);
+    return (CallsStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
 }

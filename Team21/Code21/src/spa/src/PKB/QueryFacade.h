@@ -20,13 +20,15 @@
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "QueryFacade.h"
 
 class QueryFacade {
@@ -54,16 +56,19 @@ class QueryFacade {
     std::vector<UsesRelationship*>* getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
     std::vector<ParentStarRelationship*>* getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
     std::vector<FollowsStarRelationship*>* getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
+    std::vector<CallsRelationship*>* getAllCallsRelationships();
+    std::vector<CallsStarRelationship*>* getAllCallsStarRelationships();
 
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
     UsesRelationship* getStatementUsesVariableRelationship(int statementNumber, std::string variableName);
-    UsesRelationship * getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
+    UsesRelationship* getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
     ParentRelationship* getParentRelationship(int parentStatementNumber, int childStatementNumber);
-    FollowsRelationship * getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
+    FollowsRelationship* getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
     ParentStarRelationship* getParentStarRelationship(int parentStatementNumber, int childStatementNumber);
     FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
-
+    CallsRelationship* getCallsRelationship(std::string callerName, std::string calleeName);
+    CallsStarRelationship* getCallsStarRelationship(std::string callerName, std::string calleeName);
 };
 
 #endif  // SPA_QUERYFACADE_H

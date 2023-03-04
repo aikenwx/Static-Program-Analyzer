@@ -861,4 +861,26 @@ TEST_CASE("PKB can store multiple CallsStar relationships and retrieve them all"
     CallsStarRelationship *expectedRelationship1 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure2")));
     CallsStarRelationship *expectedRelationship2 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure3")));
     CallsStarRelationship *expectedRelationship3 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure4")));
+    CallsStarRelationship *expectedRelationship4 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure5")));
+
+    std::vector<CallsStarRelationship *> expectedRelationships = {expectedRelationship1,
+                                                                  expectedRelationship2,
+                                                                  expectedRelationship3,
+                                                                  expectedRelationship4};
+
+    // for loop finds the relationship in the vector and compares it to the expected relationship
+
+    for (auto relationship : *relationships) {
+        bool found = false;
+        for (CallsStarRelationship *expectedRelationship : expectedRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        }
+        REQUIRE(found);
+    }
+
+    delete pkb;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
 }

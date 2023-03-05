@@ -29,15 +29,18 @@ class IntervalTree {
     return intervals_.erase(interval) > 0;
   };
   std::optional<Val> Search(Key key) {
-    auto it = intervals_.lower_bound({value, value});
+    auto it = std::lower_bound(intervals_.begin(), intervals_.end(), key,
+                               [](const auto& kvp1, const auto& key) {
+                                 return kvp1.first.second < key;
+                               });
     if (it == intervals_.end()) {
       return std::nullopt;
     }
-    if (it->first.first <= value && it->first.second >= value) {
+    if (it->first.first <= key && it->first.second >= key) {
       return it->second;
     }
     return std::nullopt;
-  };
+  }
 
  private:
   std::map<std::pair<Key, Key>, Val> intervals_;

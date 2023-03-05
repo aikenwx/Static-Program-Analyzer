@@ -67,7 +67,7 @@ class IntervalTree {
     }
     return false;
   };
-  bool Overlaps(std::pair<Key, Key> interval1, std::pair<Key, Key> interval2) {
+  static bool Overlaps(std::pair<Key, Key> interval1, std::pair<Key, Key> interval2) {
     // interval1 starts somewhere within interval2
     if (interval1.first >= interval2.first && interval1.first <= interval2.second) {
       return true;

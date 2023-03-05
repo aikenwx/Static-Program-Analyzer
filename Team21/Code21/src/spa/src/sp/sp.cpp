@@ -34,7 +34,7 @@
 namespace sp {
 bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   if (!util::instance_of<ast::ProgramNode>(root)) {
-    throw exceptions::SyntaxError("Unknown syntax error");
+    throw exceptions::SyntaxError("Invalid program");
   }
 
   std::shared_ptr<ast::ProgramNode> programNode =

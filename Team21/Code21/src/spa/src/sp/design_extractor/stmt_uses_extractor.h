@@ -1,5 +1,18 @@
 #pragma once
 
+#include "../ast/assign_node.h"
+#include "../ast/call_node.h"
+#include "../ast/constant_node.h"
+#include "../ast/if_node.h"
+#include "../ast/print_node.h"
+#include "../ast/procedure_node.h"
+#include "../ast/program_node.h"
+#include "../ast/statement_list_node.h"
+#include "../ast/statement_node.h"
+#include "../ast/read_node.h"
+#include "../ast/variable_node.h"
+#include "../ast/while_node.h"
+#include "../rel/uses_stmt_var_relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {
@@ -14,65 +27,68 @@ class StmtUsesExtractor : public Extractor {
   // - Uses(print, v) will always hold
   // - Uses(assg, v) will always hold (if v is on RHS of assg)
  public:
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleAssignNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                   std::shared_ptr<ast::AssignNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleCallNode(
-      std::vector<std::shared_ptr<ast::INode>> parents,
-      std::shared_ptr<ast::CallNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleIfNode(
-      std::vector<std::shared_ptr<ast::INode>> parents,
-      std::shared_ptr<ast::IfNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleWhileNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                  std::shared_ptr<ast::WhileNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleConstantNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                     std::shared_ptr<ast::ConstantNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandlePrintNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                  std::shared_ptr<ast::PrintNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleProcedureNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                      std::shared_ptr<ast::ProcedureNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleProgramNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                    std::shared_ptr<ast::ProgramNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleReadNode(
-      std::vector<std::shared_ptr<ast::INode>> parents,
-      std::shared_ptr<ast::ReadNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleStatementListNode(
-      std::vector<std::shared_ptr<ast::INode>> parents,
-      std::shared_ptr<ast::StatementListNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleStatementNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                      std::shared_ptr<ast::StatementNode> node) override {
-    return std::nullopt;
-  }
-  std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-  HandleVariableNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                     std::shared_ptr<ast::VariableNode> node) override;
   StmtUsesExtractor() = default;
+  void HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+                        int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleCallNode(
+
+      std::shared_ptr<ast::CallNode> node, int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleIfNode(
+
+      std::shared_ptr<ast::IfNode> node, int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleWhileNode(std::shared_ptr<ast::WhileNode> node,
+                       int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleConstantNode(std::shared_ptr<ast::ConstantNode> node,
+                          int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandlePrintNode(std::shared_ptr<ast::PrintNode> node,
+                       int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
+                           int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleProgramNode(std::shared_ptr<ast::ProgramNode> node,
+                         int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleReadNode(
+
+      std::shared_ptr<ast::ReadNode> node, int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleStatementListNode(
+
+      std::shared_ptr<ast::StatementListNode> node, int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleStatementNode(std::shared_ptr<ast::StatementNode> node,
+                           int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+  void HandleVariableNode(std::shared_ptr<ast::VariableNode> node,
+                          int depth) override;
+  void HandleOtherNode(std::shared_ptr<ast::INode> node, int depth) override {
+    UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
+  };
+
+  std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> GetRelationships();
+
+ private:
+  std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> relns_;
+  std::vector<std::shared_ptr<ast::INode>> parents_;
+  int depth_ = -1;
+
+  void UpdateParents(std::shared_ptr<ast::INode> node, int depth);
 };
 }  // namespace design_extractor

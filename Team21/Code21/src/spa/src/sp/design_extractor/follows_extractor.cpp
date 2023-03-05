@@ -2,18 +2,19 @@
 
 #include <vector>
 
+#include "../ast/statement_list_node.h"
+#include "../ast/statement_node.h"
 #include "../rel/follows_stmt_stmt_relationship.h"
 #include "../rel/relationship.h"
 
 namespace design_extractor {
-std::optional<std::vector<std::unique_ptr<rel::Relationship>>>
-FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode>> parents,
-                                          std::shared_ptr<ast::StatementListNode> node) {
-  std::vector<std::unique_ptr<rel::Relationship>> relationships;
-  std::vector<std::shared_ptr<ast::StatementNode>> statements = node->GetStatements();
+void FollowsExtractor::HandleStatementListNode(
+    std::shared_ptr<ast::StatementListNode> node, int depth) {
+  std::vector<std::shared_ptr<ast::StatementNode>> statements =
+      node->GetStatements();
   if (statements.size() <= 1) {
     // no Follows relationship possible in this statement list
-    return std::nullopt;
+    return;
   };
 
   // nb: `StatementListNode` stores statements in reverse order
@@ -23,11 +24,14 @@ FollowsExtractor::HandleStatementListNode(std::vector<std::shared_ptr<ast::INode
 
   for (; it != statements.crend(); it++) {
     std::shared_ptr<ast::StatementNode> second = *it;
-    relationships.push_back(
+    relns_.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));
     first = second;
   };
+};
 
-  return relationships;
-}
+std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>
+FollowsExtractor::GetRelationships() {
+  return relns_;
+};
 }  // namespace design_extractor

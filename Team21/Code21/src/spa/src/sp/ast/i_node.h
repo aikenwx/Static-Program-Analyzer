@@ -17,6 +17,6 @@ class INode {
   */
   virtual void AcceptVisitor(
       std::shared_ptr<INode> currentNode,
-      std::shared_ptr<design_extractor::Extractor> extractor, int depth) = 0;
+      std::shared_ptr<design_extractor::Extractor> extractor, int depth){};
 };
 }  // namespace ast

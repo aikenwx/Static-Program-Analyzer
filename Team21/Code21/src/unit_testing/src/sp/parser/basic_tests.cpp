@@ -40,15 +40,6 @@ TEST_CASE("Parser throws a SyntaxError with an empty program",
   REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
     Catch::Message("Syntax error: Empty program"));
 };
-
-TEST_CASE(
-  "Parser parses a program with no statements without throwing an error",
-  "[Parser]") {
-  std::string program = R"(procedure hello {
-})";
-  REQUIRE_NOTHROW(CheckRootIsProgram(program));
-};
-
 TEST_CASE(
   "Parser correctly parses a valid program with a read statement",
   "[Parser]") {

@@ -3,7 +3,7 @@
 #include <catch.hpp>
 
 namespace test_util {
-SCENARIO("IntervalTree can be constructed") {
+SCENARIO("IntervalTree can be constructed", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("The tree is constructed") {
@@ -12,7 +12,7 @@ SCENARIO("IntervalTree can be constructed") {
   }
 }
 
-SCENARIO("IntervalTree can insert intervals") {
+SCENARIO("IntervalTree can insert intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("An interval is inserted") {
@@ -25,7 +25,7 @@ SCENARIO("IntervalTree can insert intervals") {
   }
 }
 
-SCENARIO("IntervalTree can delete intervals") {
+SCENARIO("IntervalTree can delete intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree with an interval") {
     util::IntervalTree<int, int> tree;
     tree.Insert({0, 1}, 0);
@@ -39,7 +39,7 @@ SCENARIO("IntervalTree can delete intervals") {
   }
 }
 
-SCENARIO("IntervalTree can insert multiple intervals") {
+SCENARIO("IntervalTree can insert multiple intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("Multiple intervals are inserted") {
@@ -58,7 +58,7 @@ SCENARIO("IntervalTree can insert multiple intervals") {
   }
 }
 
-SCENARIO("IntervalTree can delete multiple intervals") {
+SCENARIO("IntervalTree can delete multiple intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree with multiple intervals") {
     util::IntervalTree<int, int> tree;
     tree.Insert({0, 1}, 0);
@@ -80,7 +80,7 @@ SCENARIO("IntervalTree can delete multiple intervals") {
   }
 }
 
-SCENARIO("IntervalTree.Search() returns nullopt when the value is not found") {
+SCENARIO("IntervalTree.Search() returns nullopt when the value is not found", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     tree.Insert({1, 5}, 2);
@@ -90,7 +90,7 @@ SCENARIO("IntervalTree.Search() returns nullopt when the value is not found") {
   }
 }
 
-SCENARIO("IntervalTree.Search() returns nullopt when the tree is empty") {
+SCENARIO("IntervalTree.Search() returns nullopt when the tree is empty", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("The tree is searched") {
@@ -99,7 +99,7 @@ SCENARIO("IntervalTree.Search() returns nullopt when the tree is empty") {
   }
 }
 
-SCENARIO("IntervalTree.Insert() returns false with overlapping intervals") {
+SCENARIO("IntervalTree.Insert() returns false with overlapping intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("An overlapping interval is inserted") {
@@ -112,7 +112,7 @@ SCENARIO("IntervalTree.Insert() returns false with overlapping intervals") {
   }
 }
 
-SCENARIO("IntervalTree.Insert() returns false with invalid intervals") {
+SCENARIO("IntervalTree.Insert() returns false with invalid intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("An invalid interval is inserted") {
@@ -123,7 +123,7 @@ SCENARIO("IntervalTree.Insert() returns false with invalid intervals") {
   }
 }
 
-SCENARIO("IntervalTree.Insert() returns false with duplicate intervals") {
+SCENARIO("IntervalTree.Insert() returns false with duplicate intervals", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("A duplicate interval is inserted") {
@@ -135,7 +135,7 @@ SCENARIO("IntervalTree.Insert() returns false with duplicate intervals") {
   }
 }
 
-SCENARIO("IntervalTree.Delete() returns false when trying to delete a non-existent interval") {
+SCENARIO("IntervalTree.Delete() returns false when trying to delete a non-existent interval", "[util][util/interval_tree]") {
   GIVEN("An IntervalTree") {
     util::IntervalTree<int, int> tree;
     WHEN("A non-existent interval is deleted") {

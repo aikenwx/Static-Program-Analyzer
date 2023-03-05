@@ -21,17 +21,18 @@ namespace design_extractor {
 class Extractor {
  public:
   virtual ~Extractor() = default;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleAssignNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::AssignNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleCallNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::CallNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleIfNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::IfNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleWhileNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::WhileNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleConstantNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ConstantNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandlePrintNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::PrintNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleProcedureNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ProcedureNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleProgramNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ProgramNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleReadNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::ReadNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleStatementListNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::StatementListNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleStatementNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::StatementNode> node) = 0;
-  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleVariableNode(std::vector<std::shared_ptr<ast::INode>> parents, std::shared_ptr<ast::VariableNode> node) = 0;
+  virtual void HandleAssignNode(std::shared_ptr<ast::AssignNode> node, int depth) = 0;
+  virtual void HandleCallNode(std::shared_ptr<ast::CallNode> node, int depth) = 0;
+  virtual void HandleIfNode(std::shared_ptr<ast::IfNode> node, int depth) = 0;
+  virtual void HandleWhileNode(std::shared_ptr<ast::WhileNode> node, int depth) = 0;
+  virtual void HandleConstantNode(std::shared_ptr<ast::ConstantNode> node, int depth) = 0;
+  virtual void HandlePrintNode(std::shared_ptr<ast::PrintNode> node, int depth) = 0;
+  virtual void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node, int depth) = 0;
+  virtual void HandleProgramNode(std::shared_ptr<ast::ProgramNode> node, int depth) = 0;
+  virtual void HandleReadNode(std::shared_ptr<ast::ReadNode> node, int depth) = 0;
+  virtual void HandleStatementListNode(std::shared_ptr<ast::StatementListNode> node, int depth) = 0;
+  virtual void HandleStatementNode(std::shared_ptr<ast::StatementNode> node, int depth) = 0;
+  virtual void HandleVariableNode(std::shared_ptr<ast::VariableNode> node, int depth) = 0;
+  virtual void HandleOtherNode(std::shared_ptr<ast::INode> node, int depth) = 0;
 };
 }  // namespace design_extractor

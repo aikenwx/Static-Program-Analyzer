@@ -13,6 +13,10 @@ public:
   std::string ToString() const override;
   int GetTotalStatementCount();
 
+  void AcceptVisitor(std::shared_ptr<INode> currentNode,
+                     std::shared_ptr<design_extractor::Extractor> extractor,
+                     int depth) override;
+
 private:
   std::vector<std::shared_ptr<ProcedureNode> > procedures;
 };

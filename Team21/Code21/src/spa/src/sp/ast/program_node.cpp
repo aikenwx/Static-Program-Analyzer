@@ -22,4 +22,15 @@ std::string ProgramNode::ToString() const {
 int ProgramNode::GetTotalStatementCount() {
   return procedures.front()->GetEndStatementNumber();
 }
+
+void ProgramNode::AcceptVisitor(
+    std::shared_ptr<INode> currentNode,
+    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+  extractor->HandleProgramNode(
+      std::static_pointer_cast<ProgramNode>(currentNode), depth);
+
+  for (auto i = procedures.begin(); i < procedures.end(); i++) {
+    (*i)->AcceptVisitor(*i, extractor, depth + 1);
+  }
 }
+}  // namespace ast

@@ -6,6 +6,8 @@
 #include "modifies_evaluator.h"
 #include "parent_star_evaluator.h"
 #include "follows_star_evaluator.h"
+#include "calls_evaluator.h"
+#include "calls_star_evaluator.h"
 #include "query/query_exceptions.h"
 
 namespace qps {
@@ -22,6 +24,8 @@ std::unique_ptr<SuchThatEvaluator> SuchThatEvaluatorFactory::Create(SuchThatClau
     case Relationship::ModifiesP:return std::make_unique<ModifiesEvaluator>(clause, decl_lst);
     case Relationship::ModifiesS:return std::make_unique<ModifiesEvaluator>(clause, decl_lst);
     case Relationship::Modifies:return std::make_unique<ModifiesEvaluator>(clause, decl_lst);
+    case Relationship::Calls:return std::make_unique<CallsEvaluator>(clause, decl_lst);
+    case Relationship::CallsT:return std::make_unique<CallsStarEvaluator>(clause, decl_lst);
     default:throw std::invalid_argument("Clause type not supported yet");
   }
 }

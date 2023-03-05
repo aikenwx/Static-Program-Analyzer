@@ -878,3 +878,120 @@ TEST_CASE("QPS can work with different combinations of followsStar") {
   }
 }
 
+TEST_CASE("QPS can work with different combinations of calls") {
+  qps_test::PopulatePKBHelper pkb_helper;
+  QueryFacade *pkb_querier = pkb_helper.GetQuerier();
+
+  // proc1 -> proc2, proc3
+  // proc2 -> proc4
+  //proc 3-> proc4, proc5
+  pkb_helper.AddCalls({"proc1", "proc2", "proc3", "proc4", "proc5"});
+  pkb_helper.AddCallsR({{"proc1", "proc2"}, {"proc1", "proc3"},
+                        {"proc2", "proc4"},
+                        {"proc3", "proc4"}, {"proc3", "proc5"}
+                       });
+
+  SECTION("Both Synonyms") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string>
+          expected{"proc1", "proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p, p1; Select p such that Calls(p, p1)", *pkb_querier) == expected);
+    }
+
+    SECTION("All procedures being called") {
+      std::unordered_set<std::string>
+          expected{"proc2", "proc3", "proc4", "proc5"};
+      REQUIRE(
+          qps_test::RunQuery("procedure p, p1; Select p1 such that Calls(p, p1)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, wild card on right") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string> expected{"proc1", "proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls(p, _)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, wild card on left") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string> expected{"proc2", "proc3", "proc4", "proc5"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls(_, p)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, literal on right") {
+    SECTION("All procedures calling a specific procedure") {
+      std::unordered_set<std::string> expected{"proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls(p, \"proc4\")", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, literal on left") {
+    SECTION("All procedures being called by a specific procedure") {
+      std::unordered_set<std::string> expected{"proc4", "proc5"};
+      REQUIRE(
+          qps_test::RunQuery("procedure p; Select p such that Calls(\"proc3\", p)", *pkb_querier)
+              == expected);
+    }
+  }
+}
+
+TEST_CASE("QPS can work with different combinations of callsStar") {
+  qps_test::PopulatePKBHelper pkb_helper;
+  QueryFacade *pkb_querier = pkb_helper.GetQuerier();
+
+  // proc1 -> proc2, proc3
+  // proc2 -> proc4
+  //proc 3-> proc4, proc5
+  pkb_helper.AddCalls({"proc1", "proc2", "proc3", "proc4", "proc5"});
+  pkb_helper.AddCallsStar({{"proc1", "proc2"}, {"proc1", "proc3"}, {"proc1", "proc4"}, {"proc1", "proc5"},
+                           {"proc2", "proc4"},
+                           {"proc3", "proc4"}, {"proc3", "proc5"}
+                          });
+
+  SECTION("Both Synonyms") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string>
+          expected{"proc1", "proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p, p1; Select p such that Calls*(p, p1)", *pkb_querier) == expected);
+    }
+
+    SECTION("All procedures being called") {
+      std::unordered_set<std::string>
+          expected{"proc2", "proc3", "proc4", "proc5"};
+      REQUIRE(
+          qps_test::RunQuery("procedure p, p1; Select p1 such that Calls*(p, p1)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, wild card on right") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string> expected{"proc1", "proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls*(p, _)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, wild card on left") {
+    SECTION("All procedures calling") {
+      std::unordered_set<std::string> expected{"proc2", "proc3", "proc4", "proc5"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls*(_, p)", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on left, literal on right") {
+    SECTION("All procedures calling a specific procedure") {
+      std::unordered_set<std::string> expected{"proc1", "proc2", "proc3"};
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls(p, \"proc4\")", *pkb_querier) == expected);
+    }
+  }
+
+  SECTION("Synonym on right, literal on left") {
+    SECTION("All procedures being called by a specific procedure") {
+      std::unordered_set<std::string> expected{"proc2", "proc3", "proc4", "proc5"};
+      REQUIRE(
+          qps_test::RunQuery("procedure p; Select p such that Calls(\"proc1\", p)", *pkb_querier)
+              == expected);
+    }
+  }
+}

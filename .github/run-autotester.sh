@@ -32,17 +32,34 @@ passed=$({ grep '<passed/>' /tmp/test_outputs/*_output.xml || test $? = 1; } | w
 failed=$({ grep '<failed>' /tmp/test_outputs/*_output.xml || test $? = 1; } | wc -l)
 total=$[ $passed + $failed ]
 
-if [[ $expected_num_queries != $total ]]; then
-    >&2 echo "Number of expected test cases doesn't match total number of executed tests!"
-    >&2 echo "The expected number of test cases might not be accurate though, so..."
-    >&2 echo
-fi
-
 echo "Total expected queries: $expected_num_queries"
 echo "Passed: $passed"
 echo "Failed: $failed"
 
 if [[ $failed > 0 ]]; then
+    >&2 echo
+    >&2 echo "There were failed tests! Exiting with an error."
+    exit 127
+fi
+
+if [[ $total == 0 ]]; then
+    >&2 echo
+    >&2 echo "Number of executed test cases is 0!"
+    >&2 echo "Something's really wrong here... Exiting with an error."
+    exit 127
+fi
+
+if [[ $expected_num_queries == 0 ]]; then
+    >&2 echo
+    >&2 echo "Number of expected test cases is 0!"
+    >&2 echo "Something's really wrong here... Exiting with an error."
+    exit 127
+fi
+
+if [[ $expected_num_queries != $total ]]; then
+    >&2 echo
+    >&2 echo "Number of expected test cases doesn't match total number of executed tests!"
+    >&2 echo "The expected number of test cases might not be accurate though, but exiting with an error anyway."
     exit 127
 fi
 

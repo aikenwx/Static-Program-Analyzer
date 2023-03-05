@@ -33,5 +33,6 @@ class Extractor {
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleStatementListNode(std::shared_ptr<ast::StatementListNode> node, int depth) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleStatementNode(std::shared_ptr<ast::StatementNode> node, int depth) = 0;
   virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleVariableNode(std::shared_ptr<ast::VariableNode> node, int depth) = 0;
+  virtual std::optional<std::vector<std::unique_ptr<rel::Relationship>>> HandleOtherNode(std::shared_ptr<ast::INode> node, int depth) = 0;
 };
 }  // namespace design_extractor

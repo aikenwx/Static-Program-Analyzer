@@ -1,5 +1,18 @@
 #pragma once
 
+#include "../ast/assign_node.h"
+#include "../ast/call_node.h"
+#include "../ast/constant_node.h"
+#include "../ast/if_node.h"
+#include "../ast/print_node.h"
+#include "../ast/procedure_node.h"
+#include "../ast/program_node.h"
+#include "../ast/statement_list_node.h"
+#include "../ast/statement_node.h"
+#include "../ast/read_node.h"
+#include "../ast/variable_node.h"
+#include "../ast/while_node.h"
+#include "../rel/uses_stmt_var_relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {

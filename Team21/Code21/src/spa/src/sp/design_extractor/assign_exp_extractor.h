@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../rel/assign_exp_relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {

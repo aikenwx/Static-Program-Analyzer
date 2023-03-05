@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "../rel/follows_stmt_stmt_relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {

@@ -1,10 +1,19 @@
 #include "ast_elem_extractor.h"
 
+#include "../ast/assign_node.h"
+#include "../ast/call_node.h"
+#include "../ast/if_node.h"
+#include "../ast/while_node.h"
+#include "../ast/constant_node.h"
+#include "../ast/print_node.h"
+#include "../ast/procedure_node.h"
+#include "../ast/read_node.h"
+#include "../ast/variable_node.h"
 #include "../rel/const_relationship.h"
 #include "../rel/proc_relationship.h"
+#include "../rel/relationship.h"
 #include "../rel/stmt_relationship.h"
 #include "../rel/var_relationship.h"
-#include "../rel/relationship.h"
 
 namespace design_extractor {
 std::optional<std::vector<std::unique_ptr<rel::Relationship>>> AstElemExtractor::HandleAssignNode(

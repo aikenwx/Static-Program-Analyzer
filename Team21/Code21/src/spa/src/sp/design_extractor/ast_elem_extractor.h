@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+
+#include "../rel/relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {

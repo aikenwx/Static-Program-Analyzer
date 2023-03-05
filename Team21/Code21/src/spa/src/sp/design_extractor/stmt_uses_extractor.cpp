@@ -1,5 +1,9 @@
 #include "stmt_uses_extractor.h"
 
+#include "../ast/assign_node.h"
+#include "../ast/read_node.h"
+#include "../ast/statement_node.h"
+#include "../ast/variable_node.h"
 #include "../rel/relationship.h"
 #include "../rel/uses_proc_var_relationship.h"
 #include "../rel/uses_stmt_var_relationship.h"

@@ -7,6 +7,7 @@
 #include "exceptions/semantic_error.h"
 #include "exceptions/syntax_error.h"
 #include "sp/ast/ast.h"
+#include "sp/ast/program_node.h"
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"

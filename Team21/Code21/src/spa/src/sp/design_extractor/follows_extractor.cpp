@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "../ast/statement_list_node.h"
+#include "../ast/statement_node.h"
 #include "../rel/follows_stmt_stmt_relationship.h"
 #include "../rel/relationship.h"
 

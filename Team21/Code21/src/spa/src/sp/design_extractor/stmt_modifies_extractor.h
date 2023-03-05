@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../rel/modifies_stmt_var_relationship.h"
 #include "extractor.h"
 
 namespace design_extractor {

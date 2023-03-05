@@ -1,5 +1,7 @@
 #include "stmt_modifies_extractor.h"
 
+#include "../ast/assign_node.h"
+#include "../ast/read_node.h"
 #include "../rel/modifies_proc_var_relationship.h"
 #include "../rel/modifies_stmt_var_relationship.h"
 #include "../rel/relationship.h"

@@ -1,11 +1,23 @@
 #!/bin/bash
+set -euo pipefail
 # el crapo script
-# make sure autotester has already been built
 
-cd Team*/Tests*
+cd Team21/Tests21
+
+# make sure autotester has already been built
+if [[ ! -x ../Code21/build/src/autotester/autotester ]]; then
+    >&2 echo "AutoTester binary not present!"
+    exit 42
+fi
+
 rm -rf /tmp/test_outputs
 mkdir /tmp/test_outputs
+
+# because asan will cause autotester to exit with exit code 1
+set +e
 for i in *_queries.txt; do name="$(echo $i | cut -d'_' -f 1)"; ../Code21/build/src/autotester/autotester ${name}_source.txt ${name}_queries.txt /tmp/test_outputs/${name}_output.xml; done
+set -e
+
 echo
 echo "All tests done!"
 echo
@@ -16,8 +28,8 @@ echo
 expected_num_queries=$[ $(cat *_queries.txt | wc -l) / 5 ]
 
 # number of passes/fails
-passed=$(grep '<passed/>' /tmp/test_outputs/*_output.xml | wc -l)
-failed=$(grep '<failed>' /tmp/test_outputs/*_output.xml | wc -l)
+passed=$({ grep '<passed/>' /tmp/test_outputs/*_output.xml || test $? = 1; } | wc -l)
+failed=$({ grep '<failed>' /tmp/test_outputs/*_output.xml || test $? = 1; } | wc -l)
 total=$[ $passed + $failed ]
 
 if [[ $expected_num_queries != $total ]]; then

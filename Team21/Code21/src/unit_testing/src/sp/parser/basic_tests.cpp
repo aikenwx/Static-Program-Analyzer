@@ -2,6 +2,7 @@
 #include <string>
 
 #include "catch.hpp"
+#include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
 #include "sp/parser/simple_parser.h"
 #include "tokenizer/simple_tokenizer.h"
@@ -36,8 +37,8 @@ bool CheckStatementCount(std::string program, int count) {
 TEST_CASE("Parser throws a SyntaxError with an empty program",
   "[Parser]") {
   std::string program = "";
-  REQUIRE_THROWS_WITH(CheckRootIsProgram(program),
-    "Syntax error: Empty program");
+  REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
+    Catch::Message("Syntax error: Empty program"));
 };
 
 TEST_CASE(

@@ -2,14 +2,7 @@
 
 #include <stack>
 
-#include "../ast/binary_operation_node.h"
-#include "../ast/constant_node.h"
-#include "../ast/divide_node.h"
-#include "../ast/minus_node.h"
-#include "../ast/modulo_node.h"
-#include "../ast/plus_node.h"
-#include "../ast/times_node.h"
-#include "../ast/variable_node.h"
+#include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
 #include "../rel/relationship.h"
 #include "util/instance_of.h"

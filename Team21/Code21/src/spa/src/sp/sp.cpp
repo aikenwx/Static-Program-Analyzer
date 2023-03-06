@@ -265,16 +265,13 @@ void PopulateCallRels(
   for (const auto& [first, second] : calls) {
     std::string callerProcName = first;
     for (const auto& calledProcName : second) {
-      // TODO: uncomment when pr #193 merged
-      // popFacade->storeCallsRelationship(callerProcName, calledProcName);
+      popFacade->storeCallsRelationship(callerProcName, calledProcName);
     }
   }
   for (const auto& [first, second] : callsStar) {
     std::string callerProcName = first;
     for (const auto& calledProcName : second) {
-      // TODO: uncomment when pr #193 merged
-      // popFacade->storeCallsStarRelationship(callerProcName,
-      // calledProcName);
+      popFacade->storeCallsStarRelationship(callerProcName, calledProcName);
     }
   }
 }

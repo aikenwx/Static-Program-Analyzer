@@ -51,7 +51,7 @@ namespace qps {
 					throw  QueryException(ErrorType::Syntactic, "Syntactic error. The argument is not of correct ref type for " + relStr);
 				}
 			}
-			else if (re == Relationship::ModifiesP || re == Relationship::UsesP) {
+			else if (re == Relationship::ModifiesP || re == Relationship::UsesP || re == Relationship::Calls || re == Relationship::CallsT) {
 				if (std::holds_alternative<StatementNumber>(ref1) || std::holds_alternative<StatementNumber>(ref2)) {
 					throw  QueryException(ErrorType::Syntactic, "Syntactic error. The argument is not of correct ref type for " + relStr);
 				}
@@ -59,7 +59,7 @@ namespace qps {
 		}
 	}
 
-	//TBD expression-spec does not have parser to parse and check if valid. Need to add something to check. Now only check for first arg.
+	//expression-spec is checked when the expression is converted to postfix in the evaluator. Now only check for first arg.
 	void SyntacticValidator::checkAssignPatternCorrectRefTypes() {
 		std::vector<PatternClause> patt = getQuery().getPatternClause();
 		for (int i = 0; i < patt.size(); i++) {

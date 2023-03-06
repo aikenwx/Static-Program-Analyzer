@@ -133,6 +133,38 @@ TEST_CASE("Semantic validation for queries") {
         REQUIRE_THROWS_WITH(validator.validateQuery(),
             Contains("Semantic error. Wrong design entity type for Uses(P)"));
     }
+
+    SECTION("check that calls relationship cannot have non variable synonym for first argument") {
+      std::string dupeInput("stmt s; procedure p; variable v; assign a; constant c; Select s such that Calls (v, p)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SemanticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Semantic error. Wrong design entity type for Calls"));
+    }
+
+    SECTION("check that callsT relationship cannot have non variable synonym for first argument") {
+      std::string dupeInput("stmt s; procedure p; variable v; assign a; constant c; Select s such that Calls (p, c)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SemanticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Semantic error. Wrong design entity type for Calls"));
+    }
+
+    SECTION("check that calls relationship cannot have non variable synonym for second argument") {
+      std::string dupeInput("stmt s; procedure p; variable v; assign a; constant c; Select s such that Calls* (a, p)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SemanticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Semantic error. Wrong design entity type for Calls*"));
+    }
+
+    SECTION("check that callsT relationship cannot have non variable synonym for second argument") {
+      std::string dupeInput("stmt s; procedure p; variable v; assign a; constant c; Select s such that Calls* (p, a)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SemanticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Semantic error. Wrong design entity type for Calls*"));
+    }
 }
 
 TEST_CASE("Syntactic validation for queries") {
@@ -179,5 +211,37 @@ TEST_CASE("Syntactic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SyntacticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(), Contains("Syntactic error. The first argument is not of correct ref type for assign clause"));
+    }
+
+    SECTION("check that calls relationship cannot allow statement number for first argument") {
+      std::string dupeInput("procedure pp; procedure px; Select pp such that Calls (1, px)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SyntacticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Syntactic error. The argument is not of correct ref type for Calls"));
+    }
+
+    SECTION("check that calls relationship cannot allow statement number for second argument") {
+      std::string dupeInput("procedure pp; procedure px; Select pp such that Calls (pp, 14)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SyntacticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Syntactic error. The argument is not of correct ref type for Calls"));
+    }
+
+    SECTION("check that callsT relationship cannot allow statement number for first argument") {
+      std::string dupeInput("procedure pp; procedure px; Select pp such that Calls* (12323, px)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SyntacticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Syntactic error. The argument is not of correct ref type for Calls*"));
+    }
+
+    SECTION("check that callsT relationship cannot allow statement number for second argument") {
+      std::string dupeInput("procedure pp; procedure px; Select pp such that Calls* (pp, 145678)");
+      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+      qps::SyntacticValidator validator(dupeQuery);
+      REQUIRE_THROWS_WITH(validator.validateQuery(),
+        Contains("Syntactic error. The argument is not of correct ref type for Calls*"));
     }
 }

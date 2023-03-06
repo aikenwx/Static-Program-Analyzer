@@ -14,6 +14,7 @@ bool SemanticValidator::validateQuery() {
   checkPatternClauseSynAssign();
   checkNoWildCardFirstArgModifiesUses();
   checkRelationSynonymMatchDesignEntity();
+  checkPatternSynonymMatchDesignEntity();
   return true;
 }
 
@@ -65,8 +66,7 @@ void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {
     Relationship rel = s[i].getRelationship();
     if (std::holds_alternative<Underscore>(s[i].getArg1())) {
       if (rel == Relationship::ModifiesP || rel == Relationship::ModifiesS || rel == Relationship::UsesP
-          || rel == Relationship::UsesS
-          || rel == Relationship::Modifies || rel == Relationship::Uses) {
+          || rel == Relationship::UsesS || rel == Relationship::Modifies || rel == Relationship::Uses) {
         std::string relStr = getStringFromRelationship(rel);
         throw QueryException(ErrorType::Semantic, "Semantic error. There is wild card as first argument in " + relStr);
       }
@@ -91,17 +91,7 @@ void SemanticValidator::checkPatternClauseSynAssign() {
 
 void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
   std::vector<SuchThatClause> s = getQuery().getSuchThatClause();
-  std::vector<PatternClause> p = getQuery().getPatternClause();
   std::vector<Declaration> declr = getQuery().getDeclarations();
-  for (int i = 0; i < p.size(); i++) {
-    if (std::holds_alternative<Synonym>(p[i].getArg1())) {
-      Synonym syn = std::get<Synonym>(p[i].getArg1());
-      DesignEntity patternArgSyn = Declaration::findDeclarationWithSynonym(declr, syn).value().getDesignEntity();
-      if (patternArgSyn != DesignEntity::VARIABLE) {
-        throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for pattern argument 1");
-      }
-    }
-  }
   for (int i = 0; i < s.size(); i++) {
     Relationship rel = s[i].getRelationship();
     std::string relStr = getStringFromRelationship(rel);
@@ -140,6 +130,20 @@ void SemanticValidator::checkSynonymStatementHelper(DesignEntity d, std::string 
   if (d != DesignEntity::STMT && d != DesignEntity::READ && d != DesignEntity::PRINT && d != DesignEntity::ASSIGN
       && d != DesignEntity::IF && d != DesignEntity::WHILE && d != DesignEntity::CALL) {
     throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+  }
+}
+
+void SemanticValidator::checkPatternSynonymMatchDesignEntity() {
+  std::vector<PatternClause> p = getQuery().getPatternClause();
+  std::vector<Declaration> declr = getQuery().getDeclarations();
+  for (int i = 0; i < p.size(); i++) {
+      if (std::holds_alternative<Synonym>(p[i].getArg1())) {
+          Synonym syn = std::get<Synonym>(p[i].getArg1());
+          DesignEntity patternArgSyn = Declaration::findDeclarationWithSynonym(declr, syn).value().getDesignEntity();
+          if (patternArgSyn != DesignEntity::VARIABLE) {
+              throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for pattern argument 1");
+          }
+      }
   }
 }
 }

@@ -28,9 +28,11 @@ namespace qps {
 		void checkNoWildCardFirstArgModifiesUses();
 
 		//checks that synonyms declared in such that clause for relationships(e.g. parent) have the correct design entity types for that relation
-		//also check that pattern first arg is variable if it is synonym
 		void checkRelationSynonymMatchDesignEntity();
 
 		void checkSynonymStatementHelper(DesignEntity d, std::string relStr);
+
+		//checks that pattern first arg is variable if it is synonym
+		void checkPatternSynonymMatchDesignEntity();
 	};
 }

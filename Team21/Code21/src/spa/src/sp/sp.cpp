@@ -144,7 +144,7 @@ bool SP::process(std::string program, PKB* pkb) {
   // put AST entities into PKB
   // and populate procedureByName, procedureRels, callStmtRels
   PopulateFacade* PopFacade = pkb->getPopulateFacade();
-  for (auto&& rel : astElemRelationships) {
+  for (const auto& rel : astElemRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::CALL_STMT) {
       std::shared_ptr<rel::CallStmtRelationship> callStmtRel =
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
@@ -203,7 +203,7 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // populate calls*
-  for (auto& elem : calls) {
+  for (const auto& elem : calls) {
     std::unordered_set<std::string>* callsStarProcs = &callsStar[elem.first];
     std::unordered_set<std::string> traversed;
     std::queue<std::string> traverseQueue;
@@ -245,14 +245,14 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // populate CalledByStar
-  for (auto& elem : callsStar) {
+  for (const auto& elem : callsStar) {
     for (const auto& called : elem.second) {
       calledByStar[called].emplace(elem.first);
     }
   }
 
   // populate followsRels
-  for (auto& rel : followsRelationships) {
+  for (const auto& rel : followsRelationships) {
     std::shared_ptr<rel::FollowsStmtStmtRelationship> followsRel =
         std::static_pointer_cast<rel::FollowsStmtStmtRelationship>(rel);
     followsRels[followsRel->secondStatementNumber()] =
@@ -260,7 +260,7 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // populate parentRels
-  for (auto& rel : parentRelationships) {
+  for (const auto& rel : parentRelationships) {
     std::shared_ptr<rel::ParentStmtStmtRelationship> parentRel =
         std::static_pointer_cast<rel::ParentStmtStmtRelationship>(rel);
     parentRels[parentRel->secondStatementNumber()] =
@@ -302,14 +302,14 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // store Calls, Calls* into PKB
-  for (auto& elem : calls) {
+  for (const auto& elem : calls) {
     std::string callerProcName = elem.first;
     for (const auto& calledProcName : elem.second) {
       // TODO: uncomment when pr #193 merged
       // PopFacade->storeCallsRelationship(callerProcName, calledProcName);
     }
   }
-  for (auto& elem : callsStar) {
+  for (const auto& elem : callsStar) {
     std::string callerProcName = elem.first;
     for (const auto& calledProcName : elem.second) {
       // TODO: uncomment when pr #193 merged
@@ -320,7 +320,7 @@ bool SP::process(std::string program, PKB* pkb) {
   // store Modifies into PKB
   std::unordered_map<std::string, std::unordered_set<std::string>>
       varModifiedByProc;
-  for (auto& rel : modifiesRelationships) {
+  for (const auto& rel : modifiesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::MODIFIES_STMT_VAR) {
       std::shared_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
           std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(rel);
@@ -359,7 +359,7 @@ bool SP::process(std::string program, PKB* pkb) {
   // store Uses into PKB
   std::unordered_map<std::string, std::unordered_set<std::string>>
       varUsedByProc;
-  for (auto& rel : usesRelationships) {
+  for (const auto& rel : usesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::USES_STMT_VAR) {
       std::shared_ptr<rel::UsesStmtVarRelationship> usesRel =
           std::static_pointer_cast<rel::UsesStmtVarRelationship>(rel);
@@ -395,7 +395,7 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // store assign postfix exps into PKB
-  for (auto& rel : assignExpRelationships) {
+  for (const auto& rel : assignExpRelationships) {
     std::shared_ptr<rel::AssignExpRelationship> assignExpRel =
         std::static_pointer_cast<rel::AssignExpRelationship>(rel);
     PopFacade->storeAssignStatementPostfixExpression(

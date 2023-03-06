@@ -1,6 +1,8 @@
 #include "call_validator.h"
 
 #include <assert.h>
+#include "sp/ast/call_node.h"
+#include "sp/ast/program_node.h"
 #include "exceptions/semantic_error.h"
 
 namespace design_extractor {

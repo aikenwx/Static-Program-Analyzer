@@ -1,4 +1,4 @@
-#include "program_subparser.h"
+#include "subparsers.h"
 #include "token/and_token.h"
 #include "token/assign_token.h"
 #include "token/divide_token.h"
@@ -28,6 +28,21 @@
 namespace parser {
 SimpleChainParser::SimpleChainParser() {
   this->subparsers = std::make_shared<ProgramSubparser>();
+  this->subparsers->SetNext(std::make_shared<ProcedureSubparser>())
+    ->SetNext(std::make_shared<StatementListSubparser>())
+    ->SetNext(std::make_shared<ReadSubparser>())
+    ->SetNext(std::make_shared<PrintSubparser>())
+    ->SetNext(std::make_shared<FactorSubparser>())
+    ->SetNext(std::make_shared<TermSubparser>())
+    ->SetNext(std::make_shared<ExpressionSubparser>())
+    ->SetNext(std::make_shared<AssignSubparser>())
+    ->SetNext(std::make_shared<RelationalFactorSubparser>())
+    ->SetNext(std::make_shared<RelationalExpressionSubparser>())
+    ->SetNext(std::make_shared<ConditionalExpressionSubparser>())
+    ->SetNext(std::make_shared<IfSubparser>())
+    ->SetNext(std::make_shared<WhileSubparser>())
+    ->SetNext(std::make_shared<VariableSubparser>())
+    ->SetNext(std::make_shared<NameSubparser>());
 }
 
 std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
@@ -38,10 +53,17 @@ std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<t
   context->statementCounter = 0;
   for (context->lookahead = input.begin(); context->lookahead < input.end(); context->lookahead++) {
     // Handle parsing logic
+    if (stack.size() == 0) {
+      Shift();
+      continue;
+    }
+
     while (subparsers->Parse(context));
 
+    Shift();
   }
-  ast = std::make_unique<ast::AST>();
+  std::unique_ptr<ast::AST> ast = std::make_unique<ast::AST>();
+  ast->SetRoot(context->stack.front());
   return ast;
 }
 

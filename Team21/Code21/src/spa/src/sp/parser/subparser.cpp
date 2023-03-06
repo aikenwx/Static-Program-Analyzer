@@ -14,5 +14,6 @@ bool Subparser::Parse(std::shared_ptr<Context> context) {
   if (this->next) {
     return this->next->Parse(context);
   }
+  return false;
 }
 }

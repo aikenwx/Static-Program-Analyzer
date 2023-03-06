@@ -202,6 +202,21 @@ TEST_CASE(
   REQUIRE(CheckRootIsNodeType<ast::ExpressionNode>(input));
 };
 
+TEST_CASE(
+  "Parser correctly parses more complicated expressions",
+  "[Parser]") {
+  std::string input = R"((x + 2) + 2 * 4;)";
+  CHECK(CheckRootIsNodeType<ast::ExpressionNode>(input));
+  input = R"(((x + 2) + 4) * (((30 + ((y))))));)";
+  CHECK(CheckRootIsNodeType<ast::ExpressionNode>(input));
+  input = R"((((x))) % 3;)";
+  CHECK(CheckRootIsNodeType<ast::ExpressionNode>(input));
+  input = R"(((1 * (x) * 3)) * 4 + ((((((5))))) / (2);)";
+  CHECK(CheckRootIsNodeType<ast::ExpressionNode>(input));
+  input = R"(((x - ((3 * 2))) - 1);)";
+  REQUIRE(CheckRootIsNodeType<ast::ExpressionNode>(input));
+}
+
 /*
 * Assign test cases
 */
@@ -212,6 +227,20 @@ TEST_CASE(
   REQUIRE(CheckRootIsNodeType<ast::AssignNode>(input));
 };
 
+TEST_CASE(
+  "Parser correctly parses assign with expressions",
+  "[Parser]") {
+  std::string input = R"(b = ((1 + x));)";
+  CHECK(CheckRootIsNodeType<ast::AssignNode>(input));
+  input = R"(b = x * 5 + 4 / 2;)";
+  CHECK(CheckRootIsNodeType<ast::AssignNode>(input));
+  input = R"(b = (((x + y) / 7) + 0 * 5) - 2;)";
+  REQUIRE(CheckRootIsNodeType<ast::AssignNode>(input));
+};
+
+/*
+* Conditional expression test cases
+*/
 TEST_CASE(
   "Parser correctly parses conditional expressions with lesser",
   "[Parser]") {
@@ -253,6 +282,39 @@ TEST_CASE(
   std::string input = R"(b != 0))";
   REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
 };
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expressions on LHS",
+  "[Parser]") {
+  std::string input = R"((x + 2) < 0))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(x + 2 < 0))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"((((x + 2))) < 0))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expressions on RHS",
+  "[Parser]") {
+  std::string input = R"(y < (5 + x)))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(y < 5 + x))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(y < (((5 + x)))))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
+
+TEST_CASE(
+  "Parser correctly parses conditional expressions with expressions on LHS and RHS",
+  "[Parser]") {
+  std::string input = R"((x + 7) < (5 * a)))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"(x + 7 < 5 * a))";
+  CHECK(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+  input = R"((((x + 7))) < (((5 * a)))))";
+  REQUIRE(CheckRootIsNodeType<ast::ConditionalExpressionNode>(input));
+}
 
 TEST_CASE(
   "Parser correctly parses conditional expressions with not",

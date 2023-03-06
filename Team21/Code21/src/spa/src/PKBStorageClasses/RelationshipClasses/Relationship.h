@@ -11,7 +11,9 @@ enum RelationshipType {
     FOLLOWS = 3,
     PARENT_STAR = 4,
     FOLLOWS_STAR = 5,
-    LAST_RELATIONSHIP = FOLLOWS_STAR,
+    CALLS = 6,
+    CALLS_STAR = 7,
+    LAST_RELATIONSHIP = CALLS_STAR,
 };
 
 class Relationship {

@@ -48,7 +48,7 @@ jobs:
         run: brew install ninja ${{matrix.other_pkgs}}
 
       - name: Configure build
-        working-directory: ${{runner.workspace}}
+        working-directory: ${{github.workspace}}/Team21/Code21
         env:
           CXX: ${{matrix.cxx}}
           CXXFLAGS: ${{matrix.cxxflags}}
@@ -62,12 +62,17 @@ jobs:
           -G Ninja
 
       - name: Build tests + project
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{github.workspace}}/Team21/Code21/build
         run: ninja
 
-      - name: Run tests
+      - name: Run unit/integration tests
         env:
             CTEST_OUTPUT_ON_FAILURE: 1
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{github.workspace}}/Team21/Code21/build
         # Hardcode 2 cores we know are there
         run: ctest -C ${{matrix.build_type}} -j 2
+
+      - name: Run AutoTester tests (Linux)
+        if: runner.os == 'Linux'
+        working-directory: ${{ github.workspace }}
+        run: .github/run-autotester.sh

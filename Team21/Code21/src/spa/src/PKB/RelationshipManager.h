@@ -29,7 +29,7 @@ class RelationshipManager {
     getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
                             EntityType rightHandEntityType);
 
-    Relationship* getRelationshipByLiterals(std::string relationshipLiteralHash);
+    Relationship* getRelationshipIfExist(Relationship* relationship);
 
    private:
     void initialiseVectorForIndexIfNotExist(int hashkey);

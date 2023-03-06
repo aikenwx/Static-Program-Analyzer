@@ -19,6 +19,8 @@
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
@@ -141,6 +143,22 @@ void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, 
     }
 
     this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, new std::string(postfixExpression));
+}
+
+void PopulateFacade::storeCallsRelationship(std::string firstProcedureName, std::string secondProcedureName) {
+    Procedure *firstProcedure = this->entityManager->getProcedureByProcedureName(firstProcedureName);
+    Procedure *secondProcedure = this->entityManager->getProcedureByProcedureName(secondProcedureName);
+    this->validateEntityExists(firstProcedure);
+    this->validateEntityExists(secondProcedure);
+    this->relationshipManager->storeRelationship(std::make_shared<CallsRelationship>(firstProcedure, secondProcedure));
+}
+
+void PopulateFacade::storeCallsStarRelationship(std::string firstProcedureName, std::string secondProcedureName) {
+    Procedure *firstProcedure = this->entityManager->getProcedureByProcedureName(firstProcedureName);
+    Procedure *secondProcedure = this->entityManager->getProcedureByProcedureName(secondProcedureName);
+    this->validateEntityExists(firstProcedure);
+    this->validateEntityExists(secondProcedure);
+    this->relationshipManager->storeRelationship(std::make_shared<CallsStarRelationship>(firstProcedure, secondProcedure));
 }
 
 void PopulateFacade::validateEntityExists(Entity *entity) {

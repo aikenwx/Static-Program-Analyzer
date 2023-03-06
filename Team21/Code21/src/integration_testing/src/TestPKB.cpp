@@ -742,3 +742,145 @@ TEST_CASE("PKB can store multitple while parentStar statements relationships and
     PKBtestHelpers::deleteRelationship(expectedRelationship5);
     PKBtestHelpers::deleteRelationship(expectedRelationship6);
 }
+
+TEST_CASE("PKB can store multiple Calls relationships and retrieve them all") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeCallStatement(3);
+    populateFacade->storePrintStatement(4);
+    populateFacade->storeReadStatement(5);
+    populateFacade->storeIfStatement(6);
+    populateFacade->storeWhileStatement(7);
+
+    populateFacade->storeIfStatement(8);
+    populateFacade->storeAssignmentStatement(9);
+
+    populateFacade->storeVariable("x");
+    populateFacade->storeVariable("y");
+
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+    populateFacade->storeProcedure("Procedure3");
+    populateFacade->storeProcedure("Procedure4");
+    populateFacade->storeProcedure("Procedure5");
+
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure2");
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure3");
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure4");
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure5");
+
+    // should not be returned
+    populateFacade->storeParentRelationship(8, 9);
+    populateFacade->storeFollowsRelationship(2, 3);
+    populateFacade->storeStatementUsesVariableRelationship(2, "x");
+    populateFacade->storeStatementModifiesVariableRelationship(2, "y");
+    populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
+    populateFacade->storeParentRelationship(1, 2);
+    populateFacade->storeFollowsStarRelationship(2, 3);
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure2");
+
+    auto relationships = queryFacade->getAllCallsRelationships();
+
+    REQUIRE(relationships->size() == 4);
+
+    CallsRelationship *expectedRelationship1 = new CallsRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure2")));
+    CallsRelationship *expectedRelationship2 = new CallsRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure3")));
+    CallsRelationship *expectedRelationship3 = new CallsRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure4")));
+    CallsRelationship *expectedRelationship4 = new CallsRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure5")));
+
+    std::vector<CallsRelationship *> expectedRelationships = {expectedRelationship1,
+                                                              expectedRelationship2,
+                                                              expectedRelationship3,
+                                                              expectedRelationship4};
+
+    // for loop finds the relationship in the vector and compares it to the expected relationship
+
+    for (auto relationship : *relationships) {
+        bool found = false;
+        for (CallsRelationship *expectedRelationship : expectedRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        }
+        REQUIRE(found);
+    }
+
+    delete pkb;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
+}
+
+TEST_CASE("PKB can store multiple CallsStar relationships and retrieve them all") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeCallStatement(3);
+    populateFacade->storePrintStatement(4);
+    populateFacade->storeReadStatement(5);
+    populateFacade->storeIfStatement(6);
+    populateFacade->storeWhileStatement(7);
+
+    populateFacade->storeIfStatement(8);
+    populateFacade->storeAssignmentStatement(9);
+
+    populateFacade->storeVariable("x");
+    populateFacade->storeVariable("y");
+
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+    populateFacade->storeProcedure("Procedure3");
+    populateFacade->storeProcedure("Procedure4");
+    populateFacade->storeProcedure("Procedure5");
+
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure2");
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure3");
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure4");
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure5");
+
+    // should not be returned
+    populateFacade->storeParentRelationship(8, 9);
+    populateFacade->storeFollowsRelationship(2, 3);
+    populateFacade->storeStatementUsesVariableRelationship(2, "x");
+    populateFacade->storeStatementModifiesVariableRelationship(2, "y");
+    populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
+    populateFacade->storeParentRelationship(1, 2);
+    populateFacade->storeFollowsStarRelationship(2, 3);
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure2");
+
+    auto relationships = queryFacade->getAllCallsStarRelationships();
+
+    REQUIRE(relationships->size() == 4);
+
+    CallsStarRelationship *expectedRelationship1 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure2")));
+    CallsStarRelationship *expectedRelationship2 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure3")));
+    CallsStarRelationship *expectedRelationship3 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure4")));
+    CallsStarRelationship *expectedRelationship4 = new CallsStarRelationship(new Procedure(new std::string("Procedure1")), new Procedure(new std::string("Procedure5")));
+
+    std::vector<CallsStarRelationship *> expectedRelationships = {expectedRelationship1,
+                                                                  expectedRelationship2,
+                                                                  expectedRelationship3,
+                                                                  expectedRelationship4};
+
+    // for loop finds the relationship in the vector and compares it to the expected relationship
+
+    for (auto relationship : *relationships) {
+        bool found = false;
+        for (CallsStarRelationship *expectedRelationship : expectedRelationships) {
+            found = found || PKBtestHelpers::relationshipEqualsRelationship(relationship, expectedRelationship);
+        }
+        REQUIRE(found);
+    }
+
+    delete pkb;
+    PKBtestHelpers::deleteRelationship(expectedRelationship1);
+    PKBtestHelpers::deleteRelationship(expectedRelationship2);
+    PKBtestHelpers::deleteRelationship(expectedRelationship3);
+    PKBtestHelpers::deleteRelationship(expectedRelationship4);
+}

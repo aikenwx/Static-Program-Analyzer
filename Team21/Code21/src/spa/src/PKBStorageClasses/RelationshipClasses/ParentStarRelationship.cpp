@@ -3,7 +3,6 @@
 //
 
 #include "ParentStarRelationship.h"
-#include <memory>
 
 bool ParentStarRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->parentStatement->equals(entity);

@@ -667,11 +667,18 @@ TEST_CASE("Duplicate Relationship has no effect") {
     std::string stmtNumber1 = "1";
     std::string stmtNumber2 = "2";
 
-    REQUIRE(relationshipManager->getRelationshipByLiterals(generator.getHashKey(FOLLOWS_STAR, WHILE_STATEMENT, &stmtNumber1, WHILE_STATEMENT, &stmtNumber2)) == relationship.get());
+    WhileStatement *whileStatementClone = new WhileStatement(1);
+    WhileStatement *whileStatement2Clone = new WhileStatement(2);
+    FollowsStarRelationship *followsStarRelationshipKey = new FollowsStarRelationship(whileStatementClone, whileStatement2Clone);
+
+    REQUIRE(relationshipManager->getRelationshipIfExist(followsStarRelationshipKey) == relationship.get());
 
     delete relationshipManager;
     delete whileStatement;
     delete whileStatement2;
+    delete whileStatementClone;
+    delete whileStatement2Clone;
+    delete followsStarRelationshipKey;
 }
 
 TEST_CASE("Can retrieve relationship by literal values") {
@@ -712,16 +719,36 @@ TEST_CASE("Can retrieve relationship by literal values") {
     relationshipManager->storeRelationship(relationship10);
     relationshipManager->storeRelationship(relationship11);
 
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship2.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship2.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship3.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship3.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship4.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship4.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship5.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship5.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship6.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship6.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship7.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship7.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship9.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship9.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship10.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship10.get()))));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship11.get(), relationshipManager->getRelationshipByLiterals(hashkeyGenerator.getHashKey(relationship11.get()))));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship2.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship2.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship3.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship3.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship4.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship4.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship5.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship5.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship6.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship6.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship7.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship7.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship9.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship9.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship10.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship10.get())));
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship11.get(),
+                                                           relationshipManager->getRelationshipIfExist(
+                                                               relationship11.get())));
 
     delete relationshipManager;
     delete whileStatement;

@@ -8,7 +8,6 @@
 
 #include "Relationship.h"
 #include "../EntityClasses/Statement.h"
-#include <memory>
 
 class FollowsStarRelationship : public Relationship {
 private:

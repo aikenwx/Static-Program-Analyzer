@@ -9,6 +9,8 @@
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
@@ -26,6 +28,9 @@ TEST_CASE("Relationships can instantiate") {
     Variable *variable = new Variable(new std::string("variable"));
     Procedure *procedure2 = new Procedure(new std::string("procedure2"));
     Variable *variable2 = new Variable(new std::string("variable2"));
+
+    CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -49,6 +54,8 @@ TEST_CASE("Relationships can instantiate") {
     delete variable;
     delete procedure2;
     delete variable2;
+    delete callsRelationship;
+    delete callsStarRelationship;
 }
 
 TEST_CASE("Relationships contain the correct left entity") {
@@ -61,6 +68,8 @@ TEST_CASE("Relationships contain the correct left entity") {
     Procedure *procedure2 = new Procedure(new std::string("procedure2"));
     Variable *variable2 = new Variable(new std::string("variable2"));
 
+    CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
@@ -74,7 +83,11 @@ TEST_CASE("Relationships contain the correct left entity") {
     REQUIRE(followsRelationship->containsEntityOnLeftHand(printStatement));
     REQUIRE(parentStarRelationship->containsEntityOnLeftHand(whileStatement));
     REQUIRE(followsStarRelationship->containsEntityOnLeftHand(printStatement));
+    REQUIRE(callsRelationship->containsEntityOnLeftHand(procedure));
+    REQUIRE(callsStarRelationship->containsEntityOnLeftHand(procedure));
 
+    delete callsRelationship;
+    delete callsStarRelationship;
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
@@ -101,6 +114,9 @@ TEST_CASE("Relationships contain the correct right entity") {
     Procedure *procedure2 = new Procedure(new std::string("procedure2"));
     Variable *variable2 = new Variable(new std::string("variable2"));
 
+    CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
+
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
@@ -108,11 +124,15 @@ TEST_CASE("Relationships contain the correct right entity") {
     ParentStarRelationship *parentStarRelationship = new ParentStarRelationship(whileStatement, assignStatement);
     FollowsStarRelationship *followsStarRelationship = new FollowsStarRelationship(printStatement, readStatement);
 
+    REQUIRE(callsRelationship->containsEntityOnRightHand(procedure2));
+    REQUIRE(callsStarRelationship->containsEntityOnRightHand(procedure2));
     REQUIRE(parentRelationship->containsEntityOnRightHand(assignStatement));
     REQUIRE(usesRelationship->containsEntityOnRightHand(variable));
     REQUIRE(modifiesRelationship->containsEntityOnRightHand(variable2));
     REQUIRE(followsRelationship->containsEntityOnRightHand(readStatement));
 
+    delete callsRelationship;
+    delete callsStarRelationship;
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
@@ -138,6 +158,8 @@ TEST_CASE("Relationships contain the wrong left entity") {
     Variable *variable = new Variable(new std::string("variable"));
     Procedure *procedure2 = new Procedure(new std::string("procedure2"));
     Variable *variable2 = new Variable(new std::string("variable2"));
+    CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
 
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
@@ -152,7 +174,11 @@ TEST_CASE("Relationships contain the wrong left entity") {
     REQUIRE(!followsRelationship->containsEntityOnLeftHand(readStatement));
     REQUIRE(!parentStarRelationship->containsEntityOnLeftHand(assignStatement));
     REQUIRE(!followsStarRelationship->containsEntityOnLeftHand(readStatement));
+    REQUIRE(!callsRelationship->containsEntityOnLeftHand(procedure2));
+    REQUIRE(!callsStarRelationship->containsEntityOnLeftHand(procedure2));
 
+    delete callsRelationship;
+    delete callsStarRelationship;
     delete parentRelationship;
     delete usesRelationship;
     delete modifiesRelationship;
@@ -179,6 +205,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
     Procedure *procedure2 = new Procedure(new std::string("procedure2"));
     Variable *variable2 = new Variable(new std::string("variable2"));
 
+    CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
     ParentRelationship *parentRelationship = new ParentRelationship(whileStatement, assignStatement);
     UsesRelationship *usesRelationship = new UsesRelationship(procedure, variable);
     ModifiesRelationship *modifiesRelationship = new ModifiesRelationship(procedure2, variable2);
@@ -192,6 +220,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
     REQUIRE(!followsRelationship->containsEntityOnRightHand(printStatement));
     REQUIRE(!parentStarRelationship->containsEntityOnRightHand(whileStatement));
     REQUIRE(!followsStarRelationship->containsEntityOnRightHand(printStatement));
+    REQUIRE(!callsRelationship->containsEntityOnRightHand(procedure));
+    REQUIRE(!callsStarRelationship->containsEntityOnRightHand(procedure));
 
     delete parentRelationship;
     delete usesRelationship;
@@ -199,6 +229,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
     delete followsRelationship;
     delete parentStarRelationship;
     delete followsStarRelationship;
+    delete callsRelationship;
+    delete callsStarRelationship;
     delete printStatement;
     delete readStatement;
     delete whileStatement;

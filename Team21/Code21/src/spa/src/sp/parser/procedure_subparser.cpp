@@ -23,8 +23,7 @@ bool ProcedureSubparser::Parse(std::shared_ptr<Context> context) {
     std::shared_ptr<ast::ProcedureNode> p = std::make_shared<ast::ProcedureNode>(n->GetName(), sl);
     stack->push_back(p);
     return true;
-  } else {
-    return Subparser::Parse(context);
   }
+  return Subparser::Parse(context);
 }
 }

@@ -59,8 +59,7 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-  } else {
-    return Subparser::Parse(context);
   }
+  return Subparser::Parse(context);
 }
 }

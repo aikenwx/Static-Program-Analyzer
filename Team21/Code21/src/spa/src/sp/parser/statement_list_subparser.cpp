@@ -50,15 +50,14 @@ bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
       // S+ <- S ;
       stack->pop_back();
       std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
-      s->SetStatementNumber(context->GetStatementCounter()++);
+      s->SetStatementNumber(context->GetStatementCounter());
       stack->pop_back();
       std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
       sl->AddStatement(s);
       stack->push_back(sl);
       return true;
     }
-  } else {
-    return Subparser::Parse(context);
   }
+  return Subparser::Parse(context);
 }
 }

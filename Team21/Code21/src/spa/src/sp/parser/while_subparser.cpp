@@ -37,11 +37,10 @@ bool WhileSubparser::Parse(std::shared_ptr<Context> context) {
     stack->pop_back();
     stack->pop_back();
     std::shared_ptr<ast::IfNode> f = std::make_shared<ast::IfNode>(e->GetOperand(), s2, s1);
-    context->GetStatementCounter();
+    context->GetStatementCounter()++;
     stack->push_back(f);
     return true;
-  } else {
-    return Subparser::Parse(context);
   }
+  return Subparser::Parse(context);
 }
 }

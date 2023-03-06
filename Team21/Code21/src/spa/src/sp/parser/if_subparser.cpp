@@ -30,8 +30,7 @@ bool IfSubparser::Parse(std::shared_ptr<Context> context) {
     context->GetStatementCounter()++;
     stack->push_back(w);
     return true;
-  } else {
-    return Subparser::Parse(context);
   }
+  return Subparser::Parse(context);
 }
 }

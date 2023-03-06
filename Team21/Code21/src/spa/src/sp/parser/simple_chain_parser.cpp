@@ -1,4 +1,5 @@
 #include <assert.h>
+#include "exceptions/syntax_error.h"
 #include "subparsers.h"
 #include "token/and_token.h"
 #include "token/assign_token.h"
@@ -63,6 +64,11 @@ std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<t
     while (subparsers->Parse(context));
 
     Shift();
+  }
+  if (context->GetStack()->size() == 0) {
+    throw exceptions::SyntaxError("Empty program");
+  } else if (context->GetStack()->size() != 1 || !util::instance_of<ast::ProgramNode>(context->GetStack()->front())) {
+    // Reject condition (guard clause)
   }
   std::unique_ptr<ast::AST> ast = std::make_unique<ast::AST>();
   ast->SetRoot(context->GetStack()->front());

@@ -203,12 +203,12 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // populate calls*
-  for (const auto& elem : calls) {
-    std::unordered_set<std::string>* callsStarProcs = &callsStar[elem.first];
+  for (const auto& [first, second] : calls) {
+    std::unordered_set<std::string>* callsStarProcs = &callsStar[first];
     std::unordered_set<std::string> traversed;
     std::queue<std::string> traverseQueue;
 
-    traverseQueue.push(elem.first);
+    traverseQueue.push(first);
     while (!traverseQueue.empty()) {
       std::string calledProcName = traverseQueue.front();
       traverseQueue.pop();
@@ -245,9 +245,9 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // populate CalledByStar
-  for (const auto& elem : callsStar) {
-    for (const auto& called : elem.second) {
-      calledByStar[called].emplace(elem.first);
+  for (const auto& [first, second] : callsStar) {
+    for (const auto& called : second) {
+      calledByStar[called].emplace(first);
     }
   }
 
@@ -302,16 +302,16 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // store Calls, Calls* into PKB
-  for (const auto& elem : calls) {
-    std::string callerProcName = elem.first;
-    for (const auto& calledProcName : elem.second) {
+  for (const auto& [first, second] : calls) {
+    std::string callerProcName = first;
+    for (const auto& calledProcName : second) {
       // TODO: uncomment when pr #193 merged
       // PopFacade->storeCallsRelationship(callerProcName, calledProcName);
     }
   }
-  for (const auto& elem : callsStar) {
-    std::string callerProcName = elem.first;
-    for (const auto& calledProcName : elem.second) {
+  for (const auto& [first, second] : callsStar) {
+    std::string callerProcName = first;
+    for (const auto& calledProcName : second) {
       // TODO: uncomment when pr #193 merged
       // PopFacade->storeCallsStarRelationship(callerProcName, calledProcName);
     }

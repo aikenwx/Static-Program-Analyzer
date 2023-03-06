@@ -1,5 +1,4 @@
 #include "context.h"
-#include "util/instance_of.h"
 
 namespace parser {
 Context::Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead) {

@@ -40,6 +40,8 @@ class PopulateFacade {
     void storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
     void storeParentStarRelationship(int parentStatementNumber, int childStatementNumber);
     void storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
+    void storeCallsRelationship(std::string caller, std::string callee);
+    void storeCallsStarRelationship(std::string caller, std::string callee);
 
     void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
 

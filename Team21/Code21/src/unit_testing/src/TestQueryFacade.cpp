@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "PKB/QueryFacade.h"
 #include "PKBtestHelpers.h"
 #include "catch.hpp"
@@ -442,17 +444,17 @@ TEST_CASE("QueryFacade can retrieve Statement Modifies Variable relationship by 
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    Variable *variable = new Variable(new std::string("variable"));
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeVariable(variable);
 
-    std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(ifStatement, variable);
+    std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(ifStatement.get(), variable.get());
 
     relationshipManager->storeRelationship(modifiesRelationship);
     REQUIRE(queryFacade->getStatementModifiesVariableRelationship(1, "variable") != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getStatementModifiesVariableRelationship(1, "variable"), modifiesRelationship.get()));
 
-    delete ifStatement;
-    delete variable;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -463,17 +465,17 @@ TEST_CASE("QueryFacade can retrieve Statement Uses Variable relationship by lite
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    Variable *variable = new Variable(new std::string("variable"));
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeVariable(variable);
 
-    std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(ifStatement, variable);
+    std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(ifStatement.get(), variable.get());
 
     relationshipManager->storeRelationship(usesRelationship);
     REQUIRE(queryFacade->getStatementUsesVariableRelationship(1, "variable") != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getStatementUsesVariableRelationship(1, "variable"), usesRelationship.get()));
 
-    delete ifStatement;
-    delete variable;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -484,17 +486,17 @@ TEST_CASE("QueryFacade can retrieve Procedure Modifies Variable relationship by 
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
+    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
+    entityManager->storeProcedure(procedure);
+    entityManager->storeVariable(variable);
 
-    std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(procedure, variable);
+    std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(procedure.get(), variable.get());
 
     relationshipManager->storeRelationship(modifiesRelationship);
     REQUIRE(queryFacade->getProcedureModifiesVariableRelationship("procedure", "variable") != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getProcedureModifiesVariableRelationship("procedure", "variable"), modifiesRelationship.get()));
 
-    delete procedure;
-    delete variable;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -505,17 +507,17 @@ TEST_CASE("QueryFacade can retrieve Procedure Uses Variable relationship by lite
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
+    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
+    entityManager->storeProcedure(procedure);
+    entityManager->storeVariable(variable);
 
-    std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(procedure, variable);
+    std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(procedure.get(), variable.get());
 
     relationshipManager->storeRelationship(usesRelationship);
     REQUIRE(queryFacade->getProcedureUsesVariableRelationship("procedure", "variable") != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getProcedureUsesVariableRelationship("procedure", "variable"), usesRelationship.get()));
 
-    delete procedure;
-    delete variable;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -526,17 +528,17 @@ TEST_CASE("QueryFacade can retrieve Statement Follows Statement relationship by 
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    WhileStatement *whileStatement = new WhileStatement(2);
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeStatement(whileStatement);
 
-    std::shared_ptr<FollowsRelationship> followsRelationship = std::make_shared<FollowsRelationship>(ifStatement, whileStatement);
+    std::shared_ptr<FollowsRelationship> followsRelationship = std::make_shared<FollowsRelationship>(ifStatement.get(), whileStatement.get());
 
     relationshipManager->storeRelationship(followsRelationship);
     REQUIRE(queryFacade->getFollowsRelationship(1, 2) != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getFollowsRelationship(1, 2), followsRelationship.get()));
 
-    delete ifStatement;
-    delete whileStatement;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -547,17 +549,17 @@ TEST_CASE("QueryFacade can retrieve Statement FollowsStar Statement relationship
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    WhileStatement *whileStatement = new WhileStatement(2);
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeStatement(whileStatement);
 
-    std::shared_ptr<FollowsStarRelationship> followsStarRelationship = std::make_shared<FollowsStarRelationship>(ifStatement, whileStatement);
+    std::shared_ptr<FollowsStarRelationship> followsStarRelationship = std::make_shared<FollowsStarRelationship>(ifStatement.get(), whileStatement.get());
 
     relationshipManager->storeRelationship(followsStarRelationship);
     REQUIRE(queryFacade->getFollowsStarRelationship(1, 2) != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getFollowsStarRelationship(1, 2), followsStarRelationship.get()));
 
-    delete ifStatement;
-    delete whileStatement;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -568,17 +570,17 @@ TEST_CASE("QueryFacade can retrieve Statement Parent Statement relationship by l
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    WhileStatement *whileStatement = new WhileStatement(2);
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeStatement(whileStatement);
 
-    std::shared_ptr<ParentRelationship> parentRelationship = std::make_shared<ParentRelationship>(ifStatement, whileStatement);
+    std::shared_ptr<ParentRelationship> parentRelationship = std::make_shared<ParentRelationship>(ifStatement.get(), whileStatement.get());
 
     relationshipManager->storeRelationship(parentRelationship);
     REQUIRE(queryFacade->getParentRelationship(1, 2) != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getParentRelationship(1, 2), parentRelationship.get()));
 
-    delete ifStatement;
-    delete whileStatement;
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -589,17 +591,119 @@ TEST_CASE("QueryFacade can retrieve Statement ParentStar Statement relationship 
     RelationshipManager *relationshipManager = new RelationshipManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
 
-    IfStatement *ifStatement = new IfStatement(1);
-    WhileStatement *whileStatement = new WhileStatement(2);
+    std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
+    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
+    entityManager->storeStatement(ifStatement);
+    entityManager->storeStatement(whileStatement);
 
-    std::shared_ptr<ParentStarRelationship> parentStarRelationship = std::make_shared<ParentStarRelationship>(ifStatement, whileStatement);
+    std::shared_ptr<ParentStarRelationship> parentStarRelationship = std::make_shared<ParentStarRelationship>(ifStatement.get(), whileStatement.get());
 
     relationshipManager->storeRelationship(parentStarRelationship);
     REQUIRE(queryFacade->getParentStarRelationship(1, 2) != nullptr);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getParentStarRelationship(1, 2), parentStarRelationship.get()));
 
-    delete ifStatement;
-    delete whileStatement;
+    delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
+}
+
+TEST_CASE("QueryFacade can retrieve Caller Calls Callee relationship by literals") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+
+    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
+    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+    entityManager->storeProcedure(caller);
+    entityManager->storeProcedure(callee);
+
+    std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
+
+    relationshipManager->storeRelationship(callsRelationship);
+    REQUIRE(queryFacade->getCallsRelationship("caller", "callee") != nullptr);
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getCallsRelationship("caller", "callee"), callsRelationship.get()));
+
+    delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
+}
+
+TEST_CASE("QueryFacade can retrieve Caller CallsStar Callee relationship by literals") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+
+    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
+    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+    entityManager->storeProcedure(caller);
+    entityManager->storeProcedure(callee);
+
+    std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
+
+    relationshipManager->storeRelationship(callsStarRelationship);
+    REQUIRE(queryFacade->getCallsStarRelationship("caller", "callee") != nullptr);
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getCallsStarRelationship("caller", "callee"), callsStarRelationship.get()));
+
+    delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
+}
+
+TEST_CASE("QueryFacade can retrieve all Calls Relationships") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+
+    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
+    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+
+    std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(new std::string("caller2"));
+    std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(new std::string("callee2"));
+
+    entityManager->storeProcedure(caller);
+    entityManager->storeProcedure(callee);
+    entityManager->storeProcedure(caller2);
+    entityManager->storeProcedure(callee2);
+
+    std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
+    std::shared_ptr<CallsRelationship> callsRelationship2 = std::make_shared<CallsRelationship>(caller2.get(), callee2.get());
+
+    relationshipManager->storeRelationship(callsRelationship);
+    relationshipManager->storeRelationship(callsRelationship2);
+
+    REQUIRE(queryFacade->getAllCallsRelationships()->size() == 2);
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getAllCallsRelationships()->at(0), callsRelationship.get()));
+
+    delete queryFacade;
+    delete entityManager;
+    delete relationshipManager;
+}
+
+TEST_CASE("QueryFacade can retrieve all CallsStar Relationships") {
+    EntityManager *entityManager = new EntityManager();
+    RelationshipManager *relationshipManager = new RelationshipManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+
+    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
+    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+
+    std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(new std::string("caller2"));
+    std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(new std::string("callee2"));
+
+    entityManager->storeProcedure(caller);
+    entityManager->storeProcedure(callee);
+    entityManager->storeProcedure(caller2);
+    entityManager->storeProcedure(callee2);
+
+    std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
+    std::shared_ptr<CallsStarRelationship> callsStarRelationship2 = std::make_shared<CallsStarRelationship>(caller2.get(), callee2.get());
+
+    relationshipManager->storeRelationship(callsStarRelationship);
+    relationshipManager->storeRelationship(callsStarRelationship2);
+
+    REQUIRE(queryFacade->getAllCallsStarRelationships()->size() == 2);
+    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(queryFacade->getAllCallsStarRelationships()->at(0), callsStarRelationship.get()));
+
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;

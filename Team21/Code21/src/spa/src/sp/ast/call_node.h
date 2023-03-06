@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "procedure_node.h"
 #include "statement_node.h"
 #include "name_node.h"
 
@@ -12,6 +13,8 @@ public:
 
   std::string GetProcedureName();
   std::string ToString() const override;
+  std::shared_ptr<ProcedureNode> GetProcedure();
+  void SetProcedure(std::shared_ptr<ProcedureNode> procedure);
 
   void AcceptVisitor(std::shared_ptr<INode> currentNode,
                      std::shared_ptr<design_extractor::Extractor> extractor,
@@ -19,5 +22,6 @@ public:
 
 private:
   std::string name;
+  std::shared_ptr<ProcedureNode> procedure;
 };
 }

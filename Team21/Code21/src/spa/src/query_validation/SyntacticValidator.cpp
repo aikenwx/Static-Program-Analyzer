@@ -70,9 +70,10 @@ namespace qps {
 			ExpressionSpec exprSpec = patt[i].getArg2();
 			if (std::holds_alternative<Expression>(exprSpec)) {
 				Expression expr = std::get<Expression>(exprSpec);
-				if (!isValidFactor(expr.getExpression())) {
-					throw  QueryException(ErrorType::Syntactic, "Syntactic error. Incorrect form for expression");
-				}
+				//This was for milestone 1 to check only had one factor as term in second argument
+				//if (!isValidFactor(expr.getExpression())) {
+				//	throw  QueryException(ErrorType::Syntactic, "Syntactic error. Incorrect form for expression");
+				//}
 			}
 		}
 	}

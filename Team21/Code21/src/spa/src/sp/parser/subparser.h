@@ -8,7 +8,7 @@ public:
   Subparser();
 
   std::shared_ptr<Subparser> SetNext(std::shared_ptr<Subparser> next);
-  bool Parse(std::shared_ptr<Context> context);
+  virtual bool Parse(std::shared_ptr<Context> context) = 0;
 
 private:
   std::shared_ptr<Subparser> next;

@@ -21,7 +21,7 @@ bool ProgramSubparser::Parse(std::shared_ptr<Context> context) {
       return true;
     } else if (util::instance_of<ast::ProcedureNode>(*i)) {
       // Pr <- P
-      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack-.back());
+      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack->back());
       stack->pop_back();
       std::shared_ptr<ast::ProgramNode> pr = std::make_shared<ast::ProgramNode>();
       pr->AddProcedure(p);

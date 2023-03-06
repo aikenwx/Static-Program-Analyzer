@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "subparsers.h"
 #include "token/and_token.h"
 #include "token/assign_token.h"
@@ -48,12 +49,13 @@ SimpleChainParser::SimpleChainParser() {
 std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
   // Push end token to mark end of token list
   input.push_back(std::make_unique<token::EndToken>());
-  context = std::make_shared<Context>();
-  context->stack.clear();
-  context->statementCounter = 0;
-  for (context->lookahead = input.begin(); context->lookahead < input.end(); context->lookahead++) {
+  auto lookahead = std::make_shared<std::vector<std::unique_ptr<token::Token>>::iterator>(input.begin());
+  context = std::make_shared<Context>(lookahead);
+  context->GetStack()->clear();
+  context->GetStatementCounter() = 0;
+  for (*lookahead; *lookahead < input.end(); (*lookahead)++) {
     // Handle parsing logic
-    if (stack.size() == 0) {
+    if (context->GetStack()->size() == 0) {
       Shift();
       continue;
     }
@@ -63,7 +65,7 @@ std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<t
     Shift();
   }
   std::unique_ptr<ast::AST> ast = std::make_unique<ast::AST>();
-  ast->SetRoot(context->stack.front());
+  ast->SetRoot(context->GetStack()->front());
   return ast;
 }
 
@@ -75,79 +77,79 @@ void SimpleChainParser::Shift() {
   * If statements trade open-closed for single-responsibility and interface segregation
   * between tokenizer and parser. Since grammar is fixed, open-closed not as necessary.
   */
-  if (util::instance_of<token::IdentifierToken>(context->*lookahead)) {
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((context->*lookahead)->GetValue());
-    context->stack.push_back(id);
-  } else if (util::instance_of<token::IntegerToken>(context->*lookahead)) {
-    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((context->*lookahead)->GetValue()));
-    context->stack.push_back(c);
-  } else if (util::instance_of<token::AndToken>(context->*lookahead)) {
+  if (util::instance_of<token::IdentifierToken>(**(context->GetLookahead()))) {
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
+    context->GetStack()->push_back(id);
+  } else if (util::instance_of<token::IntegerToken>(**(context->GetLookahead()))) {
+    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((**(context->GetLookahead()))->GetValue()));
+    context->GetStack()->push_back(c);
+  } else if (util::instance_of<token::AndToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAnd);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::AssignToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::AssignToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAssign);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::DivideToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::DivideToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kDivide);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::EqualToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::EqualToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kEqual);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::GreaterEqualToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::GreaterEqualToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kGreaterEqual);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::GreaterThanToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::GreaterThanToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kGreater);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::LeftBraceToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::LeftBraceToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLeftBrace);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::LeftParenToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::LeftParenToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLeftParen);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::LessEqualToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::LessEqualToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLesserEqual);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::LessThanToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::LessThanToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kLesser);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::MinusToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::MinusToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kMinus);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::ModuloToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::ModuloToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kModulo);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::MultiplyToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::MultiplyToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kMultiply);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::NotEqualToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::NotEqualToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kNotEqual);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::NotToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::NotToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kNot);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::OrToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::OrToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kOr);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::PlusToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::PlusToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kPlus);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::RightBraceToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::RightBraceToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kRightBrace);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::RightParenToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::RightParenToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kRightParen);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::SemicolonToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::SemicolonToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kSemicolon);
-    context->stack.push_back(sym);
-  } else if (util::instance_of<token::EndToken>(context->*lookahead)) {
+    context->GetStack()->push_back(sym);
+  } else if (util::instance_of<token::EndToken>(**(context->GetLookahead()))) {
     // No need to include end token in AST
     return;
   } else {
     // Default implementation but should not reach here
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
-    context->stack.push_back(id);
+    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
+    context->GetStack()->push_back(id);
     assert(false);
   }
 }

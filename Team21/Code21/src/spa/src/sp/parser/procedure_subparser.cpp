@@ -15,7 +15,7 @@ bool ProcedureSubparser::Parse(std::shared_ptr<Context> context) {
     // P <- procedure N { S+ }
     stack->pop_back();
     std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack->back());
-    stack-.pop_back();
+    stack->pop_back();
     stack->pop_back();
     std::shared_ptr<ast::NameNode> n = std::static_pointer_cast<ast::NameNode>(stack->back());
     stack->pop_back();

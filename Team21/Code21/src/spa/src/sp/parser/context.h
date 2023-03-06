@@ -4,21 +4,23 @@
 #include <vector>
 
 #include "sp/ast/astlib.h"
-#include "simple_chain_parser.h"
 #include "token/token.h"
 
 namespace parser {
+
 class Context {
 public:
+  Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead);
   template<typename T>
   bool IsLookaheadTypeOf();
   std::shared_ptr< std::vector<std::shared_ptr<ast::INode>>> GetStack();
   int &GetStatementCounter();
+  std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> GetLookahead();
+
 
 private:
-  friend class SimpleChainParser;
-  std::vector<std::unique_ptr<token::Token>>::iterator lookahead;
-  std::vector<std::shared_ptr<ast::INode>> stack;
+  std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead;
+  std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> stack;
   int statementCounter;
 };
 }

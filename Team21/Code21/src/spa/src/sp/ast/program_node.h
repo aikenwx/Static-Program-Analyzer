@@ -13,6 +13,7 @@ public:
   std::string ToString() const override;
   int GetTotalStatementCount();
   bool ContainsProcedure(std::string &procedureName);
+  std::shared_ptr<ProcedureNode> GetProcedure(std::string &procedureName);
 
   void AcceptVisitor(std::shared_ptr<INode> currentNode,
                      std::shared_ptr<design_extractor::Extractor> extractor,

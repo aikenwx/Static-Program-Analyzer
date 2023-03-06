@@ -12,8 +12,8 @@ public:
   std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
   std::string ToString() const override;
   int GetTotalStatementCount();
-  bool ContainsProcedure(std::string &procedureName);
-  std::shared_ptr<ProcedureNode> GetProcedure(std::string &procedureName);
+  bool ContainsProcedure(std::string const &procedureName);
+  std::shared_ptr<ProcedureNode> GetProcedure(std::string const &procedureName);
 
   void AcceptVisitor(std::shared_ptr<INode> currentNode,
                      std::shared_ptr<design_extractor::Extractor> extractor,

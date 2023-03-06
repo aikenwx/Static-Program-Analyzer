@@ -23,7 +23,7 @@ int ProgramNode::GetTotalStatementCount() {
   return procedures.front()->GetEndStatementNumber();
 }
 
-bool ProgramNode::ContainsProcedure(std::string &procedureName) {
+bool ProgramNode::ContainsProcedure(std::string const &procedureName) {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
@@ -32,7 +32,7 @@ bool ProgramNode::ContainsProcedure(std::string &procedureName) {
   return false;
 }
 
-std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(std::string &procedureName) {
+std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(std::string const &procedureName) {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return *i;

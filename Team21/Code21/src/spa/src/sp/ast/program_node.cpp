@@ -23,6 +23,15 @@ int ProgramNode::GetTotalStatementCount() {
   return procedures.front()->GetEndStatementNumber();
 }
 
+bool ProgramNode::ContainsProcedure(std::string &procedureName) {
+  for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
+    if ((*i)->GetName() == procedureName) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void ProgramNode::AcceptVisitor(
     std::shared_ptr<INode> currentNode,
     std::shared_ptr<design_extractor::Extractor> extractor, int depth) {

@@ -1,10 +1,10 @@
 #include <string>
 
 namespace exceptions {
-class SemanticError : public std::exception {
+class ParserError : public std::exception {
  public:
-  explicit SemanticError(const std::string& message) {
-    this->message = "Semantic error: " + message;
+  explicit ParserError(const std::string& message) {
+    this->message = "Parser error: " + message;
   };
   const char* what() const throw() override {
     return message.c_str();

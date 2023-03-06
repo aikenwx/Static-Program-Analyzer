@@ -51,12 +51,12 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
 
 bool SP::process(std::string program, PKB* pkb) {
   // tokenize the string
-  tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
+  auto tokenizer = tokenizer::SimpleTokenizer();
   std::vector<std::unique_ptr<token::Token>> tokens =
       tokenizer.tokenize(program);
 
   // parse tokens into AST
-  parser::SimpleParser parser = parser::SimpleParser();
+  auto parser = parser::SimpleParser();
   std::shared_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
 
   VerifyAstRoot(ast->GetRoot());
@@ -67,40 +67,38 @@ bool SP::process(std::string program, PKB* pkb) {
   int totalStatementCount = programNode->GetTotalStatementCount();
 
   // process AST to get elements
-  std::shared_ptr<design_extractor::AstElemExtractor> astElemExtractor =
+  auto astElemExtractor =
       std::make_shared<design_extractor::AstElemExtractor>();
   programNode->AcceptVisitor(programNode, astElemExtractor, 0);
   std::vector<std::shared_ptr<rel::Relationship>> astElemRelationships =
       astElemExtractor->GetRelationships();
 
   // process AST to find relationships
-  std::shared_ptr<design_extractor::FollowsExtractor> followsExtractor =
+  auto followsExtractor =
       std::make_shared<design_extractor::FollowsExtractor>();
   programNode->AcceptVisitor(programNode, followsExtractor, 0);
   std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>
       followsRelationships = followsExtractor->GetRelationships();
 
-  std::shared_ptr<design_extractor::ParentExtractor> parentExtractor =
-      std::make_shared<design_extractor::ParentExtractor>();
+  auto parentExtractor = std::make_shared<design_extractor::ParentExtractor>();
   programNode->AcceptVisitor(programNode, parentExtractor, 0);
   std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>
       parentRelationships = parentExtractor->GetRelationships();
 
-  std::shared_ptr<design_extractor::StmtModifiesExtractor>
-      stmtModifiesExtractor =
-          std::make_shared<design_extractor::StmtModifiesExtractor>();
+  auto stmtModifiesExtractor =
+      std::make_shared<design_extractor::StmtModifiesExtractor>();
   programNode->AcceptVisitor(programNode, stmtModifiesExtractor, 0);
   std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
       modifiesRelationships = stmtModifiesExtractor->GetRelationships();
 
-  std::shared_ptr<design_extractor::StmtUsesExtractor> stmtUsesExtractor =
+  auto stmtUsesExtractor =
       std::make_shared<design_extractor::StmtUsesExtractor>();
   programNode->AcceptVisitor(programNode, stmtUsesExtractor, 0);
   std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> usesRelationships =
       stmtUsesExtractor->GetRelationships();
 
   // process AST to get assign node <-> expression reprs
-  std::shared_ptr<design_extractor::AssignExpExtractor> assignExpExtractor =
+  auto assignExpExtractor =
       std::make_shared<design_extractor::AssignExpExtractor>();
   programNode->AcceptVisitor(programNode, assignExpExtractor, 0);
   std::vector<std::shared_ptr<rel::AssignExpRelationship>>
@@ -308,19 +306,20 @@ bool SP::process(std::string program, PKB* pkb) {
     std::string callerProcName = elem.first;
     for (const auto& calledProcName : elem.second) {
       // TODO: uncomment when pr #193 merged
-      //PopFacade->storeCallsRelationship(callerProcName, calledProcName);
+      // PopFacade->storeCallsRelationship(callerProcName, calledProcName);
     }
   }
   for (auto& elem : callsStar) {
     std::string callerProcName = elem.first;
     for (const auto& calledProcName : elem.second) {
       // TODO: uncomment when pr #193 merged
-      //PopFacade->storeCallsStarRelationship(callerProcName, calledProcName);
+      // PopFacade->storeCallsStarRelationship(callerProcName, calledProcName);
     }
   }
 
   // store Modifies into PKB
-  std::unordered_map<std::string, std::unordered_set<std::string>> varModifiedByProc;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      varModifiedByProc;
   for (auto& rel : modifiesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::MODIFIES_STMT_VAR) {
       std::shared_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
@@ -358,7 +357,8 @@ bool SP::process(std::string program, PKB* pkb) {
   }
 
   // store Uses into PKB
-  std::unordered_map<std::string, std::unordered_set<std::string>> varUsedByProc;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      varUsedByProc;
   for (auto& rel : usesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::USES_STMT_VAR) {
       std::shared_ptr<rel::UsesStmtVarRelationship> usesRel =

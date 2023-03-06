@@ -118,7 +118,7 @@ bool SP::process(std::string program, PKB* pkb) {
   std::vector<int> parentRels;
   parentRels.resize(totalStatementCount + 1);
 
-  // procedureByName[procName] = ProcedureNode
+  // procedureByName[procName] -> ProcedureNode mapping
   std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
       procedureByName;
 
@@ -327,14 +327,14 @@ bool SP::process(std::string program, PKB* pkb) {
 
       std::string varName = modifiesRel->variableName();
 
-      // store Modifies(stmt, v) + Modifies(container, v)
+      // store Modifies(stmt, v) and Modifies(container, v)
       int stmtNum = modifiesRel->statementNumber();
       while (stmtNum != 0) {
         PopFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
         stmtNum = parentRels[stmtNum];
       }
 
-      // store Modifies(proc, v)
+      // store Modifies(proc, v) relations
       std::string procName = procedureRels[modifiesRel->statementNumber()];
       varModifiedByProc[procName].emplace(varName);
       PopFacade->storeProcedureModifiesVariableRelationship(procName, varName);
@@ -347,7 +347,7 @@ bool SP::process(std::string program, PKB* pkb) {
     }
   }
 
-  // store Modifies(call, v)
+  // store Modifies(call, v) relations
   for (const auto& callStmtRel : callStmtRels) {
     int stmtNum = callStmtRel->statementNumber();
     std::string procName = callStmtRel->procedureName();

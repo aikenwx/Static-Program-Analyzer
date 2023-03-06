@@ -6,7 +6,7 @@ Subparser::Subparser() {
 }
 
 std::shared_ptr<Subparser> Subparser::SetNext(std::shared_ptr<Subparser> next) {
-  this.next = next;
+  this->next = next;
   return next;
 }
 

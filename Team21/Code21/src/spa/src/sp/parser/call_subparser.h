@@ -4,6 +4,6 @@
 
 namespace parser {
 class CallSubparser : public Subparser {
-  bool Subparser::Parse(std::shared_ptr<Context> context) override;
+  bool Subparser::Parse(std::shared_ptr<Context> context);
 };
 }

@@ -49,7 +49,7 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   return true;
 }
 
-bool SP::process(std::string program, PKB* pkb) {
+bool SP::process(const std::string& program, PKB* pkb) const {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   std::vector<std::unique_ptr<token::Token>> tokens =

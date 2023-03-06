@@ -66,10 +66,13 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "forward_list": "cpp",
+        "typeindex": "cpp"
     },
     "C_Cpp.clang_format_fallbackStyle": "Google",
     "C_Cpp.clang_format_style": "Google",
     "editor.tabSize": 2,
-    "C_Cpp.inlayHints.parameterNames.enabled": true
+    "C_Cpp.inlayHints.parameterNames.enabled": true,
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json"
 }

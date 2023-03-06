@@ -885,7 +885,7 @@ TEST_CASE("QPS can work with different combinations of calls") {
   // proc1 -> proc2, proc3
   // proc2 -> proc4
   //proc 3-> proc4, proc5
-  pkb_helper.AddCalls({"proc1", "proc2", "proc3", "proc4", "proc5"});
+  pkb_helper.AddProcedures({"proc1", "proc2", "proc3", "proc4", "proc5"});
   pkb_helper.AddCallsR({{"proc1", "proc2"}, {"proc1", "proc3"},
                         {"proc2", "proc4"},
                         {"proc3", "proc4"}, {"proc3", "proc5"}
@@ -944,7 +944,7 @@ TEST_CASE("QPS can work with different combinations of callsStar") {
   // proc1 -> proc2, proc3
   // proc2 -> proc4
   //proc 3-> proc4, proc5
-  pkb_helper.AddCalls({"proc1", "proc2", "proc3", "proc4", "proc5"});
+  pkb_helper.AddProcedures({"proc1", "proc2", "proc3", "proc4", "proc5"});
   pkb_helper.AddCallsStar({{"proc1", "proc2"}, {"proc1", "proc3"}, {"proc1", "proc4"}, {"proc1", "proc5"},
                            {"proc2", "proc4"},
                            {"proc3", "proc4"}, {"proc3", "proc5"}
@@ -982,7 +982,7 @@ TEST_CASE("QPS can work with different combinations of callsStar") {
   SECTION("Synonym on left, literal on right") {
     SECTION("All procedures calling a specific procedure") {
       std::unordered_set<std::string> expected{"proc1", "proc2", "proc3"};
-      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls(p, \"proc4\")", *pkb_querier) == expected);
+      REQUIRE(qps_test::RunQuery("procedure p; Select p such that Calls*(p, \"proc4\")", *pkb_querier) == expected);
     }
   }
 
@@ -990,7 +990,7 @@ TEST_CASE("QPS can work with different combinations of callsStar") {
     SECTION("All procedures being called by a specific procedure") {
       std::unordered_set<std::string> expected{"proc2", "proc3", "proc4", "proc5"};
       REQUIRE(
-          qps_test::RunQuery("procedure p; Select p such that Calls(\"proc1\", p)", *pkb_querier)
+          qps_test::RunQuery("procedure p; Select p such that Calls*(\"proc1\", p)", *pkb_querier)
               == expected);
     }
   }

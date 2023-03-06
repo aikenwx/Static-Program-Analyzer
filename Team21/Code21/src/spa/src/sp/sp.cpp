@@ -103,8 +103,8 @@ bool SP::process(std::string program, PKB* pkb) {
   std::shared_ptr<design_extractor::AssignExpExtractor> assignExpExtractor =
       std::make_shared<design_extractor::AssignExpExtractor>();
   programNode->AcceptVisitor(programNode, assignExpExtractor, 0);
-  std::vector<std::shared_ptr<rel::AssignExpRelationship>> assignExpRelationships =
-      assignExpExtractor->GetRelationships();
+  std::vector<std::shared_ptr<rel::AssignExpRelationship>>
+      assignExpRelationships = assignExpExtractor->GetRelationships();
 
   // postprocess relationships
   // optimization?: use vecs of ints because we're told that we won't
@@ -133,12 +133,14 @@ bool SP::process(std::string program, PKB* pkb) {
   std::vector<std::string> procedureRels;
   procedureRels.resize(totalStatementCount + 1);
 
-  // calledBy[calledProcNode] = std::vec<ProcedureNode> that call
-  // calledProcNode it's kinda icky, but...
-  std::unordered_map<std::string, std::unordered_set<std::string>> calledBy;
+  // calls[caller] = std::uset<std::string> of procs called by caller
+  std::unordered_map<std::string, std::unordered_set<std::string>> calls;
+  std::unordered_map<std::string, std::unordered_set<std::string>> callsStar;
+  // for Uses, Modifies
+  std::unordered_map<std::string, std::unordered_set<std::string>> calledByStar;
 
   // temporary storage for call stmt rels for later processing
-  // only needed until calledBy is fully populated
+  // e.g. for Modifies/Uses(call, v)
   std::vector<std::shared_ptr<rel::CallStmtRelationship>> callStmtRels;
 
   // put AST entities into PKB
@@ -150,7 +152,7 @@ bool SP::process(std::string program, PKB* pkb) {
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
 
       PopFacade->storeAssignmentStatement(callStmtRel->statementNumber());
-      callStmtRels.push_back(std::move(callStmtRel));
+      callStmtRels.push_back(callStmtRel);
     } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       std::shared_ptr<rel::ProcRelationship> procRel =
           std::static_pointer_cast<rel::ProcRelationship>(rel);
@@ -187,28 +189,74 @@ bool SP::process(std::string program, PKB* pkb) {
               ->statementNumber());
     } else if (rel->relationshipType() == rel::RelationshipType::CONST) {
       PopFacade->storeConstant(
-          std::static_pointer_cast<rel::ConstRelationship>(rel)
-              ->value());
+          std::static_pointer_cast<rel::ConstRelationship>(rel)->value());
     } else if (rel->relationshipType() == rel::RelationshipType::VAR) {
       PopFacade->storeVariable(
-          std::static_pointer_cast<rel::VarRelationship>(rel)
-              ->variableName());
+          std::static_pointer_cast<rel::VarRelationship>(rel)->variableName());
     }
   }
 
-  // populate calledBy
+  // populate calls
   for (const auto& rel : callStmtRels) {
     std::string calledProcName = rel->procedureName();
     std::string callerProcName = procedureRels[rel->statementNumber()];
 
-    calledBy[calledProcName].emplace(callerProcName);
+    calls[callerProcName].emplace(calledProcName);
+  }
+
+  // populate calls*
+  for (auto& elem : calls) {
+    std::unordered_set<std::string>* callsStarProcs = &callsStar[elem.first];
+    std::unordered_set<std::string> traversed;
+    std::queue<std::string> traverseQueue;
+
+    traverseQueue.push(elem.first);
+    while (!traverseQueue.empty()) {
+      std::string calledProcName = traverseQueue.front();
+      traverseQueue.pop();
+
+      // if we haven't already traversed this procedure
+      if (traversed.find(calledProcName) == traversed.end()) {
+        traversed.emplace(calledProcName);
+
+        // get callsStarProcs for this procedure, if applicable
+        // a shortcut, basically
+        if (callsStar.find(calledProcName) != callsStar.end()) {
+          for (const auto& called : calls[calledProcName]) {
+            if (traversed.find(called) == traversed.end()) {
+              callsStarProcs->emplace(called);
+              traverseQueue.push(called);
+
+              // assume that if it's in callsStar, it's been fully traversed
+              traversed.emplace(called);
+            }
+          }
+        }
+
+        // then, check calls
+        if (calls.find(calledProcName) != calls.end()) {
+          for (const auto& called : calls[calledProcName]) {
+            if (traversed.find(called) == traversed.end()) {
+              callsStarProcs->emplace(called);
+              traverseQueue.push(called);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // populate CalledByStar
+  for (auto& elem : callsStar) {
+    for (const auto& called : elem.second) {
+      calledByStar[called].emplace(elem.first);
+    }
   }
 
   // populate followsRels
   for (auto& rel : followsRelationships) {
     std::shared_ptr<rel::FollowsStmtStmtRelationship> followsRel =
-        std::static_pointer_cast<rel::FollowsStmtStmtRelationship>(
-            rel);
+        std::static_pointer_cast<rel::FollowsStmtStmtRelationship>(rel);
     followsRels[followsRel->secondStatementNumber()] =
         followsRel->firstStatementNumber();
   }
@@ -216,8 +264,7 @@ bool SP::process(std::string program, PKB* pkb) {
   // populate parentRels
   for (auto& rel : parentRelationships) {
     std::shared_ptr<rel::ParentStmtStmtRelationship> parentRel =
-        std::static_pointer_cast<rel::ParentStmtStmtRelationship>(
-            rel);
+        std::static_pointer_cast<rel::ParentStmtStmtRelationship>(rel);
     parentRels[parentRel->secondStatementNumber()] =
         parentRel->firstStatementNumber();
   }
@@ -256,12 +303,28 @@ bool SP::process(std::string program, PKB* pkb) {
     }
   }
 
+  // store Calls, Calls* into PKB
+  for (auto& elem : calls) {
+    std::string callerProcName = elem.first;
+    for (const auto& calledProcName : elem.second) {
+      // TODO: uncomment when pr #193 merged
+      //PopFacade->storeCallsRelationship(callerProcName, calledProcName);
+    }
+  }
+  for (auto& elem : callsStar) {
+    std::string callerProcName = elem.first;
+    for (const auto& calledProcName : elem.second) {
+      // TODO: uncomment when pr #193 merged
+      //PopFacade->storeCallsStarRelationship(callerProcName, calledProcName);
+    }
+  }
+
   // store Modifies into PKB
+  std::unordered_map<std::string, std::unordered_set<std::string>> varModifiedByProc;
   for (auto& rel : modifiesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::MODIFIES_STMT_VAR) {
       std::shared_ptr<rel::ModifiesStmtVarRelationship> modifiesRel =
-          std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(
-              rel);
+          std::static_pointer_cast<rel::ModifiesStmtVarRelationship>(rel);
 
       std::string varName = modifiesRel->variableName();
 
@@ -274,36 +337,32 @@ bool SP::process(std::string program, PKB* pkb) {
 
       // store Modifies(proc, v)
       std::string procName = procedureRels[modifiesRel->statementNumber()];
-      std::unordered_set<std::string> visitedProcs;
-      std::queue<std::string> procQueue;
-      procQueue.push(procName);
-      while (!procQueue.empty()) {
-        std::string currProc = procQueue.front();
-        procQueue.pop();
-        visitedProcs.emplace(currProc);
-        PopFacade->storeProcedureModifiesVariableRelationship(currProc,
-                                                              varName);
-
-        for (const auto& caller : calledBy[currProc]) {
-          if (visitedProcs.find(caller) == visitedProcs.end()) {
-            procQueue.push(caller);
-          }
-        }
+      varModifiedByProc[procName].emplace(varName);
+      PopFacade->storeProcedureModifiesVariableRelationship(procName, varName);
+      for (const auto& caller : calledByStar[procName]) {
+        varModifiedByProc[caller].emplace(varName);
+        PopFacade->storeProcedureModifiesVariableRelationship(caller, varName);
       }
-
-      // store Modifies(call, v)...?
-      // TODO
     } else {
       throw std::runtime_error("Invalid Modifies relationship type");
     }
   }
 
+  // store Modifies(call, v)
+  for (const auto& callStmtRel : callStmtRels) {
+    int stmtNum = callStmtRel->statementNumber();
+    std::string procName = callStmtRel->procedureName();
+    for (const auto& varName : varModifiedByProc[procName]) {
+      PopFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
+    }
+  }
+
   // store Uses into PKB
+  std::unordered_map<std::string, std::unordered_set<std::string>> varUsedByProc;
   for (auto& rel : usesRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::USES_STMT_VAR) {
       std::shared_ptr<rel::UsesStmtVarRelationship> usesRel =
-          std::static_pointer_cast<rel::UsesStmtVarRelationship>(
-              rel);
+          std::static_pointer_cast<rel::UsesStmtVarRelationship>(rel);
 
       std::string varName = usesRel->variableName();
 
@@ -316,26 +375,22 @@ bool SP::process(std::string program, PKB* pkb) {
 
       // store Uses(proc, v)
       std::string procName = procedureRels[usesRel->statementNumber()];
-      std::unordered_set<std::string> visitedProcs;
-      std::queue<std::string> procQueue;
-      procQueue.push(procName);
-      while (!procQueue.empty()) {
-        std::string currProc = procQueue.front();
-        procQueue.pop();
-        visitedProcs.emplace(currProc);
-        PopFacade->storeProcedureUsesVariableRelationship(currProc, varName);
-
-        for (const auto& caller : calledBy[currProc]) {
-          if (visitedProcs.find(caller) == visitedProcs.end()) {
-            procQueue.push(caller);
-          }
-        }
+      varUsedByProc[procName].emplace(varName);
+      PopFacade->storeProcedureUsesVariableRelationship(procName, varName);
+      for (const auto& caller : calledByStar[procName]) {
+        varUsedByProc[caller].emplace(varName);
+        PopFacade->storeProcedureUsesVariableRelationship(caller, varName);
       }
-
-      // store Uses(call, v)...?
-      // TODO
     } else {
       throw std::runtime_error("Invalid Uses relationship type");
+    }
+  }
+  // store Uses(call, v)
+  for (const auto& callStmtRel : callStmtRels) {
+    int stmtNum = callStmtRel->statementNumber();
+    std::string procName = callStmtRel->procedureName();
+    for (const auto& varName : varUsedByProc[procName]) {
+      PopFacade->storeStatementUsesVariableRelationship(stmtNum, varName);
     }
   }
 

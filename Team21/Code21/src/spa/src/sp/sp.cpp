@@ -50,8 +50,7 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   }
 
   // validate that all call statements call a procedure that exists
-  auto callValidator =
-      std::make_shared<design_extractor::CallValidator>();
+  auto callValidator = std::make_shared<design_extractor::CallValidator>();
   root->AcceptVisitor(root, callValidator, 0);
 
   return true;
@@ -326,12 +325,16 @@ void PopulateModifiesRels(
     }
   }
 
-  // store Modifies(call, v) relations
+  // store Modifies(call, v) relations,
+  // and more Modifies(container, v) relations
   for (const auto& callStmtRel : callStmtRels) {
     int stmtNum = callStmtRel->statementNumber();
     std::string procName = callStmtRel->procedureName();
-    for (const auto& varName : varModifiedByProc[procName]) {
-      popFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
+    while (stmtNum != 0) {
+      for (const auto& varName : varModifiedByProc[procName]) {
+        popFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
+      }
+      stmtNum = parentRels[stmtNum];
     }
   }
 }
@@ -380,12 +383,16 @@ void PopulateUsesRels(
     }
   }
 
-  // store Uses(call, v)
+  // store Uses(call, v), and
+  // more Uses(container, v) relationships
   for (const auto& callStmtRel : callStmtRels) {
     int stmtNum = callStmtRel->statementNumber();
     std::string procName = callStmtRel->procedureName();
-    for (const auto& varName : varUsedByProc[procName]) {
-      popFacade->storeStatementUsesVariableRelationship(stmtNum, varName);
+    while (stmtNum != 0) {
+      for (const auto& varName : varUsedByProc[procName]) {
+        popFacade->storeStatementUsesVariableRelationship(stmtNum, varName);
+      }
+      stmtNum = parentRels[stmtNum];
     }
   }
 }

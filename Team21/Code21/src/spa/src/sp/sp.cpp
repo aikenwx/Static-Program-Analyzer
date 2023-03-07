@@ -11,6 +11,7 @@
 #include "sp/ast/program_node.h"
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
+#include "sp/design_extractor/call_validator.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -47,6 +48,11 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
     }
     procedures.insert(procNode->GetName());
   }
+
+  // validate that all call statements call a procedure that exists
+  auto callValidator = std::make_shared<design_extractor::CallValidator>();
+  root->AcceptVisitor(root, callValidator, 0);
+
   return true;
 }
 
@@ -62,7 +68,7 @@ void PopulateAstEntities(
       std::shared_ptr<rel::CallStmtRelationship> callStmtRel =
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
 
-      popFacade->storeAssignmentStatement(callStmtRel->statementNumber());
+      popFacade->storeCallStatement(callStmtRel->statementNumber());
       callStmtRels.push_back(callStmtRel);
     } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       std::shared_ptr<rel::ProcRelationship> procRel =
@@ -147,11 +153,10 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : callsStar.at(calledProcName)) {
         if (traversed.find(called) == traversed.end()) {
-          continue;
+          traverseQueue.push(called);
         }
 
         callsStarProcs->emplace(called);
-        traverseQueue.push(called);
 
         // assume that if it's in callsStar, it's been fully traversed
         traversed.emplace(called);
@@ -164,9 +169,10 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : calls.at(calledProcName)) {
         if (traversed.find(called) == traversed.end()) {
-          callsStarProcs->emplace(called);
           traverseQueue.push(called);
         }
+
+        callsStarProcs->emplace(called);
       }
     } catch (const std::out_of_range&) {
       // do nothing?
@@ -319,12 +325,16 @@ void PopulateModifiesRels(
     }
   }
 
-  // store Modifies(call, v) relations
+  // store Modifies(call, v) relations,
+  // and more Modifies(container, v) relations
   for (const auto& callStmtRel : callStmtRels) {
     int stmtNum = callStmtRel->statementNumber();
     std::string procName = callStmtRel->procedureName();
-    for (const auto& varName : varModifiedByProc[procName]) {
-      popFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
+    while (stmtNum != 0) {
+      for (const auto& varName : varModifiedByProc[procName]) {
+        popFacade->storeStatementModifiesVariableRelationship(stmtNum, varName);
+      }
+      stmtNum = parentRels[stmtNum];
     }
   }
 }
@@ -373,12 +383,16 @@ void PopulateUsesRels(
     }
   }
 
-  // store Uses(call, v)
+  // store Uses(call, v), and
+  // more Uses(container, v) relationships
   for (const auto& callStmtRel : callStmtRels) {
     int stmtNum = callStmtRel->statementNumber();
     std::string procName = callStmtRel->procedureName();
-    for (const auto& varName : varUsedByProc[procName]) {
-      popFacade->storeStatementUsesVariableRelationship(stmtNum, varName);
+    while (stmtNum != 0) {
+      for (const auto& varName : varUsedByProc[procName]) {
+        popFacade->storeStatementUsesVariableRelationship(stmtNum, varName);
+      }
+      stmtNum = parentRels[stmtNum];
     }
   }
 }

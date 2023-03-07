@@ -34,6 +34,7 @@ SimpleChainParser::SimpleChainParser() {
     ->SetNext(std::make_shared<StatementListSubparser>())
     ->SetNext(std::make_shared<ReadSubparser>())
     ->SetNext(std::make_shared<PrintSubparser>())
+    ->SetNext(std::make_shared<CallSubparser>())
     ->SetNext(std::make_shared<FactorSubparser>())
     ->SetNext(std::make_shared<TermSubparser>())
     ->SetNext(std::make_shared<ExpressionSubparser>())

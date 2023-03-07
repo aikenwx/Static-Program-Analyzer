@@ -21,7 +21,7 @@ public:
                      int depth) override;
 
 private:
-  std::string name;
-  std::shared_ptr<ProcedureNode> procedure;
+  std::string name_;
+  std::weak_ptr<ProcedureNode> procedure_;
 };
 }

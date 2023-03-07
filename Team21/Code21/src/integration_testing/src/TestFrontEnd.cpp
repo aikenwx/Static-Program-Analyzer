@@ -86,7 +86,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
     std::string program = R"(procedure main {
       x = 1;
       read y;
-      print x;
+      print z;
       call foo;
     }
     procedure foo {
@@ -425,6 +425,80 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {EntityType::VARIABLE, "z"}}};
 
         RequireRelationshipsMatch(modifiesRels, expectedRels);
+      }
+
+      THEN("The PKB should contain all proc-var Uses relationships") {
+        std::vector<UsesRelationship*> const* usesRels =
+            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
+                EntityType::PROCEDURE, EntityType::VARIABLE);
+
+        std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "foo"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "bar"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "baz"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "qux"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "z"}}};
+
+        RequireRelationshipsMatch(usesRels, expectedRels);
+      }
+
+      THEN("The PKB should contain all stmt-var Uses relationships") {
+        std::vector<UsesRelationship*> const* usesRels =
+            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
+                EntityType::STATEMENT, EntityType::VARIABLE);
+
+        std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
+            RelPair{RelationshipType::USES,
+                    {EntityType::PRINT_STATEMENT, "3"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "4"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "6"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::IF_STATEMENT, "8"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "9"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "10"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "12"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "13"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::VARIABLE, "z"}}};
+
+        RequireRelationshipsMatch(usesRels, expectedRels);
       }
     }
   }

@@ -15,7 +15,7 @@
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
 #include "sp/design_extractor/stmt_uses_extractor.h"
-#include "sp/parser/simple_parser.h"
+#include "sp/parser/simple_chain_parser.h"
 #include "sp/rel/assign_exp_relationship.h"
 #include "sp/rel/const_relationship.h"
 #include "sp/rel/follows_stmt_stmt_relationship.h"
@@ -400,7 +400,7 @@ bool SP::process(const std::string& program, PKB* pkb) const {
       tokenizer.tokenize(program);
 
   // parse tokens into AST
-  auto parser = parser::SimpleParser();
+  auto parser = parser::SimpleChainParser();
   std::shared_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
 
   VerifyAstRoot(ast->GetRoot());

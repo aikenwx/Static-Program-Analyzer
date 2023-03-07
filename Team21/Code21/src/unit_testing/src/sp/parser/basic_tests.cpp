@@ -2,14 +2,16 @@
 #include <string>
 
 #include "catch.hpp"
+#include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
 #include "sp/parser/simple_parser.h"
+#include "sp/parser/simple_chain_parser.h"
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 
 namespace parser {
 tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
-SimpleParser parser = SimpleParser();
+SimpleChainParser parser = SimpleChainParser();
 
 template<typename T>
 bool CheckRootIsNodeType(std::string input) {
@@ -33,6 +35,13 @@ bool CheckStatementCount(std::string program, int count) {
 /*
 * General program test cases
 */
+TEST_CASE("Parser throws a SyntaxError with an empty program",
+  "[Parser]") {
+  std::string program = "";
+  REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
+    Catch::Message("Syntax error: Empty program"));
+};
+
 TEST_CASE(
   "Parser correctly parses a valid program with a read statement",
   "[Parser]") {
@@ -56,7 +65,28 @@ TEST_CASE(
   "[Parser]") {
   std::string program = R"(procedure hello {
     x = 2;
-})";
+  })";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with one procedure and one call statement",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    call hello;
+  })";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with multiple procedures and call statements",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    call world;
+  }
+  procedure world {
+    read x;
+  })";
   REQUIRE(CheckRootIsProgram(program));
 };
 
@@ -123,6 +153,19 @@ TEST_CASE(
       }
     }
 })";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with multiple procedures",
+  "[Parser]") {
+  std::string program = R"(procedure hello {
+    read x;
+  }
+  procedure world {
+    read y;
+  })";
+
   REQUIRE(CheckRootIsProgram(program));
 };
 

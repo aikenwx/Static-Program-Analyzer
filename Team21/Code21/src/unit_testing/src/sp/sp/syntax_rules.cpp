@@ -3,22 +3,71 @@
 #include "exceptions/syntax_error.h"
 #include "sp/sp.h"
 
-TEST_CASE(
-    "SP should terminate there are unexpected characters in the program") {
+SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]") {
   PKB pkb = PKB();
   sp::SP sp = sp::SP();
 
-  std::string program = R"(procedure main {
-    read a_e;
-  })";
+  GIVEN("A program containing an invalid identifier") {
+    std::string program = R"(procedure main {
+      read a_e;
+    })";
 
-  REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SyntaxError,
-                         Catch::Message("Syntax error: Invalid identifier"));
+    WHEN("The program is processed") {
+      THEN("A syntax error should be thrown") {
+        REQUIRE_THROWS_MATCHES(
+            sp.process(program, &pkb), exceptions::SyntaxError,
+            Catch::Message("Syntax error: Invalid identifier"));
+      }
+    }
+  };
 
-  program = R"(procedure main {
-    e = a &$ f;
-  })";
+  GIVEN("A program containing an unexpected symbol") {
+    std::string program = R"(procedure main {
+      e = a &$ f;
+    })";
 
-  REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SyntaxError,
-                         Catch::Message("Syntax error: Unexpected symbol"));
+    WHEN("The program is processed") {
+      THEN("A syntax error should be thrown") {
+        REQUIRE_THROWS_MATCHES(
+            sp.process(program, &pkb), exceptions::SyntaxError,
+            Catch::Message("Syntax error: Unexpected symbol"));
+      }
+    }
+  };
+
+  GIVEN("An empty program") {
+    std::string program = "";
+
+    WHEN("The program is processed") {
+      THEN("A syntax error should be thrown") {
+        REQUIRE_THROWS_MATCHES(
+            sp.process(program, &pkb), exceptions::SyntaxError,
+            Catch::Message("Syntax error: Empty program"));
+      }
+    }
+  };
+
+  GIVEN("A program containing an empty procedure") {
+    std::string program = R"(procedure main {})";
+
+    WHEN("The program is processed") {
+      THEN("A syntax error should be thrown") {
+        REQUIRE_THROWS_MATCHES(
+            sp.process(program, &pkb), exceptions::SyntaxError,
+            Catch::Message("Syntax error: Invalid program"));
+      }
+    }
+  };
+
+  GIVEN("A program made up of non-procedure items") {
+    std::string program = R"(1 + 3 == 4)";
+
+    WHEN("The program is processed") {
+      THEN("A syntax error should be thrown") {
+        REQUIRE_THROWS_MATCHES(
+            sp.process(program, &pkb), exceptions::SyntaxError,
+            Catch::Message("Syntax error: Invalid program"));
+      }
+    }
+  };
 }

@@ -11,6 +11,7 @@
 #include "sp/ast/program_node.h"
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
+#include "sp/design_extractor/call_validator.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -47,6 +48,12 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
     }
     procedures.insert(procNode->GetName());
   }
+
+  // validate that all call statements call a procedure that exists
+  auto callValidator =
+      std::make_shared<design_extractor::CallValidator>();
+  root->AcceptVisitor(root, callValidator, 0);
+
   return true;
 }
 

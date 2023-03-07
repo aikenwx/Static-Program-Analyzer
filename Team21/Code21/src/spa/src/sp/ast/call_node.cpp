@@ -1,12 +1,16 @@
 #include "call_node.h"
 
 namespace ast {
-CallNode::CallNode(std::shared_ptr<ProcedureNode> proc) { this->proc = proc; }
+CallNode::CallNode(std::shared_ptr<NameNode> name) {
+  this->name = name->GetName();
+}
 
-std::shared_ptr<ProcedureNode> CallNode::GetProcedure() { return proc; }
+std::string CallNode::GetProcedureName() {
+  return name;
+}
 
 std::string CallNode::ToString() const {
-  return "call:\n{\n" + proc->ToString() + "}\n";
+  return "call:\n{\n" + name + "}\n";
 }
 
 void CallNode::AcceptVisitor(
@@ -17,6 +21,6 @@ void CallNode::AcceptVisitor(
   extractor->HandleCallNode(std::static_pointer_cast<CallNode>(currentNode),
                             depth);
 
-  proc->AcceptVisitor(proc, extractor, depth + 1);
+  //proc->AcceptVisitor(proc, extractor, depth + 1);
 }
 }  // namespace ast

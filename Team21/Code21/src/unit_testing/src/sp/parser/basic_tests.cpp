@@ -5,12 +5,13 @@
 #include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
 #include "sp/parser/simple_parser.h"
+#include "sp/parser/simple_chain_parser.h"
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 
 namespace parser {
 tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
-SimpleParser parser = SimpleParser();
+SimpleChainParser parser = SimpleChainParser();
 
 template<typename T>
 bool CheckRootIsNodeType(std::string input) {
@@ -40,6 +41,7 @@ TEST_CASE("Parser throws a SyntaxError with an empty program",
   REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
     Catch::Message("Syntax error: Empty program"));
 };
+
 TEST_CASE(
   "Parser correctly parses a valid program with a read statement",
   "[Parser]") {

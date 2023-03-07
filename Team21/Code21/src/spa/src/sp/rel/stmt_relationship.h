@@ -26,7 +26,7 @@ class CallStmtRelationship : public StmtRelationship {
  public:
   static std::unique_ptr<CallStmtRelationship> CreateRelationship(std::shared_ptr<ast::CallNode> statementNode);
   RelationshipType relationshipType() override { return RelationshipType::CALL_STMT; };
-  std::string procedureName() { return statementNode_->GetProcedure()->GetName(); };
+  std::string procedureName() { return statementNode_->GetProcedureName(); };
   int statementNumber() override { return statementNode_->GetStatementNumber(); };
 
  private:

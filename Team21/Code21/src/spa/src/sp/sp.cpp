@@ -152,6 +152,9 @@ void ResolveCallsStarSingleProc(
     // a shortcut, basically
     try {
       for (const auto& called : callsStar.at(calledProcName)) {
+        if (proc == called) {
+          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+        }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
         }
@@ -168,6 +171,9 @@ void ResolveCallsStarSingleProc(
     // then, check calls
     try {
       for (const auto& called : calls.at(calledProcName)) {
+        if (proc == called) {
+          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+        }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
         }

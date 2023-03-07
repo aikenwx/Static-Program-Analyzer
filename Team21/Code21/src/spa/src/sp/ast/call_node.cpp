@@ -9,6 +9,14 @@ std::string CallNode::GetProcedureName() {
   return name;
 }
 
+std::shared_ptr<ProcedureNode> CallNode::GetProcedure() {
+  return procedure;
+}
+
+void CallNode::SetProcedure(std::shared_ptr<ProcedureNode> procedure) {
+  this->procedure = procedure;
+}
+
 std::string CallNode::ToString() const {
   return "call:\n{\n" + name + "}\n";
 }

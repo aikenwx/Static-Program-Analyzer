@@ -154,11 +154,10 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : callsStar.at(calledProcName)) {
         if (traversed.find(called) == traversed.end()) {
-          continue;
+          traverseQueue.push(called);
         }
 
         callsStarProcs->emplace(called);
-        traverseQueue.push(called);
 
         // assume that if it's in callsStar, it's been fully traversed
         traversed.emplace(called);
@@ -171,9 +170,10 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : calls.at(calledProcName)) {
         if (traversed.find(called) == traversed.end()) {
-          callsStarProcs->emplace(called);
           traverseQueue.push(called);
         }
+
+        callsStarProcs->emplace(called);
       }
     } catch (const std::out_of_range&) {
       // do nothing?

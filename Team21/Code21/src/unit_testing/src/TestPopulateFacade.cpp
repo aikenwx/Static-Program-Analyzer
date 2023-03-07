@@ -1,11 +1,13 @@
 #include "PKB/PopulateFacade.h"
 #include "catch.hpp"
 
+
 TEST_CASE("PopulateFacade can instantiate") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     delete populateFacade;
     delete entityManager;
     delete relationshipManager;
@@ -16,7 +18,8 @@ TEST_CASE("PopulateFacade can add postfix expressions to assignment statements")
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeAssignmentStatement(1);
     populateFacade->storeAssignStatementPostfixExpression(1, "xy+");
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
@@ -34,7 +37,8 @@ TEST_CASE("Error thrown when trying to add non pattern expression to call statem
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeCallStatement(1);
     REQUIRE_THROWS(populateFacade->storeAssignStatementPostfixExpression(1, "xy+"));
     delete populateFacade;
@@ -47,7 +51,8 @@ TEST_CASE("PopulateFace can populate assign statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     std::string postfixExpression = "xy+";
     populateFacade->storeAssignmentStatement(1);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
@@ -65,7 +70,8 @@ TEST_CASE("PopulateFace can populate call statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeCallStatement(2);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
     REQUIRE(entities->size() == 1);
@@ -82,7 +88,8 @@ TEST_CASE("PopulateFace can populate while statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeWhileStatement(3);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::WHILE_STATEMENT);
     REQUIRE(entities->size() == 1);
@@ -99,7 +106,8 @@ TEST_CASE("PopulateFace can populate if statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeIfStatement(4);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::IF_STATEMENT);
     REQUIRE(entities->size() == 1);
@@ -116,7 +124,8 @@ TEST_CASE("PopulateFace can populate procedure") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string procedureName = "main";
     populateFacade->storeProcedure(procedureName);
@@ -135,7 +144,8 @@ TEST_CASE("PopulateFace can populate variable") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     std::string variableName = "x";
     populateFacade->storeVariable(variableName);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::VARIABLE);
@@ -153,7 +163,8 @@ TEST_CASE("PopulateFace can populate constant") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     populateFacade->storeConstant(5);
     std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::CONSTANT);
     REQUIRE(entities->size() == 1);
@@ -170,7 +181,8 @@ TEST_CASE("PopulateFacade can populate follow relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -196,7 +208,8 @@ TEST_CASE("PopulateFacade can populate parent relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -223,7 +236,8 @@ TEST_CASE("PopulateFacade can populate parentStar relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -251,7 +265,8 @@ TEST_CASE("PopulateFacade can populate followStar relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -278,7 +293,8 @@ TEST_CASE("Adding a relationship with a non-existent entity throws an exception"
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     REQUIRE_THROWS_AS(populateFacade->storeParentRelationship(1, 2), std::exception);
 
@@ -292,7 +308,8 @@ TEST_CASE("PopulateFacade can populate statement modifies relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string variableName = "variable";
 
@@ -321,7 +338,8 @@ TEST_CASE("PopulateFacade can populate statement uses relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     std::string variableName = "variable";
 
     std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
@@ -346,7 +364,8 @@ TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -373,7 +392,8 @@ TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
@@ -400,7 +420,8 @@ TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string variableName = "variable";
     std::string procedureName = "Procedure";
@@ -428,7 +449,8 @@ TEST_CASE("PopulateFacade can populate procedure uses relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string variableName = "variable";
     std::string procedureName = "Procedure";
@@ -457,7 +479,8 @@ TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string callerName = "caller";
     std::string calleeName = "callee";
@@ -486,7 +509,8 @@ TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::string callerName = "caller";
     std::string calleeName = "callee";
@@ -515,7 +539,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
     PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+    CFGManager *cfgManager = new CFGManager();
+    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager, cfgManager);
     std::string postFixPattern = "xy+";
 
     populateFacade->storeAssignmentStatement(1);

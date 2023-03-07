@@ -28,10 +28,11 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager) {
+PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGManager *cfgManager) {
     this->entityManager = entityManager;
     this->relationshipManager = relationshipManager;
     this->patternManager = patternManager;
+    this->cfgManager = cfgManager;
 }
 
 void PopulateFacade::storeAssignmentStatement(int statementNumber) {
@@ -165,4 +166,10 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
     if (entity == nullptr) {
         throw std::runtime_error("Entity does not exist in PKB and the relationship cannot be added, please populate PKB with all entities before storing relationships.");
     }
+}
+
+void PopulateFacade::storeCFGForProcedureName(std::string procedureName, std::shared_ptr<cfg::CFG> cfg) {
+    Procedure *procedure = this->entityManager->getProcedureByProcedureName(procedureName);
+    this->validateEntityExists(procedure);
+    this->cfgManager->storeCFG(procedure, cfg);
 }

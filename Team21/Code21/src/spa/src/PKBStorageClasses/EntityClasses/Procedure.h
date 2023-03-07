@@ -9,15 +9,22 @@
 #include <string>
 
 #include "Entity.h"
+#include "sp/cfg/cfg.h"
 
 class Procedure : public Entity {
    private:
     std::shared_ptr<std::string> procedureName;
 
+    std::shared_ptr<cfg::CFG> cfg;
+    
    public:
     Procedure(std::string* variableValue);
 
     ~Procedure() = default;
+
+    void setCFG(std::shared_ptr<cfg::CFG> cfg);
+
+    cfg::CFG * getCFG();
 
     std::string * getEntityValue() override;
 

@@ -298,6 +298,134 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
         RequireRelationshipsMatch(callsStarRels, expectedRels);
       }
+
+      THEN("The PKB should contain all proc-var Modifies relationships") {
+        std::vector<ModifiesRelationship*> const* modifiesRels =
+            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
+                EntityType::PROCEDURE, EntityType::VARIABLE);
+
+        std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "y"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "foo"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "foo"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "bar"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "bar"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "baz"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "baz"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "qux"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "qux"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "y"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "z"}}};
+
+        RequireRelationshipsMatch(modifiesRels, expectedRels);
+      }
+
+      THEN("The PKB should contain all stmt-var Modifies relationships") {
+        std::vector<ModifiesRelationship*> const* modifiesRels =
+            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
+                EntityType::STATEMENT, EntityType::VARIABLE);
+
+        std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::ASSIGN_STATEMENT, "1"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::READ_STATEMENT, "2"},
+                    {EntityType::VARIABLE, "y"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "4"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "4"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::ASSIGN_STATEMENT, "5"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "6"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "6"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::ASSIGN_STATEMENT, "7"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::IF_STATEMENT, "8"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::IF_STATEMENT, "8"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "9"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "9"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "10"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "10"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::ASSIGN_STATEMENT, "11"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "12"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "12"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "13"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "13"},
+                    {EntityType::VARIABLE, "z"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::VARIABLE, "y"}},
+            RelPair{RelationshipType::MODIFIES,
+                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::VARIABLE, "z"}}};
+
+        RequireRelationshipsMatch(modifiesRels, expectedRels);
+      }
     }
   }
 }

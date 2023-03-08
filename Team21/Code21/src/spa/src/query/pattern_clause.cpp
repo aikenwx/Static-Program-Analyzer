@@ -2,8 +2,8 @@
 
 namespace qps {
 
-	PatternClause::PatternClause(Synonym synonym, Ref arg1_, ExpressionSpec arg2_)
-		: assignSynonym{ synonym }, arg1{ arg1_ }, arg2{ arg2_ }, isPartial{ false } {
+	PatternClause::PatternClause(Synonym synonym_, Ref arg1_, ExpressionSpec arg2_)
+		: stmtSynonym{ synonym_ }, arg1{ arg1_ }, arg2{ arg2_ }, isPartial{ false } {
 		gotExpression = std::holds_alternative<Expression>(arg2);
 		if (std::holds_alternative<Underscore>(arg2)) {
 			isPartial = false;
@@ -24,7 +24,7 @@ namespace qps {
 	ExpressionSpec PatternClause::getArg2() {
 		return arg2;
 	}
-	Synonym PatternClause::getAssign() {
-		return assignSynonym;
+	Synonym PatternClause::getStmtSynonym() {
+		return stmtSynonym;
 	}
 }

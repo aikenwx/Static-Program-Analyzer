@@ -156,7 +156,8 @@ namespace qps {
 		std::string syn{ next() };
 		Synonym synonym{ Synonym(syn) };
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
-		if (declaration->getDesignEntity() != DesignEntity::ASSIGN) {
+		auto synDE{ declaration->getDesignEntity() };
+		if (synDE != DesignEntity::ASSIGN && synDE != DesignEntity::WHILE && synDE != DesignEntity::IF) {
 			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern assign with synonym: " + syn);
 		}
 
@@ -166,6 +167,12 @@ namespace qps {
 		assertNextToken(",");
 		next();
 		ExpressionSpec arg2{ parseExpression() };
+		if (synDE != DesignEntity::IF) {
+			assertNextToken(",");
+			next();
+			assertNextToken("_");
+			next();
+		}
 		assertNextToken(")");
 		next();
 

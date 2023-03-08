@@ -38,10 +38,18 @@ namespace qps {
 	//expression-spec is checked when the expression is converted to postfix in the evaluator. Now only check for first arg.
 	void SyntacticValidator::checkAssignPatternCorrectRefTypes() {
 		std::vector<PatternClause> patt = getQuery().getPatternClause();
+		auto declarations = getQuery().getDeclarations();
 		for (int i = 0; i < patt.size(); i++) {
-			Ref ref3 = patt[i].getArg1();
-			if (std::holds_alternative<StatementNumber>(ref3)) {
+			Ref arg1 = patt[i].getArg1();
+			ExpressionSpec arg2 = patt[i].getArg2();
+			Synonym stmtSyn = patt[i].getStmtSynonym();
+			auto declaration = Declaration::findDeclarationWithSynonym(declarations, stmtSyn);
+			auto synDE = declaration->getDesignEntity();
+			if (std::holds_alternative<StatementNumber>(arg1)) {
 				throw  QueryException(ErrorType::Syntactic, "Syntactic error. The first argument is not of correct ref type for assign clause");
+			}
+			if ((synDE == DesignEntity::WHILE || synDE == DesignEntity::IF) && std::holds_alternative<Expression>(arg2)) {
+				throw QueryException(ErrorType::Syntactic, "Syntactic error. The second argument of if/while pattern cannot be expression");
 			}
 		}
 	}

@@ -17,7 +17,8 @@ namespace qps {
 			Ref ref2 = such[i].getArg2();
 			Relationship re = such[i].getRelationship();
 			std::string relStr = getStringFromRelationship(re);
-			if (re == Relationship::Follows || re == Relationship::FollowsT || re == Relationship::Parent || re == Relationship::ParentT) {
+			if (re == Relationship::Follows || re == Relationship::FollowsT || re == Relationship::Parent || re == Relationship::ParentT ||
+				re == Relationship::Next || re == Relationship::NextT || re == Relationship::Affects || re == Relationship::AffectsT) {
 				if (std::holds_alternative<QuotedIdentifier>(ref1) || std::holds_alternative<QuotedIdentifier>(ref2)) {
 					throw  QueryException(ErrorType::Syntactic, "Syntactic error. The argument is not of correct ref type for " + relStr);
 				}

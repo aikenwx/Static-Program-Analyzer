@@ -3,7 +3,7 @@
 namespace qps {
 
 	QueryParser::QueryParser(std::vector<std::string> tokens_)
-		: tokens{ tokens_ }, currentIndex{ 0 } {}
+		: tokens{ tokens_ }, currentIndex{ 0 }, selectClause{ "" } {}
 
 	std::string QueryParser::peek() {
 		if (currentIndex < tokens.size()) {
@@ -113,16 +113,31 @@ namespace qps {
 		}
 		return true;
 	}
+
 	void QueryParser::parseSelectClause() {
 		assertNextToken("Select");
 		next();
-		Synonym test_synonym{ peek() };
+		std::string select = peek();
+		if (select == "BOOLEAN") {
+			Synonym test_synonym{ select };
+			if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
+				selectClause = "BOOLEAN";
+				next();
+			}
+			else {
+				selectClause = parseTupleSelect();
+			}
+		}
+		else {
+			selectClause = parseTupleSelect();
+		}
+		/*Synonym test_synonym{ peek() };
 		if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
 			throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for " + peek());
 		}
 		Synonym synonym{ next() };
 		DesignEntity design_entity = Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity();
-		selectClause.push_back(Declaration(design_entity, synonym));
+		selectClause.push_back(Declaration(design_entity, synonym));*/
 	}
 
 	bool QueryParser::parseSuchThatClause() {
@@ -198,6 +213,6 @@ namespace qps {
 				throw QueryException(ErrorType::Syntactic, "Invalid clause, not such-that or pattern");
 			}
 		}
-		return Query(declarations, suchThatClause, patternClause, selectClause[0]);
+		return Query(declarations, suchThatClause, patternClause, selectClause);
 	}
 }

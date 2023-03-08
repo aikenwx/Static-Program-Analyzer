@@ -14,7 +14,7 @@ class QueryParser {
 		std::vector<Declaration> declarations;
 		std::vector<SuchThatClause> suchThatClause;
 		std::vector<PatternClause> patternClause;
-		std::vector<Declaration> selectClause;
+		Result selectClause;
 		int currentIndex;
 		std::vector<std::string> tokens;
 
@@ -29,6 +29,7 @@ class QueryParser {
 
 		Ref parseRef();
 		ExpressionSpec parseExpression();
+		std::vector<Element> parseTupleSelect();
 
 		bool parseDeclaration();
 		bool parseSuchThatClause();

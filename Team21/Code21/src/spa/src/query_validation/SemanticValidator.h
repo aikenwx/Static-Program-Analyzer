@@ -21,9 +21,6 @@ namespace qps {
 
 		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
 
-		//check that the pattern clause has a syn-assign that is a pattern declaration
-		void checkPatternClauseSynAssign();
-
 		//checks that no wild card as first argument for modifies and uses
 		void checkNoWildCardFirstArgModifiesUses();
 

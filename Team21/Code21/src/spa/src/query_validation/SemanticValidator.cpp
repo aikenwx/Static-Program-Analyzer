@@ -74,21 +74,6 @@ void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {
   }
 }
 
-void SemanticValidator::checkPatternClauseSynAssign() {
-  std::vector<Declaration> declr = getQuery().getDeclarations();
-  if (!getQuery().getPatternClause().empty()) {
-    Ref refPattern = getQuery().getPatternClause()[0].getAssign();
-    Synonym syn = std::get<Synonym>(refPattern);
-    std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, syn);
-    if (patternDclr.has_value()) {
-      if (patternDclr.value().getDesignEntity() != DesignEntity::ASSIGN) {
-        throw QueryException(ErrorType::Semantic,
-                             "Semantic error. Invalid syntax for pattern assign with synonym: " + syn.getSynonym());
-      }
-    }
-  }
-}
-
 void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
   std::vector<SuchThatClause> s = getQuery().getSuchThatClause();
   std::vector<Declaration> declr = getQuery().getDeclarations();

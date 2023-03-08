@@ -5,7 +5,6 @@
 #include "query/synonym.h"
 #include "query/underscore.h"
 
-#include <optional>
 #include <variant>
 
 namespace qps {

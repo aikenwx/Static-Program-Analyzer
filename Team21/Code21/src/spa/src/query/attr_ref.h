@@ -31,13 +31,13 @@ std::set<AttrName> getValidAttrNameSet(Declaration declaration);
 
 class AttrRef {
 	public:
-		Declaration synonym_decl;
+		Synonym synonym;
 		AttrName attrName;
 
-		AttrRef(Declaration synonym_decl_, AttrName attrName_);
+		AttrRef(Synonym synonym_, AttrName attrName_);
 
 		bool operator==(const AttrRef& other) const {
-			return synonym_decl == other.synonym_decl && attrName == other.attrName;
+			return synonym == other.synonym && attrName == other.attrName;
 		}
 };
 }

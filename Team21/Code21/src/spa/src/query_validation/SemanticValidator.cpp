@@ -11,10 +11,11 @@ SemanticValidator::SemanticValidator(Query query) : QueryValidator(query) {}
 bool SemanticValidator::validateQuery() {
   checkForDuplicateDeclarations();
   checkIfSynonymContainedInDeclaration();
-  checkPatternClauseSynAssign();
+  checkPatternClauseSynonym();
   checkNoWildCardFirstArgModifiesUses();
   checkRelationSynonymMatchDesignEntity();
   checkPatternSynonymMatchDesignEntity();
+  checkWithClauseSameAttributeCompare();
   return true;
 }
 
@@ -33,13 +34,16 @@ void SemanticValidator::checkForDuplicateDeclarations() {
 
 void SemanticValidator::checkIfSynonymContainedInDeclaration() {
   std::vector<Declaration> declr = getQuery().getDeclarations();
-  Synonym syn = getQuery().getSelectClause().getSynonym();
+  Result result = getQuery().getSelectClause();
+  if (std::holds_alternative<std::vector<Element>>(result)) {
+    std::vector<Element> tuple = std::get<std::vector<Element>>(result);
+    for (int i = 0; i < tuple.size(); i++) {
+      checkElementSynonymDeclareHelper(tuple[i], declr);
+    }
+  }
   std::vector<SuchThatClause> s = getQuery().getSuchThatClause();
   std::vector<PatternClause> p = getQuery().getPatternClause();
-  if (Declaration::findDeclarationWithSynonym(declr, syn).has_value() == false) {
-    throw QueryException(ErrorType::Semantic,
-                         "Semantic error. There is missing declaration in Select clause for " + syn.getSynonym());
-  }
+  std::vector<WithClause> w = getQuery().getWithClause();
   for (int i = 0; i < s.size(); i++) {
     Ref refSuchThat1 = s[i].getArg1();
     Ref refSuchThat2 = s[i].getArg2();
@@ -47,8 +51,36 @@ void SemanticValidator::checkIfSynonymContainedInDeclaration() {
     checkSynonymDeclareHelper(refSuchThat2, declr, "SuchThat clause for argument 2");
   }
   for (int i = 0; i < p.size(); i++) {
+    Synonym stmtSyn = p[i].getStmtSynonym();
+    if (Declaration::findDeclarationWithSynonym(declr, stmtSyn).has_value() == false) {
+      throw QueryException(ErrorType::Semantic,
+        "Semantic error. There is missing declaration in Select clause for " + stmtSyn.getSynonym());
+    }
     Ref refPattern = p[i].getArg1();
-    checkSynonymDeclareHelper(refPattern, declr, "AssignPattern clause for argument 1");
+    checkSynonymDeclareHelper(refPattern, declr, "Pattern clause for argument 1");
+  }
+  for (int i = 0; i < w.size(); i++) {
+    WithRef ref1 = w[i].getRef1();
+    WithRef ref2 = w[i].getRef2();
+    checkWithRefSynonymDeclareHelper(ref1, declr);
+    checkWithRefSynonymDeclareHelper(ref2, declr);
+  }
+}
+
+void SemanticValidator::checkPatternClauseSynonym() {
+  std::vector<Declaration> declr = getQuery().getDeclarations();
+  if (!getQuery().getPatternClause().empty()) {
+    Ref refPattern = getQuery().getPatternClause()[0].getStmtSynonym();
+    Synonym syn = std::get<Synonym>(refPattern);
+    std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, syn);
+    if (patternDclr.has_value()) {
+      if (patternDclr.value().getDesignEntity() != DesignEntity::ASSIGN
+        && patternDclr.value().getDesignEntity() != DesignEntity::WHILE
+        && patternDclr.value().getDesignEntity() != DesignEntity::IF) {
+        throw QueryException(ErrorType::Semantic,
+          "Semantic error. Invalid syntax for pattern with synonym: " + syn.getSynonym());
+      }
+    }
   }
 }
 
@@ -56,6 +88,30 @@ void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration
   if (std::holds_alternative<Synonym>(r)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
       throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in " + missing);
+    }
+  }
+}
+
+void SemanticValidator::checkElementSynonymDeclareHelper(Element r, std::vector<Declaration> declr) {
+  if (std::holds_alternative<Synonym>(r)) {
+    if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym " +
+        std::get<Synonym>(r).getSynonym());
+    }
+  }
+  else if (std::holds_alternative<AttrRef>(r)) {
+    if (Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(r).synonym).has_value() == false) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym in AttrRef " +
+        std::get<AttrRef>(r).synonym.getSynonym());
+    }
+  }
+}
+
+void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration> declr) {
+  if (std::holds_alternative<AttrRef>(r.ref)) {
+    if (Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(r.ref).synonym).has_value() == false) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym in WithRef" +
+        std::get<AttrRef>(r.ref).synonym.getSynonym());
     }
   }
 }
@@ -129,6 +185,16 @@ void SemanticValidator::checkPatternSynonymMatchDesignEntity() {
               throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for pattern argument 1");
           }
       }
+  }
+}
+
+void SemanticValidator::checkWithClauseSameAttributeCompare() {
+  std::vector<WithClause> w = getQuery().getWithClause();
+  std::vector<Declaration> declr = getQuery().getDeclarations();
+  for (int i = 0; i < w.size(); i++) {
+    if (w[i].getRef1().attrType != w[i].getRef2().attrType) {
+      throw QueryException(ErrorType::Semantic, "Comparison of different type of attribute in with clause");
+    }
   }
 }
 }

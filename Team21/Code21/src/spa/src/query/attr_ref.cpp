@@ -47,12 +47,7 @@ namespace qps {
 		return validAttrNameMap.at(de);
 	}
 
-	AttrRef::AttrRef(Declaration synonym_decl_, AttrName attrName_)
-		: synonym_decl{ synonym_decl_ }, attrName{ attrName_ } {
-		std::set<AttrName> validAttrNameSet = getValidAttrNameSet(synonym_decl_);
-		if (validAttrNameSet.find(attrName_) == validAttrNameSet.end()) {
-			throw QueryException(ErrorType::Syntactic, "Attribute name is invalid with synonym " + synonym_decl.getSynonym().getSynonym());
-		}
-	}
+	AttrRef::AttrRef(Synonym synonym_, AttrName attrName_)
+		: synonym{ synonym_ }, attrName{ attrName_ } {}
 
 }

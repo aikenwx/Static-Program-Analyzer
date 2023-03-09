@@ -21,6 +21,13 @@ namespace qps {
 
 		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
 
+		void checkElementSynonymDeclareHelper(Element r, std::vector<Declaration> declr);
+
+		void checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration> declr);
+
+		//check that the pattern clause has a synonym with valid design entity
+		void checkPatternClauseSynonym();
+
 		//checks that no wild card as first argument for modifies and uses
 		void checkNoWildCardFirstArgModifiesUses();
 
@@ -31,5 +38,8 @@ namespace qps {
 
 		//checks that pattern first arg is variable if it is synonym
 		void checkPatternSynonymMatchDesignEntity();
+
+		//checks that with clause contain comparison of same type of attribute
+		void checkWithClauseSameAttributeCompare();
 	};
 }

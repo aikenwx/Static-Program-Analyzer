@@ -4,7 +4,7 @@
 
 namespace qps {
 
-  // Underscore class represents underscore as a type of stmtRef/entRef
+  // Boolean class represents boolean as a type of Select Clause
   class Boolean {
 
   public:

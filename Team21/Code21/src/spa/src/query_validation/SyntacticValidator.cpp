@@ -6,7 +6,7 @@ namespace qps {
 
 	bool SyntacticValidator::validateQuery() {
 		checkSuchThatCorrectRefTypes();
-		checkAssignPatternCorrectRefTypes();
+		checkPatternCorrectRefTypes();
 		return true;
 	}
 
@@ -37,7 +37,7 @@ namespace qps {
 	}
 
 	//expression-spec is checked when the expression is converted to postfix in the evaluator. Now only check for first arg.
-	void SyntacticValidator::checkAssignPatternCorrectRefTypes() {
+	void SyntacticValidator::checkPatternCorrectRefTypes() {
 		std::vector<PatternClause> patt = getQuery().getPatternClause();
 		auto declarations = getQuery().getDeclarations();
 		for (int i = 0; i < patt.size(); i++) {

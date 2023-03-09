@@ -7,5 +7,5 @@
 
 namespace qps {
 
-	using Element = std::variant<Declaration, AttrRef>;
+	using Element = std::variant<Synonym, AttrRef>;
 }

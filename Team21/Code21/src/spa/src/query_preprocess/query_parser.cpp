@@ -92,18 +92,14 @@ namespace qps {
 	}
 
 	Element QueryParser::parseElement() {
-		if (!Synonym::isValidSynonym(peek()) || Declaration::findDeclarationWithString(declarations, peek()) == std::nullopt) {
-			throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
-		}
 		Synonym synonym = Synonym(next());
-		Declaration declaration = Declaration(Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity(), synonym);
 		if (isSameToken(".")) {
 			next();
 			AttrName attrName = getAttrNameFromString(next());
-			return AttrRef(declaration, attrName);
+			return AttrRef(synonym, attrName);
 		}
 		else {
-			return declaration;
+			return synonym;
 		}
 	}
 
@@ -120,14 +116,10 @@ namespace qps {
 		}
 		else if (Synonym::isValidSynonym(peek())) {
 			Synonym synonym = Synonym(next());
-			if (Declaration::findDeclarationWithSynonym(declarations, synonym) == std::nullopt) {
-				throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
-			}
-			Declaration declaration = Declaration(Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity(), synonym);
 			assertNextToken(".");
 			next();
 			AttrName attrName = getAttrNameFromString(next());
-			return AttrRef(declaration, attrName);
+			return AttrRef(synonym, attrName);
 		}
 		else {
 			throw QueryException(ErrorType::Syntactic, "Invalid representation for WithRef: (" + peek() + ")");
@@ -168,13 +160,10 @@ namespace qps {
 
 	void QueryParser::parsePattern() {
 		Synonym synonym{ Synonym(next()) };
-		if (Declaration::findDeclarationWithSynonym(declarations, synonym) == std::nullopt) {
-			throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
-		}
 		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
-		auto synDE{ declaration->getDesignEntity() };
-		if (synDE != DesignEntity::ASSIGN && synDE != DesignEntity::WHILE && synDE != DesignEntity::IF) {
-			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern with synonym: " + synonym.getSynonym());
+		auto synDE{ DesignEntity::ASSIGN };
+		if (declaration.has_value()) {
+			synDE = declaration.value().getDesignEntity();
 		}
 
 		assertNextToken("(");

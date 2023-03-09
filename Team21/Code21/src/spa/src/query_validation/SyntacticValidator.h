@@ -23,6 +23,6 @@ namespace qps {
 		void checkSuchThatCorrectRefTypes();
 
 		//checks if assign pattern clause uses correct grammar. It checks if first arg is ent-ref and second ref is expression-spec
-		void checkAssignPatternCorrectRefTypes();
+		void checkPatternCorrectRefTypes();
 	};
 }

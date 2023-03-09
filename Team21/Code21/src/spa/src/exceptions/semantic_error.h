@@ -3,10 +3,10 @@
 namespace exceptions {
 class SemanticError : public std::exception {
  public:
-  SemanticError(std::string message) {
+  explicit SemanticError(const std::string& message) {
     this->message = "Semantic error: " + message;
   };
-  const char* what() const throw() {
+  const char* what() const throw() override {
     return message.c_str();
   };
  private:

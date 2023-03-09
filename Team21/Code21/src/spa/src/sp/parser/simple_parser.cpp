@@ -1,4 +1,5 @@
 #include <assert.h>
+#include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
 #include "token/and_token.h"
 #include "token/assign_token.h"
@@ -51,17 +52,17 @@ std::unique_ptr<ast::AST> SimpleParser::Parse(std::vector<std::unique_ptr<token:
     // Shifts the next token to the stack
     Shift();
   }
-  std::unique_ptr<ast::AST> ast;
-  if (!(stack.size() == 1) || !util::instance_of<ast::ProgramNode>(stack.front())) {
+  std::unique_ptr<ast::AST> ast = std::make_unique<ast::AST>();
+  if (stack.size() == 0) {
+    Reject();
+    throw exceptions::SyntaxError("Empty program");
+  } else if (stack.size() != 1 || !util::instance_of<ast::ProgramNode>(stack.front())) {
     // Reject condition (guard clause)
     Reject();
-    ast = std::make_unique<ast::AST>();
-    ast->SetRoot(stack.front());
-    return ast;
+  } else {
+    // Success condition
+    Success();
   }
-  // Success condition
-  Success();
-  ast = std::make_unique<ast::AST>();
   ast->SetRoot(stack.front());
   return ast;
 }

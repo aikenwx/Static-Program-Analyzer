@@ -12,6 +12,9 @@ public:
   std::shared_ptr<INode> GetLeft();
   std::shared_ptr<INode> GetRight();
   virtual std::string ToString() const override = 0;
+  virtual void AcceptVisitor(
+      std::shared_ptr<INode> currentNode,
+      std::shared_ptr<design_extractor::Extractor> extractor, int depth) override;
 
 protected:
   std::shared_ptr<INode> left;

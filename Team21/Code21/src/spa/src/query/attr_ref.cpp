@@ -51,7 +51,7 @@ namespace qps {
 		: synonym_decl{ synonym_decl_ }, attrName{ attrName_ } {
 		std::set<AttrName> validAttrNameSet = getValidAttrNameSet(synonym_decl_);
 		if (validAttrNameSet.find(attrName_) == validAttrNameSet.end()) {
-			throw QueryException(ErrorType::Syntactic, "Attribute Name " + str +
+			throw QueryException(ErrorType::Syntactic, "Attribute Name " + attrName_ +
 				" is invalid with synonym " + synonym_decl.getSynonym());
 		}
 	}

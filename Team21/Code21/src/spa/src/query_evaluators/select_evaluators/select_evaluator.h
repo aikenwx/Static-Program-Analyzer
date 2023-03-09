@@ -2,7 +2,7 @@
 
 #include "query_evaluators/clause_evaluator.h"
 
-#include "query/declaration.h"
+#include "query/query.h"
 
 namespace qps {
 

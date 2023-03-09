@@ -9,9 +9,14 @@ namespace qps {
 QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)), early_return_(false) {
   CreateEvaluators();
 }
+
+Declaration getDeclaration(Query &query) {
+  auto elements = std::get<std::vector<Element>>(query.getSelectClause());
+  return std::get<Declaration>(elements[0]);
+}
 void QueryEvaluator::CreateEvaluators() {
   auto declarations = query_.getDeclarations();
-  select_evalautor_ = std::make_unique<SelectEvaluator>(query_.getSelectClause());
+  select_evalautor_ = std::make_unique<SelectEvaluator>(getDeclaration(query_));
   for (auto &clause : query_.getSuchThatClause()) {
     clause_evaluators_.push_back(SuchThatEvaluatorFactory::Create(clause, declarations));
   }
@@ -34,7 +39,7 @@ void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
 }
 
 std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb) {
-  auto target = query_.getSelectClause().getSynonym();
+  auto target = getDeclaration(query_).getSynonym();
   if (tables_.empty()) {
     return std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)).Extract(target);
   }

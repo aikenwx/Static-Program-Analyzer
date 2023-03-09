@@ -1,6 +1,6 @@
 #include "select_evaluator.h"
 
-#include "query/design_entity.h"
+//TODO(DHRUV): Select Evaluation
 
 namespace qps {
 ClauseEvaluator::ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {

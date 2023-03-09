@@ -3,9 +3,9 @@
 namespace qps {
 
 	Query::Query(std::vector<Declaration> declarations_, std::vector<SuchThatClause> suchThatClause_,
-		std::vector<PatternClause> patternClause_, Result selectClause_)
+		std::vector<PatternClause> patternClause_, std::vector<WithClause> withClause_, Result selectClause_)
 		: declarations{ declarations_ }, suchThatClause{suchThatClause_},
-		patternClause{ patternClause_ }, selectClause{ selectClause_ } {}
+		patternClause{ patternClause_ }, withClause{ withClause_ }, selectClause{ selectClause_ } {}
 
 	Query::Query(Result selectClause_) : selectClause{ selectClause_ } {}
 

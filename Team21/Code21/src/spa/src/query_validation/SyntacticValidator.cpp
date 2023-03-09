@@ -42,7 +42,7 @@ namespace qps {
 			Ref ref3 = patt[i].getArg1();
 			if (std::holds_alternative<StatementNumber>(ref3)) {
 				throw  QueryException(ErrorType::Syntactic, "Syntactic error. The first argument is not of correct ref type for assign clause");
-			}
+      }
 		}
 	}
 }

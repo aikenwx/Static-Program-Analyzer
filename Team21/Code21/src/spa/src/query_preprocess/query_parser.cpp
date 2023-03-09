@@ -3,7 +3,7 @@
 namespace qps {
 
 	QueryParser::QueryParser(std::vector<std::string> tokens_)
-		: tokens{ tokens_ }, currentIndex{ 0 }, selectClause{ "" } {}
+		: tokens{ tokens_ }, currentIndex{ 0 }, selectClause{ Boolean() } {}
 
 	std::string QueryParser::peek() {
 		if (currentIndex < tokens.size()) {
@@ -91,6 +91,119 @@ namespace qps {
 		return Expression(isPartial, expression);
 	}
 
+	Element QueryParser::parseElement() {
+		if (!Synonym::isValidSynonym(peek()) || Declaration::findDeclarationWithString(declarations, peek()) == std::nullopt) {
+			throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
+		}
+		Synonym synonym = Synonym(next());
+		Declaration declaration = Declaration(Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity(), synonym);
+		if (isSameToken(".")) {
+			next();
+			AttrName attrName = getAttrNameFromString(next());
+			return AttrRef(declaration, attrName);
+		}
+		else {
+			return declaration;
+		}
+	}
+
+	WithRef QueryParser::parseWithRef() {
+		if (isSameToken("\"")) {
+			next();
+			std::string id = next();
+			assertNextToken("\"");
+			next();
+			return QuotedIdentifier(id);
+		}
+		else if (isTokenValidInteger(peek())) {
+			return std::stoi(next());
+		}
+		else if (Synonym::isValidSynonym(peek())) {
+			Synonym synonym = Synonym(next());
+			if (Declaration::findDeclarationWithSynonym(declarations, synonym) == std::nullopt) {
+				throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
+			}
+			Declaration declaration = Declaration(Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity(), synonym);
+			assertNextToken(".");
+			next();
+			AttrName attrName = getAttrNameFromString(next());
+			return AttrRef(declaration, attrName);
+		}
+		else {
+			throw QueryException(ErrorType::Syntactic, "Invalid representation for WithRef: (" + peek() + ")");
+		}
+	}
+
+	std::vector<Element> QueryParser::parseTupleSelect() {
+		std::vector<Element> tuple{};
+		if (isSameToken("<")) {
+			next();
+			tuple.push_back(parseElement());
+			while (isSameToken(",")) {
+				next();
+				tuple.push_back(parseElement());
+			}
+			assertNextToken(">");
+			next();
+		}
+		else {
+			tuple.push_back(parseElement());
+		}
+		return tuple;
+	}
+
+	void QueryParser::parseSuchThat() {
+		Relationship relationship{ getRelationshipFromString(next()) };
+		assertNextToken("(");
+		next();
+		Ref arg1{ parseRef() };
+		assertNextToken(",");
+		next();
+		Ref arg2{ parseRef() };
+		assertNextToken(")");
+		next();
+
+		suchThatClause.push_back(SuchThatClause(relationship, arg1, arg2, declarations));
+	}
+
+	void QueryParser::parsePattern() {
+		Synonym synonym{ Synonym(next()) };
+		if (Declaration::findDeclarationWithSynonym(declarations, synonym) == std::nullopt) {
+			throw QueryException(ErrorType::Syntactic, "Invalid synonym (without declaration) for elem in Select Clause: (" + peek() + ")");
+		}
+		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
+		auto synDE{ declaration->getDesignEntity() };
+		if (synDE != DesignEntity::ASSIGN && synDE != DesignEntity::WHILE && synDE != DesignEntity::IF) {
+			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern with synonym: " + synonym.getSynonym());
+		}
+
+		assertNextToken("(");
+		next();
+		Ref arg1{ parseRef() };
+		assertNextToken(",");
+		next();
+		ExpressionSpec arg2{ parseExpression() };
+		if (synDE != DesignEntity::IF) {
+			assertNextToken(",");
+			next();
+			assertNextToken("_");
+			next();
+		}
+		assertNextToken(")");
+		next();
+
+		patternClause.push_back(PatternClause(synonym, arg1, arg2));
+	}
+
+	void QueryParser::parseWith() {
+		WithRef ref1{ parseWithRef() };
+		assertNextToken("=");
+		next();
+		WithRef ref2{ parseWithRef() };
+
+		withClause.push_back(WithClause(ref1, ref2));
+	}
+
 	bool QueryParser::parseDeclaration() {
 		try {
 			getDesignEntityFromString(peek());
@@ -121,7 +234,7 @@ namespace qps {
 		if (select == "BOOLEAN") {
 			Synonym test_synonym{ select };
 			if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
-				selectClause = "BOOLEAN";
+				selectClause = Boolean();
 				next();
 			}
 			else {
@@ -131,13 +244,6 @@ namespace qps {
 		else {
 			selectClause = parseTupleSelect();
 		}
-		/*Synonym test_synonym{ peek() };
-		if (Declaration::findDeclarationWithSynonym(declarations, test_synonym) == std::nullopt) {
-			throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for " + peek());
-		}
-		Synonym synonym{ next() };
-		DesignEntity design_entity = Declaration::findDeclarationWithSynonym(declarations, synonym)->getDesignEntity();
-		selectClause.push_back(Declaration(design_entity, synonym));*/
 	}
 
 	bool QueryParser::parseSuchThatClause() {
@@ -148,17 +254,11 @@ namespace qps {
 		assertNextToken("that");
 		next();
 
-		Relationship relationship{ getRelationshipFromString(next()) };
-		assertNextToken("(");
-		next();
-		Ref arg1{ parseRef() };
-		assertNextToken(",");
-		next();
-		Ref arg2{ parseRef() };
-		assertNextToken(")");
-		next();
-
-		suchThatClause.push_back(SuchThatClause(relationship, arg1, arg2, declarations));
+		parseSuchThat();
+		while (isSameToken("and")) {
+			next();
+			parseSuchThat();
+		}
 		return true;
 	}
 
@@ -166,32 +266,27 @@ namespace qps {
 		if (!isSameToken("pattern")) {
 			return false;
 		}
+		next();
 
-		next();
-		std::string syn{ next() };
-		Synonym synonym{ Synonym(syn) };
-		auto declaration{ Declaration::findDeclarationWithSynonym(declarations, synonym) };
-		auto synDE{ declaration->getDesignEntity() };
-		if (synDE != DesignEntity::ASSIGN && synDE != DesignEntity::WHILE && synDE != DesignEntity::IF) {
-			throw QueryException(ErrorType::Semantic, "Semantic error. Invalid syntax for pattern assign with synonym: " + syn);
-		}
-
-		assertNextToken("(");
-		next();
-		Ref arg1{ parseRef() };
-		assertNextToken(",");
-		next();
-		ExpressionSpec arg2{ parseExpression() };
-		if (synDE != DesignEntity::IF) {
-			assertNextToken(",");
+		parsePattern();
+		while (isSameToken("and")) {
 			next();
-			assertNextToken("_");
-			next();
+			parsePattern();
 		}
-		assertNextToken(")");
-		next();
+		return true;
+	}
 
-		patternClause.push_back(PatternClause(synonym, arg1, arg2));
+	bool QueryParser::parseWithClause() {
+		if (!isSameToken("with")) {
+			return false;
+		}
+		next();
+		
+		parseWith();
+		while (isSameToken("and")) {
+			next();
+			parseWith();
+		}
 		return true;
 	}
 
@@ -209,10 +304,13 @@ namespace qps {
 			else if (parsePatternClause()) {
 				continue;
 			}
+			else if (parseWithClause()) {
+				continue;
+			}
 			else {
 				throw QueryException(ErrorType::Syntactic, "Invalid clause, not such-that or pattern");
 			}
 		}
-		return Query(declarations, suchThatClause, patternClause, selectClause);
+		return Query(declarations, suchThatClause, patternClause, withClause, selectClause);
 	}
 }

@@ -41,5 +41,10 @@ namespace qps {
 
 		//checks that with clause contain comparison of same type of attribute
 		void checkWithClauseSameAttributeCompare();
+
+		//checks that attrRef have valid attrName
+		void checkAttrRefValidAttrName();
+
+		void checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration> declr);
 	};
 }

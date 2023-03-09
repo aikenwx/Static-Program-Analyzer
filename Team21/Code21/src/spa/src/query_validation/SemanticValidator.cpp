@@ -16,6 +16,7 @@ bool SemanticValidator::validateQuery() {
   checkRelationSynonymMatchDesignEntity();
   checkPatternSynonymMatchDesignEntity();
   checkWithClauseSameAttributeCompare();
+  checkAttrRefValidAttrName();
   return true;
 }
 
@@ -197,4 +198,35 @@ void SemanticValidator::checkWithClauseSameAttributeCompare() {
     }
   }
 }
+
+void SemanticValidator::checkAttrRefValidAttrName() {
+  std::vector<Declaration> declr = getQuery().getDeclarations();
+  Result result = getQuery().getSelectClause();
+  if (std::holds_alternative<std::vector<Element>>(result)) {
+    std::vector<Element> tuple = std::get<std::vector<Element>>(result);
+    for (int i = 0; i < tuple.size(); i++) {
+      if (std::holds_alternative<AttrRef>(tuple[i])) {
+        checkAttrRefValidAttrNameHelper(std::get<AttrRef>(tuple[i]), declr);
+      }
+    }
+  }
+  std::vector<WithClause> w = getQuery().getWithClause();
+  for (int i = 0; i < w.size(); i++) {
+    WithRef ref1 = w[i].getRef1();
+    WithRef ref2 = w[i].getRef2();
+    checkAttrRefValidAttrNameHelper(std::get<AttrRef>(ref1.ref), declr);
+    checkAttrRefValidAttrNameHelper(std::get<AttrRef>(ref2.ref), declr);
+  }
+}
+
+void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration> declr) {
+  if (Declaration::findDeclarationWithSynonym(declr, ar.synonym).has_value()) {
+    Declaration decl = Declaration::findDeclarationWithSynonym(declr, ar.synonym).value();
+    std::set<AttrName> validAttrNameSet = getValidAttrNameSet(decl);
+    if (validAttrNameSet.find(ar.attrName) == validAttrNameSet.end()) {
+      throw QueryException(ErrorType::Semantic, "Attribute name is invalid with synonym " + ar.synonym.getSynonym());
+    }
+  }
+}
+
 }

@@ -5,37 +5,62 @@
 #ifndef SPA_ENTITY_H
 #define SPA_ENTITY_H
 
+#include <memory>
 #include <string>
 #include <vector>
 
-enum EntityType {
-    ASSIGN_STATEMENT = 0,
-    CALL_STATEMENT = 1,
-    IF_STATEMENT = 2,
-    PRINT_STATEMENT = 3,
-    READ_STATEMENT = 4,
-    WHILE_STATEMENT = 5,
-    CONSTANT = 6,
-    VARIABLE = 7,
-    PROCEDURE = 8,
-    STATEMENT = 9,
-    LAST_ENTITY = STATEMENT
+#include "../StorageKey.h"
+
+struct EntityType : public StorageKey {
+   private:
+    static std::size_t entityTypeKeyCounter;
+
+   public:
+    EntityType();
+
+    bool operator==(const EntityType &entityType) const;
+};
+
+template <>
+struct std::hash<EntityType> {
+    std::size_t operator()(const EntityType &entityType) const;
+};
+
+struct EntityKey : public StorageKey {
+   private:
+    EntityType *entityType;
+    std::string *entityValue;
+    std::string entityValueStore;
+
+   public:
+    EntityKey(EntityType *entityType, std::string *entityValue);
+    EntityKey(EntityType *entityType, int entityIntValue);
+
+    bool operator==(const EntityKey &entityKey) const;
 };
 
 class Entity {
-   public:
-    static std::vector<EntityType> statementTypes;
+   private:
+    EntityKey entityKey;
+    std::shared_ptr<std::string> entityValue;
 
    public:
+    Entity(EntityType *entityType, std::shared_ptr<std::string> entityValue);
+
     virtual ~Entity(){};
 
-    virtual std::string* getEntityValue() = 0;
+    virtual EntityType &getEntityType() const = 0;
 
-    virtual EntityType getEntityType() = 0;
+    std::string *getEntityValue() const;
 
-    bool equals(Entity* otherEntity);
+    bool equals(Entity *otherEntity);
 
-    static bool isStatementType(EntityType entityType);
+    EntityKey &getEntityKey();
+};
+
+template <>
+struct std::hash<EntityKey> {
+    std::size_t operator()(const EntityKey &entityKey) const;
 };
 
 #endif

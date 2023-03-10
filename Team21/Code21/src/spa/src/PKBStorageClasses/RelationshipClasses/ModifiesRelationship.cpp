@@ -5,32 +5,19 @@
 
 #include <stdexcept>
 
-bool ModifiesRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->modifier->equals(entity);
-}
-
-bool ModifiesRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->modifiedVariable->equals(entity);
-}
-
-ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedVariable) {
+ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedVariable) : Relationship(&ModifiesRelationship::relationshipType, modifier, modifiedVariable) {
     // modifier can only be Statement or Procedure
-    if (!Entity::isStatementType(modifier->getEntityType()) && modifier->getEntityType() != EntityType::PROCEDURE) {
+    if (!Statement::isStatement(modifier) && dynamic_cast<Procedure *>(modifier) == nullptr) {
         throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
     }
-
-    this->modifier = modifier;
-    this->modifiedVariable = modifiedVariable;
 }
 
-RelationshipType ModifiesRelationship::getRelationshipType() {
-    return RelationshipType::MODIFIES;
+RelationshipType &ModifiesRelationship::getRelationshipType() const {
+    return ModifiesRelationship::getRelationshipTypeStatic();
 }
 
-Entity *ModifiesRelationship::getLeftHandEntity() {
-    return this->modifier;
-}
+RelationshipType ModifiesRelationship::relationshipType = RelationshipType();
 
-Entity *ModifiesRelationship::getRightHandEntity() {
-    return this->modifiedVariable;
+RelationshipType &ModifiesRelationship::getRelationshipTypeStatic() {
+    return ModifiesRelationship::relationshipType;
 }

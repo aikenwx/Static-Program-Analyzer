@@ -4,28 +4,15 @@
 
 #include "CallsStarRelationship.h"
 
-bool CallsStarRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->caller->equals(entity);
+RelationshipType CallsStarRelationship::relationshipType = RelationshipType();
+
+RelationshipType &CallsStarRelationship::getRelationshipTypeStatic() {
+    return CallsStarRelationship::relationshipType;
 }
 
-bool CallsStarRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->callee->equals(entity);
+CallsStarRelationship::CallsStarRelationship(Procedure *caller, Procedure *callee) : Relationship(&CallsStarRelationship::relationshipType, caller, callee) {
 }
 
-CallsStarRelationship::CallsStarRelationship(Procedure *caller, Procedure *callee) {
-    this->callee = callee;
-    this->caller = caller;
+RelationshipType &CallsStarRelationship::getRelationshipType() const {
+    return CallsStarRelationship::getRelationshipTypeStatic();
 }
-
-RelationshipType CallsStarRelationship::getRelationshipType() {
-    return RelationshipType::CALLS_STAR;
-}
-
-Entity *CallsStarRelationship::getLeftHandEntity() {
-    return this->caller;
-}
-
-Entity *CallsStarRelationship::getRightHandEntity() {
-    return this->callee;
-}
-

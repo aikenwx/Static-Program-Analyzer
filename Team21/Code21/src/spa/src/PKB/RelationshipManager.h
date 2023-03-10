@@ -14,28 +14,26 @@
 
 class RelationshipManager {
    private:
-    std::unordered_map<int, std::shared_ptr<std::vector<Relationship*>>> relationshipSynonymHashToRelationshipStore;
-    std::unordered_map<std::string, std::shared_ptr<Relationship>> relationshipLiteralHashToRelationshipStore;
+    std::unordered_map<RelationshipSynonymKey, std::shared_ptr<std::vector<Relationship*>>> relationshipSynonymStore;
+    std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>> relationshipStore;
 
    public:
     RelationshipManager();
 
     ~RelationshipManager();
 
-    void storeRelationship(std::shared_ptr<Relationship> relationship);
+    void storeRelationship(Relationship* relationship);
 
-    // ownership of the vector is transferred to the caller, so we return a smart pointer
+    Relationship* getRelationship(RelationshipKey& key);
+
     std::vector<Relationship*>*
-    getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftHandEntityType,
-                            EntityType rightHandEntityType);
-
-    Relationship* getRelationshipIfExist(Relationship* relationship);
+    getRelationshipsByTypes(RelationshipType& relationshipType, EntityType& leftHandEntityType,
+                            EntityType& rightHandEntityType);
 
    private:
-    void initialiseVectorForIndexIfNotExist(int hashkey);
-    std::shared_ptr<std::vector<int>> getPossibleHashKeysForGivenEntityAndRelationshipTypes(RelationshipType relationshipType,
-                                                                                            EntityType leftHandEntityType,
-                                                                                            EntityType rightHandEntityType);
+    void storeInRelationshipSynonymStore(Relationship* relationship);
+
+    void initialiseVectorForRelationshipSynonymStoreIfNotExist(RelationshipSynonymKey relationshipSynonymKey);
 };
 
 #endif  // SPA_RELATIONSHIPMANAGER_H

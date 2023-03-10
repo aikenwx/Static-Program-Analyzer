@@ -31,180 +31,247 @@ QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *rela
 }
 
 std::vector<AssignStatement *> *QueryFacade::getAllAssignStatements() {
-    return (std::vector<AssignStatement *> *)this->entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
+    return (std::vector<AssignStatement *> *)this->entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 }
 
 std::vector<IfStatement *> *QueryFacade::getAllIfStatements() {
-    return (std::vector<IfStatement *> *)this->entityManager->getEntitiesByType(EntityType::IF_STATEMENT);
+    return (std::vector<IfStatement *> *)this->entityManager->getEntitiesByType(IfStatement::getEntityTypeStatic());
 }
 
 std::vector<WhileStatement *> *QueryFacade::getAllWhileStatements() {
-    return (std::vector<WhileStatement *> *)this->entityManager->getEntitiesByType(EntityType::WHILE_STATEMENT);
+    return (std::vector<WhileStatement *> *)this->entityManager->getEntitiesByType(WhileStatement::getEntityTypeStatic());
 }
 
 std::vector<CallStatement *> *QueryFacade::getAllCallStatements() {
-    return (std::vector<CallStatement *> *)this->entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
+    return (std::vector<CallStatement *> *)this->entityManager->getEntitiesByType(CallStatement::getEntityTypeStatic());
 }
 
 std::vector<ReadStatement *> *QueryFacade::getAllReadStatements() {
-    return (std::vector<ReadStatement *> *)this->entityManager->getEntitiesByType(EntityType::READ_STATEMENT);
+    return (std::vector<ReadStatement *> *)this->entityManager->getEntitiesByType(ReadStatement::getEntityTypeStatic());
 }
 
 std::vector<PrintStatement *> *QueryFacade::getAllPrintStatements() {
-    return (std::vector<PrintStatement *> *)this->entityManager->getEntitiesByType(EntityType::PRINT_STATEMENT);
+    return (std::vector<PrintStatement *> *)this->entityManager->getEntitiesByType(PrintStatement::getEntityTypeStatic());
 }
 std::vector<Procedure *> *QueryFacade::getAllProcedures() {
-    return (std::vector<Procedure *> *)this->entityManager->getEntitiesByType(EntityType::PROCEDURE);
+    return (std::vector<Procedure *> *)this->entityManager->getEntitiesByType(Procedure::getEntityTypeStatic());
 }
 
 std::vector<Variable *> *QueryFacade::getAllVariables() {
-    return (std::vector<Variable *> *)this->entityManager->getEntitiesByType(EntityType::VARIABLE);
+    return (std::vector<Variable *> *)this->entityManager->getEntitiesByType(Variable::getEntityTypeStatic());
 }
 
 std::vector<Constant *> *QueryFacade::getAllConstants() {
-    return (std::vector<Constant *> *)this->entityManager->getEntitiesByType(EntityType::CONSTANT);
+    return (std::vector<Constant *> *)this->entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
 }
 
 std::vector<Statement *> *QueryFacade::getAllStatements() {
-    return (std::vector<Statement *> *)this->entityManager->getEntitiesByType(EntityType::STATEMENT);
+    return (std::vector<Statement *> *)this->entityManager->getEntitiesByType(Statement::getEntityTypeStatic());
 }
 
 std::vector<ParentRelationship *> *QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<ParentRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::PARENT, leftEntityType, rightEntityType);
+
+        ParentRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<FollowsRelationship *> *QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<FollowsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::FOLLOWS, leftEntityType, rightEntityType);
+
+        FollowsRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<ModifiesRelationship *> *QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<ModifiesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::MODIFIES, leftEntityType, rightEntityType);
+
+        ModifiesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<UsesRelationship *> *QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<UsesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::USES, leftEntityType, rightEntityType);
+
+        UsesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<ParentStarRelationship *> *QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<ParentStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::PARENT_STAR, leftEntityType, rightEntityType);
+
+        ParentStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<FollowsStarRelationship *> *QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
     return (std::vector<FollowsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::FOLLOWS_STAR, leftEntityType, rightEntityType);
+
+        FollowsStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<CallsRelationship *> *QueryFacade::getAllCallsRelationships() {
     return (std::vector<CallsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::CALLS, EntityType::PROCEDURE, EntityType::PROCEDURE);
+
+        CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 }
 
 std::vector<CallsStarRelationship *> *QueryFacade::getAllCallsStarRelationships() {
     return (std::vector<CallsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
-        RelationshipType::CALLS_STAR, EntityType::PROCEDURE, EntityType::PROCEDURE);
+
+        CallsStarRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 }
 
 ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
-    Statement *statement = entityManager->getStatementByStatementNumber(statementNumber);
-    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    EntityKey statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+    EntityKey variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
+
     if (statement == nullptr || variable == nullptr) {
         return nullptr;
     }
-    ModifiesRelationship relationship = ModifiesRelationship(statement, variable);
-    return (ModifiesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&ModifiesRelationship::getRelationshipTypeStatic(), &statementKey, &variableKey);
+
+    return (ModifiesRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 ModifiesRelationship *QueryFacade::getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
-    Procedure *procedure = entityManager->getProcedureByProcedureName(procedureName);
-    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    EntityKey procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
+    EntityKey variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+
+    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
+
     if (procedure == nullptr || variable == nullptr) {
         return nullptr;
     }
-    ModifiesRelationship relationship = ModifiesRelationship(procedure, variable);
-    return (ModifiesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&ModifiesRelationship::getRelationshipTypeStatic(), &procedureKey, &variableKey);
+
+    return (ModifiesRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 UsesRelationship *QueryFacade::getStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
-    Statement *statement = entityManager->getStatementByStatementNumber(statementNumber);
-    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    EntityKey statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+    EntityKey variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
+
     if (statement == nullptr || variable == nullptr) {
         return nullptr;
     }
-    UsesRelationship relationship = UsesRelationship(statement, variable);
-    return (UsesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(), &statementKey, &variableKey);
+
+    return (UsesRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 UsesRelationship *QueryFacade::getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
-    Procedure *procedure = entityManager->getProcedureByProcedureName(procedureName);
-    Variable *variable = entityManager->getVariableByVariableName(variableName);
+    EntityKey procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
+    EntityKey variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+
+    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
+
     if (procedure == nullptr || variable == nullptr) {
         return nullptr;
     }
-    UsesRelationship relationship = UsesRelationship(procedure, variable);
-    return (UsesRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
-}
 
+    RelationshipKey relationshipKey = RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(), &procedureKey, &variableKey);
+
+    return (UsesRelationship *)this->relationshipManager->getRelationship(relationshipKey);
+}
 ParentRelationship *QueryFacade::getParentRelationship(int parentStatementNumber, int childStatementNumber) {
-    Statement *parentStatement = entityManager->getStatementByStatementNumber(parentStatementNumber);
-    Statement *childStatement = entityManager->getStatementByStatementNumber(childStatementNumber);
+    EntityKey parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
+    EntityKey childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
+
+    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
+    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
+
     if (parentStatement == nullptr || childStatement == nullptr) {
         return nullptr;
     }
-    ParentRelationship relationship = ParentRelationship(parentStatement, childStatement);
-    return (ParentRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&ParentRelationship::getRelationshipTypeStatic(), &parentStatementKey, &childStatementKey);
+
+    return (ParentRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 FollowsRelationship *QueryFacade::getFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
-    Statement *firstStatement = entityManager->getStatementByStatementNumber(firstStatementNumber);
-    Statement *secondStatement = entityManager->getStatementByStatementNumber(secondStatementNumber);
+    EntityKey firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
+    EntityKey secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
+
+    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
+    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
+
     if (firstStatement == nullptr || secondStatement == nullptr) {
         return nullptr;
     }
-    FollowsRelationship relationship = FollowsRelationship(firstStatement, secondStatement);
-    return (FollowsRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&FollowsRelationship::getRelationshipTypeStatic(), &firstStatementKey, &secondStatementKey);
+
+    return (FollowsRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 ParentStarRelationship *QueryFacade::getParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
-    Statement *parentStatement = entityManager->getStatementByStatementNumber(parentStatementNumber);
-    Statement *childStatement = entityManager->getStatementByStatementNumber(childStatementNumber);
+    EntityKey parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
+    EntityKey childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
+
+    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
+    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
+
     if (parentStatement == nullptr || childStatement == nullptr) {
         return nullptr;
     }
-    ParentStarRelationship relationship = ParentStarRelationship(parentStatement, childStatement);
-    return (ParentStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&ParentStarRelationship::getRelationshipTypeStatic(), &parentStatementKey, &childStatementKey);
+
+    return (ParentStarRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 FollowsStarRelationship *QueryFacade::getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
-    Statement *firstStatement = entityManager->getStatementByStatementNumber(firstStatementNumber);
-    Statement *secondStatement = entityManager->getStatementByStatementNumber(secondStatementNumber);
+    EntityKey firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
+    EntityKey secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
+
+    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
+    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
+
     if (firstStatement == nullptr || secondStatement == nullptr) {
         return nullptr;
     }
-    FollowsStarRelationship relationship = FollowsStarRelationship(firstStatement, secondStatement);
-    return (FollowsStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&FollowsStarRelationship::getRelationshipTypeStatic(), &firstStatementKey, &secondStatementKey);
+
+    return (FollowsStarRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 CallsRelationship *QueryFacade::getCallsRelationship(std::string callerName, std::string calleeName) {
-    Procedure *callerProcedure = entityManager->getProcedureByProcedureName(callerName);
-    Procedure *calleeProcedure = entityManager->getProcedureByProcedureName(calleeName);
+    EntityKey callerKey = EntityKey(&Procedure::getEntityTypeStatic(), &callerName);
+    EntityKey calleeKey = EntityKey(&Procedure::getEntityTypeStatic(), &calleeName);
+
+    Procedure *callerProcedure = (Procedure *)this->entityManager->getEntity(callerKey);
+    Procedure *calleeProcedure = (Procedure *)this->entityManager->getEntity(calleeKey);
+
     if (callerProcedure == nullptr || calleeProcedure == nullptr) {
         return nullptr;
     }
-    CallsRelationship relationship = CallsRelationship(callerProcedure, calleeProcedure);
-    return (CallsRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&CallsRelationship::getRelationshipTypeStatic(), &callerKey, &calleeKey);
+
+    return (CallsRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }
 
 CallsStarRelationship *QueryFacade::getCallsStarRelationship(std::string callerName, std::string calleeName) {
-    Procedure *callerProcedure = entityManager->getProcedureByProcedureName(callerName);
-    Procedure *calleeProcedure = entityManager->getProcedureByProcedureName(calleeName);
+    EntityKey callerKey = EntityKey(&Procedure::getEntityTypeStatic(), &callerName);
+    EntityKey calleeKey = EntityKey(&Procedure::getEntityTypeStatic(), &calleeName);
+
+    Procedure *callerProcedure = (Procedure *)this->entityManager->getEntity(callerKey);
+    Procedure *calleeProcedure = (Procedure *)this->entityManager->getEntity(calleeKey);
+
     if (callerProcedure == nullptr || calleeProcedure == nullptr) {
         return nullptr;
     }
-    CallsStarRelationship relationship = CallsStarRelationship(callerProcedure, calleeProcedure);
-    return (CallsStarRelationship *)this->relationshipManager->getRelationshipIfExist(&relationship);
+
+    RelationshipKey relationshipKey = RelationshipKey(&CallsStarRelationship::getRelationshipTypeStatic(), &callerKey, &calleeKey);
+
+    return (CallsStarRelationship *)this->relationshipManager->getRelationship(relationshipKey);
 }

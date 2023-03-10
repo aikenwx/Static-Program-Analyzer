@@ -6,19 +6,29 @@
 
 #include "Entity.h"
 
-class Statement : public Entity {
-   protected:
-    int statementNumber;
-    std::shared_ptr<std::string> statementNumberString;
+struct StatementType : public EntityType {
+   private:
+    static std::size_t statementTypeKeyCounter;
 
    public:
+    StatementType();
+};
+class Statement : public Entity {
+   private:
+    static EntityType statementType;
+    int statementNumber;
 
-    virtual ~Statement() {};
-    std::string * getEntityValue() override;
+   public:
+    Statement(int statementNumber);
 
-    const int getStatementNumber();
+    static EntityType& getEntityTypeStatic();
+    static bool isStatement(Entity* entity);
 
-    virtual EntityType getEntityType() override = 0;
+    virtual ~Statement(){};
+
+    int getStatementNumber() const;
+
+    virtual EntityType& getEntityType() const override;
 };
 
 #endif

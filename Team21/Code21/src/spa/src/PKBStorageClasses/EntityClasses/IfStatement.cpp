@@ -1,10 +1,14 @@
 #include "IfStatement.h"
 
-IfStatement::IfStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
+EntityType IfStatement::ifStatementType = EntityType();
+
+EntityType& IfStatement::getEntityTypeStatic() {
+    return IfStatement::ifStatementType;
 }
 
-EntityType IfStatement::getEntityType() {
-    return EntityType::IF_STATEMENT;
+EntityType& IfStatement::getEntityType() const {
+    return IfStatement::getEntityTypeStatic();
+}
+
+IfStatement::IfStatement(int statementNumber) : Statement(statementNumber) {
 }

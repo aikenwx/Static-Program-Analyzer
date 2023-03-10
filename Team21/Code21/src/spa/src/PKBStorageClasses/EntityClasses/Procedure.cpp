@@ -1,21 +1,30 @@
 #include "Procedure.h"
 
-Procedure::Procedure(std::string* procedureName) {
-    this->procedureName = std::shared_ptr<std::string>(procedureName);
-}
-
-std::string * Procedure::getEntityValue() {
-    return this->procedureName.get();
-}
-
-EntityType Procedure::getEntityType() {
-    return EntityType::PROCEDURE;
+Procedure::Procedure(std::string *procedureName) : Entity(&Procedure::getEntityTypeStatic(), std::shared_ptr<std::string>(procedureName)) {
 }
 
 void Procedure::setCFG(std::shared_ptr<cfg::CFG> cfg) {
     this->cfg = cfg;
 }
 
-cfg::CFG * Procedure::getCFG() {
+cfg::CFG *Procedure::getCFG() {
     return this->cfg.get();
 }
+
+bool Procedure::operator==(const Procedure &procedure) const {
+    return this->getEntityValue() == procedure.getEntityValue();
+}
+
+EntityType &Procedure::getEntityTypeStatic() {
+    return Procedure::procedureType;
+}
+
+EntityType &Procedure::getEntityType() const {
+    return Procedure::getEntityTypeStatic();
+}
+
+size_t std::hash<Procedure>::operator()(const Procedure &procedure) const {
+    return std::hash<std::string *>()(procedure.getEntityValue());
+}
+
+EntityType Procedure::procedureType = EntityType();

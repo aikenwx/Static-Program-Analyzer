@@ -5,23 +5,17 @@
 #ifndef SPA_FOLLOWSRELATIONSHIP_H
 #define SPA_FOLLOWSRELATIONSHIP_H
 
-
-#include "Relationship.h"
 #include "../EntityClasses/Statement.h"
+#include "Relationship.h"
 
 class FollowsRelationship : public Relationship {
-private:
-    Statement* followedStatement;
-    Statement* followerStatement;
+   private:
+    static RelationshipType relationshipType;
 
-public:
-    FollowsRelationship(Statement *followedStatement, Statement *followerStatement);
-    bool containsEntityOnLeftHand(Entity *entity) override;
-    bool containsEntityOnRightHand(Entity *entity) override;
-    RelationshipType getRelationshipType() override;
-    Entity* getLeftHandEntity() override;
-    Entity* getRightHandEntity() override;
+   public:
+    static RelationshipType& getRelationshipTypeStatic();
+    FollowsRelationship(Statement* followedStatement, Statement* followerStatement);
+    RelationshipType& getRelationshipType() const override;
 };
 
-
-#endif //SPA_FOLLOWSRELATIONSHIP_H
+#endif  // SPA_FOLLOWSRELATIONSHIP_H

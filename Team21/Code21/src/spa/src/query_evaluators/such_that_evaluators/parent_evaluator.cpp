@@ -16,7 +16,7 @@ std::vector<EntityType> ParentEvaluator::GetLeftHandTypes(Ref &left_arg) {
 }
 
 std::vector<EntityType> ParentEvaluator::GetRightHandTypes(Ref &right_arg) {
-  return {EntityType::STATEMENT};
+  return {Statement::getEntityTypeStatic()};
 }
 
 } // qps

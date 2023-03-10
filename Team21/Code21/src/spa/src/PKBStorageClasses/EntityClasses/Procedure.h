@@ -13,22 +13,32 @@
 
 class Procedure : public Entity {
    private:
+    static EntityType procedureType;
+    size_t hash;
+
     std::shared_ptr<std::string> procedureName;
 
     std::shared_ptr<cfg::CFG> cfg;
-    
+
    public:
+    static EntityType& getEntityTypeStatic();
+
+    EntityType& getEntityType() const override;
+
     Procedure(std::string* variableValue);
 
     ~Procedure() = default;
 
     void setCFG(std::shared_ptr<cfg::CFG> cfg);
 
-    cfg::CFG * getCFG();
+    cfg::CFG* getCFG();
 
-    std::string * getEntityValue() override;
+    bool operator==(const Procedure& procedure) const;
+};
 
-    EntityType getEntityType() override;
+template <>
+struct std::hash<Procedure> {
+    size_t operator()(const Procedure& procedure) const;
 };
 
 #endif  // SPA_PROCEDURE_H

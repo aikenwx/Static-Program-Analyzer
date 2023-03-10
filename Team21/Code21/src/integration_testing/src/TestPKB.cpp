@@ -64,7 +64,7 @@ TEST_CASE("PKB can store read relationship and QueryFacade can read retrieve rel
     populateFacade->storeReadStatement(2);
     populateFacade->storeFollowsRelationship(1, 2);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        READ_STATEMENT, READ_STATEMENT);
+        ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 1);
 
@@ -88,7 +88,7 @@ TEST_CASE("PKB can store multiple read follow read relationships and QueryFacade
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(2, 3);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        READ_STATEMENT, READ_STATEMENT);
+        ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -136,7 +136,7 @@ TEST_CASE("PKB can store multiple print follow print relationships and retrieve 
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(2, 3);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        PRINT_STATEMENT, PRINT_STATEMENT);
+        PrintStatement::getEntityTypeStatic(), PrintStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -244,7 +244,7 @@ TEST_CASE("PKB can store multiple while parent read relationships and retrieve t
     populateFacade->storeParentRelationship(1, 2);
     populateFacade->storeParentRelationship(1, 3);
     auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-        WHILE_STATEMENT, READ_STATEMENT);
+        WhileStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -273,7 +273,7 @@ TEST_CASE("PKB can store multiple while parent assign relationships and retrieve
     populateFacade->storeParentRelationship(1, 2);
     populateFacade->storeParentRelationship(3, 4);
     auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-        WHILE_STATEMENT, ASSIGN_STATEMENT);
+        WhileStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -302,7 +302,7 @@ TEST_CASE("PKB can store mulitple assignment follows read relationships and retr
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(3, 4);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        ASSIGN_STATEMENT, READ_STATEMENT);
+        AssignStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -330,7 +330,7 @@ TEST_CASE("PKB can store multiple assignment follows assignment relationships an
     populateFacade->storeFollowsRelationship(1, 2);
     populateFacade->storeFollowsRelationship(2, 3);
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        ASSIGN_STATEMENT, ASSIGN_STATEMENT);
+        AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -359,7 +359,7 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
     populateFacade->storeStatementUsesVariableRelationship(1, "x");
     populateFacade->storeStatementUsesVariableRelationship(2, "y");
     auto relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-        ASSIGN_STATEMENT, VARIABLE);
+        AssignStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -386,7 +386,7 @@ TEST_CASE("PKB can store multiple procedure uses variable relationships and retr
     populateFacade->storeProcedureUsesVariableRelationship("Procedure1", "x");
     populateFacade->storeProcedureUsesVariableRelationship("Procedure2", "y");
     auto relationships = queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-        PROCEDURE, VARIABLE);
+        Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -413,7 +413,7 @@ TEST_CASE("PKB can store multiple call modifies variable relationships and retri
     populateFacade->storeStatementModifiesVariableRelationship(1, "x");
     populateFacade->storeStatementModifiesVariableRelationship(2, "y");
     auto relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-        CALL_STATEMENT, VARIABLE);
+        CallStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -442,7 +442,7 @@ TEST_CASE("PKB can store multiple procedure modifies variable relationships and 
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure2", "y");
     auto relationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-        PROCEDURE, VARIABLE);
+        Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
 
@@ -542,7 +542,7 @@ TEST_CASE("PKB can store mulitple types of statement follows statements relation
     populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
 
     auto relationships = queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(
-        STATEMENT, STATEMENT);
+        Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 6);
 
@@ -621,7 +621,7 @@ TEST_CASE("PKB can store multitple while parent statements relationships and ret
     populateFacade->storeFollowsStarRelationship(2, 3);
 
     auto relationships = queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(
-        WHILE_STATEMENT, STATEMENT);
+        WhileStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 6);
 
@@ -700,7 +700,7 @@ TEST_CASE("PKB can store multitple while parentStar statements relationships and
     populateFacade->storeFollowsStarRelationship(2, 3);
 
     auto relationships = queryFacade->getParentStarRelationshipsByLeftAndRightEntityTypes(
-        WHILE_STATEMENT, STATEMENT);
+        WhileStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 6);
 

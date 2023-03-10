@@ -4,10 +4,15 @@
 #include "Statement.h"
 
 class IfStatement : public Statement {
+   private:
+    static EntityType ifStatementType;
+
    public:
     IfStatement(int statementNumber);
 
-    EntityType getEntityType() override;
+    static EntityType& getEntityTypeStatic();
+
+    EntityType& getEntityType() const override;
 };
 
 #endif

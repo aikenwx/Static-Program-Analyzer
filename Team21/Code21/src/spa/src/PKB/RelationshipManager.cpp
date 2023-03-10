@@ -4,6 +4,7 @@
 
 #include "RelationshipManager.h"
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 
@@ -23,7 +24,7 @@ void RelationshipManager::storeRelationship(std::shared_ptr<Relationship> relati
     RelationshipLiteralHashkeyGenerator relationshipLiteralHashFactory;
     std::string literalHashkey = relationshipLiteralHashFactory.getHashKey(relationship.get());
 
-    if (this->getRelationshipByLiterals(literalHashkey) != nullptr) {
+    if (this->getRelationshipIfExist(relationship.get()) != nullptr) {
         return;
     }
 
@@ -60,11 +61,14 @@ RelationshipManager::getRelationshipsByTypes(RelationshipType relationshipType, 
     return this->relationshipSynonymHashToRelationshipStore.at(hashKey).get();
 }
 
-Relationship *RelationshipManager::getRelationshipByLiterals(std::string relationshipLiteralHash) {
-    if (this->relationshipLiteralHashToRelationshipStore.find(relationshipLiteralHash) == this->relationshipLiteralHashToRelationshipStore.end()) {
+Relationship *RelationshipManager::getRelationshipIfExist(Relationship *relationship) {
+    RelationshipLiteralHashkeyGenerator relationshipLiteralHashFactory;
+    std::string literalHashkey = relationshipLiteralHashFactory.getHashKey(relationship);
+
+    if (this->relationshipLiteralHashToRelationshipStore.find(literalHashkey) == this->relationshipLiteralHashToRelationshipStore.end()) {
         return nullptr;
     }
-    return this->relationshipLiteralHashToRelationshipStore.at(relationshipLiteralHash).get();
+    return this->relationshipLiteralHashToRelationshipStore.at(literalHashkey).get();
 }
 
 void RelationshipManager::initialiseVectorForIndexIfNotExist(int hashkey) {

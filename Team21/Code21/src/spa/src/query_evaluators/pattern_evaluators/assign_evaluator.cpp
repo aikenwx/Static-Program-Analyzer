@@ -35,8 +35,10 @@ std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
   return res;
 }
 
+//helper to tell precedence of operators
 int AssignEvaluator::postfixHelper(char a) {
   switch (a) {
+    case '%':
     case '*':
     case '/':return 1;
     case '+':
@@ -54,6 +56,7 @@ std::string AssignEvaluator::makePostfix(std::string s) {
   while (i < s.length()) {
     if (s[i] == ' ') {
         i++;
+      //check for alphanumeric
     } else if (isalpha(s[i])) {
       postfixed += "\"";
       postfixed += s[i];
@@ -63,11 +66,13 @@ std::string AssignEvaluator::makePostfix(std::string s) {
         i++;
       }
       postfixed += "\"";
+      //check for number
     } else if (isdigit(s[i])) {
       postfixed += "\"";
       postfixed += s[i];
       i++;
-      if (s[i - 1] == '0') {
+      int prev = i - 1;
+      if (s[prev] == '0') {
         if (i < s.length() && isdigit(s[i])) {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. Expression spec contains leading zero");
         }
@@ -77,12 +82,15 @@ std::string AssignEvaluator::makePostfix(std::string s) {
         i++;
       }
       postfixed += "\"";
+      //check for '('
     } else if (s[i] == '(' && i < last) {
-      if (!isalnum(s[i + 1]) && s[i + 1] != '(') {
+      int next = i + 1;
+      if (!isalnum(s[next]) && s[next] != '(') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is followed by a non alphanumeric char");
       }
       stck.push(s[i]);
       i++;
+      //check for ')'
     } else if (s[i] == ')') {
       while (stck.top() != '(') {
         postfixed += stck.top();
@@ -90,8 +98,10 @@ std::string AssignEvaluator::makePostfix(std::string s) {
       }
       stck.pop();
       i++;
+      //check for operators
     } else if (postfixHelper(s[i]) >= 0 && i < last) {
-      if (s[i + 1] == ')') {
+      int next = i + 1;
+      if (s[next] == ')') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. operator is followed by )");
       }
       while (!stck.empty() && (postfixHelper(s[i]) <= postfixHelper(stck.top()))) {
@@ -106,6 +116,10 @@ std::string AssignEvaluator::makePostfix(std::string s) {
     }
   }
   while (!stck.empty()) {
+    if (stck.top() == '(') {
+      throw QueryException(ErrorType::Syntactic,
+        "Syntactic error. Expression spec contains opening bracket, ')', but no closing bracket for it, ')'");
+    }
     postfixed += stck.top();
     stck.pop();
   }

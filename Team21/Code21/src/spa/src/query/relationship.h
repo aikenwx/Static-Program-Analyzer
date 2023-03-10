@@ -5,16 +5,18 @@
 namespace qps {
 
 enum class Relationship {
-	Parent,
-	ParentT,
-	Follows,
-	FollowsT,
-	Uses,
-	UsesS,
-	UsesP,
-	Modifies,
-	ModifiesS,
-	ModifiesP,
+  Parent,
+  ParentT,
+  Follows,
+  FollowsT,
+  Uses,
+  UsesS,
+  UsesP,
+  Modifies,
+  ModifiesS,
+  ModifiesP,
+  Calls,
+  CallsT
 };
 
 Relationship getRelationshipFromString(std::string reString);

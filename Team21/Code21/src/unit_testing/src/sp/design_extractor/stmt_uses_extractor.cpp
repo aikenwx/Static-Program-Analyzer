@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include "sp/ast/assign_node.h"
-#include "sp/design_extractor/traverse.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "util/unique_ptr_cast.h"
 
@@ -19,33 +18,32 @@ SCENARIO(
     assignNode->SetStatementNumber(15);
 
     WHEN("Variable node from LHS of assign node is handled") {
-      std::vector<std::shared_ptr<ast::INode>> parents = {assignNode};
       design_extractor::StmtUsesExtractor extractor =
           design_extractor::StmtUsesExtractor();
 
-      std::optional<std::vector<std::unique_ptr<rel::Relationship>>> relns =
-          extractor.HandleVariableNode(parents, assignNode->GetVariable());
+      extractor.HandleAssignNode(assignNode, 0);
+
+      extractor.HandleVariableNode(assignNode->GetVariable(), 1);
+
       THEN("No uses relationship should be created") {
-        REQUIRE(relns.has_value());
-        REQUIRE(relns.value().empty());
+        REQUIRE(extractor.GetRelationships().empty());
       }
     };
 
     WHEN("Variable node from RHS of assign node is handled") {
-      // we can use Traverse here because LHS isn't gonna hit on that
-      std::optional<std::vector<std::unique_ptr<rel::Relationship>>> relns =
-          Traverse(assignNode,
-                   std::make_shared<design_extractor::StmtUsesExtractor>());
+      std::shared_ptr<design_extractor::StmtUsesExtractor> extractor =
+          std::make_shared<design_extractor::StmtUsesExtractor>();
+
+      // we can use AcceptVisitor here because LHS isn't gonna hit on that
+      assignNode->AcceptVisitor(assignNode, extractor, 0);
+
+      std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> relns =
+          extractor->GetRelationships();
 
       THEN("Uses relationship should be created") {
-        REQUIRE(relns.has_value());
-        REQUIRE(relns.value().size() == 1);
+        REQUIRE(relns.size() == 1);
 
-        REQUIRE(relns.value()[0]->relationshipType() ==
-                rel::RelationshipType::USES_STMT_VAR);
-        std::unique_ptr<rel::UsesStmtVarRelationship> usesRel =
-            std::static_pointer_cast<rel::UsesStmtVarRelationship>(
-                std::move(relns.value()[0]));
+        std::shared_ptr<rel::UsesStmtVarRelationship> usesRel = relns[0];
 
         REQUIRE(usesRel->statementNumber() == assignNode->GetStatementNumber());
 

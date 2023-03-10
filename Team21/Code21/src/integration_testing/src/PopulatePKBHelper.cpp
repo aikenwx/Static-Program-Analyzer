@@ -92,6 +92,18 @@ class PopulatePKBHelper {
     }
   }
 
+  void AddCallsR(const std::vector<std::pair<std::string, std::string>> &calls) {
+    for (const auto &[proc1, proc2] : calls) {
+      pkb_->getPopulateFacade()->storeCallsRelationship(proc1, proc2);
+    }
+  }
+
+  void AddCallsStar(const std::vector<std::pair<std::string, std::string>> &calls) {
+    for (const auto &[proc1, proc2] : calls) {
+      pkb_->getPopulateFacade()->storeCallsStarRelationship(proc1, proc2);
+    }
+  }
+
   void AddVariables(const std::unordered_set<std::string> &variables) {
     for (const auto &str : variables) {
       pkb_->getPopulateFacade()->storeVariable(str);

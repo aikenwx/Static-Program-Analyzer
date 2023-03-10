@@ -15,6 +15,8 @@
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
@@ -659,4 +661,30 @@ TEST_CASE("Print FollowsStar Call") {
     delete followsStarRelationship;
     delete printStatement;
     delete callStatement;
+}
+
+TEST_CASE("Caller Calls Callee") {
+    Procedure *caller = new Procedure(new std::string("caller"));
+    Procedure *callee = new Procedure(new std::string("callee"));
+    CallsRelationship *callsRelationship = new CallsRelationship(caller, callee);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(callsRelationship);
+    REQUIRE(hashKey == (int)testRelationshipType::TEST_CALLS * testBase * testBase + (int)testEntityType::TEST_PROCEDURE * testBase + (int)testEntityType::TEST_PROCEDURE);
+
+    delete callsRelationship;
+    delete caller;
+    delete callee;
+}
+
+TEST_CASE("Caller CallsStar Callee") {
+    Procedure *caller = new Procedure(new std::string("caller"));
+    Procedure *callee = new Procedure(new std::string("callee"));
+    CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(caller, callee);
+    RelationshipSynonymHashkeyGenerator relationshipHashFactory;
+    int hashKey = relationshipHashFactory.getHashKey(callsStarRelationship);
+    REQUIRE(hashKey == (int)testRelationshipType::TEST_CALLS_STAR * testBase * testBase + (int)testEntityType::TEST_PROCEDURE * testBase + (int)testEntityType::TEST_PROCEDURE);
+
+    delete callsStarRelationship;
+    delete caller;
+    delete callee;
 }

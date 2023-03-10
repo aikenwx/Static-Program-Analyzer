@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "../ast/procedure_node.h"
 #include "../ast/statement_node.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 

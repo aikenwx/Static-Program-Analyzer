@@ -11,6 +11,8 @@
 #include "PKBStorageClasses/EntityClasses/Procedure.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
@@ -131,50 +133,32 @@ TEST_CASE("Assignment Statement Modifies Variable Relationship Literal Hashkey G
     delete variable;
 }
 
-TEST_CASE("getStatementModifiesVariableHashKey works") {
+TEST_CASE("Caller Calls Callee Procedure Relationship Literal Hashkey Generator") {
     RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getStatementModifiesVariableHashKey(ONE_INT_TEST_VALUE, &VARIABLE_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, VARIABLE_TEST_VALUE, testEntityType::TEST_VARIABLE, testRelationshipType::TEST_MODIFIES));
+    Procedure *caller = new Procedure(new std::string(PROCEDURE_TEST_VALUE));
+    Procedure *callee = new Procedure(new std::string(PROCEDURE_TEST_VALUE_2));
+    Relationship *relationship = new CallsRelationship(caller, callee);
+
+    std::string hashkey = relationshipLiteralHashkeyGenerator.getHashKey(relationship);
+
+    REQUIRE(relationshipLiteralHashkeyGenerator.getHashKey((RelationshipType)testRelationshipType::TEST_CALLS, (EntityType)testEntityType::TEST_PROCEDURE, &PROCEDURE_TEST_VALUE, (EntityType)testEntityType::TEST_PROCEDURE, &PROCEDURE_TEST_VALUE_2) == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, PROCEDURE_TEST_VALUE_2, testEntityType::TEST_PROCEDURE, testRelationshipType::TEST_CALLS));
+    REQUIRE(hashkey == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, PROCEDURE_TEST_VALUE_2, testEntityType::TEST_PROCEDURE, testRelationshipType::TEST_CALLS));
+    delete relationship;
+    delete caller;
+    delete callee;
 }
 
-TEST_CASE("getStatementUsesVariableHashKey works") {
+TEST_CASE("Caller CallsStar Callee Procedure Relationship Literal Hashkey Generator") {
     RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getStatementUsesVariableHashKey(ONE_INT_TEST_VALUE, &VARIABLE_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, VARIABLE_TEST_VALUE, testEntityType::TEST_VARIABLE, testRelationshipType::TEST_USES));
-}
+    Procedure *caller = new Procedure(new std::string(PROCEDURE_TEST_VALUE));
+    Procedure *callee = new Procedure(new std::string(PROCEDURE_TEST_VALUE_2));
+    Relationship *relationship = new CallsStarRelationship(caller, callee);
 
-TEST_CASE("getFollowsRelationshipHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getFollowsRelationshipHashKey(ONE_INT_TEST_VALUE, TWO_INT_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, TWO_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, testRelationshipType::TEST_FOLLOWS));
-}
+    std::string hashkey = relationshipLiteralHashkeyGenerator.getHashKey(relationship);
 
-TEST_CASE("getFollowsStarRelationshipHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getFollowsStarRelationshipHashKey(ONE_INT_TEST_VALUE, TWO_INT_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, TWO_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, testRelationshipType::TEST_FOLLOWS_STAR));
-}
-
-TEST_CASE("getParentRelationshipHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getParentRelationshipHashKey(ONE_INT_TEST_VALUE, TWO_INT_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, TWO_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, testRelationshipType::TEST_PARENT));
-}
-
-TEST_CASE("getParentStarRelationshipHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getParentStarRelationshipHashKey(ONE_INT_TEST_VALUE, TWO_INT_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(ONE_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, TWO_STRING_TEST_VALUE, testEntityType::TEST_STATEMENT, testRelationshipType::TEST_PARENT_STAR));
-}
-
-TEST_CASE("getProcedureModifiesVariableHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getProcedureModifiesVariableHashKey(&PROCEDURE_TEST_VALUE, &VARIABLE_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, VARIABLE_TEST_VALUE, testEntityType::TEST_VARIABLE, testRelationshipType::TEST_MODIFIES));
-}
-
-TEST_CASE("getProcedureUsesVariableHashKey works") {
-    RelationshipLiteralHashkeyGenerator relationshipLiteralHashkeyGenerator;
-    std::string hashkey = relationshipLiteralHashkeyGenerator.getProcedureUsesVariableHashKey(&PROCEDURE_TEST_VALUE, &VARIABLE_TEST_VALUE);
-    REQUIRE(hashkey == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, VARIABLE_TEST_VALUE, testEntityType::TEST_VARIABLE, testRelationshipType::TEST_USES));
+    REQUIRE(relationshipLiteralHashkeyGenerator.getHashKey((RelationshipType)testRelationshipType::TEST_CALLS_STAR, (EntityType)testEntityType::TEST_PROCEDURE, &PROCEDURE_TEST_VALUE, (EntityType)testEntityType::TEST_PROCEDURE, &PROCEDURE_TEST_VALUE_2) == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, PROCEDURE_TEST_VALUE_2, testEntityType::TEST_PROCEDURE, testRelationshipType::TEST_CALLS_STAR));
+    REQUIRE(hashkey == getTestHash(PROCEDURE_TEST_VALUE, testEntityType::TEST_PROCEDURE, PROCEDURE_TEST_VALUE_2, testEntityType::TEST_PROCEDURE, testRelationshipType::TEST_CALLS_STAR));
+    delete relationship;
+    delete caller;
+    delete callee;
 }

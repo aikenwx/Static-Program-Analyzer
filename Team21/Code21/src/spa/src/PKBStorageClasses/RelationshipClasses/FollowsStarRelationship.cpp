@@ -3,7 +3,6 @@
 //
 
 #include "FollowsStarRelationship.h"
-#include <memory>
 
 bool FollowsStarRelationship::containsEntityOnLeftHand(Entity *entity) {
     return this->followedStatement->equals(entity);

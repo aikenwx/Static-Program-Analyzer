@@ -12,6 +12,7 @@ class AssignEvaluator : public PatternEvaluator {
       : PatternEvaluator(std::move(clause), std::move(declarations)) {}
   std::vector<Relationship *> CallPkb(QueryFacade &pkb) override;
 
+private:
   int postfixHelper(char a);
 
   std::string makePostfix(std::string str);

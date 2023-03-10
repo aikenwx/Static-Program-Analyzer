@@ -44,7 +44,7 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   std::unordered_set<std::string> procedures;
   for (const auto& procNode : programNode->GetProcedures()) {
     if (procedures.find(procNode->GetName()) != procedures.end()) {
-      throw exceptions::SemanticError("Duplicate procedure name");
+      throw exceptions::SemanticError("Duplicate procedure name: " + procNode->GetName());
     }
     procedures.insert(procNode->GetName());
   }

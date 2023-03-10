@@ -24,7 +24,7 @@ SCENARIO("SP should terminate if there are non-unique procedure names") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::Message("Semantic error: Duplicate procedure name"));
+            Catch::StartsWith("Semantic error: Duplicate procedure name: "));
       }
     }
   }

@@ -23,7 +23,7 @@ bool SemanticValidator::validateQuery() {
 void SemanticValidator::checkForDuplicateDeclarations() {
   //create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
   std::unordered_set<std::string> seen;
-  for (auto &declr : getQuery().getDeclarations()) {
+  for (Declaration declr : getQuery().getDeclarations()) {
     std::string syn = declr.getSynonym().getSynonym();
     if (seen.find(syn) == seen.end()) {
       seen.insert(syn);
@@ -71,8 +71,7 @@ void SemanticValidator::checkIfSynonymContainedInDeclaration() {
 void SemanticValidator::checkPatternClauseSynonym() {
   std::vector<Declaration> declr = getQuery().getDeclarations();
   if (!getQuery().getPatternClause().empty()) {
-    Ref refPattern = getQuery().getPatternClause()[0].getStmtSynonym();
-    Synonym syn = std::get<Synonym>(refPattern);
+    Synonym syn = getQuery().getPatternClause()[0].getStmtSynonym();
     std::optional<Declaration> patternDclr = Declaration::findDeclarationWithSynonym(declr, syn);
     if (patternDclr.has_value()) {
       if (patternDclr.value().getDesignEntity() != DesignEntity::ASSIGN
@@ -85,7 +84,7 @@ void SemanticValidator::checkPatternClauseSynonym() {
   }
 }
 
-void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing) {
+void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration>& declr, std::string missing) {
   if (std::holds_alternative<Synonym>(r)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
       throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in " + missing);
@@ -93,7 +92,7 @@ void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration
   }
 }
 
-void SemanticValidator::checkElementSynonymDeclareHelper(Element r, std::vector<Declaration> declr) {
+void SemanticValidator::checkElementSynonymDeclareHelper(Element r, std::vector<Declaration>& declr) {
   if (std::holds_alternative<Synonym>(r)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
       throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym " +
@@ -108,7 +107,7 @@ void SemanticValidator::checkElementSynonymDeclareHelper(Element r, std::vector<
   }
 }
 
-void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration> declr) {
+void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration>& declr) {
   if (std::holds_alternative<AttrRef>(r.ref)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(r.ref).synonym).has_value() == false) {
       throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym in WithRef" +
@@ -219,7 +218,7 @@ void SemanticValidator::checkAttrRefValidAttrName() {
   }
 }
 
-void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration> declr) {
+void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration>& declr) {
   if (Declaration::findDeclarationWithSynonym(declr, ar.synonym).has_value()) {
     Declaration decl = Declaration::findDeclarationWithSynonym(declr, ar.synonym).value();
     std::set<AttrName> validAttrNameSet = getValidAttrNameSet(decl);

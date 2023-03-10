@@ -19,11 +19,11 @@ namespace qps {
 		//checks that all synonyms in clauses are from declarations
 		void checkIfSynonymContainedInDeclaration();
 
-		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
+		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration>& declr, std::string missing);
 
-		void checkElementSynonymDeclareHelper(Element r, std::vector<Declaration> declr);
+		void checkElementSynonymDeclareHelper(Element r, std::vector<Declaration>& declr);
 
-		void checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration> declr);
+		void checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration>& declr);
 
 		//check that the pattern clause has a synonym with valid design entity
 		void checkPatternClauseSynonym();
@@ -45,6 +45,6 @@ namespace qps {
 		//checks that attrRef have valid attrName
 		void checkAttrRefValidAttrName();
 
-		void checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration> declr);
+		void checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration>& declr);
 	};
 }

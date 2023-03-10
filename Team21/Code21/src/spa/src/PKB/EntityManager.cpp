@@ -23,6 +23,7 @@ void EntityManager::storeEntity(Entity *entity) {
     if (Statement::isStatement(entity)) {
         EntityKey statementKey = EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
         if (entityStore.find(statementKey) != entityStore.end()) {
+            delete entity;
             return;
         }
 

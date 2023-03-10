@@ -19,6 +19,7 @@ TEST_CASE("PopulateFacade can instantiate") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can add postfix expressions to assignment statements") {
@@ -40,6 +41,7 @@ TEST_CASE("PopulateFacade can add postfix expressions to assignment statements")
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("Error thrown when trying to add non pattern expression to call statement") {
@@ -54,6 +56,7 @@ TEST_CASE("Error thrown when trying to add non pattern expression to call statem
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate assign statement") {
@@ -73,6 +76,7 @@ TEST_CASE("PopulateFace can populate assign statement") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate call statement") {
@@ -91,6 +95,7 @@ TEST_CASE("PopulateFace can populate call statement") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate while statement") {
@@ -109,6 +114,7 @@ TEST_CASE("PopulateFace can populate while statement") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate if statement") {
@@ -127,6 +133,7 @@ TEST_CASE("PopulateFace can populate if statement") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate procedure") {
@@ -147,6 +154,7 @@ TEST_CASE("PopulateFace can populate procedure") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate variable") {
@@ -166,6 +174,7 @@ TEST_CASE("PopulateFace can populate variable") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFace can populate constant") {
@@ -184,6 +193,7 @@ TEST_CASE("PopulateFace can populate constant") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate follow relationship") {
@@ -208,6 +218,7 @@ TEST_CASE("PopulateFacade can populate follow relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate parent relationship") {
@@ -232,6 +243,7 @@ TEST_CASE("PopulateFacade can populate parent relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate parentStar relationship") {
@@ -257,6 +269,7 @@ TEST_CASE("PopulateFacade can populate parentStar relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate followStar relationship") {
@@ -282,6 +295,7 @@ TEST_CASE("PopulateFacade can populate followStar relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("Adding a relationship with a non-existent entity throws an exception") {
@@ -297,6 +311,7 @@ TEST_CASE("Adding a relationship with a non-existent entity throws an exception"
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate statement modifies relationship") {
@@ -324,6 +339,7 @@ TEST_CASE("PopulateFacade can populate statement modifies relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate statement uses relationship") {
@@ -350,6 +366,7 @@ TEST_CASE("PopulateFacade can populate statement uses relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
@@ -375,6 +392,7 @@ TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
@@ -401,6 +419,7 @@ TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
@@ -429,6 +448,7 @@ TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate procedure uses relationship") {
@@ -457,6 +477,7 @@ TEST_CASE("PopulateFacade can populate procedure uses relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
@@ -486,6 +507,7 @@ TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
@@ -515,6 +537,7 @@ TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }
 
 TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
@@ -611,4 +634,5 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     delete entityManager;
     delete relationshipManager;
     delete patternManager;
+    delete cfgManager;
 }

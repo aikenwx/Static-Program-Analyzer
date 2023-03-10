@@ -1,5 +1,6 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "PKB/PopulateFacade.h"
-#include "catch.hpp"
 
 TEST_CASE("PopulateFacade can instantiate") {
     EntityManager *entityManager = new EntityManager();

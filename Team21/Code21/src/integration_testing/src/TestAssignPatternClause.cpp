@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"

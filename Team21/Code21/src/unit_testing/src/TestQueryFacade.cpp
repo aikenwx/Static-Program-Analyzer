@@ -1,8 +1,8 @@
+#include <catch2/catch_test_macros.hpp>
 #include <memory>
 
 #include "PKB/QueryFacade.h"
 #include "PKBtestHelpers.h"
-#include "catch.hpp"
 
 TEST_CASE("QueryFacade Instantiates") {
     EntityManager *entityManager = new EntityManager();

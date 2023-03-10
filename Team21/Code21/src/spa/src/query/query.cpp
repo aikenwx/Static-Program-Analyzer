@@ -18,6 +18,9 @@ namespace qps {
 	std::vector<PatternClause> Query::getPatternClause() {
 		return patternClause;
 	}
+	std::vector<WithClause> Query::getWithClause() {
+		return withClause;
+	}
 	Result Query::getSelectClause() {
 		return selectClause;
 	}

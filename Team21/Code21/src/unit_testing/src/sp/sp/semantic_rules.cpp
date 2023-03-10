@@ -37,3 +37,18 @@ TEST_CASE("SP should terminate if a nonexistent procedure is called") {
 
   REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SemanticError, Catch::Message("Semantic error: Call node cannot call procedure that does not exist"));
 }
+
+TEST_CASE("SP should terminate if a recursive procedure call exists") {
+  std::string program = R"(procedure recursive {
+    call other;
+  }
+  procedure other {
+    call recursive;
+  })";
+
+  auto pkb = PKB();
+
+  auto sp = sp::SP();
+
+  REQUIRE_THROWS_MATCHES(sp.process(program, &pkb), exceptions::SemanticError, Catch::Message("Semantic error: Procedure call is recursive: recursive"));
+}

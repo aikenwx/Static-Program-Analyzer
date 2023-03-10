@@ -6,8 +6,6 @@
 
 #include <stdexcept>
 
-#include "StorageHelpers.h"
-
 EntityManager::EntityManager() {
     this->entityTypeToStore = std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity *>>>();
     this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();

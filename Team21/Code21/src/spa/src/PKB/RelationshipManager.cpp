@@ -8,8 +8,6 @@
 #include <memory>
 #include <stdexcept>
 
-#include "StorageHelpers.h"
-
 RelationshipManager::RelationshipManager() {
     this->relationshipSynonymStore = std::unordered_map<RelationshipSynonymKey, std::shared_ptr<std::vector<Relationship *>>>();
     this->relationshipStore = std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();

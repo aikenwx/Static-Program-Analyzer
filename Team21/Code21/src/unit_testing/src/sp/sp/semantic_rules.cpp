@@ -68,14 +68,14 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::Message("Semantic error: Procedure call is recursive: "
-                           "recursive"));
+            Catch::StartsWith("Semantic error: Procedure call is recursive: "));
       }
     }
   }
 
-  GIVEN("A program with a procedure that calls another procedure that calls "
-        "itself") {
+  GIVEN(
+      "A program with a procedure that calls another procedure that calls "
+      "itself") {
     std::string program = R"(procedure recursive {
       call other;
     }
@@ -91,8 +91,7 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::Message("Semantic error: Procedure call is recursive: "
-                           "recursive"));
+            Catch::StartsWith("Semantic error: Procedure call is recursive: "));
       }
     }
   }

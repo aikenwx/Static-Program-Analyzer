@@ -5,6 +5,7 @@
 #ifndef SPA_ENTITY_H
 #define SPA_ENTITY_H
 
+#include <memory>
 #include <string>
 #include <vector>
 

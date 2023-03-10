@@ -4,7 +4,7 @@
 
 namespace qps {
 ClauseEvaluator::ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
-  SynonymTable clause_result({declaration_.getSynonym()});
+  SynonymTable clause_result({synonym_});
   for (auto entity : entities) {
     clause_result.AddRow({*(entity->getEntityValue())});
   }
@@ -18,7 +18,7 @@ ClauseEvaluator::ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
     entities.insert(entities.end(), vec.begin(), vec.end());
   };
 
-  switch (declaration_.getDesignEntity()) {
+  switch (Declaration::findDeclarationWithSynonym(declarations_, synonym_).value().getDesignEntity()) {
     case DesignEntity::STMT:add_entity(*(pkb.getAllStatements()));
       break;
     case DesignEntity::READ:add_entity(*(pkb.getAllReadStatements()));

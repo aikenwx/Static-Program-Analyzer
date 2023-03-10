@@ -8,12 +8,14 @@ namespace qps {
 
 class SelectEvaluator : public ClauseEvaluator {
  public:
-  explicit SelectEvaluator(Declaration declaration) : declaration_(std::move(declaration)) {}
+  explicit SelectEvaluator(Synonym synonym, std::vector<Declaration> declarations)
+      : synonym_(std::move(synonym)), declarations_(std::move(declarations)) {}
   ~SelectEvaluator() override = default;
 
   ClauseResult Evaluate(QueryFacade &pkb) override;
  private:
-  Declaration declaration_;
+  Synonym synonym_;
+  std::vector<Declaration> declarations_;
   ClauseResult ConstructResult(const std::vector<Entity *> &entities);
 };
 

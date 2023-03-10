@@ -10,13 +10,13 @@ QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)), early_re
   CreateEvaluators();
 }
 
-Declaration getDeclaration(Query &query) {
+Synonym getSynonynm(Query &query) {
   auto elements = std::get<std::vector<Element>>(query.getSelectClause());
-  return std::get<Declaration>(elements[0]);
+  return std::get<Synonym>(elements[0]);
 }
 void QueryEvaluator::CreateEvaluators() {
   auto declarations = query_.getDeclarations();
-  select_evalautor_ = std::make_unique<SelectEvaluator>(getDeclaration(query_));
+  select_evalautor_ = std::make_unique<SelectEvaluator>(getSynonynm(query_), declarations);
   for (auto &clause : query_.getSuchThatClause()) {
     clause_evaluators_.push_back(SuchThatEvaluatorFactory::Create(clause, declarations));
   }
@@ -39,7 +39,7 @@ void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
 }
 
 std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb) {
-  auto target = getDeclaration(query_).getSynonym();
+  auto target = getSynonynm(query_);
   if (tables_.empty()) {
     return std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)).Extract(target);
   }

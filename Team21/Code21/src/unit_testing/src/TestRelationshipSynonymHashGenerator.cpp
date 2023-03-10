@@ -1,6 +1,7 @@
 //
 // Created by Aiken Wong on 4/2/23.
 //
+#include <catch2/catch_test_macros.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -24,7 +25,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBtestHelpers.h"
-#include "catch.hpp"
 
 TEST_CASE("Assignment statement parent of read statement") {
     RelationshipSynonymHashkeyGenerator relationshipHashFactory;

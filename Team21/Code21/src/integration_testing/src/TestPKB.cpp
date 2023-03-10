@@ -1,10 +1,10 @@
 //
 // Created by Aiken Wong on 5/2/23.
 //
+#include <catch2/catch_test_macros.hpp>
 
 #include "PKB/PKB.h"
 #include "PKBtestHelpers.h"
-#include "catch.hpp"
 
 TEST_CASE("PKB instantiation") {
     PKB *pkb = new PKB();

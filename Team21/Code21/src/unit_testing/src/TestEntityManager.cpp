@@ -1,3 +1,4 @@
+#include <catch2/catch_test_macros.hpp>
 
 #include "PKB/EntityManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -7,7 +8,6 @@
 #include "PKBStorageClasses/EntityClasses/Procedure.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "catch.hpp"
 
 TEST_CASE("EntityManager Instantiates") {
     EntityManager *entityManager = new EntityManager();

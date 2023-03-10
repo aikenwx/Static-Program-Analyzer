@@ -1,7 +1,15 @@
-#include "PKB/PKB.h"
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 #include "exceptions/semantic_error.h"
+#include "PKB/PKB.h"
 #include "sp/sp.h"
+
+namespace test_sp {
+using Catch::Matchers::Message;
+using Catch::Matchers::MessageMatches;
+using Catch::Matchers::StartsWith;
 
 SCENARIO("SP should terminate if there are non-unique procedure names") {
   GIVEN("A program with duplicate procedure names") {
@@ -24,7 +32,7 @@ SCENARIO("SP should terminate if there are non-unique procedure names") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::StartsWith("Semantic error: Duplicate procedure name: "));
+            MessageMatches(StartsWith("Semantic error: Duplicate procedure name: ")));
       }
     }
   }
@@ -47,7 +55,7 @@ SCENARIO("SP should terminate if a nonexistent procedure is called") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::Message("Semantic error: Call node cannot call procedure "
+            Message("Semantic error: Call node cannot call procedure "
                            "that does not exist"));
       }
     }
@@ -68,7 +76,7 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::StartsWith("Semantic error: Procedure call is recursive: "));
+            MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }
   }
@@ -91,8 +99,9 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SemanticError,
-            Catch::StartsWith("Semantic error: Procedure call is recursive: "));
+            MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }
   }
 }
+}  // namespace test_sp

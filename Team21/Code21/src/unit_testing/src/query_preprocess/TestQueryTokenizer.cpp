@@ -1,6 +1,7 @@
 #include <utility>
 
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+
 #include "query_preprocess/query_tokenizer.h"
 #include "query_preprocess/query_parser.h"
 

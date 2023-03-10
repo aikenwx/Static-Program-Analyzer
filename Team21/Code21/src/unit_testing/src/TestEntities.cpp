@@ -1,4 +1,5 @@
 // add guards
+#include <catch2/catch_test_macros.hpp>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -10,7 +11,6 @@
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "catch.hpp"
 
 using namespace std;
 

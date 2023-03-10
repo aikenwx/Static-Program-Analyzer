@@ -1,5 +1,6 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "QueryHelper.h"
-#include "catch.hpp"
 
 using namespace qps;
 

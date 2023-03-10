@@ -30,6 +30,7 @@ void EntityManager::storeEntity(Entity *entity) {
         this->entityStore.insert(std::make_pair(statementKey, std::shared_ptr<Entity>(entity)));
     } else {
         if (entityStore.find(entity->getEntityKey()) != entityStore.end()) {
+            delete entity;
             return;
         }
         this->entityStore.insert(std::make_pair(entity->getEntityKey(), std::shared_ptr<Entity>(entity)));

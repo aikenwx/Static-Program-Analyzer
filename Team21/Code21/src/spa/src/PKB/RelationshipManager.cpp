@@ -19,6 +19,7 @@ RelationshipManager::~RelationshipManager() {
 
 void RelationshipManager::storeRelationship(Relationship *relationship) {
     if (relationshipStore.find(relationship->getRelationshipKey()) != relationshipStore.end()) {
+        delete relationship;
         return;
     }
 

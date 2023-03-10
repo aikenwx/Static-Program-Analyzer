@@ -1,8 +1,9 @@
+#include <algorithm>
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <unordered_set>
 
 #include "PKB/PKB.h"
-#include "catch.hpp"
 #include "sp/sp.h"
 
 namespace test_frontend {

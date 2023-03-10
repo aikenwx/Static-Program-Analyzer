@@ -1,6 +1,7 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "PKB/PatternManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
-#include "catch.hpp"
 
 TEST_CASE("PatternManager Instantiates") {
     PatternManager *patternManager = new PatternManager();

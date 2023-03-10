@@ -172,7 +172,7 @@ namespace qps {
 		assertNextToken(",");
 		next();
 		ExpressionSpec arg2{ parseExpression() };
-		if (synDE != DesignEntity::IF) {
+		if (synDE == DesignEntity::IF) {
 			assertNextToken(",");
 			next();
 			assertNextToken("_");

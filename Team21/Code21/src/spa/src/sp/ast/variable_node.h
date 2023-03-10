@@ -7,5 +7,9 @@ public:
   using NamedNode::NamedNode;
 
   std::string ToString() const override;
+
+  void AcceptVisitor(std::shared_ptr<INode> currentNode,
+                     std::shared_ptr<design_extractor::Extractor> extractor,
+                     int depth) override;
 };
 }

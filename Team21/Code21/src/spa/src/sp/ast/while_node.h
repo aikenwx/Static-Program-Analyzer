@@ -14,6 +14,10 @@ public:
   int GetEndStatementNumber() override;
   void IncrementStatementNumber(int value) override;
 
+  void AcceptVisitor(std::shared_ptr<INode> currentNode,
+                     std::shared_ptr<design_extractor::Extractor> extractor,
+                     int depth) override;
+
 private:
   std::shared_ptr<INode> condition;
   std::shared_ptr<StatementListNode> body;

@@ -27,6 +27,10 @@ TestWrapper::TestWrapper() : pkb_() {
 void TestWrapper::parse(std::string filename) {
   // read file into string
   std::ifstream t(filename);
+  if (!t.is_open()) {
+    throw std::runtime_error("Unable to open file");
+  }
+
   std::stringstream buf;
   buf << t.rdbuf();
   std::string program = buf.str();

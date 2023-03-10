@@ -17,6 +17,10 @@ public:
   int GetStartStatementNumber();
   int GetEndStatementNumber();
 
+  void AcceptVisitor(std::shared_ptr<INode> currentNode,
+                     std::shared_ptr<design_extractor::Extractor> extractor,
+                     int depth) override;
+
 private:
   // Creates some coupling with statement list node
   std::shared_ptr<StatementListNode> statements;

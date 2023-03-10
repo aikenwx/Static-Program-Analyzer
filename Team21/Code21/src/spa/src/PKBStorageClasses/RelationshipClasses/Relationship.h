@@ -14,6 +14,11 @@ struct RelationshipType : public StorageKey {
     bool operator==(const RelationshipType &relationshipType) const;
 };
 
+template <>
+struct std::hash<RelationshipType> {
+    std::size_t operator()(const RelationshipType &relationshipType) const;
+};
+
 struct RelationshipSynonymKey : public StorageKey {
    private:
     RelationshipType *relationshipType;

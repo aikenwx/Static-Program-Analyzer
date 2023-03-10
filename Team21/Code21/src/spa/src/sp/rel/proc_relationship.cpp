@@ -1,3 +1,4 @@
+#include "../ast/procedure_node.h"
 #include "proc_relationship.h"
 
 namespace rel {

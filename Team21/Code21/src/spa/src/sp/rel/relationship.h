@@ -3,11 +3,12 @@
 #include <memory>
 #include <string>
 
+#include "../ast/procedure_node.h"
 #include "../ast/statement_node.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 
 namespace rel {
-enum RelationshipType {
+enum class RelationshipType {
   USES_PROC_VAR,
   USES_STMT_VAR,
   MODIFIES_PROC_VAR,
@@ -35,11 +36,7 @@ class Relationship {
 class StmtVarRelationship : public Relationship {
  public:
   virtual int statementNumber() = 0;
-  // TODO: return PKBStorageClasses/EntityClasses/Entity.h?
   virtual std::string variableName() = 0;
-  // static StmtVarRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> statement, std::string
-  //     variableName);
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;
@@ -50,8 +47,6 @@ class ProcVarRelationship : public Relationship {
  public:
   virtual std::string procedureName() = 0;
   virtual std::string variableName() = 0;
-  // static ProcVarRelationship CreateRelationship(
-  //     std::string procedureName, std::string variableName);
 
  private:
   std::string procedureName_;
@@ -62,9 +57,6 @@ class StmtStmtRelationship : public Relationship {
  public:
   virtual int firstStatementNumber() = 0;
   virtual int secondStatementNumber() = 0;
-  // static StmtStmtRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> firstStatement,
-  //     std::shared_ptr<ast::StatementNode> secondStatement);
 
  private:
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
@@ -73,9 +65,14 @@ class StmtStmtRelationship : public Relationship {
 
 class StmtRelationship : public Relationship {
  public:
+  std::string parentProcedureName() const { return procedureNode_->GetName(); };
   virtual int statementNumber() = 0;
 
+ protected:
+  explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(procedureNode) {};
+
  private:
-  std::shared_ptr<ast::StatementNode> statementNode_;
+  std::shared_ptr<ast::ProcedureNode> procedureNode_;
+  // also, some sort of StatementNode, but in child classes
 };
 }  // namespace rel

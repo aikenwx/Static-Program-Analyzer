@@ -18,7 +18,11 @@ std::map<Relationship, std::string> relationshipStringMap{{
                                                               {Relationship::ModifiesS, "Modifies(S)"},
                                                               {Relationship::ModifiesP, "Modifies(P)"},
                                                               {Relationship::Calls, "Calls"},
-                                                              {Relationship::CallsT, "Calls*"}
+                                                              {Relationship::CallsT, "Calls*"},
+                                                              {Relationship::Next, "Next"},
+                                                              {Relationship::NextT, "Next*"},
+                                                              {Relationship::Affects, "Affects"},
+                                                              {Relationship::AffectsT, "Affects*"}
                                                           }};
 
 std::map<std::string, Relationship> relationshipMap{{
@@ -33,7 +37,11 @@ std::map<std::string, Relationship> relationshipMap{{
                                                         {"Modifies(S)", Relationship::ModifiesS},
                                                         {"Modifies(P)", Relationship::ModifiesP},
                                                         {"Calls", Relationship::Calls},
-                                                        {"Calls*", Relationship::CallsT}
+                                                        {"Calls*", Relationship::CallsT},
+                                                        {"Next", Relationship::Next},
+                                                        {"Next*", Relationship::NextT},
+                                                        {"Affects", Relationship::Affects},
+                                                        {"Affects*", Relationship::AffectsT}
                                                     }};
 
 Relationship getRelationshipFromString(std::string reString) {

@@ -1,8 +1,12 @@
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
+
 #include "exceptions/syntax_error.h"
 #include "token_factory/simple_token_factory.h"
 
 namespace test_token_factory {
+using Catch::Matchers::Message;
+
 SCENARIO("Token factory should return valid Tokens for any valid token",
          "[sp][sp/token_factory]") {
   GIVEN("A valid token") {
@@ -51,7 +55,7 @@ SCENARIO("Token factory should handle integers appropriately",
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             token_factory.CreateToken("00"), exceptions::SyntaxError,
-            Catch::Message(
+            Message(
                 "Syntax error: Non-zero integer cannot start with 0"));
       }
     }
@@ -64,7 +68,7 @@ SCENARIO("Token factory should handle integers appropriately",
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             token_factory.CreateToken("0151"), exceptions::SyntaxError,
-            Catch::Message(
+            Message(
                 "Syntax error: Non-zero integer cannot start with 0"));
       }
     }
@@ -79,7 +83,7 @@ SCENARIO("Token factory should handle identifiers appropriately",
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             token_factory.CreateToken(""), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid identifier"));
+            Message("Syntax error: Invalid identifier"));
       }
     }
   };
@@ -91,7 +95,7 @@ SCENARIO("Token factory should handle identifiers appropriately",
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             token_factory.CreateToken("1abc"), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid identifier"));
+            Message("Syntax error: Invalid identifier"));
       }
     }
   };
@@ -103,7 +107,7 @@ SCENARIO("Token factory should handle identifiers appropriately",
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             token_factory.CreateToken("ab_c"), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid identifier"));
+            Message("Syntax error: Invalid identifier"));
       }
     }
   };

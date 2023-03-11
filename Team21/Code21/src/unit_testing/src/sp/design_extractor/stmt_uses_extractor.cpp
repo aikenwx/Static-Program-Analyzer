@@ -1,6 +1,7 @@
 #include "sp/design_extractor/stmt_uses_extractor.h"
 
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+
 #include "sp/ast/assign_node.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "util/unique_ptr_cast.h"

@@ -2,6 +2,7 @@
 // // Created by Aiken Wong on 4/2/23.
 // //
 
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
 #include "PKB/RelationshipManager.h"
@@ -21,7 +22,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBtestHelpers.h"
-#include "catch.hpp"
 
 TEST_CASE("RelationshipManager instantiates") {
     RelationshipManager *relationshipManager = new RelationshipManager();

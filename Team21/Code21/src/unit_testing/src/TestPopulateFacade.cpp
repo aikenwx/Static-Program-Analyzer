@@ -1,3 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "PKB/PopulateFacade.h"
 #include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
@@ -7,7 +9,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "catch.hpp"
 
 TEST_CASE("PopulateFacade can instantiate") {
     EntityManager *entityManager = new EntityManager();

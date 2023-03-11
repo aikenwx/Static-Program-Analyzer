@@ -1,3 +1,4 @@
+#include <catch2/catch_test_macros.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -18,7 +19,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBtestHelpers.h"
-#include "catch.hpp"
 
 // std::string getTestHash(std::string firstEntityValue, testEntityType firstEntityType, std::string secondEntityValue,
 //                         testEntityType secondEntityType, testRelationshipType relationshipType) {

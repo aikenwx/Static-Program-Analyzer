@@ -38,7 +38,7 @@ namespace qps {
 			return attrNameMap.at(str);
 		}
 		catch (const std::out_of_range& err) {
-			throw QueryException(ErrorType::Syntactic, "Invalid Attribute Name " + str);
+			throw QueryException(ErrorType::Syntactic, "Syntactic error. Invalid Attribute Name " + str);
 		}
 	}
 

@@ -41,7 +41,7 @@ bool QueryParser::assertNextToken(std::string str) {
   if (isSameToken(str)) {
     return true;
   }
-  throw QueryException(ErrorType::Syntactic, "Invalid Query Syntax. Expect (" + str + ") got (" + peek() + ")");
+  throw QueryException(ErrorType::Syntactic, "Syntactic error. Invalid Query Syntax. Expect (" + str + ") got (" + peek() + ")");
 }
 
 Ref QueryParser::parseRef() {
@@ -63,7 +63,7 @@ Ref QueryParser::parseRef() {
   }
 }
 
-ExpressionSpec QueryParser::parseExpression() {
+ExpressionSpec QueryParser::parseExpressionSpec() {
   bool isPartial{};
   std::string expression{};
 
@@ -108,15 +108,15 @@ WithRef QueryParser::parseWithRef() {
     std::string id = next();
     assertNextToken("\"");
     next();
-    return {QuotedIdentifier(id)};
+    return WithRef(QuotedIdentifier(id));
   } else if (isTokenValidInteger(peek())) {
-    return {std::stoi(next())};
+    return WithRef(std::stoi(next()));
   } else if (Synonym::isValidSynonym(peek())) {
     Synonym synonym = Synonym(next());
     assertNextToken(".");
     next();
     AttrName attrName = getAttrNameFromString(next());
-    return {AttrRef(synonym, attrName)};
+    return WithRef(AttrRef(synonym, attrName));
   } else {
     throw QueryException(ErrorType::Syntactic, "Invalid representation for WithRef: (" + peek() + ")");
   }
@@ -166,7 +166,7 @@ void QueryParser::parsePattern() {
   Ref arg1{parseRef()};
   assertNextToken(",");
   next();
-  ExpressionSpec arg2{parseExpression()};
+  ExpressionSpec arg2{parseExpressionSpec()};
   if (synDE == DesignEntity::IF) {
     assertNextToken(",");
     next();

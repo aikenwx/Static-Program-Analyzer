@@ -47,7 +47,7 @@ namespace qps {
 			auto declaration = Declaration::findDeclarationWithSynonym(declarations, stmtSyn);
 			auto synDE = declaration->getDesignEntity();
 			if (std::holds_alternative<StatementNumber>(arg1)) {
-				throw  QueryException(ErrorType::Syntactic, "Syntactic error. The first argument is not of correct ref type for assign clause");
+				throw QueryException(ErrorType::Syntactic, "Syntactic error. The first argument is not of correct ref type for assign clause");
 			}
 			if ((synDE == DesignEntity::WHILE || synDE == DesignEntity::IF) && std::holds_alternative<Expression>(arg2)) {
 				throw QueryException(ErrorType::Syntactic, "Syntactic error. The second argument of if/while pattern cannot be expression");

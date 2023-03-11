@@ -28,7 +28,7 @@ class QueryParser {
 		bool assertNextToken(std::string str);
 
 		Ref parseRef();
-		ExpressionSpec parseExpression();
+		ExpressionSpec parseExpressionSpec();
 		Element parseElement();
 		WithRef parseWithRef();
 		std::vector<Element> parseTupleSelect();

@@ -6,13 +6,6 @@
 
 #include "Entity.h"
 
-struct StatementType : public EntityType {
-   private:
-    static std::size_t statementTypeKeyCounter;
-
-   public:
-    StatementType();
-};
 class Statement : public Entity {
    private:
     static EntityType statementType;

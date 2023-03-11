@@ -56,7 +56,7 @@ SyntaxError
 12 - relationship(literal, synonym) nonAssignPattern(wildcard, subexpression)
 assign a; while w;
 Select a such that Follows*(1, a) pattern w(_, _"x"_)
-SemanticError
+SyntaxError
 5000
 13 - Modifies*(synonym, literal) pattern(literal, wildcard)
 assign a;

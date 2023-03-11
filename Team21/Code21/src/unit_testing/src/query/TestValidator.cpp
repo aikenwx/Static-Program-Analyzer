@@ -25,11 +25,10 @@ TEST_CASE("Semantic validation for queries") {
 
     SECTION("The synonym for select clause is not previously declared") {
         std::string dupeInput("stmt s; procedure p; variable v; assign a; Select S");
-        qps::QueryTokenizer tokenizer(dupeInput);
-        std::vector<std::string> tokenList = tokenizer.tokenize();
-        qps::QueryParser parser(tokenList);
-        REQUIRE_THROWS_WITH(parser.parse(),
-            Contains("Semantic error. There is missing declaration in Select clause for S"));
+        qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+        qps::SemanticValidator validator(dupeQuery);
+        REQUIRE_THROWS_WITH(validator.validateQuery(),
+            Contains("Semantic error. There is missing declaration in Select clause for synonym S"));
     }
 
     SECTION("The synonym for such that clause is not previously declared") {
@@ -45,7 +44,7 @@ TEST_CASE("Semantic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
+            Contains("Semantic error. There is missing declaration in Pattern clause for argument 1"));
     }
 
     SECTION("The synonym for assignPattern clause is not previously declared and with double clause") {
@@ -53,7 +52,7 @@ TEST_CASE("Semantic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. There is missing declaration in AssignPattern clause for argument 1"));
+            Contains("Semantic error. There is missing declaration in Pattern clause for argument 1"));
     }
 
     SECTION("check for WildCard as firstArg in Modifies") {
@@ -72,10 +71,12 @@ TEST_CASE("Semantic validation for queries") {
             Contains("Semantic error. There is wild card as first argument in Uses"));
     }
 
-    SECTION("check pattern clause has proper assign synonym") {
-        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select a pattern p (New, _)");
-        REQUIRE_THROWS_WITH(QueryHelper::buildQuery(dupeInput),
-            Contains("Semantic error. Invalid syntax for pattern assign with synonym"));
+    SECTION("check pattern clause has proper synonym") {
+        std::string dupeInput("stmt s; procedure p; variable v; assign a; Select a pattern p (v, _)");
+        qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
+        qps::SemanticValidator validator(dupeQuery);
+        REQUIRE_THROWS_WITH(validator.validateQuery(),
+            Contains("Semantic error. Invalid syntax for pattern with synonym: p"));
     }
 
     SECTION("check that pattern clause if have synonym, it is variable") {

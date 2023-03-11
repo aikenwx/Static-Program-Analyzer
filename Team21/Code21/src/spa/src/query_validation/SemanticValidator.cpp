@@ -95,13 +95,13 @@ void SemanticValidator::checkSynonymDeclareHelper(Ref r, std::vector<Declaration
 void SemanticValidator::checkElementSynonymDeclareHelper(Element r, std::vector<Declaration>& declr) {
   if (std::holds_alternative<Synonym>(r)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(r)).has_value() == false) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym " +
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym " +
         std::get<Synonym>(r).getSynonym());
     }
   }
   else if (std::holds_alternative<AttrRef>(r)) {
     if (Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(r).synonym).has_value() == false) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym in AttrRef " +
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym in AttrRef " +
         std::get<AttrRef>(r).synonym.getSynonym());
     }
   }

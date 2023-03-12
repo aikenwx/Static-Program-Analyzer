@@ -97,7 +97,7 @@ ExpressionSpec QueryParser::parseExpressionSpec() {
 }
 
 std::string QueryParser::validateExpressionHelper(std::string s) {
-  s.erase(remove_if(s.begin(), s.end(), isspace), s.end());
+  s.erase(std::remove_if(s.begin(), s.end(), isspace), s.end());
   int i = 0;
   int last = s.length() - 1;
   int openBracketCount = 0;

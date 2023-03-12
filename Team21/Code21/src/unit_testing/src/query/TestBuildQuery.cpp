@@ -112,9 +112,9 @@ TEST_CASE("Build queries with invalid expression spec. Check if throw syntax err
   SECTION("Check cannot have closing bracket without a preceding opening bracket to match it") {
 
     REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"a)\"_)"), 
-      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket"));
-    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(1 + 2) + axccx34345)\"_)"),
-      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket"));
+      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket")); 
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(1 + 2) + axccx34345)\"_)"), 
+      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket")); 
   }
 
   SECTION("operator cannot be followed by an operator") {

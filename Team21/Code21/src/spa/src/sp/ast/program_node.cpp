@@ -1,12 +1,14 @@
 #include "program_node.h"
 
+#include "exceptions/parser_error.h"
+
 namespace ast {
 // Handles procedures like a stack LIFO
 void ProgramNode::AddProcedure(std::shared_ptr<ProcedureNode> procedure) {
   procedures.push_back(procedure);
 }
 
-std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() {
+std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() const {
   return procedures;
 }
 
@@ -23,7 +25,7 @@ int ProgramNode::GetTotalStatementCount() {
   return procedures.front()->GetEndStatementNumber();
 }
 
-bool ProgramNode::ContainsProcedure(std::string const &procedureName) {
+bool ProgramNode::ContainsProcedure(const std::string& procedureName) {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
@@ -32,12 +34,14 @@ bool ProgramNode::ContainsProcedure(std::string const &procedureName) {
   return false;
 }
 
-std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(std::string const &procedureName) {
+std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(const std::string& procedureName) {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return *i;
     }
   }
+
+  throw exceptions::ParserError("Procedure for " + procedureName + " not found while trying to validate procedure");
 }
 
 void ProgramNode::AcceptVisitor(

@@ -104,10 +104,9 @@ SCENARIO("SP can process and store a simple program into PKB") {
     }
     procedure baz {
       x = 4;
-      call bar;
     }
     procedure qux {
-      call foo;
+      print w;
     }
     procedure quux {
       call main;
@@ -131,7 +130,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about call "
           "statements") {
         std::vector<CallStatement*> const* calls = qf->getAllCallStatements();
-        RequireStmtNumsMatch(calls, {4, 6, 9, 10, 12, 13, 14});
+        RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
       THEN(
@@ -154,7 +153,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "statements") {
         std::vector<PrintStatement*> const* prints =
             qf->getAllPrintStatements();
-        RequireStmtNumsMatch(prints, {3});
+        RequireStmtNumsMatch(prints, {3, 12});
       }
 
       THEN(
@@ -172,7 +171,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain the correct information about variables") {
         std::vector<Variable*> const* vars = qf->getAllVariables();
-        RequireEntityValuesMatch(vars, {"x", "y", "z"});
+        RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
@@ -183,7 +182,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain the correct information about statements") {
         std::vector<Statement*> const* stmts = qf->getAllStatements();
         RequireStmtNumsMatch(stmts,
-                             {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+                             {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
       }
 
       THEN("The PKB should contain all Calls relationships") {
@@ -203,12 +202,6 @@ SCENARIO("SP can process and store a simple program into PKB") {
             RelPair{RelationshipType::CALLS,
                     {EntityType::PROCEDURE, "bar"},
                     {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::PROCEDURE, "foo"}},
             RelPair{RelationshipType::CALLS,
                     {EntityType::PROCEDURE, "quux"},
                     {EntityType::PROCEDURE, "main"}}};
@@ -243,43 +236,10 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {EntityType::PROCEDURE, "foo"},
                     {EntityType::PROCEDURE, "qux"}},
             RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
                     {EntityType::PROCEDURE, "bar"},
                     {EntityType::PROCEDURE, "baz"}},
             RelPair{RelationshipType::CALLS_STAR,
                     {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "qux"},
                     {EntityType::PROCEDURE, "qux"}},
             RelPair{RelationshipType::CALLS_STAR,
                     {EntityType::PROCEDURE, "quux"},
@@ -325,20 +285,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {EntityType::PROCEDURE, "bar"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
                     {EntityType::PROCEDURE, "baz"},
                     {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::VARIABLE, "z"}},
             RelPair{RelationshipType::MODIFIES,
                     {EntityType::PROCEDURE, "quux"},
                     {EntityType::VARIABLE, "x"}},
@@ -377,52 +325,25 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {EntityType::CALL_STATEMENT, "6"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "6"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
                     {EntityType::ASSIGN_STATEMENT, "7"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
                     {EntityType::IF_STATEMENT, "8"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
-                    {EntityType::IF_STATEMENT, "8"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
                     {EntityType::CALL_STATEMENT, "9"},
                     {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "9"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "10"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "10"},
-                    {EntityType::VARIABLE, "z"}},
             RelPair{RelationshipType::MODIFIES,
                     {EntityType::ASSIGN_STATEMENT, "11"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "12"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "12"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
                     {EntityType::CALL_STATEMENT, "13"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::MODIFIES,
                     {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "14"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "14"},
                     {EntityType::VARIABLE, "y"}},
             RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::CALL_STATEMENT, "13"},
                     {EntityType::VARIABLE, "z"}}};
 
         RequireRelationshipsMatch(modifiesRels, expectedRels);
@@ -436,22 +357,31 @@ SCENARIO("SP can process and store a simple program into PKB") {
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "main"},
+                    {EntityType::VARIABLE, "w"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "main"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "main"},
                     {EntityType::VARIABLE, "z"}},
             RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "foo"},
+                    {EntityType::VARIABLE, "w"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "foo"},
                     {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "bar"},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "bar"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "qux"},
-                    {EntityType::VARIABLE, "x"}},
+                    {EntityType::VARIABLE, "w"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::PROCEDURE, "quux"},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
                     {EntityType::PROCEDURE, "quux"},
                     {EntityType::VARIABLE, "x"}},
@@ -473,30 +403,36 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {EntityType::VARIABLE, "z"}},
             RelPair{RelationshipType::USES,
                     {EntityType::CALL_STATEMENT, "4"},
+                    {EntityType::VARIABLE, "w"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "4"},
                     {EntityType::VARIABLE, "x"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "6"},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
                     {EntityType::CALL_STATEMENT, "6"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::USES,
                     {EntityType::IF_STATEMENT, "8"},
-                    {EntityType::VARIABLE, "x"}},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "9"},
+                    {EntityType::IF_STATEMENT, "8"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::USES,
                     {EntityType::CALL_STATEMENT, "10"},
-                    {EntityType::VARIABLE, "x"}},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "12"},
-                    {EntityType::VARIABLE, "x"}},
+                    {EntityType::PRINT_STATEMENT, "12"},
+                    {EntityType::VARIABLE, "w"}},
+            RelPair{RelationshipType::USES,
+                    {EntityType::CALL_STATEMENT, "13"},
+                    {EntityType::VARIABLE, "w"}},
             RelPair{RelationshipType::USES,
                     {EntityType::CALL_STATEMENT, "13"},
                     {EntityType::VARIABLE, "x"}},
             RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "14"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "14"},
+                    {EntityType::CALL_STATEMENT, "13"},
                     {EntityType::VARIABLE, "z"}}};
 
         RequireRelationshipsMatch(usesRels, expectedRels);

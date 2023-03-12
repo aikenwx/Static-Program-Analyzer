@@ -31,6 +31,7 @@
 #include "token/token.h"
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
+#include "util/interval_tree.h"
 
 namespace sp {
 bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
@@ -44,7 +45,8 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   std::unordered_set<std::string> procedures;
   for (const auto& procNode : programNode->GetProcedures()) {
     if (procedures.find(procNode->GetName()) != procedures.end()) {
-      throw exceptions::SemanticError("Duplicate procedure name: " + procNode->GetName());
+      throw exceptions::SemanticError("Duplicate procedure name: " +
+                                      procNode->GetName());
     }
     procedures.insert(procNode->GetName());
   }
@@ -58,10 +60,6 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
 
 void PopulateAstEntities(
     const std::vector<std::shared_ptr<rel::Relationship>>& astElemRelationships,
-    std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>&
-        procedureByName,
-    std::vector<std::string>& procedureRels,
-    std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels,
     PopulateFacade* popFacade) {
   for (const auto& rel : astElemRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::CALL_STMT) {
@@ -69,7 +67,6 @@ void PopulateAstEntities(
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
 
       popFacade->storeCallStatement(callStmtRel->statementNumber());
-      callStmtRels.push_back(callStmtRel);
     } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       std::shared_ptr<rel::ProcRelationship> procRel =
           std::static_pointer_cast<rel::ProcRelationship>(rel);
@@ -77,13 +74,6 @@ void PopulateAstEntities(
       std::shared_ptr<ast::ProcedureNode> procNode = procRel->procedureNode();
 
       popFacade->storeProcedure(procName);
-      procedureByName[procName] = procNode;
-
-      int startStmtNum = procNode->GetStartStatementNumber();
-      int endStmtNum = procNode->GetEndStatementNumber();
-      for (int i = startStmtNum; i <= endStmtNum; i++) {
-        procedureRels[i] = procName;
-      }
     } else if (rel->relationshipType() == rel::RelationshipType::ASSIGN_STMT) {
       popFacade->storeAssignmentStatement(
           std::static_pointer_cast<rel::AssignStmtRelationship>(rel)
@@ -114,14 +104,38 @@ void PopulateAstEntities(
   }
 }
 
+void ResolveCallStmtRels(
+    const std::vector<std::shared_ptr<rel::Relationship>>& astElemRelationships,
+    std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels) {
+  for (auto& rel : astElemRelationships) {
+    if (rel->relationshipType() == rel::RelationshipType::CALL_STMT) {
+      callStmtRels.push_back(
+          std::static_pointer_cast<rel::CallStmtRelationship>(rel));
+    }
+  }
+}
+
+void ResolveProcedureInfo(
+    std::shared_ptr<ast::ProgramNode> programNode,
+    std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>&
+        procedureByName,
+    util::IntervalTree<int, std::string>& procedureNameByLine) {
+  for (const auto& procNode : programNode->GetProcedures()) {
+    procedureByName[procNode->GetName()] = procNode;
+
+    int startStmtNum = procNode->GetStartStatementNumber();
+    int endStmtNum = procNode->GetEndStatementNumber();
+    procedureNameByLine.Insert({startStmtNum, endStmtNum}, procNode->GetName());
+  }
+}
+
 void ResolveCalls(
     const std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels,
-    const std::vector<std::string>& procedureRels,
     std::unordered_map<std::string, std::unordered_set<std::string>>& calls) {
   // populate calls
   for (const auto& rel : callStmtRels) {
     std::string calledProcName = rel->procedureName();
-    std::string callerProcName = procedureRels[rel->statementNumber()];
+    std::string callerProcName = rel->parentProcedureName();
 
     calls[callerProcName].emplace(calledProcName);
   }
@@ -153,7 +167,8 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : callsStar.at(calledProcName)) {
         if (proc == called) {
-          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+          throw exceptions::SemanticError("Procedure call is recursive: " +
+                                          proc);
         }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
@@ -172,7 +187,8 @@ void ResolveCallsStarSingleProc(
     try {
       for (const auto& called : calls.at(calledProcName)) {
         if (proc == called) {
-          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+          throw exceptions::SemanticError("Procedure call is recursive: " +
+                                          proc);
         }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
@@ -292,7 +308,7 @@ void PopulateModifiesRels(
     const std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>&
         modifiesRelationships,
     const std::vector<int>& parentRels,
-    const std::vector<std::string>& procedureRels,
+    const util::IntervalTree<int, std::string>& procNameByLine,
     const std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels,
     const std::unordered_map<std::string, std::unordered_set<std::string>>&
         calledByStar,
@@ -316,7 +332,7 @@ void PopulateModifiesRels(
     }
 
     // store Modifies(proc, v) relations
-    std::string procName = procedureRels[modifiesRel->statementNumber()];
+    std::string procName = procNameByLine.Search(modifiesRel->statementNumber()).value();
     varModifiedByProc[procName].emplace(varName);
     popFacade->storeProcedureModifiesVariableRelationship(procName, varName);
     try {
@@ -349,7 +365,7 @@ void PopulateUsesRels(
     const std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>>&
         usesRelationships,
     const std::vector<int>& parentRels,
-    const std::vector<std::string>& procedureRels,
+    const util::IntervalTree<int, std::string>& procNameByLine,
     const std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels,
     const std::unordered_map<std::string, std::unordered_set<std::string>>&
         calledByStar,
@@ -374,7 +390,7 @@ void PopulateUsesRels(
     }
 
     // store Uses(proc, v)
-    std::string procName = procedureRels[usesRel->statementNumber()];
+    std::string procName = procNameByLine.Search(usesRel->statementNumber()).value();
     varUsedByProc[procName].emplace(varName);
     popFacade->storeProcedureUsesVariableRelationship(procName, varName);
     try {
@@ -469,57 +485,47 @@ bool SP::process(const std::string& program, PKB* pkb) const {
       assignExpRelationships = assignExpExtractor->GetRelationships();
 
   // postprocess relationships
-  // optimization?: use vecs of ints because we're told that we won't
-  // have more than 500 stmts
+
+  // temporary storage for call stmt rels for later processing
+  // e.g. for Modifies/Uses(call, v)
+  std::vector<std::shared_ptr<rel::CallStmtRelationship>> callStmtRels;
+  ResolveCallStmtRels(astElemRelationships, callStmtRels);
+
+  // procedureByName[procName] -> ProcedureNode mapping
+  // procedureRels[stmtNum] = procName that stmtNum belongs to
+  std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
+      procedureByName;
+  util::IntervalTree<int, std::string> procNameByLine;
+  ResolveProcedureInfo(programNode, procedureByName, procNameByLine);
+
+  // calls[caller] = std::uset<std::string> of procs called by caller
+  std::unordered_map<std::string, std::unordered_set<std::string>> calls;
+  ResolveCalls(callStmtRels, calls);
+  std::unordered_map<std::string, std::unordered_set<std::string>> callsStar;
+  ResolveCallsStar(calls, callsStar);
+
+  // for Uses, Modifies
+  std::unordered_map<std::string, std::unordered_set<std::string>> calledByStar;
+  ResolveCalledByStar(callsStar, calledByStar);
 
   // followsRels[secondStmtNum] = firstStmtNum (or 0 if it doesn't have
   // a preceding stmt)
   std::vector<int> followsRels;
   followsRels.resize(totalStatementCount + 1);
+  ResolveFollowsRels(followsRelationships, followsRels);
 
   // parentRels[childStmtNum] = parentStmtNum (or 0 if it doesn't have a
   // parent stmt)
   std::vector<int> parentRels;
   parentRels.resize(totalStatementCount + 1);
+  ResolveParentRels(parentRelationships, parentRels);
 
-  // procedureByName[procName] -> ProcedureNode mapping
-  std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
-      procedureByName;
-
-  // procedureRels[stmtNum] = procName that stmtNum belongs to
-  //
-  // using string here because i'm not sure if ast::ProcedureNode is
-  // unique per ProcName
-  //
-  // TODO: consider using an interval/range tree
-  std::vector<std::string> procedureRels;
-  procedureRels.resize(totalStatementCount + 1);
-
-  // calls[caller] = std::uset<std::string> of procs called by caller
-  std::unordered_map<std::string, std::unordered_set<std::string>> calls;
-  std::unordered_map<std::string, std::unordered_set<std::string>> callsStar;
-  // for Uses, Modifies
-  std::unordered_map<std::string, std::unordered_set<std::string>> calledByStar;
-
-  // temporary storage for call stmt rels for later processing
-  // e.g. for Modifies/Uses(call, v)
-  std::vector<std::shared_ptr<rel::CallStmtRelationship>> callStmtRels;
-
+  // populate
   PopulateFacade* popFacade = pkb->getPopulateFacade();
 
   // put AST entities into PKB
-  // and populate procedureByName, procedureRels, callStmtRels
-  PopulateAstEntities(astElemRelationships, procedureByName, procedureRels,
-                      callStmtRels, popFacade);
-
-  // resolve calls, calls*, calledByStar
-  ResolveCalls(callStmtRels, procedureRels, calls);
-  ResolveCallsStar(calls, callsStar);
-  ResolveCalledByStar(callsStar, calledByStar);
-
-  // populate followsRels, parentRels
-  ResolveFollowsRels(followsRelationships, followsRels);
-  ResolveParentRels(parentRelationships, parentRels);
+  // and populate procedureByName, procNameByLine, callStmtRels
+  PopulateAstEntities(astElemRelationships, popFacade);
 
   // store Follows, Follows* into PKB
   PopulateFollowsRels(followsRels, popFacade);
@@ -531,11 +537,11 @@ bool SP::process(const std::string& program, PKB* pkb) const {
   PopulateCallRels(calls, callsStar, popFacade);
 
   // store Modifies into PKB
-  PopulateModifiesRels(modifiesRelationships, parentRels, procedureRels,
+  PopulateModifiesRels(modifiesRelationships, parentRels, procNameByLine,
                        callStmtRels, calledByStar, popFacade);
 
   // store Uses into PKB
-  PopulateUsesRels(usesRelationships, parentRels, procedureRels, callStmtRels,
+  PopulateUsesRels(usesRelationships, parentRels, procNameByLine, callStmtRels,
                    calledByStar, popFacade);
 
   // store assign postfix exps into PKB

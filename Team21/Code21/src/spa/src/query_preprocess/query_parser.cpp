@@ -2,6 +2,7 @@
 
 #include <stack>
 #include <cctype>
+#include <algorithm>
 
 namespace qps {
 

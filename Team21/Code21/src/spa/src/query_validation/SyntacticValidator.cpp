@@ -2,7 +2,7 @@
 
 namespace qps {
 
-	SyntacticValidator::SyntacticValidator(Query query) :QueryValidator(query) {}
+	SyntacticValidator::SyntacticValidator(Query& query) :QueryValidator(query) {}
 
 	bool SyntacticValidator::validateQuery() {
 		checkSuchThatCorrectRefTypes();

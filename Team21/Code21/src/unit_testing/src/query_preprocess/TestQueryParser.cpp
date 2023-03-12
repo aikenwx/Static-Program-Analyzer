@@ -75,7 +75,7 @@ TEST_CASE("Parser: pattern(syn,expr)") {
 	REQUIRE(decl_list[2].getDesignEntity() == DesignEntity::ASSIGN);
 	REQUIRE(decl_list[2].getSynonym().getSynonym() == "a");
 	std::vector<PatternClause> patternClause = query.getPatternClause();
-	REQUIRE(patternClause[0] == PatternClause(Synonym("a"), Synonym("u"), Expression(false, "x + y")));
+	REQUIRE(patternClause[0] == PatternClause(Synonym("a"), Synonym("u"), Expression(false, "\"x\"\"y\"+")));
 }
 
 TEST_CASE("Parser: pattern(_,partial_expr)") {
@@ -92,7 +92,9 @@ TEST_CASE("Parser: pattern(_,partial_expr)") {
 	REQUIRE(decl_list[2].getDesignEntity() == DesignEntity::ASSIGN);
 	REQUIRE(decl_list[2].getSynonym().getSynonym() == "a");
 	std::vector<PatternClause> patternClause = query.getPatternClause();
-	REQUIRE(patternClause[0] == PatternClause(Synonym("a"), Synonym("u"), Expression(true, "x + y")));
+	//std::string expr = std::get<Expression>(patternClause[0].getArg2()).getExpression();
+	//std::cout << expr;
+	REQUIRE(patternClause[0] == PatternClause(Synonym("a"), Synonym("u"), Expression(true, "\"x\"\"y\"+")));
 }
 
 TEST_CASE("Parser: pattern(quoted_id,_)") {

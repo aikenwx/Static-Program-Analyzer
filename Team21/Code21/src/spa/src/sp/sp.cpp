@@ -34,7 +34,7 @@
 #include "util/interval_tree.h"
 
 namespace sp {
-bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
+std::shared_ptr<ast::ProgramNode> ToProgramNode(std::shared_ptr<ast::INode> root) {
   if (!util::instance_of<ast::ProgramNode>(root)) {
     throw exceptions::SyntaxError("Invalid program");
   }
@@ -55,7 +55,15 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   auto callValidator = std::make_shared<design_extractor::CallValidator>();
   root->AcceptVisitor(root, callValidator, 0);
 
-  return true;
+  return programNode;
+}
+
+template <typename E, typename R>
+inline std::vector<std::shared_ptr<R>> Visit(
+    std::shared_ptr<ast::ProgramNode> programNode) {
+  auto extractor = std::make_shared<E>();
+  programNode->AcceptVisitor(programNode, extractor, 0);
+  return extractor->GetRelationships();
 }
 
 void PopulateAstEntities(
@@ -332,7 +340,8 @@ void PopulateModifiesRels(
     }
 
     // store Modifies(proc, v) relations
-    std::string procName = procNameByLine.Search(modifiesRel->statementNumber()).value();
+    std::string procName =
+        procNameByLine.Search(modifiesRel->statementNumber()).value();
     varModifiedByProc[procName].emplace(varName);
     popFacade->storeProcedureModifiesVariableRelationship(procName, varName);
     try {
@@ -390,7 +399,8 @@ void PopulateUsesRels(
     }
 
     // store Uses(proc, v)
-    std::string procName = procNameByLine.Search(usesRel->statementNumber()).value();
+    std::string procName =
+        procNameByLine.Search(usesRel->statementNumber()).value();
     varUsedByProc[procName].emplace(varName);
     popFacade->storeProcedureUsesVariableRelationship(procName, varName);
     try {
@@ -432,57 +442,41 @@ void PopulateAssignPostfixExpr(
 bool SP::process(const std::string& program, PKB* pkb) const {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
-  std::vector<std::unique_ptr<token::Token>> tokens =
-      tokenizer.tokenize(program);
+  auto tokens = tokenizer.tokenize(program);
 
   // parse tokens into AST
   auto parser = parser::SimpleChainParser();
-  std::shared_ptr<ast::AST> ast = parser.Parse(std::move(tokens));
+  auto ast = parser.Parse(std::move(tokens));
 
-  VerifyAstRoot(ast->GetRoot());
-
-  std::shared_ptr<ast::ProgramNode> programNode =
-      std::static_pointer_cast<ast::ProgramNode>(ast->GetRoot());
+  auto programNode = ToProgramNode(ast->GetRoot());
 
   int totalStatementCount = programNode->GetTotalStatementCount();
 
   // process AST to get elements
-  auto astElemExtractor =
-      std::make_shared<design_extractor::AstElemExtractor>();
-  programNode->AcceptVisitor(programNode, astElemExtractor, 0);
-  std::vector<std::shared_ptr<rel::Relationship>> astElemRelationships =
-      astElemExtractor->GetRelationships();
+  auto astElemRelationships =
+      Visit<design_extractor::AstElemExtractor, rel::Relationship>(programNode);
 
   // process AST to find relationships
-  auto followsExtractor =
-      std::make_shared<design_extractor::FollowsExtractor>();
-  programNode->AcceptVisitor(programNode, followsExtractor, 0);
-  std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>
-      followsRelationships = followsExtractor->GetRelationships();
+  auto followsRelationships =
+      Visit<design_extractor::FollowsExtractor,
+            rel::FollowsStmtStmtRelationship>(programNode);
 
-  auto parentExtractor = std::make_shared<design_extractor::ParentExtractor>();
-  programNode->AcceptVisitor(programNode, parentExtractor, 0);
-  std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>
-      parentRelationships = parentExtractor->GetRelationships();
+  auto parentRelationships =
+      Visit<design_extractor::ParentExtractor, rel::ParentStmtStmtRelationship>(
+          programNode);
 
-  auto stmtModifiesExtractor =
-      std::make_shared<design_extractor::StmtModifiesExtractor>();
-  programNode->AcceptVisitor(programNode, stmtModifiesExtractor, 0);
-  std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
-      modifiesRelationships = stmtModifiesExtractor->GetRelationships();
+  auto modifiesRelationships =
+      Visit<design_extractor::StmtModifiesExtractor,
+            rel::ModifiesStmtVarRelationship>(programNode);
 
-  auto stmtUsesExtractor =
-      std::make_shared<design_extractor::StmtUsesExtractor>();
-  programNode->AcceptVisitor(programNode, stmtUsesExtractor, 0);
-  std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> usesRelationships =
-      stmtUsesExtractor->GetRelationships();
+  auto usesRelationships =
+      Visit<design_extractor::StmtUsesExtractor, rel::UsesStmtVarRelationship>(
+          programNode);
 
   // process AST to get assign node <-> expression reprs
-  auto assignExpExtractor =
-      std::make_shared<design_extractor::AssignExpExtractor>();
-  programNode->AcceptVisitor(programNode, assignExpExtractor, 0);
-  std::vector<std::shared_ptr<rel::AssignExpRelationship>>
-      assignExpRelationships = assignExpExtractor->GetRelationships();
+  auto assignExpRelationships =
+      Visit<design_extractor::AssignExpExtractor, rel::AssignExpRelationship>(
+          programNode);
 
   // postprocess relationships
 

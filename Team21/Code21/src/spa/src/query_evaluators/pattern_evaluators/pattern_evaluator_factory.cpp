@@ -7,7 +7,7 @@
 namespace qps {
 std::unique_ptr<PatternEvaluator> PatternEvaluatorFactory::Create(PatternClause &clause,
                                                                   std::vector<Declaration> &decl_lst) {
-  auto syn = clause.getAssign();
+  auto syn = clause.getStmtSynonym();
   DesignEntity d = Declaration::findDeclarationWithSynonym(decl_lst, syn).value().getDesignEntity();
   switch (d) {
     case DesignEntity::ASSIGN:return std::make_unique<AssignEvaluator>(clause, decl_lst);

@@ -6,14 +6,14 @@ namespace qps {
 
 	class QueryValidator {
 	private:
-		Query query_;
+		Query& query_;
 
 	public:
-		QueryValidator(Query query_) :query_(query_) {}
+		QueryValidator(Query& query_) :query_(query_) {}
 
 		virtual bool validateQuery() = 0;
 
-		Query getQuery() {
+		Query& getQuery() const {
 			return query_;
 		}
 	};

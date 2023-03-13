@@ -26,3 +26,111 @@ TEST_CASE("Queries can be built from parsing and tokenising from inputs") {
     REQUIRE_NOTHROW(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (s, _) such that Modifies(s, _)"));
   }
 }
+
+TEST_CASE("Build queries with invalid expression spec. Check if throw syntax errors") {
+  using Catch::Matchers::Contains;
+  SECTION("Check no leading zero for number") {
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"0121212 + 456\"_)"),
+      Contains("Syntactic error. Expression spec contains leading zero"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"012\"_)"),
+      Contains("Syntactic error. Expression spec contains leading zero"));
+  }
+
+  SECTION("Check no integer can contain a letter in it") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"190293333a + 123\"_)"),
+      Contains("Syntactic error. Integer has a letter in it"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"19r89\"_)"),
+      Contains("Syntactic error. Integer has a letter in it"));
+  }
+
+  SECTION("Check no ) as start") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\") + asdasd\"_)"),
+      Contains("Syntactic error. ) cannot be first char"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\")\"_)"),
+      Contains("Syntactic error. ) cannot be first char"));
+  }
+
+  SECTION("Check no operator as start") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"*123\"_)"),
+      Contains("Syntactic error. Operator cannot be first char"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"%(a9876)\"_)"),
+      Contains("Syntactic error. Operator cannot be first char"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"*agt3\"_)"),
+      Contains("Syntactic error. Operator cannot be first char"));
+  }
+
+  SECTION("Check no weird symbols allowed") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"&\"_)"),
+      Contains("Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"^\"_)"),
+      Contains("Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"&&^^\"_)"),
+      Contains("Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character"));
+  }
+
+  SECTION("Check cannot terminate with operator or (") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"1+\"_)"),
+      Contains("Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"1+(\"_)"),
+      Contains("Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character"));
+  }
+
+  SECTION("Check ( has to be followed by alphanumeric or (") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(*)\"_)"),
+      Contains("Syntactic error. ( is followed by neither an alphanumeric char or ("));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"()\"_)"),
+      Contains("Syntactic error. ( is followed by neither an alphanumeric char or ("));
+  }
+
+  SECTION("Check ( has to preceded by operator or (") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"abc(a + 2)\"_)"),
+      Contains("Syntactic error. ( is preceded by neither an operator or ("));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(1245(a + 2)\"_)"),
+      Contains("Syntactic error. ( is preceded by neither an operator or ("));
+  }
+
+  SECTION("Check ) has to be followed by operator or )") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(123)123\"_)"),
+      Contains("Syntactic error. ) is followed by neither an operator or )"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(123)(adadad)\"_)"),
+      Contains("Syntactic error. ) is followed by neither an operator or )"));
+  }
+
+  SECTION("Check ) has to be preceded by alphanumeric or )") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(1*)\"_)"),
+      Contains("Syntactic error. ) is preceded by neither an alphanumeric char or )"));
+  }
+
+  SECTION("Check cannot have closing bracket without a preceding opening bracket to match it") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"a)\"_)"),
+      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(1 + 2) + axccx34345)\"_)"),
+      Contains("Syntactic error. ) is not supposed to be allowed without a opening bracket"));
+  }
+
+  SECTION("operator cannot be followed by an operator") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"1+*\"_)"),
+      Contains("Syntactic error. operator cannot be followed by operator"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"1+2*a%-\"_)"),
+      Contains("Syntactic error. operator cannot be followed by operator"));
+  }
+
+  SECTION("Check that number of opening and closing cannot not be equal") {
+
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(((1+abcdef)\"_)"),
+      Contains("Syntactic error. Closing brackets are insufficient"));
+    REQUIRE_THROWS_WITH(QueryHelper::buildQuery("stmt s; assign a; Select s pattern a (_, _\"(((1+abcdef*(Ad129090))\"_)"),
+      Contains("Syntactic error. Closing brackets are insufficient"));
+  }
+}

@@ -13,7 +13,7 @@ ClauseEvaluator::ClauseResult PatternEvaluator::Evaluate(QueryFacade &pkb) {
 
 ClauseEvaluator::ClauseResult PatternEvaluator::ConstructResult(const std::vector<Relationship *> &statements) {
   std::vector<Synonym> syns;
-  syns.push_back(clause_.getAssign());
+  syns.push_back(clause_.getStmtSynonym());
 
   bool lhs_syn = false;
   Ref ref = clause_.getArg1();

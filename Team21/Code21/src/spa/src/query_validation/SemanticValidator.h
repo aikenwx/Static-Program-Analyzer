@@ -8,7 +8,7 @@ namespace qps {
 
 	class SemanticValidator : public QueryValidator {
 	public:
-		SemanticValidator(Query query);
+		SemanticValidator(Query& query);
 
 		//checks query by calling all the other check functions
 		bool validateQuery();
@@ -19,10 +19,14 @@ namespace qps {
 		//checks that all synonyms in clauses are from declarations
 		void checkIfSynonymContainedInDeclaration();
 
-		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
+		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration>& declr, std::string missing);
 
-		//check that the pattern clause has a syn-assign that is a pattern declaration
-		void checkPatternClauseSynAssign();
+		void checkElementSynonymDeclareHelper(Element r, std::vector<Declaration>& declr);
+
+		void checkWithRefSynonymDeclareHelper(WithRef r, std::vector<Declaration>& declr);
+
+		//check that the pattern clause has a synonym with valid design entity
+		void checkPatternClauseSynonym();
 
 		//checks that no wild card as first argument for modifies and uses
 		void checkNoWildCardFirstArgModifiesUses();
@@ -34,5 +38,13 @@ namespace qps {
 
 		//checks that pattern first arg is variable if it is synonym
 		void checkPatternSynonymMatchDesignEntity();
+
+		//checks that with clause contain comparison of same type of attribute
+		void checkWithClauseSameAttributeCompare();
+
+		//checks that attrRef have valid attrName
+		void checkAttrRefValidAttrName();
+
+		void checkAttrRefValidAttrNameHelper(AttrRef ar, std::vector<Declaration>& declr);
 	};
 }

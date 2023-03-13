@@ -6,7 +6,7 @@
 
 namespace qps {
 
-std::set<std::string> special_phrase = {"Follows", "Parent", "Calls"};
+std::set<std::string> special_relationship = {"Follows", "Parent", "Calls"};
 std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
 
 QueryTokenizer::QueryTokenizer(std::string source)
@@ -33,8 +33,12 @@ void QueryTokenizer::readPhrase() {
   while (isalnum(peek())) {
     currentString += next();
   }
-  //Deals with special phrase with extra single token *
-  if (special_phrase.count(currentString) && peek() == '*') {
+  //Deals with special relationship with extra single token *
+  if (special_relationship.count(currentString) && peek() == '*') {
+    currentString += next();
+  }
+  //Deals with special attrName: stmt#
+  if (currentString == "stmt" && peek() == '#') {
     currentString += next();
   }
 }

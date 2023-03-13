@@ -13,10 +13,6 @@ class AssignEvaluator : public PatternEvaluator {
   std::vector<Relationship *> CallPkb(QueryFacade &pkb) override;
 
 private:
-  int postfixHelper(char a);
-
-  std::string makePostfix(std::string str);
-
   std::vector<ModifiesRelationship *> checkExpressionContained(std::vector<ModifiesRelationship *> pkb_res,
                                                                std::string postfix,
                                                                bool is_partial);

@@ -14,12 +14,12 @@ class QueryParser {
 		std::vector<Declaration> declarations;
 		std::vector<SuchThatClause> suchThatClause;
 		std::vector<PatternClause> patternClause;
-		std::vector<Declaration> selectClause;
+		std::vector<WithClause> withClause;
+		Result selectClause;
 		int currentIndex;
 		std::vector<std::string> tokens;
 
 		std::string peek();
-		std::string prev();
 		std::string next();
 		bool isEnd();
 
@@ -28,12 +28,24 @@ class QueryParser {
 		bool assertNextToken(std::string str);
 
 		Ref parseRef();
-		ExpressionSpec parseExpression();
+		ExpressionSpec parseExpressionSpec();
+		std::string validateExpressionHelper(std::string s);
+		Element parseElement();
+		WithRef parseWithRef();
+		std::vector<Element> parseTupleSelect();
+
+		void parseSuchThat();
+		void parsePattern();
+		void parseWith();
 
 		bool parseDeclaration();
+		void parseSelectClause();
 		bool parseSuchThatClause();
 		bool parsePatternClause();
-		void parseSelectClause();
+		bool parseWithClause();
+
+		int operatorHelper(char a);
+		std::string makePostfix(std::string str);
 
 	public:
 		QueryParser(std::vector<std::string> tokens_);

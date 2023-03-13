@@ -6,23 +6,23 @@ Block::Block(int start, int end) {
   end_ = end;
 }
 
-int Block::start() {
+int Block::start() const {
   return start_;
 }
 
-int Block::end() {
+int Block::end() const {
   return end_;
 }
 
-bool Block::IsInBlock(int stmtNo) {
+bool Block::IsInBlock(int stmtNo) const {
   return stmtNo >= start_ && stmtNo <= end_;
 }
 
-std::vector<std::weak_ptr<Block>> Block::parents() {
+std::vector<std::weak_ptr<Block>> Block::parents() const {
   return parents_;
 }
 
-std::vector<std::weak_ptr<Block>> Block::children() {
+std::vector<std::weak_ptr<Block>> Block::children() const {
   return children_;
 }
 

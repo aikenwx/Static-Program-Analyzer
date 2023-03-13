@@ -5,13 +5,12 @@
 #include <memory>
 #include <string>
 
+#include "PKB/CFGManager.h"
 #include "PKB/EntityManager.h"
 #include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "sp/cfg/cfg.h"
-#include "PKB/CFGManager.h"
-
 
 #ifndef SPA_POPULATEFACADE_H
 #define SPA_POPULATEFACADE_H
@@ -48,6 +47,10 @@ class PopulateFacade {
     void storeCallsStarRelationship(std::string caller, std::string callee);
 
     void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
+
+    void storeWhileStatementConditionVariable(int statementNumber, std::string variableName);
+    void storeIfStatementConditionVariable(int statementNumber, std::string variableName);
+
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
    private:

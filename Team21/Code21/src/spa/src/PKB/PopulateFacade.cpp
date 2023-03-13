@@ -165,6 +165,34 @@ void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, 
     this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, new std::string(postfixExpression));
 }
 
+void PopulateFacade::storeIfStatementConditionVariable(int statementNumber, std::string variableName) {
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+
+    this->validateEntityExists(statement);
+
+    if (!(statement->getEntityType() == IfStatement::getEntityTypeStatic())) {
+        throw std::runtime_error("Statement is not an if statement, cannot store pattern");
+    }
+
+    this->patternManager->storeIfStatementConditionVariable((IfStatement *)statement, &variableName);
+}
+
+void PopulateFacade::storeWhileStatementConditionVariable(int statementNumber, std::string variableName) {
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+
+    this->validateEntityExists(statement);
+
+    if (!(statement->getEntityType() == WhileStatement::getEntityTypeStatic())) {
+        throw std::runtime_error("Statement is not a while statement, cannot store pattern");
+    }
+
+    this->patternManager->storeWhileStatementConditionVariable((WhileStatement *)statement, &variableName);
+}
+
 void PopulateFacade::storeCallsRelationship(std::string firstProcedureName, std::string secondProcedureName) {
     auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &firstProcedureName);
     auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &secondProcedureName);

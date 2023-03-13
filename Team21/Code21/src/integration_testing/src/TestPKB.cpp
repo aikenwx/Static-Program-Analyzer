@@ -884,3 +884,52 @@ TEST_CASE("PKB can store multiple CallsStar relationships and retrieve them all"
     PKBtestHelpers::deleteRelationship(expectedRelationship3);
     PKBtestHelpers::deleteRelationship(expectedRelationship4);
 }
+
+TEST_CASE("PKB can store while and if statememt pattern information") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeIfStatement(2);
+    populateFacade->storeWhileStatement(3);
+    populateFacade->storeIfStatement(4);
+
+    populateFacade->storeWhileStatementConditionVariable(1, "x");
+    populateFacade->storeWhileStatementConditionVariable(1, "x");
+
+    populateFacade->storeWhileStatementConditionVariable(3, "x");
+
+    populateFacade->storeIfStatementConditionVariable(2, "y");
+    populateFacade->storeIfStatementConditionVariable(2, "y");
+
+    populateFacade->storeIfStatementConditionVariable(4, "y");
+
+    std::set<WhileStatement *> *whileStatements = queryFacade->getWhileStatementsUsingVariableInCondition("x");
+
+    REQUIRE(whileStatements->size() == 2);
+
+    // convert to array
+    std::vector<WhileStatement *> whileStatementsVector(whileStatements->begin(), whileStatements->end());
+    whileStatementsVector[0]->equals(std::make_shared<WhileStatement>(1).get());
+    whileStatementsVector[1]->equals(std::make_shared<WhileStatement>(3).get());
+
+    whileStatements = queryFacade->getWhileStatementsUsingVariableInCondition("y");
+
+    REQUIRE(whileStatements->size() == 0);
+
+    std::set<IfStatement *> *ifStatements = queryFacade->getIfStatementsUsingVariableInCondition("y");
+
+    REQUIRE(ifStatements->size() == 2);
+    // convert to array
+
+    std::vector<IfStatement *> ifStatementsVector(ifStatements->begin(), ifStatements->end());
+    ifStatementsVector[0]->equals(std::make_shared<IfStatement>(2).get());
+    ifStatementsVector[1]->equals(std::make_shared<IfStatement>(4).get());
+
+    ifStatements = queryFacade->getIfStatementsUsingVariableInCondition("x");
+
+    REQUIRE(ifStatements->size() == 0);
+
+    delete pkb;
+}

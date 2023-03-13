@@ -7,7 +7,7 @@ std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
   Ref ref1 = clause_.getArg1();
 
   auto all_assignment_variable_pairs =
-      pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType::ASSIGN_STATEMENT, EntityType::VARIABLE);
+      pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(AssignStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
   for (const auto &row : *all_assignment_variable_pairs) {
     if (std::holds_alternative<QuotedIdentifier>(ref1)
         && *row->getRightHandEntity()->getEntityValue() != std::get<QuotedIdentifier>(ref1).getQuotedId()) {

@@ -1,10 +1,14 @@
 #include "WhileStatement.h"
 
-WhileStatement::WhileStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
+EntityType &WhileStatement::getEntityType() const {
+    return WhileStatement::whileStatementType;
 }
 
-EntityType WhileStatement::getEntityType() {
-    return EntityType::WHILE_STATEMENT;
+WhileStatement::WhileStatement(int statementNumber) : Statement(statementNumber) {
 }
+
+EntityType &WhileStatement::getEntityTypeStatic() {
+    return WhileStatement::whileStatementType;
+}
+
+EntityType WhileStatement::whileStatementType = EntityType();

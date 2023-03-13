@@ -9,6 +9,7 @@
 
 #include "PKB/CFGManager.h"
 #include "PKB/EntityManager.h"
+#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -38,9 +39,10 @@ class QueryFacade {
     EntityManager* entityManager;
     RelationshipManager* relationshipManager;
     CFGManager* cfgManager;
+    PatternManager* patternManager;
 
    public:
-    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, CFGManager* cfgManager);
+    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGManager* cfgManager);
 
     std::vector<AssignStatement*>* getAllAssignStatements();
     std::vector<IfStatement*>* getAllIfStatements();
@@ -61,6 +63,9 @@ class QueryFacade {
     std::vector<FollowsStarRelationship*>* getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
     std::vector<CallsRelationship*>* getAllCallsRelationships();
     std::vector<CallsStarRelationship*>* getAllCallsStarRelationships();
+
+    std::set<WhileStatement*>* getWhileStatementsUsingVariableInCondition(std::string variableName);
+    std::set<IfStatement*>* getIfStatementsUsingVariableInCondition(std::string variableName);
 
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);

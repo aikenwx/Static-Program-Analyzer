@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-
+#include <catch2/matchers/catch_matchers_exception.hpp>
 #include "query_validation/SemanticValidator.h"
 #include "query_validation/SyntacticValidator.h"
 #include "QueryHelper.h"
@@ -29,7 +29,7 @@ TEST_CASE("Semantic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. There is missing declaration in Select clause for synonym S"));
+            ContainsSubstring("Semantic error. There is missing declaration in Select clause for synonym S"));
     }
 
     SECTION("The synonym for such that clause is not previously declared") {
@@ -45,7 +45,7 @@ TEST_CASE("Semantic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. There is missing declaration in Pattern clause for argument 1"));
+            ContainsSubstring("Semantic error. There is missing declaration in Pattern clause for argument 1"));
     }
 
     SECTION("The synonym for assignPattern clause is not previously declared and with double clause") {
@@ -53,7 +53,7 @@ TEST_CASE("Semantic validation for queries") {
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. There is missing declaration in Pattern clause for argument 1"));
+            ContainsSubstring("Semantic error. There is missing declaration in Pattern clause for argument 1"));
     }
 
     SECTION("check for WildCard as firstArg in Modifies") {
@@ -71,13 +71,13 @@ TEST_CASE("Semantic validation for queries") {
         REQUIRE_THROWS_WITH(validator.validateQuery(),
             ContainsSubstring("Semantic error. There is wild card as first argument in Uses"));
     }
-    
+
     SECTION("check pattern clause has proper synonym") {
         std::string dupeInput("stmt s; procedure p; variable v; assign a; Select a pattern p (v, _)");
         qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
         qps::SemanticValidator validator(dupeQuery);
         REQUIRE_THROWS_WITH(validator.validateQuery(),
-            Contains("Semantic error. Invalid syntax for pattern with synonym: p"));
+            ContainsSubstring("Semantic error. Invalid syntax for pattern with synonym: p"));
     }
 
     SECTION("check that pattern clause if have synonym, it is variable") {
@@ -180,7 +180,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. Attribute name is invalid with synonym s"));
+        ContainsSubstring("Semantic error. Attribute name is invalid with synonym s"));
     }
 
     SECTION("check correct attrRef with synonym BOOLEAN") {
@@ -195,7 +195,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. There is missing declaration in Select clause for synonym BOOLEAN"));
+        ContainsSubstring("Semantic error. There is missing declaration in Select clause for synonym BOOLEAN"));
     }
 
     SECTION("check synonym BOOLEAN have declaration") {
@@ -203,7 +203,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) s"));
+        ContainsSubstring("Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) s"));
     }
 
     SECTION("check synonym BOOLEAN in attrRef have declaration") {
@@ -211,7 +211,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) BOOLEAN"));
+        ContainsSubstring("Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) BOOLEAN"));
     }
 
     SECTION("check that withRef in WithClause have declaration") {
@@ -219,7 +219,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. There is missing declaration for synonym (in WithRef) c"));
+        ContainsSubstring("Semantic error. There is missing declaration for synonym (in WithRef) c"));
     }
 
     SECTION("check that attrName is acceptable with synonym in WithClause") {
@@ -227,7 +227,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. Attribute name is invalid with synonym c"));
+        ContainsSubstring("Semantic error. Attribute name is invalid with synonym c"));
     }
 
     SECTION("check that correct comparison of withRef in WithClause") {
@@ -235,7 +235,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. Comparison of different type of attribute in with clause"));
+        ContainsSubstring("Semantic error. Comparison of different type of attribute in with clause"));
     }
 
     SECTION("check correct pattern with if/assign/while synonym") {
@@ -250,7 +250,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. Invalid syntax for pattern with synonym: w"));
+        ContainsSubstring("Semantic error. Invalid syntax for pattern with synonym: w"));
     }
 
     SECTION("check pattern if/assign/while synonym have declaration") {
@@ -258,7 +258,7 @@ TEST_CASE("Semantic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SemanticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Semantic error. There is missing declaration in Select clause for a"));
+        ContainsSubstring("Semantic error. There is missing declaration in Select clause for a"));
     }
 
 }
@@ -344,7 +344,7 @@ TEST_CASE("Syntactic validation for queries") {
     SECTION("check that attrRef (attrName) is incorrect") {
       std::string dupeInput("stmt s; procedure p; variable P; assign S; Select <s.stmt, p.procName, P>");
       REQUIRE_THROWS_WITH(QueryHelper::buildQuery(dupeInput),
-        Contains("Syntactic error. Invalid Attribute Name stmt"));
+        ContainsSubstring("Syntactic error. Invalid Attribute Name stmt"));
     }
 
     SECTION("check incorrect arg2 with while pattern") {
@@ -352,7 +352,7 @@ TEST_CASE("Syntactic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SyntacticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Syntactic error. The second argument of if/while pattern cannot be expression"));
+        ContainsSubstring("Syntactic error. The second argument of if/while pattern cannot be expression"));
     }
 
     SECTION("check incorrect arg2 with if pattern") {
@@ -360,12 +360,12 @@ TEST_CASE("Syntactic validation for queries") {
       qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
       qps::SyntacticValidator validator(dupeQuery);
       REQUIRE_THROWS_WITH(validator.validateQuery(),
-        Contains("Syntactic error. The second argument of if/while pattern cannot be expression"));
+        ContainsSubstring("Syntactic error. The second argument of if/while pattern cannot be expression"));
     }
 
     SECTION("check incorrect arg3 with if pattern") {
       std::string dupeInput("if i; assign a; while w; Select <a.stmt#, w, i> pattern a(_,_) and w(_,_) and i(_,_,\"x\")");
       REQUIRE_THROWS_WITH(QueryHelper::buildQuery(dupeInput),
-        Contains("Syntactic error. Invalid Query Syntax. Expect (_) got (\")"));
+        ContainsSubstring("Syntactic error. Invalid Query Syntax. Expect (_) got (\")"));
     }
 }

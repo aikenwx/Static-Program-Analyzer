@@ -750,7 +750,7 @@ TEST_CASE("Can retrieve relationship by literal values") {
     //                                                            relationship11.get())));
     // print hi
 
-    std::cout << "hi" << std::endl;
+    //std::cout << "hi" << std::endl;
     auto relationshipKey1 = RelationshipKey(&relationship->getRelationshipType(), &relationship->getLeftHandEntity()->getEntityKey(),
                                             &relationship->getRightHandEntity()->getEntityKey());
 

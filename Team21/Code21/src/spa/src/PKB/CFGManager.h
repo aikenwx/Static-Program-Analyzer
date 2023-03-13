@@ -10,9 +10,16 @@
 #include "sp/cfg/cfg.h"
 
 class CFGManager {
+private:
+    std::shared_ptr<cfg::CFG> cfg;
+
    public:
     CFGManager() = default;
-    void storeCFG(Procedure* procedure, std::shared_ptr<cfg::CFG> cfg);
+    void storeCFG(std::shared_ptr<cfg::CFG> cfg);
+
+    cfg::CFG* getCFG();
 };
+
+
 
 #endif  // SPA_CFGMANAGER_H

@@ -7,7 +7,8 @@
 TEST_CASE("QueryFacade Instantiates") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
@@ -16,7 +17,8 @@ TEST_CASE("QueryFacade Instantiates") {
 TEST_CASE("QueryFacade can retrieve read statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(1);
 
@@ -35,7 +37,8 @@ TEST_CASE("QueryFacade can retrieve read statement") {
 TEST_CASE("QueryFacade can retrieve print statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(1);
     entityManager->storeEntity(new PrintStatement(1));
@@ -53,7 +56,8 @@ TEST_CASE("QueryFacade can retrieve print statement") {
 TEST_CASE("QueryFacade can retrieve assign statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
     entityManager->storeEntity(new AssignStatement(1));
@@ -71,7 +75,8 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
 TEST_CASE("QueryFacade can retrieve call statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
     entityManager->storeEntity(new CallStatement(1));
@@ -89,7 +94,8 @@ TEST_CASE("QueryFacade can retrieve call statement") {
 TEST_CASE("QueryFacade can retrieve while statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
 
@@ -108,7 +114,8 @@ TEST_CASE("QueryFacade can retrieve while statement") {
 TEST_CASE("QueryFacade can retrieve if statement") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
     entityManager->storeEntity(new IfStatement(1));
@@ -126,7 +133,8 @@ TEST_CASE("QueryFacade can retrieve if statement") {
 TEST_CASE("QueryFacade can retrieve procedure") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
     entityManager->storeEntity(new Procedure(new std::string("procedure")));
@@ -143,7 +151,8 @@ TEST_CASE("QueryFacade can retrieve procedure") {
 TEST_CASE("QueryFacade can retrieve variable") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
     entityManager->storeEntity(new Variable(new std::string("variable")));
@@ -160,7 +169,8 @@ TEST_CASE("QueryFacade can retrieve variable") {
 TEST_CASE("QueryFacade can retrieve constant") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<Constant> constant = std::make_shared<Constant>(1);
     entityManager->storeEntity(new Constant(1));
@@ -177,7 +187,8 @@ TEST_CASE("QueryFacade can retrieve constant") {
 TEST_CASE("QueryFace can retrieve all statements") {
     EntityManager *entityManager = new EntityManager();
     RelationshipManager *relationshipManager = new RelationshipManager();
-    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+    CFGManager *cfgManager = new CFGManager();
+    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, cfgManager);
 
     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(5);
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
@@ -203,7 +214,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve follow relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -236,7 +248,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve parent relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -269,7 +282,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve followstar relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -300,7 +314,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve ParentStar relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -331,7 +346,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve modifies relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(1);
@@ -364,7 +380,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve uses relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -396,7 +413,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade gives empty vector") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::vector<ModifiesRelationship *> *modifiesRelationships = queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT, VARIABLE);
 //     REQUIRE(modifiesRelationships->size() == 0);
@@ -412,7 +430,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement Follows Statement relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -442,7 +461,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement Modifies Variable relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
@@ -463,7 +483,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement Uses Variable relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
@@ -484,7 +505,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Procedure Modifies Variable relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
 //     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
@@ -505,7 +527,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Procedure Uses Variable relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
 //     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
@@ -526,7 +549,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement Follows Statement relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
@@ -547,7 +571,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement FollowsStar Statement relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
@@ -568,7 +593,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement Parent Statement relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
@@ -589,7 +615,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Statement ParentStar Statement relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
@@ -610,7 +637,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Caller Calls Callee relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
 //     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
@@ -631,7 +659,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve Caller CallsStar Callee relationship by literals") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
 //     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
@@ -652,7 +681,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve all Calls Relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
 //     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
@@ -682,7 +712,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // TEST_CASE("QueryFacade can retrieve all CallsStar Relationships") {
 //     EntityManager *entityManager = new EntityManager();
 //     RelationshipManager *relationshipManager = new RelationshipManager();
-//     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager);
+// CFGManager* cfgManager = new CFGManager();//
+//    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
 //     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));

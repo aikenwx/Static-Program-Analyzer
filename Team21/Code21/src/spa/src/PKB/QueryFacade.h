@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "PKB/CFGManager.h"
 #include "PKB/EntityManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -30,14 +31,16 @@
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "QueryFacade.h"
+#include "sp/cfg/cfg.h"
 
 class QueryFacade {
    private:
     EntityManager* entityManager;
     RelationshipManager* relationshipManager;
+    CFGManager* cfgManager;
 
    public:
-    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager);
+    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, CFGManager* cfgManager);
 
     std::vector<AssignStatement*>* getAllAssignStatements();
     std::vector<IfStatement*>* getAllIfStatements();
@@ -69,6 +72,8 @@ class QueryFacade {
     FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
     CallsRelationship* getCallsRelationship(std::string callerName, std::string calleeName);
     CallsStarRelationship* getCallsStarRelationship(std::string callerName, std::string calleeName);
+
+    cfg::CFG* getCFG();
 };
 
 #endif  // SPA_QUERYFACADE_H

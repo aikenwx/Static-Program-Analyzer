@@ -25,9 +25,10 @@
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager) {
+QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, CFGManager *cfgManager) {
     this->entityManager = entityManager;
     this->relationshipManager = relationshipManager;
+    this->cfgManager = cfgManager;
 }
 
 std::vector<AssignStatement *> *QueryFacade::getAllAssignStatements() {
@@ -274,4 +275,8 @@ CallsStarRelationship *QueryFacade::getCallsStarRelationship(std::string callerN
     RelationshipKey relationshipKey = RelationshipKey(&CallsStarRelationship::getRelationshipTypeStatic(), &callerKey, &calleeKey);
 
     return (CallsStarRelationship *)this->relationshipManager->getRelationship(relationshipKey);
+}
+
+cfg::CFG *QueryFacade::getCFG() {
+    return this->cfgManager->getCFG();
 }

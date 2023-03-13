@@ -4,6 +4,10 @@
 
 #include "CFGManager.h"
 
-void CFGManager::storeCFG(Procedure* procedure, std::shared_ptr<cfg::CFG> cfg) {
-    procedure->setCFG(cfg);
+void CFGManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
+    this->cfg = cfg;
+}
+
+cfg::CFG* CFGManager::getCFG() {
+    return this->cfg.get();
 }

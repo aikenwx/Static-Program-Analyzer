@@ -191,9 +191,6 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
     }
 }
 
-void PopulateFacade::storeCFGForProcedureName(std::string procedureName, std::shared_ptr<cfg::CFG> cfg) {
-    auto procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
-    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
-    this->validateEntityExists(procedure);
-    this->cfgManager->storeCFG(procedure, cfg);
+void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
+    this->cfgManager->storeCFG(cfg);
 }

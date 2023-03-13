@@ -18,8 +18,6 @@ class Procedure : public Entity {
 
     std::shared_ptr<std::string> procedureName;
 
-    std::shared_ptr<cfg::CFG> cfg;
-
    public:
     static EntityType& getEntityTypeStatic();
 
@@ -28,10 +26,6 @@ class Procedure : public Entity {
     Procedure(std::string* variableValue);
 
     ~Procedure() = default;
-
-    void setCFG(std::shared_ptr<cfg::CFG> cfg);
-
-    cfg::CFG* getCFG();
 
     bool operator==(const Procedure& procedure) const;
 };

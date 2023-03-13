@@ -3,14 +3,6 @@
 Procedure::Procedure(std::string *procedureName) : Entity(&Procedure::getEntityTypeStatic(), std::shared_ptr<std::string>(procedureName)) {
 }
 
-void Procedure::setCFG(std::shared_ptr<cfg::CFG> cfg) {
-    this->cfg = cfg;
-}
-
-cfg::CFG *Procedure::getCFG() {
-    return this->cfg.get();
-}
-
 bool Procedure::operator==(const Procedure &procedure) const {
     return this->getEntityValue() == procedure.getEntityValue();
 }

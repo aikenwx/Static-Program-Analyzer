@@ -48,8 +48,7 @@ class PopulateFacade {
     void storeCallsStarRelationship(std::string caller, std::string callee);
 
     void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
-
-    void storeCFGForProcedureName(std::string procedureName, std::shared_ptr<cfg::CFG> cfg);
+    void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
    private:
     void validateEntityExists(Entity *entity);

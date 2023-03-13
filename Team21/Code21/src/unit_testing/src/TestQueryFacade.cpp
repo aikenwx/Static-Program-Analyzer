@@ -12,6 +12,7 @@ TEST_CASE("QueryFacade Instantiates") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve read statement") {
@@ -32,6 +33,7 @@ TEST_CASE("QueryFacade can retrieve read statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve print statement") {
@@ -51,6 +53,7 @@ TEST_CASE("QueryFacade can retrieve print statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve assign statement") {
@@ -70,6 +73,7 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve call statement") {
@@ -89,6 +93,7 @@ TEST_CASE("QueryFacade can retrieve call statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve while statement") {
@@ -109,6 +114,7 @@ TEST_CASE("QueryFacade can retrieve while statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve if statement") {
@@ -128,6 +134,7 @@ TEST_CASE("QueryFacade can retrieve if statement") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve procedure") {
@@ -146,6 +153,7 @@ TEST_CASE("QueryFacade can retrieve procedure") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve variable") {
@@ -164,6 +172,7 @@ TEST_CASE("QueryFacade can retrieve variable") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFacade can retrieve constant") {
@@ -182,6 +191,7 @@ TEST_CASE("QueryFacade can retrieve constant") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 TEST_CASE("QueryFace can retrieve all statements") {
@@ -209,6 +219,7 @@ TEST_CASE("QueryFace can retrieve all statements") {
     delete queryFacade;
     delete entityManager;
     delete relationshipManager;
+    delete cfgManager;
 }
 
 // TEST_CASE("QueryFacade can retrieve follow relationships") {

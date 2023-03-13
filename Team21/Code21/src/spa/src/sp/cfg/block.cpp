@@ -18,19 +18,19 @@ bool Block::IsInBlock(int stmtNo) {
   return stmtNo >= start_ && stmtNo <= end_;
 }
 
-std::vector<std::shared_ptr<Block>> Block::parents() {
+std::vector<std::weak_ptr<Block>> Block::parents() {
   return parents_;
 }
 
-std::vector<std::shared_ptr<Block>> Block::children() {
+std::vector<std::weak_ptr<Block>> Block::children() {
   return children_;
 }
 
-void Block::AddParent(std::shared_ptr<Block> parent) {
+void Block::AddParent(std::weak_ptr<Block> parent) {
   parents_.push_back(parent);
 }
 
-void Block::AddChild(std::shared_ptr<Block> child) {
+void Block::AddChild(std::weak_ptr<Block> child) {
   children_.push_back(child);
 }
 }

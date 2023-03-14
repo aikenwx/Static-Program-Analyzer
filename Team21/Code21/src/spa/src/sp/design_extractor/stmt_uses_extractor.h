@@ -82,7 +82,7 @@ class StmtUsesExtractor : public Extractor {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
 
-  std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> GetRelationships();
+  auto GetRelationships() const -> std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>>;
 
  private:
   std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> relns_;

@@ -20,8 +20,8 @@ class StmtModifiesExtractor : public Extractor {
                         int depth) override;
   void HandleReadNode(const std::shared_ptr<ast::ReadNode>& node, int depth) override;
 
-  std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
-  GetRelationships();
+  auto
+  GetRelationships() const -> std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>;
 
  private:
   std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>> relns_;

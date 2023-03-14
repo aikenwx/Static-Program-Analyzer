@@ -7,15 +7,16 @@
 
 namespace design_extractor {
 class FollowsExtractor : public Extractor {
- public:
+public:
   FollowsExtractor() = default;
-  void HandleStatementListNode(const std::shared_ptr<ast::StatementListNode>& node,
-                               int depth) override;
+  void
+  HandleStatementListNode(const std::shared_ptr<ast::StatementListNode> &node,
+                          int depth) override;
 
-  std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>
-  GetRelationships();
+  [[nodiscard]] auto GetRelationships() const
+      -> std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>;
 
- private:
+private:
   std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>> relns_;
 };
-}  // namespace design_extractor
+} // namespace design_extractor

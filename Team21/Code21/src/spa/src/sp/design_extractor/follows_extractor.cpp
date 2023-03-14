@@ -23,15 +23,15 @@ void FollowsExtractor::HandleStatementListNode(
   it++;
 
   for (; it != statements.crend(); it++) {
-    std::shared_ptr<ast::StatementNode> second = *it;
+    const std::shared_ptr<ast::StatementNode>& second = *it;
     relns_.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));
     first = second;
   };
 };
 
-std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>>
-FollowsExtractor::GetRelationships() {
+auto
+FollowsExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::FollowsStmtStmtRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

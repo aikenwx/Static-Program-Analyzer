@@ -64,8 +64,8 @@ void AstElemExtractor::HandleVariableNode(
       rel::VarRelationship::CreateRelationship(variable_node->GetName()));
 }
 
-std::vector<std::shared_ptr<rel::Relationship>>
-AstElemExtractor::GetRelationships() const {
+auto
+AstElemExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::Relationship>> {
   return relns_;
 }
 }  // namespace design_extractor

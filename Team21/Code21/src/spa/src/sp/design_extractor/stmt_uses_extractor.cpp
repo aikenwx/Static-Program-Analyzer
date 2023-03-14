@@ -75,8 +75,8 @@ void StmtUsesExtractor::HandleVariableNode(
   }
 };
 
-std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>>
-StmtUsesExtractor::GetRelationships() {
+auto
+StmtUsesExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

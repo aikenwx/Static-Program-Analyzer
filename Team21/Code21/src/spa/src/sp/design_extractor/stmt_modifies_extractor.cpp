@@ -20,8 +20,8 @@ void StmtModifiesExtractor::HandleReadNode(const std::shared_ptr<ast::ReadNode>&
       node, node->GetVariable()->GetName()));
 };
 
-std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
-StmtModifiesExtractor::GetRelationships() {
+auto
+StmtModifiesExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

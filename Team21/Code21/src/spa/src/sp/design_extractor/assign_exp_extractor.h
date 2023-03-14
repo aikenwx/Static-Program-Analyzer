@@ -20,7 +20,7 @@ class AssignExpExtractor : public Extractor {
   void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                         int depth) override;
 
-  std::vector<std::shared_ptr<rel::AssignExpRelationship>> GetRelationships();
+  [[nodiscard]] auto GetRelationships() const -> std::vector<std::shared_ptr<rel::AssignExpRelationship>>;
  private:
   std::vector<std::shared_ptr<rel::AssignExpRelationship>> relns_;
 };

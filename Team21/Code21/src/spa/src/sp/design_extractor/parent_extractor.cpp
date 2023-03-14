@@ -27,8 +27,8 @@ void ParentExtractor::HandleWhileNode(const std::shared_ptr<ast::WhileNode>& nod
   }
 };
 
-std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>
-ParentExtractor::GetRelationships() {
+auto
+ParentExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

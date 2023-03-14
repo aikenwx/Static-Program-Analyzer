@@ -21,12 +21,10 @@
 #include "../PKBStorageClasses/EntityClasses/Variable.h"
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
-
 class EntityManager {
    private:
     std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
     std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToEntityStore;
-
 
    public:
     EntityManager();
@@ -35,10 +33,7 @@ class EntityManager {
 
     Entity* getEntity(EntityKey& key);
 
-    std::vector<Entity *> * getEntitiesByType(EntityType& entityType);
-   
-   
-
+    std::vector<Entity*>* getEntitiesByType(EntityType& entityType);
 
    private:
     void storeInEntityTypeStore(Entity* entity);

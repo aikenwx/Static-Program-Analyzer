@@ -10,7 +10,7 @@ class AssignEvaluator : public PatternEvaluator {
  public:
   AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
       : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-  std::vector<Relationship *> CallPkb(QueryFacade &pkb) override;
+  std::vector<Product> CallPkb(QueryFacade &pkb) override;
 
 private:
   std::vector<ModifiesRelationship *> checkExpressionContained(std::vector<ModifiesRelationship *> pkb_res,

@@ -2,7 +2,7 @@
 #include "query/query_exceptions.h"
 
 namespace qps {
-std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
+std::vector<Product> AssignEvaluator::CallPkb(QueryFacade &pkb) {
   std::vector<ModifiesRelationship *> modifies_relationships;
   Ref ref1 = clause_.getArg1();
 
@@ -25,8 +25,11 @@ std::vector<Relationship *> AssignEvaluator::CallPkb(QueryFacade &pkb) {
     modifies_relationships = checkExpressionContained(modifies_relationships, expr, is_partial);
   }
 
-  std::vector<Relationship *> res;
-  res.assign(modifies_relationships.begin(), modifies_relationships.end());
+  std::vector<Product> res;
+  for (const auto &row : modifies_relationships) {
+    Product p = Product(*row);
+    res.push_back(p);
+  }
   return res;
 }
 

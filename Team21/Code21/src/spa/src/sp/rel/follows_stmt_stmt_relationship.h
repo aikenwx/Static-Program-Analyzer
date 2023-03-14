@@ -10,9 +10,9 @@ class FollowsStmtStmtRelationship : public StmtStmtRelationship {
  public:
   static auto CreateRelationship(
       std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) -> std::unique_ptr<FollowsStmtStmtRelationship>;
-  auto firstStatementNumber() const -> int override;
-  auto secondStatementNumber() const -> int override;
-  auto relationshipType() const -> RelationshipType override { return RelationshipType::FOLLOWS_STMT_STMT; };
+  [[nodiscard]] auto firstStatementNumber() const -> int override;
+  [[nodiscard]] auto secondStatementNumber() const -> int override;
+  [[nodiscard]] auto relationshipType() const -> RelationshipType override { return RelationshipType::FOLLOWS_STMT_STMT; };
 
  private:
   FollowsStmtStmtRelationship(std::shared_ptr<ast::StatementNode> firstStatement,

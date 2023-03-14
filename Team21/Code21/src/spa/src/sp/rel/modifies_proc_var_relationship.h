@@ -9,9 +9,9 @@ class ModifiesProcVarRelationship : public ProcVarRelationship {
  public:
   static auto CreateRelationship(
       const std::string& procedureName, const std::string& variableName) -> std::unique_ptr<ModifiesProcVarRelationship>;
-  auto procedureName() const -> std::string override;
-  auto variableName() const -> std::string override;
-  auto relationshipType() const -> RelationshipType override {
+  [[nodiscard]] auto procedureName() const -> std::string override;
+  [[nodiscard]] auto variableName() const -> std::string override;
+  [[nodiscard]] auto relationshipType() const -> RelationshipType override {
     return RelationshipType::MODIFIES_PROC_VAR;
   };
 

@@ -9,9 +9,9 @@ class UsesProcVarRelationship : public ProcVarRelationship {
  public:
   static auto CreateRelationship(
       const std::string& procedureName, const std::string& variableName) -> std::unique_ptr<UsesProcVarRelationship>;
-  auto procedureName() const -> std::string override;
-  auto variableName() const -> std::string override;
-  auto relationshipType() const -> RelationshipType override { return RelationshipType::USES_PROC_VAR; };
+  [[nodiscard]] auto procedureName() const -> std::string override;
+  [[nodiscard]] auto variableName() const -> std::string override;
+  [[nodiscard]] auto relationshipType() const -> RelationshipType override { return RelationshipType::USES_PROC_VAR; };
 
  private:
   UsesProcVarRelationship(std::string_view procedureName, std::string_view variableName) : procedureName_(procedureName), variableName_(variableName) {};

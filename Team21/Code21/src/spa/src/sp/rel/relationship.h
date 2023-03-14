@@ -30,13 +30,13 @@ enum class RelationshipType {
 class Relationship {
  public:
   virtual ~Relationship() = default;
-  virtual auto relationshipType() const -> RelationshipType = 0;
+  [[nodiscard]] virtual auto relationshipType() const -> RelationshipType = 0;
 };
 
 class StmtVarRelationship : public Relationship {
  public:
-  virtual auto statementNumber() const -> int = 0;
-  virtual auto variableName() const -> std::string = 0;
+  [[nodiscard]] virtual auto statementNumber() const -> int = 0;
+  [[nodiscard]] virtual auto variableName() const -> std::string = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;
@@ -45,8 +45,8 @@ class StmtVarRelationship : public Relationship {
 
 class ProcVarRelationship : public Relationship {
  public:
-  virtual auto procedureName() const -> std::string = 0;
-  virtual auto variableName() const -> std::string = 0;
+  [[nodiscard]] virtual auto procedureName() const -> std::string = 0;
+  [[nodiscard]] virtual auto variableName() const -> std::string = 0;
 
  private:
   std::string procedureName_;
@@ -55,8 +55,8 @@ class ProcVarRelationship : public Relationship {
 
 class StmtStmtRelationship : public Relationship {
  public:
-  virtual auto firstStatementNumber() const -> int = 0;
-  virtual auto secondStatementNumber() const -> int = 0;
+  [[nodiscard]] virtual auto firstStatementNumber() const -> int = 0;
+  [[nodiscard]] virtual auto secondStatementNumber() const -> int = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
@@ -65,8 +65,8 @@ class StmtStmtRelationship : public Relationship {
 
 class StmtRelationship : public Relationship {
  public:
-  auto parentProcedureName() const -> std::string { return procedureNode_->GetName(); };
-  virtual auto statementNumber() const -> int = 0;
+  [[nodiscard]] auto parentProcedureName() const -> std::string { return procedureNode_->GetName(); };
+  [[nodiscard]] virtual auto statementNumber() const -> int = 0;
 
  protected:
   explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(procedureNode) {};

@@ -9,9 +9,9 @@ class ParentStmtStmtRelationship : public StmtStmtRelationship {
  public:
   static auto CreateRelationship(
       std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) -> std::unique_ptr<ParentStmtStmtRelationship>;
-  auto firstStatementNumber() const -> int override;
-  auto secondStatementNumber() const -> int override;
-  auto relationshipType() const -> RelationshipType override { return RelationshipType::PARENT_STMT_STMT; };
+  [[nodiscard]] auto firstStatementNumber() const -> int override;
+  [[nodiscard]] auto secondStatementNumber() const -> int override;
+  [[nodiscard]] auto relationshipType() const -> RelationshipType override { return RelationshipType::PARENT_STMT_STMT; };
 
  private:
   ParentStmtStmtRelationship(

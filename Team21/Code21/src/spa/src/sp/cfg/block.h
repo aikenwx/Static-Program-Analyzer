@@ -1,12 +1,13 @@
 #pragma once
 
+#include <assert.h>
 #include <memory>
 #include <vector>
 
 namespace cfg {
 class Block : public std::enable_shared_from_this<Block> {
 public:
-  Block(int start, int end) : start_(start), end_(end) {};
+  Block(int start, int end) : start_(start), end_(end) { assert(start <= end); };
   int start() const;
   int end() const;
   bool IsInBlock(int stmtNo) const;

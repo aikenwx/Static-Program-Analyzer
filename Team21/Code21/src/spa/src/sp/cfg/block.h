@@ -6,7 +6,7 @@
 namespace cfg {
 class Block : public std::enable_shared_from_this<Block> {
 public:
-  Block(int start, int end);
+  Block(int start, int end) : start_(start), end_(end) {};
   int start() const;
   int end() const;
   bool IsInBlock(int stmtNo) const;

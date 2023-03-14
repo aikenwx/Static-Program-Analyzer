@@ -1,11 +1,6 @@
 #include "block.h"
 
 namespace cfg {
-Block::Block(int start, int end) {
-  start_ = start;
-  end_ = end;
-}
-
 int Block::start() const {
   return start_;
 }

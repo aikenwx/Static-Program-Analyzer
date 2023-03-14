@@ -13,7 +13,7 @@ namespace parser {
 bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
-  // Default parsing case (LHS of relational expression) 
+  // Default parsing case (LHS of relational expression)
   if (context->IsLookaheadTypeOf<token::LessThanToken>()
     || context->IsLookaheadTypeOf<token::GreaterThanToken>()
     || context->IsLookaheadTypeOf<token::EqualToken>()

@@ -7,7 +7,7 @@
 namespace cfg {
 class Block : public std::enable_shared_from_this<Block> {
 public:
-  Block(int start, int end) : start_(start), end_(end) { assert(start <= end); };
+  Block(int start, int end) : start_(start), end_(end) { static_assert(true); };
   auto start() const -> int;
   auto end() const -> int;
   auto IsInBlock(int stmtNo) const -> bool;

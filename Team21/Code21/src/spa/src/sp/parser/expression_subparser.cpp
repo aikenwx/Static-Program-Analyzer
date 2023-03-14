@@ -26,39 +26,61 @@ bool ExpressionSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
+    // E <- E + T <;, +, ->
     if (stack->size() >= 3
       && util::instance_of<ast::TermNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kPlus
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 2))) {
-      // E <- E + T <;, +, ->
+      // References term node
       std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
+      // Pops plus symbol node
       stack->pop_back();
+      // References expression node
       std::shared_ptr<ast::ExpressionNode> e1 = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      // Pops expression node
       stack->pop_back();
+      // Creates plus node
       std::shared_ptr<ast::PlusNode> b = std::make_shared<ast::PlusNode>(e1->GetOperand(), t->GetOperand());
+      // Creates expression node
       std::shared_ptr<ast::ExpressionNode> e2 = std::make_shared<ast::ExpressionNode>(b);
+      // Pushes expression node to parse stack
       stack->push_back(e2);
       return true;
-    } else if (stack->size() >= 3
+    }
+    // E <- E - T <;, +, ->
+    if (stack->size() >= 3
       && util::instance_of<ast::TermNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMinus
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 2))) {
-      // E <- E - T <;, +, ->
+      // References term node
       std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
+      // Pops minus symbol node
       stack->pop_back();
+      // References expression node
       std::shared_ptr<ast::ExpressionNode> e1 = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      // Pops expression node
       stack->pop_back();
+      // Creates minus node
       std::shared_ptr<ast::MinusNode> b = std::make_shared<ast::MinusNode>(e1->GetOperand(), t->GetOperand());
+      // Creates expression node
       std::shared_ptr<ast::ExpressionNode> e2 = std::make_shared<ast::ExpressionNode>(b);
+      // Pushes expression node to parse stack
       stack->push_back(e2);
       return true;
-    } else if (util::instance_of<ast::TermNode>(*i)) {
-      // E <- T < ;, +, ->
+    }
+    // E <- T < ;, +, ->
+    if (util::instance_of<ast::TermNode>(*i)) {
+      // References term node
       std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
+      // Creates expression node
       std::shared_ptr<ast::ExpressionNode> e = std::make_shared<ast::ExpressionNode>(t->GetOperand());
+      // Pushes expression node to parse stack
       stack->push_back(e);
       return true;
     }

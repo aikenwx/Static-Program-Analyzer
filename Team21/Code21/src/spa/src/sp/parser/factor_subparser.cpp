@@ -32,30 +32,46 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
+    // F <- V
     if (util::instance_of<ast::VariableNode>(*i)) {
-      // F <- V
+      // References variable node
       std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
+      // Pops variable node
       stack->pop_back();
+      // Creates factor node
       std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(v);
+      // Pushes factor node to parse stack
       stack->push_back(f);
       return true;
-    } else if (util::instance_of<ast::ConstantNode>(*i)) {
-      // F <- C
+    }
+    // F <- C
+    if (util::instance_of<ast::ConstantNode>(*i)) {
+      // References constant node
       std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
+      // Pops constant node
       stack->pop_back();
+      // Creates factor node
       std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(c);
+      // Pushes factor node to parse stack
       stack->push_back(f);
       return true;
-    } else if (stack->size() >= 3
+    }
+    // F <- ( E )
+    if (stack->size() >= 3
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))
       && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen) {
-      // F <- ( E )
+      // Pops right paren symbol node
       stack->pop_back();
+      // References expression node
       std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      // Pops expression node
       stack->pop_back();
+      // Pops left paren symbol node
       stack->pop_back();
+      // Creates factor node
       std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(e->GetOperand());
+      // Pushes factor node to parse stack
       stack->push_back(f);
       return true;
     }

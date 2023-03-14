@@ -13,7 +13,7 @@ class ProcRelationship : public Relationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::PROC; };
 
  private:
-  ProcRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(std::move(procedureNode)) {};
+  explicit ProcRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(std::move(procedureNode)) {};
   std::shared_ptr<ast::ProcedureNode> procedureNode_;
 };
 } // namespace rel

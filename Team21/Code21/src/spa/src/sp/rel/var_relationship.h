@@ -12,7 +12,7 @@ class VarRelationship : public Relationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::VAR; };
 
  private:
-  VarRelationship(std::string_view variableName) : variableName_(variableName) {};
+  explicit VarRelationship(std::string_view variableName) : variableName_(variableName) {};
   std::string variableName_;
 };
 }  // namespace rel

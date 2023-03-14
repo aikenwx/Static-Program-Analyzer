@@ -12,25 +12,25 @@ void AstElemExtractor::HandleAssignNode(
     std::shared_ptr<ast::AssignNode> assign_node, int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
   relns_.push_back(
-      rel::AssignStmtRelationship::CreateRelationship(assign_node));
+      rel::AssignStmtRelationship::CreateRelationship(assign_node, currentProc_));
 }
 
 void AstElemExtractor::HandleCallNode(std::shared_ptr<ast::CallNode> call_node,
                                       int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
-  relns_.push_back(rel::CallStmtRelationship::CreateRelationship(call_node));
+  relns_.push_back(rel::CallStmtRelationship::CreateRelationship(call_node, currentProc_));
 }
 
 void AstElemExtractor::HandleIfNode(std::shared_ptr<ast::IfNode> if_node,
                                     int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
-  relns_.push_back(rel::IfStmtRelationship::CreateRelationship(if_node));
+  relns_.push_back(rel::IfStmtRelationship::CreateRelationship(if_node, currentProc_));
 }
 
 void AstElemExtractor::HandleWhileNode(
     std::shared_ptr<ast::WhileNode> while_node, int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
-  relns_.push_back(rel::WhileStmtRelationship::CreateRelationship(while_node));
+  relns_.push_back(rel::WhileStmtRelationship::CreateRelationship(while_node, currentProc_));
 }
 
 void AstElemExtractor::HandleConstantNode(
@@ -43,18 +43,19 @@ void AstElemExtractor::HandleConstantNode(
 void AstElemExtractor::HandlePrintNode(
     std::shared_ptr<ast::PrintNode> print_node, int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
-  relns_.push_back(rel::PrintStmtRelationship::CreateRelationship(print_node));
+  relns_.push_back(rel::PrintStmtRelationship::CreateRelationship(print_node, currentProc_));
 }
 
 void AstElemExtractor::HandleProcedureNode(
     std::shared_ptr<ast::ProcedureNode> procedure_node, int depth) {
   std::vector<std::unique_ptr<rel::Relationship>> vec;
   relns_.push_back(rel::ProcRelationship::CreateRelationship(procedure_node));
+  currentProc_ = procedure_node;
 }
 
 void AstElemExtractor::HandleReadNode(std::shared_ptr<ast::ReadNode> read_node,
                                       int depth) {
-  relns_.push_back(rel::ReadStmtRelationship::CreateRelationship(read_node));
+  relns_.push_back(rel::ReadStmtRelationship::CreateRelationship(read_node, currentProc_));
 }
 
 void AstElemExtractor::HandleVariableNode(
@@ -64,7 +65,7 @@ void AstElemExtractor::HandleVariableNode(
 }
 
 std::vector<std::shared_ptr<rel::Relationship>>
-AstElemExtractor::GetRelationships() {
+AstElemExtractor::GetRelationships() const {
   return relns_;
 }
 }  // namespace design_extractor

@@ -8,7 +8,7 @@
 namespace cfg {
 class CFG {
  public:
-  CFG();
+  CFG() = default;
   std::optional<std::shared_ptr<Block>> GetBlockAt(int stmtNo);
   void InsertBlock(std::shared_ptr<Block> block);
 

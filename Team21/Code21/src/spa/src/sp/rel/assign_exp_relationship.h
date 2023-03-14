@@ -16,7 +16,7 @@ class AssignExpRelationship : public Relationship {
   RelationshipType relationshipType() const override { return RelationshipType::PROC; };
 
  private:
-  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp);
+  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, const std::string& postfixExp);
   std::shared_ptr<ast::AssignNode> assignNode_;
   std::string postfixExp_;
 };

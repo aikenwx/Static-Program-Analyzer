@@ -1,4 +1,5 @@
 #include <string>
+#include <utility>
 
 #include "parent_stmt_stmt_relationship.h"
 
@@ -14,7 +15,7 @@ int ParentStmtStmtRelationship::secondStatementNumber() const {
 std::unique_ptr<ParentStmtStmtRelationship>
 ParentStmtStmtRelationship::CreateRelationship(
     std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
-  return std::unique_ptr<ParentStmtStmtRelationship>(new ParentStmtStmtRelationship(firstStatement, secondStatement));
+  return std::unique_ptr<ParentStmtStmtRelationship>(new ParentStmtStmtRelationship(std::move(firstStatement), std::move(secondStatement)));
 };
 
 ParentStmtStmtRelationship::ParentStmtStmtRelationship(

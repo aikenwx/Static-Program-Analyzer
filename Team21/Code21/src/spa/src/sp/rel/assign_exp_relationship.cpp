@@ -13,7 +13,7 @@ int AssignExpRelationship::statementNumber() const { return assignNode_->GetStat
 
 std::string AssignExpRelationship::postfixExp() const { return postfixExp_; }
 
-AssignExpRelationship::AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp) {
+AssignExpRelationship::AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, const std::string& postfixExp) {
   assignNode_ = assignNode;
   postfixExp_ = postfixExp;
 };

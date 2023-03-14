@@ -7,12 +7,12 @@
 namespace rel {
 class VarRelationship : public Relationship {
  public:
-  static std::unique_ptr<VarRelationship> CreateRelationship(std::string variableName);
+  static std::unique_ptr<VarRelationship> CreateRelationship(const std::string& variableName);
   std::string variableName() const;
   RelationshipType relationshipType() const override { return RelationshipType::VAR; };
 
  private:
-  VarRelationship(std::string variableName);
+  VarRelationship(std::string_view variableName);
   std::string variableName_;
 };
 }  // namespace rel

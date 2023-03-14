@@ -8,12 +8,12 @@ std::string UsesProcVarRelationship::procedureName() const { return procedureNam
 std::string UsesProcVarRelationship::variableName() const { return variableName_; };
 
 std::unique_ptr<UsesProcVarRelationship> UsesProcVarRelationship::CreateRelationship(
-    std::string procedureName, std::string variableName) {
+    const std::string& procedureName, const std::string& variableName) {
   return std::unique_ptr<UsesProcVarRelationship>(new UsesProcVarRelationship(procedureName, variableName));
 };
 
-UsesProcVarRelationship::UsesProcVarRelationship(std::string procedureName,
-                                                 std::string variableName) {
+UsesProcVarRelationship::UsesProcVarRelationship(std::string_view procedureName,
+                                                 std::string_view variableName) {
   procedureName_ = procedureName;
   variableName_ = variableName;
 }

@@ -1,4 +1,5 @@
 #include <string>
+#include <utility>
 
 #include "uses_stmt_var_relationship.h"
 
@@ -11,11 +12,11 @@ std::string UsesStmtVarRelationship::variableName() const {
   return variableName_;
 };
 
-std::unique_ptr<UsesStmtVarRelationship> UsesStmtVarRelationship::CreateRelationship(std::shared_ptr<ast::StatementNode> statementNode, std::string variableName) {
-  return std::unique_ptr<UsesStmtVarRelationship>(new UsesStmtVarRelationship(statementNode, variableName));
+std::unique_ptr<UsesStmtVarRelationship> UsesStmtVarRelationship::CreateRelationship(std::shared_ptr<ast::StatementNode> statementNode, const std::string& variableName) {
+  return std::unique_ptr<UsesStmtVarRelationship>(new UsesStmtVarRelationship(std::move(statementNode), variableName));
 };
 
-UsesStmtVarRelationship::UsesStmtVarRelationship(std::shared_ptr<ast::StatementNode> statementNode, std::string variableName) {
+UsesStmtVarRelationship::UsesStmtVarRelationship(std::shared_ptr<ast::StatementNode> statementNode, std::string_view variableName) {
   statementNode_ = statementNode;
   variableName_ = variableName;
 }

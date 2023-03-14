@@ -9,7 +9,7 @@
 
 namespace design_extractor {
 void FollowsExtractor::HandleStatementListNode(
-    std::shared_ptr<ast::StatementListNode> node, int depth) {
+    const std::shared_ptr<ast::StatementListNode>& node, int depth) {
   std::vector<std::shared_ptr<ast::StatementNode>> statements =
       node->GetStatements();
   if (statements.size() <= 1) {

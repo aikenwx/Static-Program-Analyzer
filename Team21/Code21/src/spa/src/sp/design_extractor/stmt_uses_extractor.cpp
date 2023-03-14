@@ -10,7 +10,7 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-void StmtUsesExtractor::UpdateParents(std::shared_ptr<ast::INode> node,
+void StmtUsesExtractor::UpdateParents(const std::shared_ptr<ast::INode>& node,
                                       int depth) {
   if (depth_ >= depth) {
     // delete all parents below current depth
@@ -32,7 +32,7 @@ void StmtUsesExtractor::UpdateParents(std::shared_ptr<ast::INode> node,
 }
 
 void StmtUsesExtractor::HandleVariableNode(
-    std::shared_ptr<ast::VariableNode> node, int depth) {
+    const std::shared_ptr<ast::VariableNode>& node, int depth) {
   UpdateParents(node, depth);
 
   // number of tree levels between variable and `*it`

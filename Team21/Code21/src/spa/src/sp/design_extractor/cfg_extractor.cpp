@@ -11,7 +11,7 @@ namespace design_extractor {
 // doing this recursively for better understandability
 // plus, possibly not very OCP-ish
 
-void CFGExtractor::HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
+void CFGExtractor::HandleProcedureNode(const std::shared_ptr<ast::ProcedureNode>& node,
                                        int depth) {
   CFGHandleStatementList({}, node->GetStatements());
 }

@@ -6,7 +6,7 @@
 #include "../rel/relationship.h"
 
 namespace design_extractor {
-void ParentExtractor::HandleIfNode(std::shared_ptr<ast::IfNode> node,
+void ParentExtractor::HandleIfNode(const std::shared_ptr<ast::IfNode>& node,
                                    int depth) {
   for (const auto& stmt : node->GetThen()->GetStatements()) {
     relns_.push_back(
@@ -19,7 +19,7 @@ void ParentExtractor::HandleIfNode(std::shared_ptr<ast::IfNode> node,
   }
 };
 
-void ParentExtractor::HandleWhileNode(std::shared_ptr<ast::WhileNode> node,
+void ParentExtractor::HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                                       int depth) {
   for (const auto& stmt : node->GetBody()->GetStatements()) {
     relns_.push_back(

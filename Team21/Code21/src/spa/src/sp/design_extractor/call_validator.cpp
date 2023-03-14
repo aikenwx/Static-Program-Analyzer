@@ -6,7 +6,7 @@
 #include "exceptions/semantic_error.h"
 
 namespace design_extractor {
-void CallValidator::HandleCallNode(std::shared_ptr<ast::CallNode> node, int depth) {
+void CallValidator::HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth) {
   assert(this->program);
   if (!(node->GetProcedure())) {
     if (program->ContainsProcedure(node->GetProcedureName())) {
@@ -17,7 +17,7 @@ void CallValidator::HandleCallNode(std::shared_ptr<ast::CallNode> node, int dept
     }
   }
 }
-void CallValidator::HandleProgramNode(std::shared_ptr<ast::ProgramNode> node, int depth) {
+void CallValidator::HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node, int depth) {
   this->program = node;
 }
 }

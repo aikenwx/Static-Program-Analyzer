@@ -9,7 +9,7 @@ class CFGExtractor : public Extractor {
  public:
   CFGExtractor() = default;
 
-  void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
+  void HandleProcedureNode(const std::shared_ptr<ast::ProcedureNode>& node,
                            int depth) override;
 
   [[nodiscard]] auto cfg() const -> std::shared_ptr<cfg::CFG>;

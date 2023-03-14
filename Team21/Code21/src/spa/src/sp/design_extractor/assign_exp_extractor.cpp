@@ -72,7 +72,7 @@ std::string AssignExpToPostfixExp(std::shared_ptr<ast::INode> node) {
   return postfixExp;
 }
 
-void AssignExpExtractor::HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+void AssignExpExtractor::HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                                           int depth) {
   std::string postfixExp = AssignExpToPostfixExp(node->GetAssignment());
   std::shared_ptr<rel::AssignExpRelationship> relationship =

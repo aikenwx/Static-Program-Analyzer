@@ -17,7 +17,7 @@ class AssignExpExtractor : public Extractor {
  public:
   AssignExpExtractor() = default;
 
-  void HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+  void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                         int depth) override;
 
   std::vector<std::shared_ptr<rel::AssignExpRelationship>> GetRelationships();

@@ -7,8 +7,8 @@ namespace design_extractor {
 class ParentExtractor : public Extractor {
  public:
   ParentExtractor() = default;
-  void HandleIfNode(std::shared_ptr<ast::IfNode> node, int depth) override;
-  void HandleWhileNode(std::shared_ptr<ast::WhileNode> node,
+  void HandleIfNode(const std::shared_ptr<ast::IfNode>& node, int depth) override;
+  void HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                        int depth) override;
 
   std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>

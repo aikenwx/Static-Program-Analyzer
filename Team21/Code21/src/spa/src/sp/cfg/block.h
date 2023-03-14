@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace cfg {
-class Block {
+class Block : public std::enable_shared_from_this<Block> {
 public:
   Block(int start, int end);
   int start() const;

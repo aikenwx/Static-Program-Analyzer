@@ -28,9 +28,11 @@ std::vector<std::weak_ptr<Block>> Block::children() const {
 
 void Block::AddParent(std::weak_ptr<Block> parent) {
   parents_.push_back(parent);
+  parent.lock()->AddChild(shared_from_this());
 }
 
 void Block::AddChild(std::weak_ptr<Block> child) {
   children_.push_back(child);
+  child.lock()->AddParent(shared_from_this());
 }
 }

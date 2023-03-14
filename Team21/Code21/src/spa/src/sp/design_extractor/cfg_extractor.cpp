@@ -21,7 +21,7 @@ std::shared_ptr<cfg::Block> CFGExtractor::NewBlock(const std::vector<std::shared
   cfg_->InsertBlock(newBlock);
   for (auto parent : parents) {
     newBlock->AddParent(parent);
-    parent->AddChild(newBlock);
+    // child automatically added
   }
   return newBlock;
 }

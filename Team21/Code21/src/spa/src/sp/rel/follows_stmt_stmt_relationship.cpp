@@ -17,11 +17,4 @@ auto FollowsStmtStmtRelationship::CreateRelationship(
     std::shared_ptr<ast::StatementNode> secondStatementNode) -> std::unique_ptr<FollowsStmtStmtRelationship> {
   return std::unique_ptr<FollowsStmtStmtRelationship>(new FollowsStmtStmtRelationship(std::move(firstStatementNode), std::move(secondStatementNode)));
 };
-
-FollowsStmtStmtRelationship::FollowsStmtStmtRelationship(
-    std::shared_ptr<ast::StatementNode> firstStatementNode,
-    std::shared_ptr<ast::StatementNode> secondStatementNode) {
-  firstStatementNode_ = firstStatementNode;
-  secondStatementNode_ = secondStatementNode;
-};
 }  // namespace rel

@@ -15,7 +15,7 @@ class UsesStmtVarRelationship : public StmtVarRelationship {
 
  private:
   UsesStmtVarRelationship(std::shared_ptr<ast::StatementNode> statementNode,
-                          std::string_view variableName);
+                          std::string_view variableName) : statementNode_(std::move(statementNode)), variableName_(variableName) {};
   std::shared_ptr<ast::StatementNode> statementNode_;
   std::string variableName_;
 };

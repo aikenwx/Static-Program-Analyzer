@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 #include "../ast/assign_node.h"
 #include "relationship.h"
@@ -16,7 +17,7 @@ class AssignExpRelationship : public Relationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::PROC; };
 
  private:
-  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string_view postfixExp);
+  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string_view postfixExp) : assignNode_(std::move(assignNode)), postfixExp_(postfixExp) {};
   std::shared_ptr<ast::AssignNode> assignNode_;
   std::string postfixExp_;
 };

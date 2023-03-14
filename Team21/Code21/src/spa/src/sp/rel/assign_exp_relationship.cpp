@@ -14,9 +14,4 @@ auto AssignExpRelationship::varName() const -> std::string { return assignNode_-
 auto AssignExpRelationship::statementNumber() const -> int { return assignNode_->GetStatementNumber(); }
 
 auto AssignExpRelationship::postfixExp() const -> std::string { return postfixExp_; }
-
-AssignExpRelationship::AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string_view postfixExp) {
-  assignNode_ = assignNode;
-  postfixExp_ = postfixExp;
-};
-}
+}  // namespace rel

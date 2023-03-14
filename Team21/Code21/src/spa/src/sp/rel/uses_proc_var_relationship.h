@@ -14,7 +14,7 @@ class UsesProcVarRelationship : public ProcVarRelationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::USES_PROC_VAR; };
 
  private:
-  UsesProcVarRelationship(std::string_view procedureName, std::string_view variableName);
+  UsesProcVarRelationship(std::string_view procedureName, std::string_view variableName) : procedureName_(procedureName), variableName_(variableName) {};
   std::string procedureName_;
   std::string variableName_;
 };

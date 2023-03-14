@@ -16,7 +16,7 @@ class ParentStmtStmtRelationship : public StmtStmtRelationship {
  private:
   ParentStmtStmtRelationship(
       std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement
-  );
+  ) : firstStatementNode_(std::move(firstStatement)), secondStatementNode_(std::move(secondStatement)) {};
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
   std::shared_ptr<ast::StatementNode> secondStatementNode_;
 };

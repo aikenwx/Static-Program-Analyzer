@@ -11,8 +11,4 @@ auto ProcRelationship::procedureName() const -> std::string { return procedureNo
 auto ProcRelationship::CreateRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<ProcRelationship> {
   return std::unique_ptr<ProcRelationship>(new ProcRelationship(std::move(procedureNode)));
 };
-
-ProcRelationship::ProcRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) {
-  procedureNode_ = procedureNode;
-};
-}
+} // namespace rel

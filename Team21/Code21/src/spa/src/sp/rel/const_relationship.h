@@ -12,7 +12,7 @@ class ConstRelationship : public Relationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::CONST; };
 
  private:
-  ConstRelationship(int value);
+  ConstRelationship(int value) : value_(value) {};
   int value_;
 };
 } // namespace rel

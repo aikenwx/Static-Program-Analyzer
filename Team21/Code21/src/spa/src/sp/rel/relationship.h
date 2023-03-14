@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
 #include "../ast/procedure_node.h"
 #include "../ast/statement_node.h"
@@ -69,7 +70,7 @@ class StmtRelationship : public Relationship {
   [[nodiscard]] virtual auto statementNumber() const -> int = 0;
 
  protected:
-  explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(procedureNode) {};
+  explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(std::move(procedureNode)) {};
 
  private:
   std::shared_ptr<ast::ProcedureNode> procedureNode_;

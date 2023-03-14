@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 #include "relationship.h"
 #include "../ast/assign_node.h"
@@ -18,7 +19,7 @@ class AssignStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  AssignStmtRelationship(std::shared_ptr<ast::AssignNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  AssignStmtRelationship(std::shared_ptr<ast::AssignNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::AssignNode> statementNode_;
 };
 
@@ -30,7 +31,7 @@ class CallStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  CallStmtRelationship(std::shared_ptr<ast::CallNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  CallStmtRelationship(std::shared_ptr<ast::CallNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::CallNode> statementNode_;
 };
 
@@ -41,7 +42,7 @@ class IfStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  IfStmtRelationship(std::shared_ptr<ast::IfNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  IfStmtRelationship(std::shared_ptr<ast::IfNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::IfNode> statementNode_;
 };
 
@@ -52,7 +53,7 @@ class WhileStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  WhileStmtRelationship(std::shared_ptr<ast::WhileNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  WhileStmtRelationship(std::shared_ptr<ast::WhileNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::WhileNode> statementNode_;
 };
 
@@ -64,7 +65,7 @@ class PrintStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::PrintNode> statementNode_;
 };
 
@@ -75,7 +76,7 @@ class ReadStmtRelationship : public StmtRelationship {
   [[nodiscard]] auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
-  ReadStmtRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode): StmtRelationship(procedureNode), statementNode_(statementNode) {};
+  ReadStmtRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode): StmtRelationship(std::move(procedureNode)), statementNode_(std::move(statementNode)) {};
   std::shared_ptr<ast::ReadNode> statementNode_;
 };
 }  // namespace rel

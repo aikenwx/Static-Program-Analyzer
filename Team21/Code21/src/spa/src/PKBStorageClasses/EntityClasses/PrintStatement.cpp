@@ -1,6 +1,6 @@
 #include "PrintStatement.h"
 
-PrintStatement::PrintStatement(int statementNumber) : Statement(statementNumber) {
+PrintStatement::PrintStatement(int statementNumber) : Statement(&PrintStatement::getEntityTypeStatic(), statementNumber) {
 }
 
 EntityType &PrintStatement::getEntityTypeStatic() {

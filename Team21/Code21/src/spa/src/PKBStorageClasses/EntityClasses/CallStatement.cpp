@@ -1,6 +1,6 @@
 #include "CallStatement.h"
 
-CallStatement::CallStatement(int statementNumber) : Statement(statementNumber) {
+CallStatement::CallStatement(int statementNumber) : Statement(&CallStatement::getEntityTypeStatic(), statementNumber) {
 }
 
 EntityType& CallStatement::getEntityTypeStatic() {

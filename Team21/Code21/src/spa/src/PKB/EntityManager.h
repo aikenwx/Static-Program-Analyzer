@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "../PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "../PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -22,21 +21,24 @@
 #include "../PKBStorageClasses/EntityClasses/Variable.h"
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
+
 class EntityManager {
    private:
     std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
-    std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToStore;
+    std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToEntityStore;
+
 
    public:
     EntityManager();
-
-    ~EntityManager();
 
     void storeEntity(Entity* entity);
 
     Entity* getEntity(EntityKey& key);
 
-    std::vector<Entity*>* getEntitiesByType(EntityType& entityType);
+    std::vector<Entity *> * getEntitiesByType(EntityType& entityType);
+   
+   
+
 
    private:
     void storeInEntityTypeStore(Entity* entity);

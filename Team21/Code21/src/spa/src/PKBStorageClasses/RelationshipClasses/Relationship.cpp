@@ -7,13 +7,7 @@ std::size_t RelationshipType::relationshipTypeKeyCounter = 0;
 
 RelationshipType::RelationshipType() : StorageKey(RelationshipType::relationshipTypeKeyCounter++){};
 
-RelationshipSynonymKey::RelationshipSynonymKey(RelationshipType *relationshipType, EntityType *leftHandEntityType, EntityType *rightHandEntityType) : StorageKey(relationshipType->getKey() ^ leftHandEntityType->getKey() ^ rightHandEntityType->getKey()) {
-    this->relationshipType = relationshipType;
-    this->leftHandEntityType = leftHandEntityType;
-    this->rightHandEntityType = rightHandEntityType;
-}
-
-Relationship::Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity) : relationshipKey(relationshipType, &leftHandEntity->getEntityKey(), &rightHandEntity->getEntityKey()), relationshipSynonymKey(relationshipType, &leftHandEntity->getEntityType(), &rightHandEntity->getEntityType()) {
+Relationship::Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity) : relationshipKey(relationshipType, &leftHandEntity->getEntityKey(), &rightHandEntity->getEntityKey()) {
     this->leftHandEntity = leftHandEntity;
     this->rightHandEntity = rightHandEntity;
 }
@@ -22,15 +16,6 @@ bool RelationshipType::operator==(const RelationshipType &otherRelationshipType)
     return this->getKey() == otherRelationshipType.getKey();
 }
 
-bool RelationshipSynonymKey::operator==(const RelationshipSynonymKey &otherRelationshipSynonymKey) const {
-    return *this->relationshipType == *otherRelationshipSynonymKey.relationshipType &&
-           *this->leftHandEntityType == *otherRelationshipSynonymKey.leftHandEntityType &&
-           *this->rightHandEntityType == *otherRelationshipSynonymKey.rightHandEntityType;
-}
-
-size_t std::hash<RelationshipSynonymKey>::operator()(const RelationshipSynonymKey &RelationshipSynonymKey) const {
-    return RelationshipSynonymKey.getKey();
-}
 
 RelationshipKey::RelationshipKey(RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey) : StorageKey(relationshipType->getKey() ^ leftEntityKey->getKey() ^ rightEntityKey->getKey()) {
     this->relationshipType = relationshipType;
@@ -64,9 +49,7 @@ Entity *Relationship::getRightHandEntity() const {
     return rightHandEntity;
 }
 
-RelationshipSynonymKey &Relationship::getRelationshipSynonymKey() {
-    return this->relationshipSynonymKey;
-}
+
 
 RelationshipKey &Relationship::getRelationshipKey() {
     return this->relationshipKey;

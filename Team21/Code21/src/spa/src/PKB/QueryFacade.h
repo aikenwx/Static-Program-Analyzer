@@ -5,6 +5,7 @@
 #ifndef SPA_QUERYFACADE_H
 #define SPA_QUERYFACADE_H
 
+#include <unordered_set>
 #include <vector>
 
 #include "PKB/CFGManager.h"
@@ -64,8 +65,8 @@ class QueryFacade {
     std::vector<CallsRelationship*>* getAllCallsRelationships();
     std::vector<CallsStarRelationship*>* getAllCallsStarRelationships();
 
-    std::set<WhileStatement*>* getWhileStatementsUsingVariableInCondition(std::string variableName);
-    std::set<IfStatement*>* getIfStatementsUsingVariableInCondition(std::string variableName);
+    std::unordered_set<WhileStatement*>* getWhileStatementsUsingVariableInCondition(std::string variableName);
+    std::unordered_set<IfStatement*>* getIfStatementsUsingVariableInCondition(std::string variableName);
 
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
@@ -77,6 +78,30 @@ class QueryFacade {
     FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
     CallsRelationship* getCallsRelationship(std::string callerName, std::string calleeName);
     CallsStarRelationship* getCallsStarRelationship(std::string callerName, std::string calleeName);
+
+    Entity* getEntity(EntityType entityType, int entityValue);
+
+    Entity* getEntity(EntityType entityType, std::string entityValue);
+
+    std::vector<Entity*>* getEntitiesByType(EntityType entityType);
+
+    Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, int rightEntityValue);
+
+    Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, std::string rightEntityValue);
+
+    Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, std::string rightEntityValue);
+
+    Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, int rightEntityValue);
+
+    std::vector<Relationship*>* getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType);
+
+    std::vector<Entity*>* getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, int rightEntityValue);
+
+    std::vector<Entity*>* getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, std::string rightEntityValue);
+
+    std::vector<Entity*>* getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType);
+
+    std::vector<Entity*>* getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType);
 
     cfg::CFG* getCFG();
 };

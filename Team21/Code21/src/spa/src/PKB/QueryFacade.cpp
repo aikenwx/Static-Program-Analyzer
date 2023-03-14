@@ -33,90 +33,95 @@ QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *rela
 }
 
 std::vector<AssignStatement *> *QueryFacade::getAllAssignStatements() {
-    return (std::vector<AssignStatement *> *)this->entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+    return (std::vector<AssignStatement *> *) this->entityManager->getEntitiesByType(
+            AssignStatement::getEntityTypeStatic());
 }
 
 std::vector<IfStatement *> *QueryFacade::getAllIfStatements() {
-    return (std::vector<IfStatement *> *)this->entityManager->getEntitiesByType(IfStatement::getEntityTypeStatic());
+    return (std::vector<IfStatement *> *) this->entityManager->getEntitiesByType(IfStatement::getEntityTypeStatic());
 }
 
 std::vector<WhileStatement *> *QueryFacade::getAllWhileStatements() {
-    return (std::vector<WhileStatement *> *)this->entityManager->getEntitiesByType(WhileStatement::getEntityTypeStatic());
+    return (std::vector<WhileStatement *> *) this->entityManager->getEntitiesByType(
+            WhileStatement::getEntityTypeStatic());
 }
 
 std::vector<CallStatement *> *QueryFacade::getAllCallStatements() {
-    return (std::vector<CallStatement *> *)this->entityManager->getEntitiesByType(CallStatement::getEntityTypeStatic());
+    return (std::vector<CallStatement *> *) this->entityManager->getEntitiesByType(CallStatement::getEntityTypeStatic());
 }
 
 std::vector<ReadStatement *> *QueryFacade::getAllReadStatements() {
-    return (std::vector<ReadStatement *> *)this->entityManager->getEntitiesByType(ReadStatement::getEntityTypeStatic());
+    return (std::vector<ReadStatement *> *) this->entityManager->getEntitiesByType(ReadStatement::getEntityTypeStatic());
 }
 
 std::vector<PrintStatement *> *QueryFacade::getAllPrintStatements() {
-    return (std::vector<PrintStatement *> *)this->entityManager->getEntitiesByType(PrintStatement::getEntityTypeStatic());
+    return (std::vector<PrintStatement *> *) this->entityManager->getEntitiesByType(
+            PrintStatement::getEntityTypeStatic());
 }
 std::vector<Procedure *> *QueryFacade::getAllProcedures() {
-    return (std::vector<Procedure *> *)this->entityManager->getEntitiesByType(Procedure::getEntityTypeStatic());
+    return (std::vector<Procedure *> *) this->entityManager->getEntitiesByType(Procedure::getEntityTypeStatic());
 }
 
 std::vector<Variable *> *QueryFacade::getAllVariables() {
-    return (std::vector<Variable *> *)this->entityManager->getEntitiesByType(Variable::getEntityTypeStatic());
+    return (std::vector<Variable *> *) this->entityManager->getEntitiesByType(Variable::getEntityTypeStatic());
 }
 
 std::vector<Constant *> *QueryFacade::getAllConstants() {
-    return (std::vector<Constant *> *)this->entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
+    return (std::vector<Constant *> *) this->entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
 }
 
 std::vector<Statement *> *QueryFacade::getAllStatements() {
-    return (std::vector<Statement *> *)this->entityManager->getEntitiesByType(Statement::getEntityTypeStatic());
+    return (std::vector<Statement *> *) this->entityManager->getEntitiesByType(Statement::getEntityTypeStatic());
 }
 
 std::vector<ParentRelationship *> *QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<ParentRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<ParentRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        ParentRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            ParentRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<FollowsRelationship *> *QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<FollowsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<FollowsRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        FollowsRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            FollowsRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<ModifiesRelationship *> *QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<ModifiesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<ModifiesRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        ModifiesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            ModifiesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<UsesRelationship *> *QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<UsesRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<UsesRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        UsesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            UsesRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<ParentStarRelationship *> *QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<ParentStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<ParentStarRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        ParentStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            ParentStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<FollowsStarRelationship *> *QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType) {
-    return (std::vector<FollowsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<FollowsStarRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        FollowsStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
+            FollowsStarRelationship::getRelationshipTypeStatic(), leftEntityType, rightEntityType);
 }
 
 std::vector<CallsRelationship *> *QueryFacade::getAllCallsRelationships() {
-    return (std::vector<CallsRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<CallsRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+            CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
 }
 
 std::vector<CallsStarRelationship *> *QueryFacade::getAllCallsStarRelationships() {
-    return (std::vector<CallsStarRelationship *> *)this->relationshipManager->getRelationshipsByTypes(
+    return (std::vector<CallsStarRelationship *> *) this->relationshipManager->getRelationshipsByTypes(
 
-        CallsStarRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+            CallsStarRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
 }
 
 ModifiesRelationship *QueryFacade::getStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
@@ -282,10 +287,96 @@ cfg::CFG *QueryFacade::getCFG() {
     return this->cfgManager->getCFG();
 }
 
-std::set<WhileStatement *> *QueryFacade::getWhileStatementsUsingVariableInCondition(std::string variableName) {
+std::unordered_set<WhileStatement *> *QueryFacade::getWhileStatementsUsingVariableInCondition(std::string variableName) {
     return this->patternManager->getWhileStatementsByConditionVariable(&variableName);
 }
 
-std::set<IfStatement *> *QueryFacade::getIfStatementsUsingVariableInCondition(std::string variableName) {
+std::unordered_set<IfStatement *> *QueryFacade::getIfStatementsUsingVariableInCondition(std::string variableName) {
     return this->patternManager->getIfStatementsByConditionVariable(&variableName);
+}
+
+Entity *QueryFacade::getEntity(EntityType entityType, int entityValue) {
+    EntityKey entityKey = EntityKey(&entityType, entityValue);
+    return this->entityManager->getEntity(entityKey);
+}
+
+Entity *QueryFacade::getEntity(EntityType entityType, std::string entityValue) {
+    EntityKey entityKey = EntityKey(&entityType, &entityValue);
+    return this->entityManager->getEntity(entityKey);
+}
+
+std::vector<Entity *> *QueryFacade::getEntitiesByType(EntityType entityType) {
+    return this->entityManager->getEntitiesByType(entityType);
+}
+
+Relationship *QueryFacade::getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, int rightEntityValue) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
+
+    RelationshipKey relationshipKey = RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
+
+    return this->relationshipManager->getRelationship(relationshipKey);
+}
+
+Relationship *QueryFacade::getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, std::string rightEntityValue) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
+
+    RelationshipKey relationshipKey = RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
+
+    return this->relationshipManager->getRelationship(relationshipKey);
+}
+
+Relationship *QueryFacade::getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, std::string rightEntityValue) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
+
+    RelationshipKey relationshipKey = RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
+
+    return this->relationshipManager->getRelationship(relationshipKey);
+}
+
+Relationship *QueryFacade::getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, int rightEntityValue) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
+
+    RelationshipKey relationshipKey = RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
+
+    return this->relationshipManager->getRelationship(relationshipKey);
+}
+
+std::vector<Relationship *> *QueryFacade::getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType) {
+    return this->relationshipManager->getRelationshipsByTypes(relationshipType, leftEntityType, rightEntityType);
+}
+
+std::vector<Entity *> *QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, int rightEntityValue) {
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
+
+    Entity *rightEntity = this->entityManager->getEntity(rightEntityKey);
+
+    return this->relationshipManager->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(relationshipType, leftEntityType, rightEntity->getEntityKey());
+}
+
+std::vector<Entity *> *QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, std::string rightEntityValue) {
+    EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
+
+    Entity *rightEntity = this->entityManager->getEntity(rightEntityKey);
+
+    return this->relationshipManager->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(relationshipType, leftEntityType, rightEntity->getEntityKey());
+}
+
+std::vector<Entity *> *QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
+
+    Entity *leftEntity = this->entityManager->getEntity(leftEntityKey);
+
+    return this->relationshipManager->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(relationshipType, leftEntity->getEntityKey(), rightEntityType);
+}
+
+std::vector<Entity *> *QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType) {
+    EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
+
+    Entity *leftEntity = this->entityManager->getEntity(leftEntityKey);
+
+    return this->relationshipManager->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(relationshipType, leftEntity->getEntityKey(), rightEntityType);
 }

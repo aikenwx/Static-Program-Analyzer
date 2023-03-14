@@ -47,6 +47,7 @@ class PopulateFacade {
     void storeCallsStarRelationship(std::string caller, std::string callee);
 
     void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
+    void storeCallStatementProcedureName(int statementNumber, std::string procedureName);
 
     void storeWhileStatementConditionVariable(int statementNumber, std::string variableName);
     void storeIfStatementConditionVariable(int statementNumber, std::string variableName);

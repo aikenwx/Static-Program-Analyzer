@@ -1,6 +1,6 @@
 #include "ReadStatement.h"
 
-ReadStatement::ReadStatement(int statementNumber) : Statement(statementNumber) {
+ReadStatement::ReadStatement(int statementNumber) : Statement(&ReadStatement::getEntityTypeStatic(), statementNumber) {
 }
 
 EntityType &ReadStatement::getEntityTypeStatic() {

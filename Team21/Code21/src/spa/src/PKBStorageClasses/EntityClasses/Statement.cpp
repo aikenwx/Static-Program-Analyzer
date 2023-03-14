@@ -3,7 +3,7 @@
 //
 #include "Statement.h"
 
-Statement::Statement(int statementNumber) : Entity(&Statement::getEntityType(), std::make_shared<std::string>(std::to_string(statementNumber))) {
+Statement::Statement( EntityType *entityType, int statementNumber) : Entity(entityType, std::make_shared<std::string>(std::to_string(statementNumber))) {
     this->statementNumber = statementNumber;
 }
 

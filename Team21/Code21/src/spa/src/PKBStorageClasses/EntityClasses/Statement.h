@@ -12,7 +12,7 @@ class Statement : public Entity {
     int statementNumber;
 
    public:
-    Statement(int statementNumber);
+    Statement( EntityType *entityType, int statementNumber);
 
     static EntityType& getEntityTypeStatic();
     static bool isStatement(Entity* entity);

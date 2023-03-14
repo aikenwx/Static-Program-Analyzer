@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-AssignStatement::AssignStatement(int statementNumber) : Statement(statementNumber) {
+AssignStatement::AssignStatement(int statementNumber) : Statement(&AssignStatement::getEntityTypeStatic(), statementNumber) {
 }
 EntityType &AssignStatement::getEntityType() const {
     return AssignStatement::assignStatementType;

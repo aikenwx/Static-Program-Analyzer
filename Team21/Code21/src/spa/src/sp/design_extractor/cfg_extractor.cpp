@@ -34,7 +34,10 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
   int startStmt = -1;
   int endStmt = -1;
 
-  for (auto statement : node->GetStatements()) {
+  // statements are stored in reverse order
+  auto statements = node->GetStatements();
+  for (auto it = statements.crbegin(); it < statements.crend(); it++) {
+    auto statement = *it;
     if (startStmt == -1) {
       startStmt = statement->GetStatementNumber();
     }
@@ -63,6 +66,7 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
   }
 
   if (endStmt != -1) {
+    std::cout << "New block: " << startStmt << " " << endStmt << std::endl;
     newParents = {NewBlock(newParents, startStmt, endStmt)};
   }
 

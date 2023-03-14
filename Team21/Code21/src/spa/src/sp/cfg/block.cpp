@@ -26,13 +26,21 @@ std::vector<std::weak_ptr<Block>> Block::children() const {
   return children_;
 }
 
-void Block::AddParent(std::weak_ptr<Block> parent) {
-  parents_.push_back(parent);
-  parent.lock()->AddChild(shared_from_this());
+void Block::AddParent(std::shared_ptr<Block> parent) {
+  AddParentOnly(parent);
+  parent->AddChildOnly(shared_from_this());
 }
 
-void Block::AddChild(std::weak_ptr<Block> child) {
+void Block::AddChild(std::shared_ptr<Block> child) {
+  AddChildOnly(child);
+  child->AddParentOnly(shared_from_this());
+}
+
+void Block::AddParentOnly(std::shared_ptr<Block> parent) {
+  parents_.push_back(parent);
+}
+
+void Block::AddChildOnly(std::shared_ptr<Block> child) {
   children_.push_back(child);
-  child.lock()->AddParent(shared_from_this());
 }
-}
+} // namespace cfg

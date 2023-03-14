@@ -12,13 +12,16 @@ public:
   bool IsInBlock(int stmtNo) const;
   std::vector<std::weak_ptr<Block>> parents() const;
   std::vector<std::weak_ptr<Block>> children() const;
-  void AddParent(std::weak_ptr<Block> parent);
-  void AddChild(std::weak_ptr<Block> child);
+  void AddParent(std::shared_ptr<Block> parent);
+  void AddChild(std::shared_ptr<Block> child);
 
 private:
   std::vector<std::weak_ptr<Block>> parents_;
   std::vector<std::weak_ptr<Block>> children_;
   int start_;
   int end_;
+
+  void AddParentOnly(std::shared_ptr<Block> parent);
+  void AddChildOnly(std::shared_ptr<Block> child);
 };
 }

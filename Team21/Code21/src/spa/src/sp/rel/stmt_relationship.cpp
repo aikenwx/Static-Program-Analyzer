@@ -26,4 +26,4 @@ auto PrintStmtRelationship::CreateRelationship(std::shared_ptr<ast::PrintNode> s
 auto ReadStmtRelationship::CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<ReadStmtRelationship> {
   return std::unique_ptr<ReadStmtRelationship>(new ReadStmtRelationship(std::move(statementNode), std::move(procedureNode)));
 };
-}
+}  // namespace rel

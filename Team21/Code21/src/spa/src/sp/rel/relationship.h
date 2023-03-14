@@ -30,7 +30,12 @@ enum class RelationshipType {
 
 class Relationship {
  public:
+  Relationship() = default;
   virtual ~Relationship() = default;
+  Relationship(const Relationship&) = delete;
+  Relationship(Relationship&&) = delete;
+  auto operator=(const Relationship&) -> Relationship& = delete;
+  auto operator=(Relationship&&) -> Relationship& = delete;
   [[nodiscard]] virtual auto relationshipType() const -> RelationshipType = 0;
 };
 

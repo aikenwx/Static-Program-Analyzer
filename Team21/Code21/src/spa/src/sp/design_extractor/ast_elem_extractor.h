@@ -25,9 +25,10 @@ class AstElemExtractor : public Extractor {
   void HandleVariableNode(std::shared_ptr<ast::VariableNode> node,
                           int depth) override;
 
-  std::vector<std::shared_ptr<rel::Relationship>> GetRelationships();
+  std::vector<std::shared_ptr<rel::Relationship>> GetRelationships() const;
 
  private:
   std::vector<std::shared_ptr<rel::Relationship>> relns_;
+  std::shared_ptr<ast::ProcedureNode> currentProc_;
 };
 }  // namespace design_extractor

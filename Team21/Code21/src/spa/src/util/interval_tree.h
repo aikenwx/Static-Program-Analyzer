@@ -30,7 +30,7 @@ class IntervalTree {
     return intervals_.erase(interval) > 0;
   };
 
-  std::optional<Val> Search(Key key) {
+  std::optional<Val> Search(Key key) const {
     auto closest = SearchClosest(key);
     if (closest == std::nullopt) {
       return std::nullopt;
@@ -48,10 +48,10 @@ class IntervalTree {
  private:
   std::map<std::pair<Key, Key>, Val> intervals_;
 
-  std::optional<std::pair<std::pair<Key, Key>, Val>> SearchClosest(Key key) {
-    auto it = std::lower_bound(intervals_.begin(), intervals_.end(), key,
-                               [](const auto& kvp1, const auto& key) {
-                                 return kvp1.first.second < key;
+  std::optional<std::pair<std::pair<Key, Key>, Val>> SearchClosest(Key key) const {
+    const auto& it = std::lower_bound(intervals_.begin(), intervals_.end(), key,
+                               [](const auto& kvp1, const auto& k) {
+                                 return kvp1.first.second < k;
                                });
     if (it == intervals_.end()) {
       return std::nullopt;
@@ -59,7 +59,7 @@ class IntervalTree {
     return *it;
   };
 
-  bool HasOverlap(std::pair<Key, Key> interval1) {
+  bool HasOverlap(std::pair<Key, Key> interval1) const {
     std::optional<std::pair<std::pair<Key, Key>, Val>> closest = SearchClosest(interval1.first);
     if (closest == std::nullopt) {
       return false;

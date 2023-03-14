@@ -16,8 +16,8 @@ class ModifiesProcVarRelationship : public ProcVarRelationship {
   };
 
  private:
-  ModifiesProcVarRelationship(const std::string& procedureName,
-                              const std::string& variableName);
+  ModifiesProcVarRelationship(std::string_view procedureName,
+                              std::string_view variableName);
   std::string procedureName_;
   std::string variableName_;
 };

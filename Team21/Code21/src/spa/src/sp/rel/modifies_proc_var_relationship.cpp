@@ -15,10 +15,10 @@ auto ModifiesProcVarRelationship::variableName() const -> std::string {
 auto
 ModifiesProcVarRelationship::CreateRelationship(const std::string& procedureName,
                                                 const std::string& variableName) -> std::unique_ptr<ModifiesProcVarRelationship> {
-  return std::unique_ptr<ModifiesProcVarRelationship>(new ModifiesProcVarRelationship(std::move(procedureName), std::move(variableName)));
+  return std::unique_ptr<ModifiesProcVarRelationship>(new ModifiesProcVarRelationship(procedureName, variableName));
 };
 
-ModifiesProcVarRelationship::ModifiesProcVarRelationship(const std::string& procedureName, const std::string& variableName) {
+ModifiesProcVarRelationship::ModifiesProcVarRelationship(std::string_view procedureName, std::string_view variableName) {
   procedureName_ = procedureName;
   variableName_ = variableName;
 }

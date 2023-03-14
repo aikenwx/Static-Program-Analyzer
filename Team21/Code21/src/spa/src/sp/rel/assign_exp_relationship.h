@@ -8,7 +8,7 @@
 namespace rel {
 class AssignExpRelationship : public Relationship {
  public:
-  static auto CreateRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp) -> std::unique_ptr<AssignExpRelationship>;
+  static auto CreateRelationship(std::shared_ptr<ast::AssignNode> assignNode, const std::string& postfixExp) -> std::unique_ptr<AssignExpRelationship>;
   auto assignNode() const -> std::shared_ptr<ast::AssignNode>;
   auto varName() const -> std::string;
   auto statementNumber() const -> int;
@@ -16,7 +16,7 @@ class AssignExpRelationship : public Relationship {
   auto relationshipType() const -> RelationshipType override { return RelationshipType::PROC; };
 
  private:
-  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, const std::string& postfixExp);
+  AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string_view postfixExp);
   std::shared_ptr<ast::AssignNode> assignNode_;
   std::string postfixExp_;
 };

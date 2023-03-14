@@ -17,7 +17,7 @@ jobs:
       with:
         build_dir: Team21/Code21/build
         cmake_command: >
-          cmake -Bbuild -H${{github.workspace}}/Team21/Code21
+          cmake -Bbuild -HTeam21/Code21
           -DCMAKE_CXX_STANDARD=17
           -DCMAKE_EXPORT_COMPILE_COMMANDS=on
     # If there are any comments, fail the check

@@ -66,7 +66,6 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
   }
 
   if (endStmt != -1) {
-    std::cout << "New block: " << startStmt << " " << endStmt << std::endl;
     newParents = {NewBlock(newParents, startStmt, endStmt)};
   }
 

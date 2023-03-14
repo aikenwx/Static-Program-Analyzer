@@ -1,4 +1,4 @@
-Samuel
+Zhongfu
 Im just listing all the possible test cases, feel free to choose any of them if you find them meaningful for our SPA,
 Also do vary the return tuples for select clause
 1 - relationship(literal, literal) assignPattern(literal, literal)
@@ -105,49 +105,3 @@ Also do vary the return tuples for select clause
 50 - relationship(synonym, synonym) whilePattern(wildcard, wildcard)
 51 - relationship(synonym, synonym) ifPattern(synonym, wildcard, wildcard)
 52 - relationship(synonym, synonym) ifPattern(wildcard, wildcard, wildcard)
-
-3 - relationship(literal, literal) pattern(wildcard, wildcard)
-assign a; variable v;
-Select a such that Modifies(19, "x") pattern a(_, _)
-3, 7, 13, 12, 2, 22, 21, 24, 19, 4, 8, 10, 25
-5000
-4 - relationship(literal, synonym) pattern(literal, wildcard)
-assign a; variable v;
-Select a such that Modifies(5, v) pattern a("x", _)
-none
-5000
-5 - relationship(literal, synonym) pattern(wildcard, wildcard)
-assign a; variable v;
-Select v such that Modifies(15, v) pattern a(_, _)
-a
-5000
-6 - relationship(synonym, literal) pattern(literal, wildcard)
-assign a;
-Select a such that Modifies(a, "x") pattern a("x", _)
-2, 12, 19
-5000
-7 - relationship(synonym, literal) pattern(synonym, wildcard)
-assign a; variable v; procedure p;
-Select p such that Modifies(p, "i") pattern a(v, _)
-program1
-5000
-8 - relationship(synonym, literal) pattern(wildcard, wildcard)
-assign a; variable v; while w;
-Select w such that Modifies(w, "a") pattern a(_, _)
-11
-5000
-9 - relationship(synonym, synonym) pattern(literal, subexpression)
-assign a; variable v; stmt s;
-Select s such that Modifies(s, v) pattern a(v, _"2"_)
-2, 3, 4, 6, 7, 8, 9,  11, 12, 13, 14, 17, 19, 22, 24, 1, 10
-500
-11 - relationship(synonym, synonym) pattern(synonym, subexpression)
-assign a; variable v; while w;
-Select w such that Modifies(w, v) pattern a(v, _"a"_)
-none
-5000
-12 - relationship(synonym, synonym) pattern(wildcard, subexpression)
-assign a; variable v; if i;
-Select v such that Modifies(i, v) pattern a(_, _"1"_)
-count, a, x, y
-5000

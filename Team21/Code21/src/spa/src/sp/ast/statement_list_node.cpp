@@ -58,7 +58,7 @@ void StatementListNode::AcceptVisitor(
   extractor->HandleStatementListNode(
       std::static_pointer_cast<StatementListNode>(currentNode), depth);
 
-  for (auto i = statements.begin(); i < statements.end(); i++) {
+  for (auto i = statements.rbegin(); i < statements.rend(); i++) {
     (*i)->AcceptVisitor(*i, extractor, depth + 1);
   }
 }

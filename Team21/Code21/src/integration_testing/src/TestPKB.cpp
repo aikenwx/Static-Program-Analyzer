@@ -934,6 +934,36 @@ TEST_CASE("PKB can store while and if statememt pattern information") {
     delete pkb;
 }
 
+TEST_CASE("Can add procedure name to calls") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    // Procedure1 calls Procedure2
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+    populateFacade->storeCallStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+
+    populateFacade->storeAssignStatementPostfixExpression(2, "ab-");
+
+    populateFacade->storeCallStatementProcedureName(1, "Procedure2");
+
+    populateFacade->storeAssignStatementPostfixExpression(2, "ab-");
+
+    populateFacade->storeCallStatementProcedureName(1, "Procedure2");
+
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure2");
+
+    CallStatement *callStatement = (CallStatement *)queryFacade->getEntity(CallStatement::getEntityTypeStatic(), 1);
+    REQUIRE(*callStatement->getProcedureName() == "Procedure2");
+
+    AssignStatement *assignStatement = (AssignStatement *)queryFacade->getEntity(AssignStatement::getEntityTypeStatic(), 2);
+
+    REQUIRE(*assignStatement->getPostFixExpression() == "ab-");
+    delete pkb;
+}
+
 TEST_CASE("PKB general query API works") {
     PKB *pkb = new PKB();
     PopulateFacade *populateFacade = pkb->getPopulateFacade();

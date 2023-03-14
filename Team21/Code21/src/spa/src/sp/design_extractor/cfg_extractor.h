@@ -12,14 +12,14 @@ class CFGExtractor : public Extractor {
   void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
                            int depth) override;
 
-  std::shared_ptr<cfg::CFG> cfg() const;
+  [[nodiscard]] auto cfg() const -> std::shared_ptr<cfg::CFG>;
 
  private:
   std::shared_ptr<cfg::CFG> cfg_ = std::make_shared<cfg::CFG>();
 
-  std::vector<std::shared_ptr<cfg::Block>> CFGHandleStatementList(const std::vector<std::shared_ptr<cfg::Block>>& parents, std::shared_ptr<ast::StatementListNode> node);
-  std::vector<std::shared_ptr<cfg::Block>> CFGHandleIfStatement(const std::vector<std::shared_ptr<cfg::Block>>& parents, std::shared_ptr<ast::IfNode> node);
-  std::vector<std::shared_ptr<cfg::Block>> CFGHandleWhileStatement(const std::vector<std::shared_ptr<cfg::Block>>& parents, std::shared_ptr<ast::WhileNode> node);
-  std::shared_ptr<cfg::Block> NewBlock(const std::vector<std::shared_ptr<cfg::Block>>& parents, int startStmt, int endStmt) const;
+  auto CFGHandleStatementList(const std::vector<std::shared_ptr<cfg::Block>>& parents, const std::shared_ptr<ast::StatementListNode>& node) -> std::vector<std::shared_ptr<cfg::Block>>;
+  auto CFGHandleIfStatement(const std::vector<std::shared_ptr<cfg::Block>>& parents, const std::shared_ptr<ast::IfNode>& node) -> std::vector<std::shared_ptr<cfg::Block>>;
+  auto CFGHandleWhileStatement(const std::vector<std::shared_ptr<cfg::Block>>& parents, const std::shared_ptr<ast::WhileNode>& node) -> std::vector<std::shared_ptr<cfg::Block>>;
+  [[nodiscard]] auto NewBlock(const std::vector<std::shared_ptr<cfg::Block>>& parents, int startStmt, int endStmt) const -> std::shared_ptr<cfg::Block>;
 };
 }  // namespace design_extractor

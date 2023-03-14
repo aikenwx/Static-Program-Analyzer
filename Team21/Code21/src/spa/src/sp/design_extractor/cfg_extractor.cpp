@@ -1,6 +1,6 @@
 #include "cfg_extractor.h"
 
-#include <assert.h>
+#include <cassert>
 
 #include "../../util/instance_of.h"
 #include "../ast/if_node.h"
@@ -16,19 +16,19 @@ void CFGExtractor::HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
   CFGHandleStatementList({}, node->GetStatements());
 }
 
-std::shared_ptr<cfg::Block> CFGExtractor::NewBlock(const std::vector<std::shared_ptr<cfg::Block>>& parents, int startStmt, int endStmt) const {
+auto CFGExtractor::NewBlock(const std::vector<std::shared_ptr<cfg::Block>>& parents, int startStmt, int endStmt) const -> std::shared_ptr<cfg::Block> {
   auto newBlock = std::make_shared<cfg::Block>(startStmt, endStmt);
   cfg_->InsertBlock(newBlock);
-  for (auto parent : parents) {
+  for (const auto& parent : parents) {
     newBlock->AddParent(parent);
     // child automatically added
   }
   return newBlock;
 }
 
-std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
+auto CFGExtractor::CFGHandleStatementList(
     const std::vector<std::shared_ptr<cfg::Block>>& parents,
-    std::shared_ptr<ast::StatementListNode> node) {
+    const std::shared_ptr<ast::StatementListNode>& node) -> std::vector<std::shared_ptr<cfg::Block>> {
   std::vector<std::shared_ptr<cfg::Block>> newParents = parents;
 
   int startStmt = -1;
@@ -37,7 +37,7 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
   // statements are stored in reverse order
   auto statements = node->GetStatements();
   for (auto it = statements.crbegin(); it < statements.crend(); it++) {
-    auto statement = *it;
+    const auto& statement = *it;
     if (startStmt == -1) {
       startStmt = statement->GetStatementNumber();
     }
@@ -72,9 +72,9 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleStatementList(
   return newParents;
 }
 
-std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleIfStatement(
+auto CFGExtractor::CFGHandleIfStatement(
     const std::vector<std::shared_ptr<cfg::Block>>& parents,
-    std::shared_ptr<ast::IfNode> node) {
+    const std::shared_ptr<ast::IfNode>& node) -> std::vector<std::shared_ptr<cfg::Block>> {
   auto condBlock = NewBlock(parents, node->GetStatementNumber(),
                             node->GetStatementNumber());
 
@@ -88,9 +88,9 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleIfStatement(
   return endBlocks;
 }
 
-std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleWhileStatement(
+auto CFGExtractor::CFGHandleWhileStatement(
     const std::vector<std::shared_ptr<cfg::Block>>& parents,
-    std::shared_ptr<ast::WhileNode> node) {
+    const std::shared_ptr<ast::WhileNode>& node) -> std::vector<std::shared_ptr<cfg::Block>> {
   auto condBlock = NewBlock(parents, node->GetStatementNumber(),
                             node->GetStatementNumber());
 
@@ -99,5 +99,5 @@ std::vector<std::shared_ptr<cfg::Block>> CFGExtractor::CFGHandleWhileStatement(
   return bodyBlocks;
 }
 
-std::shared_ptr<cfg::CFG> CFGExtractor::cfg() const { return cfg_; }
+auto CFGExtractor::cfg() const -> std::shared_ptr<cfg::CFG> { return cfg_; }
 }  // namespace design_extractor

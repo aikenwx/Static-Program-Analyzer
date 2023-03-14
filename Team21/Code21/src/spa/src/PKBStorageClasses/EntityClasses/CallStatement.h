@@ -5,6 +5,7 @@
 class CallStatement : public Statement {
    private:
     static EntityType callStatementType;
+    std::shared_ptr<std::string> procedureName;
 
    public:
     CallStatement(int statementNumber);
@@ -12,6 +13,10 @@ class CallStatement : public Statement {
     static EntityType& getEntityTypeStatic();
 
     EntityType& getEntityType() const override;
+
+    std::string* getProcedureName();
+
+    void setProcedureName(std::string* procedureName);
 };
 
 #endif

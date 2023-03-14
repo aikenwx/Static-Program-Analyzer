@@ -15,6 +15,7 @@ jobs:
     - uses: ZedThree/clang-tidy-review@v0.10.0
       id: review
       with:
+        lgtm_comment_body: ''
         build_dir: Team21/Code21/build
         cmake_command: >
           cmake -BTeam21/Code21/build -HTeam21/Code21

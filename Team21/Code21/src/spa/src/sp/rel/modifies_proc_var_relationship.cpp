@@ -3,11 +3,11 @@
 #include <string>
 
 namespace rel {
-std::string ModifiesProcVarRelationship::procedureName() {
+std::string ModifiesProcVarRelationship::procedureName() const {
   return procedureName_;
 };
 
-std::string ModifiesProcVarRelationship::variableName() {
+std::string ModifiesProcVarRelationship::variableName() const {
   return variableName_;
 };
 

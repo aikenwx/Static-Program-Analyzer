@@ -3,11 +3,11 @@
 #include "uses_stmt_var_relationship.h"
 
 namespace rel {
-int UsesStmtVarRelationship::statementNumber() {
+int UsesStmtVarRelationship::statementNumber() const {
   return statementNode_->GetStatementNumber();
 };
 
-std::string UsesStmtVarRelationship::variableName() {
+std::string UsesStmtVarRelationship::variableName() const {
   return variableName_;
 };
 

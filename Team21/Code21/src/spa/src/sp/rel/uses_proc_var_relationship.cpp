@@ -3,9 +3,9 @@
 #include <string>
 
 namespace rel {
-std::string UsesProcVarRelationship::procedureName() { return procedureName_; };
+std::string UsesProcVarRelationship::procedureName() const { return procedureName_; };
 
-std::string UsesProcVarRelationship::variableName() { return variableName_; };
+std::string UsesProcVarRelationship::variableName() const { return variableName_; };
 
 std::unique_ptr<UsesProcVarRelationship> UsesProcVarRelationship::CreateRelationship(
     std::string procedureName, std::string variableName) {

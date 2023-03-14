@@ -3,11 +3,11 @@
 #include "parent_stmt_stmt_relationship.h"
 
 namespace rel {
-int ParentStmtStmtRelationship::firstStatementNumber() {
+int ParentStmtStmtRelationship::firstStatementNumber() const {
   return firstStatementNode_->GetStatementNumber();
 };
 
-int ParentStmtStmtRelationship::secondStatementNumber() {
+int ParentStmtStmtRelationship::secondStatementNumber() const {
   return secondStatementNode_->GetStatementNumber();
 };
 

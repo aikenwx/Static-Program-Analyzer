@@ -5,13 +5,13 @@ std::unique_ptr<AssignExpRelationship> AssignExpRelationship::CreateRelationship
   return std::unique_ptr<AssignExpRelationship>(new AssignExpRelationship(assignNode, postfixExp));
 };
 
-std::shared_ptr<ast::AssignNode> AssignExpRelationship::assignNode() { return assignNode_; }
+std::shared_ptr<ast::AssignNode> AssignExpRelationship::assignNode() const { return assignNode_; }
 
-std::string AssignExpRelationship::varName() { return assignNode_->GetVariable()->GetName(); }
+std::string AssignExpRelationship::varName() const { return assignNode_->GetVariable()->GetName(); }
 
-int AssignExpRelationship::statementNumber() { return assignNode_->GetStatementNumber(); }
+int AssignExpRelationship::statementNumber() const { return assignNode_->GetStatementNumber(); }
 
-std::string AssignExpRelationship::postfixExp() { return postfixExp_; }
+std::string AssignExpRelationship::postfixExp() const { return postfixExp_; }
 
 AssignExpRelationship::AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp) {
   assignNode_ = assignNode;

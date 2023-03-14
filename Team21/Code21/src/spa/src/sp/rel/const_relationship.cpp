@@ -1,7 +1,7 @@
 #include "const_relationship.h"
 
 namespace rel {
-int ConstRelationship::value() { return value_; }
+int ConstRelationship::value() const { return value_; }
 
 std::unique_ptr<ConstRelationship> ConstRelationship::CreateRelationship(int value) {
   return std::unique_ptr<ConstRelationship>(new ConstRelationship(value));

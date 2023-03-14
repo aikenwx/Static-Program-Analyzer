@@ -1,0 +1,28 @@
+name: clang-tidy-review
+
+# You can be more specific, but it currently only works on pull requests
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Optionally generate compile_commands.json
+
+    - uses: ZedThree/clang-tidy-review@v0.10.0
+      id: review
+      with:
+        config_file: Team21/Code21/.clang-tidy
+        clang_tidy_version: 14
+        lgtm_comment_body: ''
+        build_dir: Team21/Code21/build
+        cmake_command: >
+          cmake -BTeam21/Code21/build -HTeam21/Code21
+          -DCMAKE_CXX_STANDARD=17
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=on
+    # If there are any comments, fail the check
+    - if: steps.review.outputs.total_comments > 0
+      run: exit 1

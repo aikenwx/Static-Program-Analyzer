@@ -3,12 +3,12 @@
 #include <string>
 
 namespace rel {
-std::string UsesProcVarRelationship::procedureName() const { return procedureName_; };
+auto UsesProcVarRelationship::procedureName() const -> std::string { return procedureName_; };
 
-std::string UsesProcVarRelationship::variableName() const { return variableName_; };
+auto UsesProcVarRelationship::variableName() const -> std::string { return variableName_; };
 
-std::unique_ptr<UsesProcVarRelationship> UsesProcVarRelationship::CreateRelationship(
-    const std::string& procedureName, const std::string& variableName) {
+auto UsesProcVarRelationship::CreateRelationship(
+    const std::string& procedureName, const std::string& variableName) -> std::unique_ptr<UsesProcVarRelationship> {
   return std::unique_ptr<UsesProcVarRelationship>(new UsesProcVarRelationship(procedureName, variableName));
 };
 

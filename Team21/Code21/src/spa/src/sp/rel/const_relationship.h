@@ -7,9 +7,9 @@
 namespace rel {
 class ConstRelationship : public Relationship {
  public:
-  static std::unique_ptr<ConstRelationship> CreateRelationship(int value);
-  int value() const;
-  RelationshipType relationshipType() const override { return RelationshipType::CONST; };
+  static auto CreateRelationship(int value) -> std::unique_ptr<ConstRelationship>;
+  auto value() const -> int;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::CONST; };
 
  private:
   ConstRelationship(int value);

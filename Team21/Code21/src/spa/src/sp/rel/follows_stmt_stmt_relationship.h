@@ -7,11 +7,11 @@
 namespace rel {
 class FollowsStmtStmtRelationship : public StmtStmtRelationship {
  public:
-  static std::unique_ptr<FollowsStmtStmtRelationship> CreateRelationship(
-      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement);
-  int firstStatementNumber() const override;
-  int secondStatementNumber() const override;
-  RelationshipType relationshipType() const override { return RelationshipType::FOLLOWS_STMT_STMT; };
+  static auto CreateRelationship(
+      std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) -> std::unique_ptr<FollowsStmtStmtRelationship>;
+  auto firstStatementNumber() const -> int override;
+  auto secondStatementNumber() const -> int override;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::FOLLOWS_STMT_STMT; };
 
  private:
   FollowsStmtStmtRelationship(std::shared_ptr<ast::StatementNode> firstStatement,

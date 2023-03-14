@@ -1,9 +1,9 @@
 #include "var_relationship.h"
 
 namespace rel {
-std::string VarRelationship::variableName() const { return variableName_; }
+auto VarRelationship::variableName() const -> std::string { return variableName_; }
 
-std::unique_ptr<VarRelationship> VarRelationship::CreateRelationship(const std::string& variableName) {
+auto VarRelationship::CreateRelationship(const std::string& variableName) -> std::unique_ptr<VarRelationship> {
   return std::unique_ptr<VarRelationship>(new VarRelationship(variableName));
 };
 

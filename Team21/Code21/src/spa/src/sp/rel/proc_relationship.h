@@ -7,10 +7,10 @@
 namespace rel {
 class ProcRelationship : public Relationship {
  public:
-  static std::unique_ptr<ProcRelationship> CreateRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode);
-  std::shared_ptr<ast::ProcedureNode> procedureNode() const;
-  std::string procedureName() const;
-  RelationshipType relationshipType() const override { return RelationshipType::PROC; };
+  static auto CreateRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<ProcRelationship>;
+  auto procedureNode() const -> std::shared_ptr<ast::ProcedureNode>;
+  auto procedureName() const -> std::string;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::PROC; };
 
  private:
   ProcRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode);

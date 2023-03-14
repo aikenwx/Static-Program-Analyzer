@@ -4,11 +4,11 @@
 #include <utility>
 
 namespace rel {
-std::shared_ptr<ast::ProcedureNode> ProcRelationship::procedureNode() const { return procedureNode_; }
+auto ProcRelationship::procedureNode() const -> std::shared_ptr<ast::ProcedureNode> { return procedureNode_; }
 
-std::string ProcRelationship::procedureName() const { return procedureNode_->GetName(); }
+auto ProcRelationship::procedureName() const -> std::string { return procedureNode_->GetName(); }
 
-std::unique_ptr<ProcRelationship> ProcRelationship::CreateRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) {
+auto ProcRelationship::CreateRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<ProcRelationship> {
   return std::unique_ptr<ProcRelationship>(new ProcRelationship(std::move(procedureNode)));
 };
 

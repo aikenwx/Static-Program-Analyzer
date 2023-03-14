@@ -13,9 +13,9 @@
 namespace rel {
 class AssignStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<AssignStmtRelationship> CreateRelationship(std::shared_ptr<ast::AssignNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::ASSIGN_STMT; };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(std::shared_ptr<ast::AssignNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<AssignStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::ASSIGN_STMT; };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   AssignStmtRelationship(std::shared_ptr<ast::AssignNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
@@ -24,10 +24,10 @@ class AssignStmtRelationship : public StmtRelationship {
 
 class CallStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<CallStmtRelationship> CreateRelationship(std::shared_ptr<ast::CallNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::CALL_STMT; };
-  std::string procedureName() const { return statementNode_->GetProcedureName(); };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(std::shared_ptr<ast::CallNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<CallStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::CALL_STMT; };
+  auto procedureName() const -> std::string { return statementNode_->GetProcedureName(); };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   CallStmtRelationship(std::shared_ptr<ast::CallNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
@@ -36,9 +36,9 @@ class CallStmtRelationship : public StmtRelationship {
 
 class IfStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<IfStmtRelationship> CreateRelationship(std::shared_ptr<ast::IfNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::IF_STMT; };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(std::shared_ptr<ast::IfNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<IfStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::IF_STMT; };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   IfStmtRelationship(std::shared_ptr<ast::IfNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
@@ -47,9 +47,9 @@ class IfStmtRelationship : public StmtRelationship {
 
 class WhileStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<WhileStmtRelationship> CreateRelationship(std::shared_ptr<ast::WhileNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::WHILE_STMT; };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(std::shared_ptr<ast::WhileNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<WhileStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::WHILE_STMT; };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   WhileStmtRelationship(std::shared_ptr<ast::WhileNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
@@ -58,10 +58,10 @@ class WhileStmtRelationship : public StmtRelationship {
 
 class PrintStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<PrintStmtRelationship> CreateRelationship(
-      std::shared_ptr<ast::PrintNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::PRINT_STMT; };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(
+      std::shared_ptr<ast::PrintNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<PrintStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::PRINT_STMT; };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   PrintStmtRelationship(std::shared_ptr<ast::PrintNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) : StmtRelationship(procedureNode), statementNode_(statementNode) {};
@@ -70,9 +70,9 @@ class PrintStmtRelationship : public StmtRelationship {
 
 class ReadStmtRelationship : public StmtRelationship {
  public:
-  static std::unique_ptr<ReadStmtRelationship> CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode);
-  RelationshipType relationshipType() const override { return RelationshipType::READ_STMT; };
-  int statementNumber() const override { return statementNode_->GetStatementNumber(); };
+  static auto CreateRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode) -> std::unique_ptr<ReadStmtRelationship>;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::READ_STMT; };
+  auto statementNumber() const -> int override { return statementNode_->GetStatementNumber(); };
 
  private:
   ReadStmtRelationship(std::shared_ptr<ast::ReadNode> statementNode, std::shared_ptr<ast::ProcedureNode> procedureNode): StmtRelationship(procedureNode), statementNode_(statementNode) {};

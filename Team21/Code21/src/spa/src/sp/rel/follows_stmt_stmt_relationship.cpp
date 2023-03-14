@@ -4,17 +4,17 @@
 #include <utility>
 
 namespace rel {
-int FollowsStmtStmtRelationship::firstStatementNumber() const {
+auto FollowsStmtStmtRelationship::firstStatementNumber() const -> int {
   return firstStatementNode_->GetStatementNumber();
 };
 
-int FollowsStmtStmtRelationship::secondStatementNumber() const {
+auto FollowsStmtStmtRelationship::secondStatementNumber() const -> int {
   return secondStatementNode_->GetStatementNumber();
 };
 
-std::unique_ptr<FollowsStmtStmtRelationship> FollowsStmtStmtRelationship::CreateRelationship(
+auto FollowsStmtStmtRelationship::CreateRelationship(
     std::shared_ptr<ast::StatementNode> firstStatementNode,
-    std::shared_ptr<ast::StatementNode> secondStatementNode) {
+    std::shared_ptr<ast::StatementNode> secondStatementNode) -> std::unique_ptr<FollowsStmtStmtRelationship> {
   return std::unique_ptr<FollowsStmtStmtRelationship>(new FollowsStmtStmtRelationship(std::move(firstStatementNode), std::move(secondStatementNode)));
 };
 

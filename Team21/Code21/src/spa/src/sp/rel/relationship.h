@@ -30,13 +30,13 @@ enum class RelationshipType {
 class Relationship {
  public:
   virtual ~Relationship() = default;
-  virtual RelationshipType relationshipType() const = 0;
+  virtual auto relationshipType() const -> RelationshipType = 0;
 };
 
 class StmtVarRelationship : public Relationship {
  public:
-  virtual int statementNumber() const = 0;
-  virtual std::string variableName() const = 0;
+  virtual auto statementNumber() const -> int = 0;
+  virtual auto variableName() const -> std::string = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;
@@ -45,8 +45,8 @@ class StmtVarRelationship : public Relationship {
 
 class ProcVarRelationship : public Relationship {
  public:
-  virtual std::string procedureName() const = 0;
-  virtual std::string variableName() const = 0;
+  virtual auto procedureName() const -> std::string = 0;
+  virtual auto variableName() const -> std::string = 0;
 
  private:
   std::string procedureName_;
@@ -55,8 +55,8 @@ class ProcVarRelationship : public Relationship {
 
 class StmtStmtRelationship : public Relationship {
  public:
-  virtual int firstStatementNumber() const = 0;
-  virtual int secondStatementNumber() const = 0;
+  virtual auto firstStatementNumber() const -> int = 0;
+  virtual auto secondStatementNumber() const -> int = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
@@ -65,8 +65,8 @@ class StmtStmtRelationship : public Relationship {
 
 class StmtRelationship : public Relationship {
  public:
-  std::string parentProcedureName() const { return procedureNode_->GetName(); };
-  virtual int statementNumber() const = 0;
+  auto parentProcedureName() const -> std::string { return procedureNode_->GetName(); };
+  virtual auto statementNumber() const -> int = 0;
 
  protected:
   explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(procedureNode) {};

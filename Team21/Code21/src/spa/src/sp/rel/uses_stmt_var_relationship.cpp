@@ -4,15 +4,15 @@
 #include "uses_stmt_var_relationship.h"
 
 namespace rel {
-int UsesStmtVarRelationship::statementNumber() const {
+auto UsesStmtVarRelationship::statementNumber() const -> int {
   return statementNode_->GetStatementNumber();
 };
 
-std::string UsesStmtVarRelationship::variableName() const {
+auto UsesStmtVarRelationship::variableName() const -> std::string {
   return variableName_;
 };
 
-std::unique_ptr<UsesStmtVarRelationship> UsesStmtVarRelationship::CreateRelationship(std::shared_ptr<ast::StatementNode> statementNode, const std::string& variableName) {
+auto UsesStmtVarRelationship::CreateRelationship(std::shared_ptr<ast::StatementNode> statementNode, const std::string& variableName) -> std::unique_ptr<UsesStmtVarRelationship> {
   return std::unique_ptr<UsesStmtVarRelationship>(new UsesStmtVarRelationship(std::move(statementNode), variableName));
 };
 

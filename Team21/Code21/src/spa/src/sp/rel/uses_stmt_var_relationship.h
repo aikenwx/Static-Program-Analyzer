@@ -7,11 +7,11 @@
 namespace rel {
 class UsesStmtVarRelationship : public StmtVarRelationship {
  public:
-  static std::unique_ptr<UsesStmtVarRelationship> CreateRelationship(
-      std::shared_ptr<ast::StatementNode> statementNode, const std::string& variableName);
-  int statementNumber() const override;
-  std::string variableName() const override;
-  RelationshipType relationshipType() const override { return RelationshipType::USES_STMT_VAR; };
+  static auto CreateRelationship(
+      std::shared_ptr<ast::StatementNode> statementNode, const std::string& variableName) -> std::unique_ptr<UsesStmtVarRelationship>;
+  auto statementNumber() const -> int override;
+  auto variableName() const -> std::string override;
+  auto relationshipType() const -> RelationshipType override { return RelationshipType::USES_STMT_VAR; };
 
  private:
   UsesStmtVarRelationship(std::shared_ptr<ast::StatementNode> statementNode,

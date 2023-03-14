@@ -4,17 +4,17 @@
 #include <utility>
 
 namespace rel {
-std::string ModifiesProcVarRelationship::procedureName() const {
+auto ModifiesProcVarRelationship::procedureName() const -> std::string {
   return procedureName_;
 };
 
-std::string ModifiesProcVarRelationship::variableName() const {
+auto ModifiesProcVarRelationship::variableName() const -> std::string {
   return variableName_;
 };
 
-std::unique_ptr<ModifiesProcVarRelationship>
+auto
 ModifiesProcVarRelationship::CreateRelationship(const std::string& procedureName,
-                                                const std::string& variableName) {
+                                                const std::string& variableName) -> std::unique_ptr<ModifiesProcVarRelationship> {
   return std::unique_ptr<ModifiesProcVarRelationship>(new ModifiesProcVarRelationship(std::move(procedureName), std::move(variableName)));
 };
 

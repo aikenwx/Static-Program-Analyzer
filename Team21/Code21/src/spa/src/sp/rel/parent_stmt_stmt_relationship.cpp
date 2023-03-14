@@ -4,17 +4,17 @@
 #include "parent_stmt_stmt_relationship.h"
 
 namespace rel {
-int ParentStmtStmtRelationship::firstStatementNumber() const {
+auto ParentStmtStmtRelationship::firstStatementNumber() const -> int {
   return firstStatementNode_->GetStatementNumber();
 };
 
-int ParentStmtStmtRelationship::secondStatementNumber() const {
+auto ParentStmtStmtRelationship::secondStatementNumber() const -> int {
   return secondStatementNode_->GetStatementNumber();
 };
 
-std::unique_ptr<ParentStmtStmtRelationship>
+auto
 ParentStmtStmtRelationship::CreateRelationship(
-    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) {
+    std::shared_ptr<ast::StatementNode> firstStatement, std::shared_ptr<ast::StatementNode> secondStatement) -> std::unique_ptr<ParentStmtStmtRelationship> {
   return std::unique_ptr<ParentStmtStmtRelationship>(new ParentStmtStmtRelationship(std::move(firstStatement), std::move(secondStatement)));
 };
 

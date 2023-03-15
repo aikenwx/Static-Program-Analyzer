@@ -28,7 +28,7 @@ auto IfNode::GetEndStatementNumber() -> int {
 }
 
 void IfNode::IncrementStatementNumber(int value) {
-  statementNumber = then->GetStartStatementNumber();
+  SetStatementNumber(then->GetStartStatementNumber());
   then->IncrementStatementNumbers(value);
   els->IncrementStatementNumbers(value);
 }

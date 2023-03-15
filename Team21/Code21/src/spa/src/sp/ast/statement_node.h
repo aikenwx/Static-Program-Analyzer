@@ -13,7 +13,7 @@ class StatementNode : public INode {
                      const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
- protected:
-  int statementNumber{};
+ private:
+  int statementNumber;
 };
 }  // namespace ast

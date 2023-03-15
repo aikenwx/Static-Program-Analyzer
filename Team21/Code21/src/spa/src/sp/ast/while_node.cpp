@@ -24,7 +24,7 @@ auto WhileNode::GetEndStatementNumber() -> int {
 }
 
 void WhileNode::IncrementStatementNumber(int value) {
-  statementNumber = body->GetStartStatementNumber();
+  SetStatementNumber(body->GetStartStatementNumber());
   body->IncrementStatementNumbers(value);
 }
 

@@ -12,17 +12,20 @@ auto BinExpExprNodeToOperator(
     const std::shared_ptr<ast::BinaryOperationNode> &node) -> std::string {
   if (util::instance_of<ast::PlusNode>(node)) {
     return "+";
-  } else if (util::instance_of<ast::MinusNode>(node)) {
-    return "-";
-  } else if (util::instance_of<ast::TimesNode>(node)) {
-    return "*";
-  } else if (util::instance_of<ast::DivideNode>(node)) {
-    return "/";
-  } else if (util::instance_of<ast::ModuloNode>(node)) {
-    return "%";
-  } else {
-    return "";
   }
+  if (util::instance_of<ast::MinusNode>(node)) {
+    return "-";
+  }
+  if (util::instance_of<ast::TimesNode>(node)) {
+    return "*";
+  }
+  if (util::instance_of<ast::DivideNode>(node)) {
+    return "/";
+  }
+  if (util::instance_of<ast::ModuloNode>(node)) {
+    return "%";
+  }
+  return "";
 }
 
 auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
@@ -62,7 +65,7 @@ auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
 
 auto AssignExpToPostfixExp(const std::shared_ptr<ast::INode>& node) -> std::string {
   std::stack<std::string> postfixExpStack = AssignExpToPostfixExpStack(node);
-  std::string postfixExp = "";
+  std::string postfixExp;
 
   while (!postfixExpStack.empty()) {
     postfixExp += (postfixExpStack.top() + " ");

@@ -1,9 +1,10 @@
 #include "call_validator.h"
 
-#include <assert.h>
+#include <cassert>
+
+#include "exceptions/semantic_error.h"
 #include "sp/ast/call_node.h"
 #include "sp/ast/program_node.h"
-#include "exceptions/semantic_error.h"
 
 namespace design_extractor {
 void CallValidator::HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth) {
@@ -20,4 +21,4 @@ void CallValidator::HandleCallNode(const std::shared_ptr<ast::CallNode>& node, i
 void CallValidator::HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node, int depth) {
   this->program = node;
 }
-}
+}  // namespace design_extractor

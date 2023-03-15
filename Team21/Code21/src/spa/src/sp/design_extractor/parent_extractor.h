@@ -11,8 +11,8 @@ class ParentExtractor : public Extractor {
   void HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                        int depth) override;
 
-  auto
-  GetRelationships() const -> std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>;
+  [[nodiscard]] auto GetRelationships() const
+      -> std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>>;
 
  private:
   std::vector<std::shared_ptr<rel::ParentStmtStmtRelationship>> relns_;

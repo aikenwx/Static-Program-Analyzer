@@ -51,18 +51,17 @@ void StmtUsesExtractor::HandleVariableNode(
         if (util::instance_of<ast::VariableNode>(assign->GetAssignment()) &&
             std::static_pointer_cast<ast::VariableNode>(assign->GetAssignment())
                     ->GetName() == node->GetName()) {
-          // TODO possible to optimize this with ptr equality check?
+          // TODO(zhongfu): possible to optimize this with ptr equality check?
           relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
               assign, node->GetName()));
         }
         // otherwise `node` is not the RHS, i.e. it's the LHS
         // and so this `node` isn't part of a `Uses` relationship
         break;
-      } else {
-        // definitely RHS
-        relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
-            assign, node->GetName()));
-      }
+      }  // definitely RHS
+      relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
+          assign, node->GetName()));
+
     } else if (util::instance_of<ast::ReadNode>(*it)) {
       // `node` is being modified here, not used
       break;

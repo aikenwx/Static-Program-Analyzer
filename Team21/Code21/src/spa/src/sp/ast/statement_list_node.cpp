@@ -18,15 +18,15 @@ void StatementListNode::AddStatement(std::shared_ptr<StatementNode> node) {
   statements.push_back(node);
 }
 
-std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
+std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() const {
   return statements;
 }
 
-int StatementListNode::GetStartStatementNumber() {
+int StatementListNode::GetStartStatementNumber() const {
   return startStatementNumber;
 }
 
-int StatementListNode::GetEndStatementNumber() { return endStatementNumber; }
+int StatementListNode::GetEndStatementNumber() const { return endStatementNumber; }
 
 void StatementListNode::IncrementStatementNumbers(int value) {
   for (auto i = statements.begin(); i < statements.end(); i++) {

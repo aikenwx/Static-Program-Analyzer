@@ -8,7 +8,6 @@
 namespace ast {
 class ProgramNode : public INode {
 public:
-  virtual ~ProgramNode() = default;
   void AddProcedure(const std::shared_ptr<ProcedureNode> &procedure);
   [[nodiscard]] auto GetProcedures() const
       -> std::vector<std::shared_ptr<ProcedureNode>>;

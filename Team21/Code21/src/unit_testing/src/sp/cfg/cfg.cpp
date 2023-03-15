@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace test_cfg {
 SCENARIO("Simple CFG with no blocks", "[sp][sp/cfg][sp/cfg/cfg]") {
   GIVEN("A CFG with no blocks") {
@@ -86,3 +88,5 @@ SCENARIO("CFG with blocks", "[sp][sp/cfg][sp/cfg/cfg]") {
   }
 }
 }  // namespace test_cfg
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

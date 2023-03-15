@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace test_cfg {
 SCENARIO("Simple Blocks with no relations to other blocks",
          "[sp][sp/cfg][sp/cfg/block]") {
@@ -150,3 +152,5 @@ SCENARIO("Blocks with relations to other blocks",
   }
 }
 }  // namespace test_cfg
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

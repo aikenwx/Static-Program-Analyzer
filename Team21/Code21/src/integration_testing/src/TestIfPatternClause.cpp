@@ -53,15 +53,15 @@ TEST_CASE("QPS can work with different combinations of if pattern") {
                                               {10, R"(cenZ)"},
                                               {12, R"(count)"}});
 
-//  SECTION("Can check for if statements with synonym") {
-//    std::unordered_set<std::string> expected{ "8", "10", "12" };
-//    REQUIRE(qps_test::RunQuery("if i; variable v; Select i pattern i(v, _, _)", *pkb_querier) == expected);
-//  }
+  SECTION("Can check for if statements with synonym") {
+    std::unordered_set<std::string> expected{"8", "10", "12"};
+    REQUIRE(qps_test::RunQuery("if i; variable v; Select i pattern i(v, _, _)", *pkb_querier) == expected);
+  }
 
-//  SECTION("Can retrive if statements with underscore") {
-//    std::unordered_set<std::string> expected{ "8", "10", "12" };
-//    REQUIRE(qps_test::RunQuery("if i; variable v; Select i pattern i(_, _, _)", *pkb_querier) == expected);
-//  }
+  SECTION("Can retrive if statements with underscore") {
+    std::unordered_set<std::string> expected{"8", "10", "12"};
+    REQUIRE(qps_test::RunQuery("if i; variable v; Select i pattern i(_, _, _)", *pkb_querier) == expected);
+  }
 
   SECTION("Can retrieve if statements with quoted identifier") {
     std::unordered_set<std::string> expected{"10", "12"};
@@ -70,19 +70,19 @@ TEST_CASE("QPS can work with different combinations of if pattern") {
     REQUIRE(qps_test::RunQuery("if i; variable v; Select i pattern i(\"cenY\", _, _)", *pkb_querier) == expected);
   }
 
-//  SECTION("Can check for if statements with synonym and return different if synonym") {
-//    std::unordered_set<std::string> expected{ "6", "8", "10", "12" };
-//    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(v, _, _)", *pkb_querier) == expected);
-//  }
-//
-//  SECTION("Can retrive if statements with underscore and return different if synonym") {
-//    std::unordered_set<std::string> expected{ "6", "8", "10", "12" };
-//    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(_, _, _)", *pkb_querier) == expected);
-//  }
-//
-//  SECTION("Can retrieve if statements with quoted identifier and return different if synonym") {
-//    std::unordered_set<std::string> expected{ "6", "8", "10", "12" };
-//    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(\"count\", _, _)", *pkb_querier) == expected);
-//    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(\"cenY\", _, _)", *pkb_querier) == expected);
-//  }
+  SECTION("Can check for if statements with synonym and return different if synonym") {
+    std::unordered_set<std::string> expected{"6", "8", "10", "12"};
+    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(v, _, _)", *pkb_querier) == expected);
+  }
+
+  SECTION("Can retrive if statements with underscore and return different if synonym") {
+    std::unordered_set<std::string> expected{"6", "8", "10", "12"};
+    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(_, _, _)", *pkb_querier) == expected);
+  }
+
+  SECTION("Can retrieve if statements with quoted identifier and return different if synonym") {
+    std::unordered_set<std::string> expected{"6", "8", "10", "12"};
+    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(\"count\", _, _)", *pkb_querier) == expected);
+    REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(\"cenY\", _, _)", *pkb_querier) == expected);
+  }
 }

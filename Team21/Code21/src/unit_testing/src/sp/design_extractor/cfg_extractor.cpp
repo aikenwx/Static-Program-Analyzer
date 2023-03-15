@@ -10,8 +10,8 @@
 #include "util/instance_of.h"
 
 namespace test_design_extractor {
-std::shared_ptr<ast::ProgramNode> ProgramStringToProgramNode(
-    const std::string& program) {
+auto ProgramStringToProgramNode(const std::string& program)
+    -> std::shared_ptr<ast::ProgramNode> {
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);
 
@@ -71,7 +71,7 @@ SCENARIO(
         REQUIRE(block_ptr.has_value());
 
         auto block = block_ptr.value();
-        REQUIRE(block->parents().size() == 0);
+        REQUIRE(block->parents().empty());
       }
 
       THEN("The block has no child blocks") {
@@ -79,7 +79,7 @@ SCENARIO(
         REQUIRE(block_ptr.has_value());
 
         auto block = block_ptr.value();
-        REQUIRE(block->children().size() == 0);
+        REQUIRE(block->children().empty());
       }
     }
   }
@@ -168,19 +168,19 @@ SCENARIO(
         REQUIRE(block_ptr.has_value());
 
         auto block = block_ptr.value();
-        REQUIRE(block->parents().size() == 0);
+        REQUIRE(block->parents().empty());
 
         block_ptr = cfg->GetBlockAt(5);
         REQUIRE(block_ptr.has_value());
 
         block = block_ptr.value();
-        REQUIRE(block->parents().size() == 0);
+        REQUIRE(block->parents().empty());
 
         block_ptr = cfg->GetBlockAt(9);
         REQUIRE(block_ptr.has_value());
 
         block = block_ptr.value();
-        REQUIRE(block->parents().size() == 0);
+        REQUIRE(block->parents().empty());
       }
 
       THEN("The blocks do not have any child blocks") {
@@ -188,19 +188,19 @@ SCENARIO(
         REQUIRE(block_ptr.has_value());
 
         auto block = block_ptr.value();
-        REQUIRE(block->children().size() == 0);
+        REQUIRE(block->children().empty());
 
         block_ptr = cfg->GetBlockAt(5);
         REQUIRE(block_ptr.has_value());
 
         block = block_ptr.value();
-        REQUIRE(block->children().size() == 0);
+        REQUIRE(block->children().empty());
 
         block_ptr = cfg->GetBlockAt(9);
         REQUIRE(block_ptr.has_value());
 
         block = block_ptr.value();
-        REQUIRE(block->children().size() == 0);
+        REQUIRE(block->children().empty());
       }
     }
   }
@@ -278,7 +278,7 @@ SCENARIO(
       }
 
       THEN("The blocks have the correct parent relationships") {
-        REQUIRE(condBlock->parents().size() == 0);
+        REQUIRE(condBlock->parents().empty());
 
         REQUIRE(thenBlock->parents().size() == 1);
         REQUIRE(thenBlock->parents().at(0).lock() == condBlock);
@@ -292,9 +292,9 @@ SCENARIO(
         REQUIRE(condBlock->children().at(0).lock() == thenBlock);
         REQUIRE(condBlock->children().at(1).lock() == elseBlock);
 
-        REQUIRE(thenBlock->children().size() == 0);
+        REQUIRE(thenBlock->children().empty());
 
-        REQUIRE(elseBlock->children().size() == 0);
+        REQUIRE(elseBlock->children().empty());
       }
     }
   }
@@ -399,7 +399,7 @@ SCENARIO(
       }
 
       THEN("The blocks have the correct parent relationships") {
-        REQUIRE(stmtBlock1->parents().size() == 0);
+        REQUIRE(stmtBlock1->parents().empty());
 
         REQUIRE(condBlock->parents().size() == 1);
         REQUIRE(condBlock->parents().at(0).lock() == stmtBlock1);
@@ -429,7 +429,7 @@ SCENARIO(
         REQUIRE(elseBlock->children().size() == 1);
         REQUIRE(elseBlock->children().at(0).lock() == stmtBlock2);
 
-        REQUIRE(stmtBlock2->children().size() == 0);
+        REQUIRE(stmtBlock2->children().empty());
       }
     }
   }
@@ -551,7 +551,7 @@ SCENARIO(
       }
 
       THEN("The blocks should have the correct parent relationships") {
-        REQUIRE(condBlock1->parents().size() == 0);
+        REQUIRE(condBlock1->parents().empty());
 
         REQUIRE(thenBlock1->parents().size() == 1);
         REQUIRE(thenBlock1->parents().at(0).lock() == condBlock1);
@@ -595,7 +595,7 @@ SCENARIO(
         REQUIRE(elseBlock1->children().size() == 1);
         REQUIRE(elseBlock1->children().at(0).lock() == stmtBlock1);
 
-        REQUIRE(stmtBlock1->children().size() == 0);
+        REQUIRE(stmtBlock1->children().empty());
       }
     }
   }

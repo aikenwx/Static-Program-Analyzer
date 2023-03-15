@@ -9,6 +9,8 @@
 #include "tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace test_design_extractor {
 auto ProgramStringToProgramNode(const std::string& program)
     -> std::shared_ptr<ast::ProgramNode> {
@@ -601,3 +603,5 @@ SCENARIO(
   }
 }
 }  // namespace test_design_extractor
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

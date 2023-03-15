@@ -19,7 +19,7 @@ namespace qps {
 template<typename Table>
 class HashJoin {
  public:
-  using JoinHashTable = std::unordered_map<std::string, std::vector<size_t>>;
+  using JoinHashTable = std::unordered_map<std::string, std::vector<std::size_t>>;
 
   HashJoin() = default;
 
@@ -30,7 +30,7 @@ class HashJoin {
 
     Table joined_table(combined_keys);
     const auto &hash_table_rows = hash_table.GetRows();
-    for (size_t probe_row_idx = 0; probe_row_idx < probe_table.ResultSize(); ++probe_row_idx) {
+    for (std::size_t probe_row_idx = 0; probe_row_idx < probe_table.ResultSize(); ++probe_row_idx) {
       auto matched_key = hashed_records.find(GetHashKey(probe_table, common_keys, probe_row_idx));
       if (matched_key == hashed_records.end()) continue;
       for (auto hashed_row_idx : matched_key->second) {
@@ -48,13 +48,13 @@ class HashJoin {
  private:
   JoinHashTable ConstructHashedTable(const Table &hash_table, const typename Table::Header &common_keys) {
     JoinHashTable hashed_records;
-    for (size_t row_idx = 0; row_idx < hash_table.ResultSize(); row_idx++) {
+    for (std::size_t row_idx = 0; row_idx < hash_table.ResultSize(); row_idx++) {
       hashed_records[GetHashKey(hash_table, common_keys, row_idx)].push_back(row_idx);
     }
     return hashed_records;
   }
 
-  std::string GetHashKey(const Table &table, const typename Table::Header &common_keys, size_t row_idx) {
+  std::string GetHashKey(const Table &table, const typename Table::Header &common_keys, std::size_t row_idx) {
     typename Table::Row extracted_row = ExtractRow(table, row_idx, common_keys);
     return Join(extracted_row, "/");
   }

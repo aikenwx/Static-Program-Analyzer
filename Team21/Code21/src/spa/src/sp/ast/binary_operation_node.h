@@ -17,10 +17,6 @@ public:
                      const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
- protected:
-  void SetLeft(std::shared_ptr<INode> left) { this->left_ = std::move(left); }
-  void SetRight(std::shared_ptr<INode> right) { this->right_ = std::move(right); }
-
  private:
   std::shared_ptr<INode> left_;
   std::shared_ptr<INode> right_;

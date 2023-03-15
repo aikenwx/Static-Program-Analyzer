@@ -255,9 +255,7 @@ TEST_CASE("Semantic validation for queries") {
 
     SECTION("check pattern if/assign/while synonym have declaration") {
       std::string dupeInput("if i; while w; Select <w, i> pattern a(_,_) and w(_,_) and i(_,_,_)");
-      qps::Query dupeQuery = QueryHelper::buildQuery(dupeInput);
-      qps::SemanticValidator validator(dupeQuery);
-      REQUIRE_THROWS_WITH(validator.validateQuery(),
+      REQUIRE_THROWS_WITH(QueryHelper::buildQuery(dupeInput),
         ContainsSubstring("Semantic error. There is missing declaration in Select clause for a"));
     }
 

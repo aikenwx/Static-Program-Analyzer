@@ -15,7 +15,7 @@ class IntervalTree {
  public:
   IntervalTree() = default;
 
-  bool Insert(std::pair<Key, Key> interval, Val value) {
+  auto Insert(std::pair<Key, Key> interval, Val value) -> bool {
     if (interval.first > interval.second) {
       return false;
     }
@@ -26,11 +26,11 @@ class IntervalTree {
     return true;
   }
 
-  bool Delete(std::pair<Key, Key> interval) {
+  auto Delete(std::pair<Key, Key> interval) -> bool {
     return intervals_.erase(interval) > 0;
   };
 
-  std::optional<Val> Search(Key key) const {
+  auto Search(Key key) const -> std::optional<Val> {
     auto closest = SearchClosest(key);
     if (closest == std::nullopt) {
       return std::nullopt;
@@ -41,25 +41,25 @@ class IntervalTree {
     return std::nullopt;
   };
 
-  int Size() const {
+  [[nodiscard]] auto Size() const -> int {
     return intervals_.size();
   }
 
  private:
   std::map<std::pair<Key, Key>, Val> intervals_;
 
-  std::optional<std::pair<std::pair<Key, Key>, Val>> SearchClosest(Key key) const {
-    const auto& it = std::lower_bound(intervals_.begin(), intervals_.end(), key,
-                               [](const auto& kvp1, const auto& k) {
-                                 return kvp1.first.second < k;
+  auto SearchClosest(Key key) const -> std::optional<std::pair<std::pair<Key, Key>, Val>> {
+    const auto& iter = std::lower_bound(intervals_.begin(), intervals_.end(), key,
+                               [](const auto& kvp1, const auto& curKey) {
+                                 return kvp1.first.second < curKey;
                                });
-    if (it == intervals_.end()) {
+    if (iter == intervals_.end()) {
       return std::nullopt;
     }
-    return *it;
+    return *iter;
   };
 
-  bool HasOverlap(std::pair<Key, Key> interval1) const {
+  auto HasOverlap(std::pair<Key, Key> interval1) const -> bool {
     std::optional<std::pair<std::pair<Key, Key>, Val>> closest = SearchClosest(interval1.first);
     if (closest == std::nullopt) {
       return false;
@@ -77,7 +77,7 @@ class IntervalTree {
     return false;
   };
 
-  static bool Overlaps(std::pair<Key, Key> interval1, std::pair<Key, Key> interval2) {
+  static auto Overlaps(std::pair<Key, Key> interval1, std::pair<Key, Key> interval2) -> bool {
     // interval1 starts somewhere within interval2
     if (interval1.first >= interval2.first && interval1.first <= interval2.second) {
       return true;

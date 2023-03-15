@@ -1,7 +1,7 @@
 #include "minus_node.h"
 
 namespace ast {
-std::string MinusNode::ToString() const {
+auto MinusNode::ToString() const -> std::string {
   return "minus:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
 }
 }

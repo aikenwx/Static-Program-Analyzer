@@ -1,15 +1,13 @@
 #include "named_node.h"
 
+#include <utility>
+
 namespace ast {
-NamedNode::NamedNode(std::string name) {
-  this->name = name;
-}
+NamedNode::NamedNode(std::string name) : name(std::move(std::move(name))) {}
 
 //void NamedNode::Execute() {
 //  return;
 //}
 
-std::string NamedNode::GetName() {
-  return name;
-}
-}
+auto NamedNode::GetName() -> std::string { return name; }
+}  // namespace ast

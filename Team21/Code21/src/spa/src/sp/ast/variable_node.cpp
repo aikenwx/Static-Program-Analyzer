@@ -1,7 +1,9 @@
 #include "variable_node.h"
 
 namespace ast {
-std::string VariableNode::ToString() const { return "variable:" + name + "\n"; }
+auto VariableNode::ToString() const -> std::string {
+  return "variable:" + name + "\n";
+}
 
 void VariableNode::AcceptVisitor(
     std::shared_ptr<INode> currentNode,

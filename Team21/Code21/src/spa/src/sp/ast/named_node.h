@@ -5,12 +5,12 @@
 namespace ast {
 class NamedNode : public INode {
 public:
-  NamedNode(std::string name);
+ explicit NamedNode(std::string name);
 
-  std::string GetName();
-  virtual std::string ToString() const override = 0;
+ auto GetName() -> std::string;
+ [[nodiscard]] auto ToString() const -> std::string override = 0;
 
 protected:
   std::string name;
 };
-}
+}  // namespace ast

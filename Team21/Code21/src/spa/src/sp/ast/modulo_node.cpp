@@ -1,7 +1,7 @@
 #include "modulo_node.h"
 
 namespace ast {
-std::string ModuloNode::ToString() const {
+auto ModuloNode::ToString() const -> std::string {
   return "modulo:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
 }
 }

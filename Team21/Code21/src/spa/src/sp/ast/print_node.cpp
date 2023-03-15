@@ -1,11 +1,14 @@
 #include "print_node.h"
 
+#include <utility>
+
 namespace ast {
-PrintNode::PrintNode(std::shared_ptr<VariableNode> var) { this->var = var; }
+PrintNode::PrintNode(std::shared_ptr<VariableNode> var)
+    : var(std::move(std::move(var))) {}
 
-std::shared_ptr<VariableNode> PrintNode::GetVariable() { return var; }
+auto PrintNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
 
-std::string PrintNode::ToString() const {
+auto PrintNode::ToString() const -> std::string {
   return "print:\n{\n" + var->ToString() + "}\n";
 }
 

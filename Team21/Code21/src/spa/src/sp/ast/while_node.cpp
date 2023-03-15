@@ -1,23 +1,27 @@
 #include "while_node.h"
 
+#include <utility>
+
 namespace ast {
 WhileNode::WhileNode(std::shared_ptr<INode> condition,
-                     std::shared_ptr<StatementListNode> body) {
-  this->condition = condition;
-  this->body = body;
+                     std::shared_ptr<StatementListNode> body)
+    : condition(std::move(std::move(condition))),
+      body(std::move(std::move(body))) {
   IncrementStatementNumber(1);
 }
 
-std::shared_ptr<INode> WhileNode::GetCondition() { return condition; }
+auto WhileNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
 
-std::shared_ptr<StatementListNode> WhileNode::GetBody() { return body; }
+auto WhileNode::GetBody() -> std::shared_ptr<StatementListNode> { return body; }
 
-std::string WhileNode::ToString() const {
+auto WhileNode::ToString() const -> std::string {
   return "while:\n{\ncondition:" + condition->ToString() +
          "body:" + body->ToString() + "}\n";
 }
 
-int WhileNode::GetEndStatementNumber() { return body->GetEndStatementNumber(); }
+auto WhileNode::GetEndStatementNumber() -> int {
+  return body->GetEndStatementNumber();
+}
 
 void WhileNode::IncrementStatementNumber(int value) {
   statementNumber = body->GetStartStatementNumber();

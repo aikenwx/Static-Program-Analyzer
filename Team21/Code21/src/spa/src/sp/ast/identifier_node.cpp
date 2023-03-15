@@ -1,19 +1,16 @@
 #include "identifier_node.h"
 
+#include <utility>
+
 namespace ast {
-IdentifierNode::IdentifierNode(std::string value) {
-  this->value = value;
-}
+IdentifierNode::IdentifierNode(std::string value)
+    : value(std::move(std::move(value))) {}
 
-void IdentifierNode::Execute() {
-  return;
-}
+void IdentifierNode::Execute() {}
 
-std::string IdentifierNode::GetValue() {
-  return value;
-}
+auto IdentifierNode::GetValue() -> std::string { return value; }
 
-std::string IdentifierNode::ToString() const {
+auto IdentifierNode::ToString() const -> std::string {
   return "Identifier:" + value + "\n";
 }
-}
+}  // namespace ast

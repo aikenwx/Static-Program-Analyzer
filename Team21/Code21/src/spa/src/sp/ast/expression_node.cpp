@@ -1,15 +1,14 @@
 #include "expression_node.h"
 
+#include <utility>
+
 namespace ast {
-ExpressionNode::ExpressionNode(std::shared_ptr<INode> operand) {
-  this->operand = operand;
-}
+ExpressionNode::ExpressionNode(std::shared_ptr<INode> operand)
+    : operand(std::move(std::move(operand))) {}
 
-std::shared_ptr<INode> ExpressionNode::GetOperand() {
-  return operand;
-}
+auto ExpressionNode::GetOperand() -> std::shared_ptr<INode> { return operand; }
 
-std::string ExpressionNode::ToString() const {
+auto ExpressionNode::ToString() const -> std::string {
   return "expression:" + operand->ToString() + "\n";
 }
-}
+}  // namespace ast

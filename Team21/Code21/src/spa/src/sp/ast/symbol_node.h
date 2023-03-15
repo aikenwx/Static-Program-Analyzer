@@ -27,12 +27,12 @@ enum class SymbolType {
 
 class SymbolNode : public INode {
 public:
-  SymbolNode(SymbolType type);
+ explicit SymbolNode(SymbolType type);
 
-  SymbolType GetType();
-  std::string ToString() const override;
+ auto GetType() -> SymbolType;
+ [[nodiscard]] auto ToString() const -> std::string override;
 
 private:
   SymbolType type;
 };
-}
+}  // namespace ast

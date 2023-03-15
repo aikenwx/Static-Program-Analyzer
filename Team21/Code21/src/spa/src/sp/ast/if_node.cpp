@@ -1,27 +1,31 @@
 #include "if_node.h"
 
+#include <utility>
+
 namespace ast {
 IfNode::IfNode(std::shared_ptr<INode> condition,
                std::shared_ptr<StatementListNode> then,
-               std::shared_ptr<StatementListNode> els) {
-  this->condition = condition;
-  this->then = then;
-  this->els = els;
+               std::shared_ptr<StatementListNode> els)
+    : condition(std::move(std::move(condition))),
+      then(std::move(std::move(then))),
+      els(std::move(std::move(els))) {
   IncrementStatementNumber(1);
 }
 
-std::shared_ptr<INode> IfNode::GetCondition() { return condition; }
+auto IfNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
 
-std::shared_ptr<StatementListNode> IfNode::GetThen() { return then; }
+auto IfNode::GetThen() -> std::shared_ptr<StatementListNode> { return then; }
 
-std::shared_ptr<StatementListNode> IfNode::GetElse() { return els; }
+auto IfNode::GetElse() -> std::shared_ptr<StatementListNode> { return els; }
 
-std::string IfNode::ToString() const {
+auto IfNode::ToString() const -> std::string {
   return "if:\n{\ncondition:" + condition->ToString() +
          "then:" + then->ToString() + "else:" + els->ToString() + "}\n";
 }
 
-int IfNode::GetEndStatementNumber() { return els->GetEndStatementNumber(); }
+auto IfNode::GetEndStatementNumber() -> int {
+  return els->GetEndStatementNumber();
+}
 
 void IfNode::IncrementStatementNumber(int value) {
   statementNumber = then->GetStartStatementNumber();

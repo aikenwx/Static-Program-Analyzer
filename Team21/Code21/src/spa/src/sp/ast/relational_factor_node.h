@@ -7,12 +7,12 @@
 namespace ast {
 class RelationalFactorNode : public INode {
 public:
-  RelationalFactorNode(std::shared_ptr<INode> operand);
+ explicit RelationalFactorNode(std::shared_ptr<INode> operand);
 
-  std::shared_ptr<INode> GetOperand();
-  std::string ToString() const override;
+ auto GetOperand() -> std::shared_ptr<INode>;
+ [[nodiscard]] auto ToString() const -> std::string override;
 
 private:
   std::shared_ptr<INode> operand;
 };
-}
+}  // namespace ast

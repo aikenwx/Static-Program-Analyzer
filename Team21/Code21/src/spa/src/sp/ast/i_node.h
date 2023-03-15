@@ -8,9 +8,10 @@
 namespace ast {
 class INode {
  public:
-  friend std::ostream &operator<<(std::ostream &out, const INode &node);
+  friend auto operator<<(std::ostream &out, const INode &node)
+      -> std::ostream &;
 
-  virtual std::string ToString() const = 0;
+  [[nodiscard]] virtual auto ToString() const -> std::string = 0;
 
   /*
     Method for accepting visitors

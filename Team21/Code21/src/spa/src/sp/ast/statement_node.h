@@ -4,16 +4,16 @@
 namespace ast {
 class StatementNode : public INode {
  public:
-  int GetStatementNumber();
+  [[nodiscard]] auto GetStatementNumber() const -> int;
   void SetStatementNumber(int statementNumber);
   virtual void IncrementStatementNumber(int value);
-  virtual std::string ToString() const override = 0;
+  [[nodiscard]] auto ToString() const -> std::string override = 0;
 
   void AcceptVisitor(std::shared_ptr<INode> currentNode,
                      std::shared_ptr<design_extractor::Extractor> extractor,
                      int depth) override;
 
  protected:
-  int statementNumber;
+  int statementNumber{};
 };
 }  // namespace ast

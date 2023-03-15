@@ -3,24 +3,22 @@
 #include "exceptions/parser_error.h"
 
 namespace ast {
-CallNode::CallNode(std::shared_ptr<NameNode> name) {
+CallNode::CallNode(const std::shared_ptr<NameNode>& name) {
   this->name_ = name->GetName();
 }
 
-std::string CallNode::GetProcedureName() {
-  return name_;
-}
+auto CallNode::GetProcedureName() -> std::string { return name_; }
 
-std::shared_ptr<ProcedureNode> CallNode::GetProcedure() {
+auto CallNode::GetProcedure() -> std::shared_ptr<ProcedureNode> {
   std::shared_ptr<ProcedureNode> procedure = this->procedure_.lock();
   return procedure;
 }
 
-void CallNode::SetProcedure(std::shared_ptr<ProcedureNode> procedure) {
+void CallNode::SetProcedure(const std::shared_ptr<ProcedureNode>& procedure) {
   this->procedure_ = std::weak_ptr<ProcedureNode>(procedure);
 }
 
-std::string CallNode::ToString() const {
+auto CallNode::ToString() const -> std::string {
   return "call:\n{\n" + name_ + "}\n";
 }
 

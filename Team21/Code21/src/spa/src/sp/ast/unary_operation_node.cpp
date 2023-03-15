@@ -1,11 +1,14 @@
 #include "unary_operation_node.h"
 
-namespace ast {
-UnaryOperationNode::UnaryOperationNode(std::shared_ptr<INode> operand) {
-  this->operand = operand;
-}
+#include <utility>
 
-std::shared_ptr<INode> UnaryOperationNode::GetOperand() { return operand; }
+namespace ast {
+UnaryOperationNode::UnaryOperationNode(std::shared_ptr<INode> operand)
+    : operand(std::move(std::move(operand))) {}
+
+auto UnaryOperationNode::GetOperand() -> std::shared_ptr<INode> {
+  return operand;
+}
 
 void UnaryOperationNode::AcceptVisitor(
     std::shared_ptr<INode> currentNode,

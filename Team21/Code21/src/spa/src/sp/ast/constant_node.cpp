@@ -1,11 +1,11 @@
 #include "constant_node.h"
 
 namespace ast {
-ConstantNode::ConstantNode(int value) { this->value = value; }
+ConstantNode::ConstantNode(int value) : value(value) {}
 
-int ConstantNode::GetValue() { return this->value; }
+auto ConstantNode::GetValue() const -> int { return this->value; }
 
-std::string ConstantNode::ToString() const {
+auto ConstantNode::ToString() const -> std::string {
   return "constant:" + std::to_string(value) + "\n";
 }
 

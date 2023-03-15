@@ -1,15 +1,15 @@
 #include "binary_operation_node.h"
 
+#include <utility>
+
 namespace ast {
 BinaryOperationNode::BinaryOperationNode(std::shared_ptr<INode> left,
-                                         std::shared_ptr<INode> right) {
-  this->left = left;
-  this->right = right;
-}
+                                         std::shared_ptr<INode> right)
+    : left(std::move(std::move(left))), right(std::move(std::move(right))) {}
 
-std::shared_ptr<INode> BinaryOperationNode::GetLeft() { return left; }
+auto BinaryOperationNode::GetLeft() -> std::shared_ptr<INode> { return left; }
 
-std::shared_ptr<INode> BinaryOperationNode::GetRight() { return right; }
+auto BinaryOperationNode::GetRight() -> std::shared_ptr<INode> { return right; }
 
 void BinaryOperationNode::AcceptVisitor(
     std::shared_ptr<INode> currentNode,

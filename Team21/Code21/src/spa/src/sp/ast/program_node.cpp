@@ -4,15 +4,17 @@
 
 namespace ast {
 // Handles procedures like a stack LIFO
-void ProgramNode::AddProcedure(std::shared_ptr<ProcedureNode> procedure) {
+void ProgramNode::AddProcedure(
+    const std::shared_ptr<ProcedureNode>& procedure) {
   procedures.push_back(procedure);
 }
 
-std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() const {
+auto ProgramNode::GetProcedures() const
+    -> std::vector<std::shared_ptr<ProcedureNode>> {
   return procedures;
 }
 
-std::string ProgramNode::ToString() const {
+auto ProgramNode::ToString() const -> std::string {
   std::string str = "program:\n{\n";
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     str += (*i)->ToString();
@@ -21,11 +23,11 @@ std::string ProgramNode::ToString() const {
   return str;
 }
 
-int ProgramNode::GetTotalStatementCount() {
+auto ProgramNode::GetTotalStatementCount() -> int {
   return procedures.front()->GetEndStatementNumber();
 }
 
-bool ProgramNode::ContainsProcedure(const std::string& procedureName) {
+auto ProgramNode::ContainsProcedure(const std::string& procedureName) -> bool {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
@@ -34,7 +36,8 @@ bool ProgramNode::ContainsProcedure(const std::string& procedureName) {
   return false;
 }
 
-std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(const std::string& procedureName) {
+auto ProgramNode::GetProcedure(const std::string& procedureName)
+    -> std::shared_ptr<ProcedureNode> {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return *i;

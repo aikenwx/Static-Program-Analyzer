@@ -6,9 +6,9 @@ namespace ast {
 IfNode::IfNode(std::shared_ptr<INode> condition,
                std::shared_ptr<StatementListNode> then,
                std::shared_ptr<StatementListNode> els)
-    : condition(std::move(std::move(condition))),
-      then(std::move(std::move(then))),
-      els(std::move(std::move(els))) {
+    : condition(std::move(condition)),
+      then(std::move(then)),
+      els(std::move(els)) {
   IncrementStatementNumber(1);
 }
 

@@ -4,7 +4,7 @@
 
 namespace ast {
 ReadNode::ReadNode(std::shared_ptr<VariableNode> var)
-    : var(std::move(std::move(var))) {}
+    : var(std::move(var)) {}
 
 auto ReadNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
 

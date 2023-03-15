@@ -4,7 +4,7 @@
 
 namespace ast {
 UnaryOperationNode::UnaryOperationNode(std::shared_ptr<INode> operand)
-    : operand(std::move(std::move(operand))) {}
+    : operand(std::move(operand)) {}
 
 auto UnaryOperationNode::GetOperand() -> std::shared_ptr<INode> {
   return operand;

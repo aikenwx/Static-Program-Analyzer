@@ -5,7 +5,7 @@
 namespace ast {
 BinaryOperationNode::BinaryOperationNode(std::shared_ptr<INode> left,
                                          std::shared_ptr<INode> right)
-    : left(std::move(std::move(left))), right(std::move(std::move(right))) {}
+    : left(std::move(left))), right(std::move(std::move(right)) {}
 
 auto BinaryOperationNode::GetLeft() -> std::shared_ptr<INode> { return left; }
 

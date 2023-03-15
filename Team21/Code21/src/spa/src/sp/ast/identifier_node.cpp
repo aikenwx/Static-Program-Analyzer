@@ -4,7 +4,7 @@
 
 namespace ast {
 IdentifierNode::IdentifierNode(std::string value)
-    : value(std::move(std::move(value))) {}
+    : value(std::move(value)) {}
 
 void IdentifierNode::Execute() {}
 

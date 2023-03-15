@@ -3,7 +3,7 @@
 #include <utility>
 
 namespace ast {
-NamedNode::NamedNode(std::string name) : name(std::move(std::move(name))) {}
+NamedNode::NamedNode(std::string name) : name(std::move(name)) {}
 
 //void NamedNode::Execute() {
 //  return;

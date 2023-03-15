@@ -6,7 +6,7 @@ namespace ast {
 ProcedureNode::ProcedureNode(std::string name,
                              std::shared_ptr<StatementListNode> statements)
     : NamedNode(std::move(name)),
-      statements(std::move(std::move(statements))) {}
+      statements(std::move(statements)) {}
 
 auto ProcedureNode::GetStatements() -> std::shared_ptr<StatementListNode> {
   return statements;

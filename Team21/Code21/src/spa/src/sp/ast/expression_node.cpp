@@ -4,7 +4,7 @@
 
 namespace ast {
 ExpressionNode::ExpressionNode(std::shared_ptr<INode> operand)
-    : operand(std::move(std::move(operand))) {}
+    : operand(std::move(operand)) {}
 
 auto ExpressionNode::GetOperand() -> std::shared_ptr<INode> { return operand; }
 

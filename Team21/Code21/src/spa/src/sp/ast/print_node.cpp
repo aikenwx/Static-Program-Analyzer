@@ -4,7 +4,7 @@
 
 namespace ast {
 PrintNode::PrintNode(std::shared_ptr<VariableNode> var)
-    : var(std::move(std::move(var))) {}
+    : var(std::move(var)) {}
 
 auto PrintNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
 

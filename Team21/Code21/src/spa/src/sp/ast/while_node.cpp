@@ -5,8 +5,8 @@
 namespace ast {
 WhileNode::WhileNode(std::shared_ptr<INode> condition,
                      std::shared_ptr<StatementListNode> body)
-    : condition(std::move(std::move(condition))),
-      body(std::move(std::move(body))) {
+    : condition(std::move(condition)),
+      body(std::move(body)) {
   IncrementStatementNumber(1);
 }
 

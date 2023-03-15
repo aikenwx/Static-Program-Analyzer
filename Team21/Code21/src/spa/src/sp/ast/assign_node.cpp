@@ -5,7 +5,7 @@
 namespace ast {
 AssignNode::AssignNode(std::shared_ptr<VariableNode> var,
                        const std::shared_ptr<ExpressionNode>& exp)
-    : var(std::move(std::move(var))) {
+    : var(std::move(var)) {
   this->assignment = exp->GetOperand();
 }
 

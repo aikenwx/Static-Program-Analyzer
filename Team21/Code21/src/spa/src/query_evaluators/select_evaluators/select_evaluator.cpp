@@ -3,15 +3,15 @@
 //TODO(DHRUV): Select Evaluation
 
 namespace qps {
-ClauseEvaluator::ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
+ClauseResult SelectEvaluator::ConstructResult(const std::vector<Entity *> &entities) {
   SynonymTable clause_result({synonym_});
   for (auto entity : entities) {
-    clause_result.AddRow({*(entity->getEntityValue())});
+    clause_result.AddRow({entity});
   }
   return clause_result;
 }
 
-ClauseEvaluator::ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
+ClauseResult SelectEvaluator::Evaluate(QueryFacade &pkb) {
   std::vector<Entity *> entities;
 
   auto add_entity = [&](auto vec) {

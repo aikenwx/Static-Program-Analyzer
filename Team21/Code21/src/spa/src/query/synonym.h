@@ -29,3 +29,12 @@ class Synonym {
   }
 };
 }
+
+namespace std {
+template<>
+struct hash<qps::Synonym> {
+  size_t operator()(const qps::Synonym &syn) const {
+    return hash<std::string>{}(syn.getSynonym());
+  }
+};
+}

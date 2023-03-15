@@ -7,11 +7,11 @@ namespace qps {
 PatternEvaluator::PatternEvaluator(PatternClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-ClauseEvaluator::ClauseResult PatternEvaluator::Evaluate(QueryFacade &pkb) {
+ClauseResult PatternEvaluator::Evaluate(QueryFacade &pkb) {
   return qps::PatternEvaluator::ConstructResult(CallPkb(pkb));
 }
 
-ClauseEvaluator::ClauseResult PatternEvaluator::ConstructResult(const std::vector<Relationship *> &statements) {
+ClauseResult PatternEvaluator::ConstructResult(const std::vector<Relationship *> &statements) {
   std::vector<Synonym> syns;
   syns.push_back(clause_.getStmtSynonym());
 
@@ -24,8 +24,8 @@ ClauseEvaluator::ClauseResult PatternEvaluator::ConstructResult(const std::vecto
 
   SynonymTable table(syns);
   for (auto ans : statements) {
-    SynonymTable::Row row = {*ans->getLeftHandEntity()->getEntityValue()};
-    if (lhs_syn) row.push_back(*ans->getRightHandEntity()->getEntityValue());
+    SynonymTable::Row row = {ans->getLeftHandEntity()};
+    if (lhs_syn) row.push_back(ans->getRightHandEntity());
     table.AddRow(row);
   }
   return table;

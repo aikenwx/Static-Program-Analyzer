@@ -40,7 +40,7 @@ ClauseResult PatternEvaluator::ConstructResult(const std::vector<Product> &state
     }
     else if (std::holds_alternative<IfStatement>(prod)) {
       auto i = std::get_if<IfStatement>(&prod);
-      SynonymTable::Row row = {i};
+      SynonymTable::Row row = {*i};
       table.AddRow(row);
     }
     else if (std::holds_alternative<WhileStatement>(prod)) {

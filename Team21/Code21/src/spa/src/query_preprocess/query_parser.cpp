@@ -155,11 +155,12 @@ void QueryParser::parseSuchThat() {
 
 void QueryParser::parsePattern() {
   Synonym synonym{Synonym(next())};
-  auto declaration{Declaration::findDeclarationWithSynonym(declarations, synonym)};
-  auto synDE{DesignEntity::ASSIGN};
-  if (declaration.has_value()) {
-    synDE = declaration.value().getDesignEntity();
+  if (Declaration::findDeclarationWithSynonym(declarations, synonym).has_value() == false) {
+    throw QueryException(ErrorType::Semantic,
+      "Semantic error. There is missing declaration in Select clause for " + synonym.getSynonym());
   }
+  auto declaration{Declaration::findDeclarationWithSynonym(declarations, synonym)};
+  DesignEntity synDE{ declaration.value().getDesignEntity() };
 
   assertNextToken("(");
   next();

@@ -52,11 +52,6 @@ void SemanticValidator::checkIfSynonymContainedInDeclaration() {
     checkSynonymDeclareHelper(refSuchThat2, declr, "SuchThat clause for argument 2");
   }
   for (int i = 0; i < p.size(); i++) {
-    Synonym stmtSyn = p[i].getStmtSynonym();
-    if (Declaration::findDeclarationWithSynonym(declr, stmtSyn).has_value() == false) {
-      throw QueryException(ErrorType::Semantic,
-        "Semantic error. There is missing declaration in Select clause for " + stmtSyn.getSynonym());
-    }
     Ref refPattern = p[i].getArg1();
     checkSynonymDeclareHelper(refPattern, declr, "Pattern clause for argument 1");
   }

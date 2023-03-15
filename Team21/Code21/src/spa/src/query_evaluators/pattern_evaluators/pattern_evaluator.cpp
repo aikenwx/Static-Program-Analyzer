@@ -26,26 +26,23 @@ ClauseResult PatternEvaluator::ConstructResult(const std::vector<Product> &state
   for (int i = 0; i < statements.size(); i++) {
     Product prod = statements.at(i);
     std::size_t ind = prod.index();
-    if (std::holds_alternative<ModifiesRelationship>(prod)) {
-      auto mod = std::get_if<ModifiesRelationship>(&prod);
+    if (std::holds_alternative<ModifiesRelationship *>(prod)) {
+      auto mod = std::get<ModifiesRelationship *>(prod);
       SynonymTable::Row row = {mod->getLeftHandEntity()};
       if (lhs_syn) row.push_back(mod->getRightHandEntity());
       table.AddRow(row);
-    }
-    else if (std::holds_alternative<UsesRelationship>(prod)){
-      auto use = std::get_if<UsesRelationship>(&prod);
+    } else if (std::holds_alternative<UsesRelationship *>(prod)) {
+      auto use = std::get<UsesRelationship *>(prod);
       SynonymTable::Row row = {use->getLeftHandEntity()};
       if (lhs_syn) row.push_back(use->getRightHandEntity());
       table.AddRow(row);
-    }
-    else if (std::holds_alternative<IfStatement>(prod)) {
-      auto i = std::get_if<IfStatement>(&prod);
-      SynonymTable::Row row = {*i};
+    } else if (std::holds_alternative<IfStatement *>(prod)) {
+      auto x = std::get<IfStatement *>(prod);
+      SynonymTable::Row row = {x};
       table.AddRow(row);
-    }
-    else if (std::holds_alternative<WhileStatement>(prod)) {
-      auto w = std::get_if<WhileStatement>(&prod);
-      SynonymTable::Row row = {*w};
+    } else if (std::holds_alternative<WhileStatement *>(prod)) {
+      auto w = std::get<WhileStatement *>(prod);
+      SynonymTable::Row row = {w};
       table.AddRow(row);
     }
   }

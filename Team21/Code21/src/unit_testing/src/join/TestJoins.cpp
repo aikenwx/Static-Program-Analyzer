@@ -58,12 +58,7 @@ TEST_CASE("Cross Join with 1 synonym table with no common synonym") {
 
   Table expected({a, b}, {{"1", "4"}, {"1", "5"}, {"2", "4"}, {"2", "5"}});
   Table res = Join{}(table1, table2);
-  for (auto &row : res.GetRows()) {
-    for (auto &k : row) {
-      std::cout << k << " ";
-    }
-    std::cout << "\n";
-  }
+  
   REQUIRE(CheckEqual(res, expected));
 }
 

@@ -4,7 +4,7 @@
 
 namespace qps {
 const std::vector<EntityType>
-    SuchThatEvaluator::CONTAINER_TYPES = {EntityType::WHILE_STATEMENT, EntityType::IF_STATEMENT};
+    SuchThatEvaluator::CONTAINER_TYPES = {WhileStatement::getEntityTypeStatic(), IfStatement::getEntityTypeStatic()};
 
 SuchThatEvaluator::SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}

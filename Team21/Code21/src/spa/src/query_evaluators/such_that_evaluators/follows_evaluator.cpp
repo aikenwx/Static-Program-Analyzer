@@ -9,11 +9,11 @@ std::vector<::Relationship *> FollowsEvaluator::CallPkb(QueryFacade &pkb, Entity
 }
 
 std::vector<EntityType> FollowsEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  return {EntityType::STATEMENT};
+  return {Statement::getEntityTypeStatic()};
 }
 
 std::vector<EntityType> FollowsEvaluator::GetRightHandTypes(Ref &right_arg) {
-  return {EntityType::STATEMENT};
+  return {Statement::getEntityTypeStatic()};
 }
 
 } // qps

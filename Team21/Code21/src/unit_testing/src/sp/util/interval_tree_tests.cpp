@@ -1,6 +1,6 @@
-#include <util/interval_tree.h>
+#include <catch2/catch_test_macros.hpp>
 
-#include <catch.hpp>
+#include "util/interval_tree.h"
 
 namespace test_util {
 SCENARIO("IntervalTree can be constructed", "[util][util/interval_tree]") {

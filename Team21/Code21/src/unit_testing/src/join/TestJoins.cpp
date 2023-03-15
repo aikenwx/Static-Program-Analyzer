@@ -1,6 +1,6 @@
+#include <algorithm>
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "query_evaluators/tables/row_table.h"
 #include "query_evaluators/join/join.h"

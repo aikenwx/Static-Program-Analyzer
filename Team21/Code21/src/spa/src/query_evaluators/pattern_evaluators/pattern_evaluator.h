@@ -5,6 +5,7 @@
 #include "query_evaluators/clause_evaluator.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
+#include "product.h"
 
 namespace qps {
 
@@ -15,11 +16,11 @@ class PatternEvaluator : public ClauseEvaluator {
 
   ClauseResult Evaluate(QueryFacade &pkb) override;
 
-  virtual std::vector<Relationship *> CallPkb(QueryFacade &pkb) = 0;
+  virtual std::vector<Product> CallPkb(QueryFacade &pkb) = 0;
 
  private:
 
-  ClauseResult ConstructResult(const std::vector<Relationship *> &);
+  ClauseResult ConstructResult(const std::vector<Product> &);
 
   std::vector<Declaration> declarations_;
 

@@ -9,13 +9,14 @@ class UnaryOperationNode : public INode {
 public:
  explicit UnaryOperationNode(std::shared_ptr<INode> operand);
 
- auto GetOperand() -> std::shared_ptr<INode>;
- [[nodiscard]] auto ToString() const -> std::string override = 0;
+ [[nodiscard]] auto GetOperand() const -> std::shared_ptr<INode>;
+ [[nodiscard]] auto ToString() const -> std::string override;
 
  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                     int depth) override;
-protected:
+
+private:
   std::shared_ptr<INode> operand;
 };
 }  // namespace ast

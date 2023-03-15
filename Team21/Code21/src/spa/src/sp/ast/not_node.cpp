@@ -2,6 +2,6 @@
 
 namespace ast {
 auto NotNode::ToString() const -> std::string {
-  return "not:\n{\n" + operand->ToString() + "}\n";
+  return "not:\n" + UnaryOperationNode::ToString();
 }
 }

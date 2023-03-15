@@ -45,7 +45,7 @@ ClauseResult PatternEvaluator::ConstructResult(const std::vector<Product> &state
     }
     else if (std::holds_alternative<WhileStatement>(prod)) {
       auto w = std::get_if<WhileStatement>(&prod);
-      SynonymTable::Row row = {w};
+      SynonymTable::Row row = {*w};
       table.AddRow(row);
     }
   }

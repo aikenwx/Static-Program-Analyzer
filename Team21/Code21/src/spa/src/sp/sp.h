@@ -9,6 +9,6 @@ class SP {
  public:
   SP() = default;
   ~SP() = default;
-  bool process(const std::string& program, PKB* pkb) const;
+  static auto process(const std::string& program, PKB* pkb) -> bool;
 };
 }  // namespace sp

@@ -34,7 +34,8 @@
 #include "util/interval_tree.h"
 
 namespace sp {
-std::shared_ptr<ast::ProgramNode> ToProgramNode(std::shared_ptr<ast::INode> root) {
+auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
+    -> std::shared_ptr<ast::ProgramNode> {
   if (!util::instance_of<ast::ProgramNode>(root)) {
     throw exceptions::SyntaxError("Invalid program");
   }
@@ -59,8 +60,8 @@ std::shared_ptr<ast::ProgramNode> ToProgramNode(std::shared_ptr<ast::INode> root
 }
 
 template <typename E, typename R>
-inline std::vector<std::shared_ptr<R>> Visit(
-    std::shared_ptr<ast::ProgramNode> programNode) {
+inline auto Visit(const std::shared_ptr<ast::ProgramNode>& programNode)
+    -> std::vector<std::shared_ptr<R>> {
   auto extractor = std::make_shared<E>();
   programNode->AcceptVisitor(programNode, extractor, 0);
   return extractor->GetRelationships();
@@ -115,7 +116,7 @@ void PopulateAstEntities(
 void ResolveCallStmtRels(
     const std::vector<std::shared_ptr<rel::Relationship>>& astElemRelationships,
     std::vector<std::shared_ptr<rel::CallStmtRelationship>>& callStmtRels) {
-  for (auto& rel : astElemRelationships) {
+  for (const auto& rel : astElemRelationships) {
     if (rel->relationshipType() == rel::RelationshipType::CALL_STMT) {
       callStmtRels.push_back(
           std::static_pointer_cast<rel::CallStmtRelationship>(rel));
@@ -124,7 +125,7 @@ void ResolveCallStmtRels(
 }
 
 void ResolveProcedureInfo(
-    std::shared_ptr<ast::ProgramNode> programNode,
+    const std::shared_ptr<ast::ProgramNode>& programNode,
     std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>&
         procedureByName,
     util::IntervalTree<int, std::string>& procedureNameByLine) {
@@ -439,7 +440,7 @@ void PopulateAssignPostfixExpr(
   }
 }
 
-bool SP::process(const std::string& program, PKB* pkb) const {
+bool SP::process(const std::string& program, PKB* pkb) {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);

@@ -2,6 +2,6 @@
 
 namespace ast {
 auto LesserNode::ToString() const -> std::string {
-  return "lesser:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+  return "lesser:\n" + BinaryOperationNode::ToString();
 }
 }

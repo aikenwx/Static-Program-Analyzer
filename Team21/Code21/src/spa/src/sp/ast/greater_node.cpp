@@ -2,6 +2,6 @@
 
 namespace ast {
 auto GreaterNode::ToString() const -> std::string {
-  return "greater:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+  return "greater:\n" + BinaryOperationNode::ToString();
 }
 }

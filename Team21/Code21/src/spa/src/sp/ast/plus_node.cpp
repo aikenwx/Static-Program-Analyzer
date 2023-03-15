@@ -2,6 +2,6 @@
 
 namespace ast {
 auto PlusNode::ToString() const -> std::string {
-  return "plus:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+  return "plus:\n" + BinaryOperationNode::ToString();
 }
 }

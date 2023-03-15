@@ -1,7 +1,8 @@
 #include "equals_node.h"
+#include "sp/ast/binary_operation_node.h"
 
 namespace ast {
 auto EqualsNode::ToString() const -> std::string {
-  return "equals:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+  return "equals:\n" + BinaryOperationNode::ToString();
 }
 }

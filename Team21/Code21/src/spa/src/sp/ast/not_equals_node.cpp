@@ -2,6 +2,6 @@
 
 namespace ast {
 auto NotEqualsNode::ToString() const -> std::string {
-  return "not_equals:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+  return "not_equals:\n" + BinaryOperationNode::ToString();
 }
 }

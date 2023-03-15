@@ -148,7 +148,7 @@ void SimpleParser::Shift() {
     // Default implementation but should not reach here
     std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((*lookahead)->GetValue());
     stack.push_back(id);
-    assert(false);
+    assert(false); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   }
 }
 

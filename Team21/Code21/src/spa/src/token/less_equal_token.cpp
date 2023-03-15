@@ -6,7 +6,7 @@
 
 namespace token {
 const std::unique_ptr<Token> LessEqualToken::CreateToken(std::string str) {
-  assert(str == "<=");
+  assert(str == "<="); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<LessEqualToken>(new LessEqualToken());
 };
 

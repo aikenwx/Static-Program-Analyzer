@@ -7,7 +7,9 @@
 namespace cfg {
 class Block : public std::enable_shared_from_this<Block> {
 public:
-  Block(int start, int end) : start_(start), end_(end) { static_assert(true); };
+  Block(int start, int end) : start_(start), end_(end) {
+    assert(start <= end); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+  };
   auto start() const -> int;
   auto end() const -> int;
   auto IsInBlock(int stmtNo) const -> bool;

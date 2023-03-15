@@ -19,7 +19,7 @@ std::shared_ptr<ast::ProgramNode> ProgramStringToProgramNode(
   auto ast = parser.Parse(std::move(tokens));
   std::shared_ptr<ast::INode> root = ast->GetRoot();
 
-  assert(util::instance_of<ast::ProgramNode>(root));
+  assert(util::instance_of<ast::ProgramNode>(root)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
   return std::static_pointer_cast<ast::ProgramNode>(root);
 }

@@ -8,7 +8,7 @@
 
 namespace design_extractor {
 void CallValidator::HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth) {
-  assert(this->program);
+  assert(this->program); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   if (!(node->GetProcedure())) {
     if (program->ContainsProcedure(node->GetProcedureName())) {
       node->SetProcedure(program->GetProcedure(node->GetProcedureName()));

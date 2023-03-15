@@ -157,7 +157,7 @@ void SimpleChainParser::Shift() {
     // Default implementation but should not reach here
     std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
     context->GetStack()->push_back(id);
-    assert(false);
+    assert(false); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   }
 }
 }

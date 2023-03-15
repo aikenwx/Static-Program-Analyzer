@@ -10,7 +10,7 @@
 
 namespace token {
 const std::unique_ptr<Token> IntegerToken::CreateToken(std::string str) {
-  assert(util::is_integer(str));  // invariant: length > 0, all digits
+  assert(util::is_integer(str)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)  // invariant: length > 0, all digits
   if (str[0] == '0' && str.length() > 1) {
     throw exceptions::SyntaxError("Non-zero integer cannot start with 0");
   }

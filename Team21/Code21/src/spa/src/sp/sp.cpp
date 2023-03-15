@@ -440,7 +440,7 @@ void PopulateAssignPostfixExpr(
   }
 }
 
-bool SP::process(const std::string& program, PKB* pkb) {
+auto SP::process(const std::string& program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);

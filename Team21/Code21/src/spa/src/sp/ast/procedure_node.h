@@ -17,8 +17,8 @@ public:
   auto GetStartStatementNumber() -> int;
   auto GetEndStatementNumber() -> int;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
 private:

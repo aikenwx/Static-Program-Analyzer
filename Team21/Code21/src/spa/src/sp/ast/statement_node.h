@@ -9,8 +9,8 @@ class StatementNode : public INode {
   virtual void IncrementStatementNumber(int value);
   [[nodiscard]] auto ToString() const -> std::string override = 0;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
  protected:

@@ -16,8 +16,8 @@ class StatementListNode : public INode {
   [[nodiscard]] auto GetEndStatementNumber() const -> int;
   void IncrementStatementNumbers(int value);
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
  private:

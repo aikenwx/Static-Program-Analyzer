@@ -48,8 +48,8 @@ auto ProgramNode::GetProcedure(const std::string& procedureName)
 }
 
 void ProgramNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleProgramNode(
       std::static_pointer_cast<ProgramNode>(currentNode), depth);
 

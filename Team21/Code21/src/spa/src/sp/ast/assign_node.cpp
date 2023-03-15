@@ -20,8 +20,8 @@ auto AssignNode::ToString() const -> std::string {
 }
 
 void AssignNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
   extractor->HandleAssignNode(std::static_pointer_cast<AssignNode>(currentNode),

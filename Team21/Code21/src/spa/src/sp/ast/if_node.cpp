@@ -34,8 +34,8 @@ void IfNode::IncrementStatementNumber(int value) {
 }
 
 void IfNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
   extractor->HandleIfNode(std::static_pointer_cast<IfNode>(currentNode), depth);

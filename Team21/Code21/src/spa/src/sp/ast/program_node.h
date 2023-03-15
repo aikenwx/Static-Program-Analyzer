@@ -17,8 +17,8 @@ public:
   auto GetProcedure(std::string const &procedureName)
       -> std::shared_ptr<ProcedureNode>;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
 private:

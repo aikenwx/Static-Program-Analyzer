@@ -6,8 +6,8 @@ auto VariableNode::ToString() const -> std::string {
 }
 
 void VariableNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleVariableNode(
       std::static_pointer_cast<VariableNode>(currentNode), depth);
 }

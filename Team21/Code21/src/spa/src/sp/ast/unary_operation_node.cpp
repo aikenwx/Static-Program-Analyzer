@@ -11,8 +11,8 @@ auto UnaryOperationNode::GetOperand() -> std::shared_ptr<INode> {
 }
 
 void UnaryOperationNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   // nb: extractor doesn't have a HandleUnaryOperationNode method
   // call HandleOtherNode() to let extractor update state
   // e.g. node parents

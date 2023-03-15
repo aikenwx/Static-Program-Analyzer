@@ -9,8 +9,8 @@ public:
  [[nodiscard]] auto GetValue() const -> int;
  [[nodiscard]] auto ToString() const -> std::string override;
 
- void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                    std::shared_ptr<design_extractor::Extractor> extractor,
+ void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                    const std::shared_ptr<design_extractor::Extractor>& extractor,
                     int depth) override;
 private:
   int value;

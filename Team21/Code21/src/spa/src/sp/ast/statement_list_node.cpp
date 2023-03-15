@@ -57,8 +57,8 @@ auto StatementListNode::ToString() const -> std::string {
 }
 
 void StatementListNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementListNode(
       std::static_pointer_cast<StatementListNode>(currentNode), depth);
 

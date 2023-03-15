@@ -10,8 +10,8 @@ auto ConstantNode::ToString() const -> std::string {
 }
 
 void ConstantNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleConstantNode(
       std::static_pointer_cast<ConstantNode>(currentNode), depth);
 }

@@ -58,7 +58,7 @@ TEST_CASE("Cross Join with 1 synonym table with no common synonym") {
 
   Table expected({a, b}, {{"1", "4"}, {"1", "5"}, {"2", "4"}, {"2", "5"}});
   Table res = Join{}(table1, table2);
-  
+
   REQUIRE(CheckEqual(res, expected));
 }
 
@@ -94,4 +94,3 @@ TEST_CASE("Join with 2 synonym tables with 2 common synonym") {
 
   REQUIRE(CheckEqual(res, expected));
 }
-

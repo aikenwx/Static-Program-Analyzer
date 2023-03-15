@@ -2,7 +2,7 @@
 
 namespace ast {
 auto VariableNode::ToString() const -> std::string {
-  return "variable:" + name + "\n";
+  return "variable:" + NamedNode::ToString();
 }
 
 void VariableNode::AcceptVisitor(

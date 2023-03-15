@@ -5,9 +5,7 @@
 namespace ast {
 NamedNode::NamedNode(std::string name) : name(std::move(name)) {}
 
-//void NamedNode::Execute() {
-//  return;
-//}
+auto NamedNode::GetName() const -> std::string { return name; }
 
-auto NamedNode::GetName() -> std::string { return name; }
+auto NamedNode::ToString() const -> std::string { return name + "\n"; }
 }  // namespace ast

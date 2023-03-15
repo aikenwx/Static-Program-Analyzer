@@ -7,10 +7,10 @@ class NamedNode : public INode {
 public:
  explicit NamedNode(std::string name);
 
- auto GetName() -> std::string;
- [[nodiscard]] auto ToString() const -> std::string override = 0;
+ [[nodiscard]] auto GetName() const -> std::string;
+ [[nodiscard]] auto ToString() const -> std::string override;
 
-protected:
+private:
   std::string name;
 };
 }  // namespace ast

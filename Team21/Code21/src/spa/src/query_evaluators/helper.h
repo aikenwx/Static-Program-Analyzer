@@ -17,7 +17,7 @@ template<typename T>
 std::string Join(std::vector<T> vec, const std::string &sep) {
   std::string res;
   for (int i = 0; i < vec.size(); ++i) {
-//    if (i != 0) res += sep;
+    if (i != 0) res += sep;
     res += to_string(vec[i]);
   }
   return res;

@@ -157,7 +157,7 @@ void QueryParser::parsePattern() {
   Synonym synonym{Synonym(next())};
   if (Declaration::findDeclarationWithSynonym(declarations, synonym).has_value() == false) {
     throw QueryException(ErrorType::Semantic,
-      "Semantic error. There is missing declaration in Select clause for " + synonym.getSynonym());
+      "Semantic error. There is missing declaration in pattern clause for synonym " + synonym.getSynonym());
   }
   auto declaration{Declaration::findDeclarationWithSynonym(declarations, synonym)};
   DesignEntity synDE{ declaration.value().getDesignEntity() };

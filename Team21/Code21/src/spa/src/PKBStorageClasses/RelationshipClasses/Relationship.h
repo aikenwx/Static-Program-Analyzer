@@ -3,33 +3,81 @@
 
 #include "../EntityClasses/AssignStatement.h"
 #include "../EntityClasses/Procedure.h"
+#include "../StorageKey.h"
 
-enum RelationshipType {
-    MODIFIES = 0,
-    USES = 1,
-    PARENT = 2,
-    FOLLOWS = 3,
-    PARENT_STAR = 4,
-    FOLLOWS_STAR = 5,
-    CALLS = 6,
-    CALLS_STAR = 7,
-    LAST_RELATIONSHIP = CALLS_STAR,
+struct RelationshipType : public StorageKey {
+   private:
+    static std::size_t relationshipTypeKeyCounter;
+
+   public:
+    RelationshipType();
+    bool operator==(const RelationshipType &relationshipType) const;
+};
+
+template <>
+struct std::hash<RelationshipType> {
+    std::size_t operator()(const RelationshipType &relationshipType) const;
+};
+
+struct RelationshipSynonymKey : public StorageKey {
+   private:
+    RelationshipType *relationshipType;
+    EntityType *leftHandEntityType;
+    EntityType *rightHandEntityType;
+
+   public:
+    RelationshipSynonymKey(RelationshipType *relationshipType, EntityType *leftHandEntityType, EntityType *rightHandEntityType);
+    bool operator==(const RelationshipSynonymKey &otherRelationshipSynonymKey) const;
+};
+
+template <>
+struct std::hash<RelationshipSynonymKey> {
+    std::size_t operator()(const RelationshipSynonymKey &relationshipSynonymKey) const;
+};
+
+struct RelationshipKey : public StorageKey {
+   private:
+    RelationshipType *relationshipType;
+    EntityKey *leftEntityKey;
+    EntityKey *rightEntityKey;
+
+   public:
+    RelationshipKey(RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
+    bool operator==(const RelationshipKey &otherRelationshipLiteralKey) const;
+};
+
+template <>
+struct std::hash<RelationshipKey> {
+    std::size_t operator()(const RelationshipKey &relationshipKey) const;
 };
 
 class Relationship {
-public:
+   private:
+    RelationshipKey relationshipKey;
+    RelationshipSynonymKey relationshipSynonymKey;
+    Entity *leftHandEntity;
+    Entity *rightHandEntity;
+
+   public:
+    Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity);
+
     virtual ~Relationship() = default;
 
-    virtual bool containsEntityOnLeftHand(Entity *entity) = 0;
+    RelationshipKey &getRelationshipKey();
 
-    virtual bool containsEntityOnRightHand(Entity *entity) = 0;
+    RelationshipSynonymKey &getRelationshipSynonymKey();
 
-    virtual RelationshipType getRelationshipType() = 0;
+    bool containsEntityOnLeftHand(Entity *entity);
 
-    virtual Entity *getLeftHandEntity() = 0;
+    bool containsEntityOnRightHand(Entity *entity);
 
-    virtual Entity *getRightHandEntity() = 0;
+    virtual RelationshipType &getRelationshipType() const = 0;
+
+    Entity *getLeftHandEntity() const;
+
+    Entity *getRightHandEntity() const;
+
+    bool equals(Relationship *otherRelationship);
 };
 
-
-#endif //SPA_RELATIONSHIP_H
+#endif  // SPA_RELATIONSHIP_H

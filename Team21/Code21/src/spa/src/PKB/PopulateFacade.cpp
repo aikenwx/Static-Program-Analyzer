@@ -28,141 +28,197 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager) {
+PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGManager *cfgManager) {
     this->entityManager = entityManager;
     this->relationshipManager = relationshipManager;
     this->patternManager = patternManager;
+    this->cfgManager = cfgManager;
 }
 
 void PopulateFacade::storeAssignmentStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<AssignStatement>(statementNumber));
+    this->entityManager->storeEntity(new AssignStatement(statementNumber));
 }
 
 void PopulateFacade::storeCallStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<CallStatement>(statementNumber));
+    this->entityManager->storeEntity(new CallStatement(statementNumber));
 }
 
 void PopulateFacade::storeIfStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<IfStatement>(statementNumber));
+    this->entityManager->storeEntity(new IfStatement(statementNumber));
 }
 
 void PopulateFacade::storePrintStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<PrintStatement>(statementNumber));
+    this->entityManager->storeEntity(new PrintStatement(statementNumber));
 }
 
 void PopulateFacade::storeReadStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<ReadStatement>(statementNumber));
+    this->entityManager->storeEntity(new ReadStatement(statementNumber));
 }
 
 void PopulateFacade::storeWhileStatement(int statementNumber) {
-    this->entityManager->storeStatement(std::make_shared<WhileStatement>(statementNumber));
+    this->entityManager->storeEntity(new WhileStatement(statementNumber));
 }
 
 void PopulateFacade::storeConstant(int constantValue) {
-    this->entityManager->storeConstant(std::make_shared<Constant>(constantValue));
+    this->entityManager->storeEntity(new Constant(constantValue));
 }
 
 void PopulateFacade::storeVariable(std::string variableName) {
-    this->entityManager->storeVariable(std::make_shared<Variable>(new std::string(variableName)));
+    this->entityManager->storeEntity(new Variable(new std::string(variableName)));
 }
 
 void PopulateFacade::storeProcedure(std::string procedureName) {
-    this->entityManager->storeProcedure(std::make_shared<Procedure>(new std::string(procedureName)));
+    this->entityManager->storeEntity(new Procedure(new std::string(procedureName)));
 }
 
 void PopulateFacade::storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
-    Statement *statement = this->entityManager->getStatementByStatementNumber(statementNumber);
-    Variable *variable = this->entityManager->getVariableByVariableName(variableName);
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+    auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
     this->validateEntityExists(statement);
     this->validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(std::make_shared<ModifiesRelationship>(statement, variable));
+    this->relationshipManager->storeRelationship(new ModifiesRelationship(statement, variable));
 }
 
 void PopulateFacade::storeStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
-    Statement *statement = this->entityManager->getStatementByStatementNumber(statementNumber);
-    Variable *variable = this->entityManager->getVariableByVariableName(variableName);
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+    auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
     this->validateEntityExists(statement);
     this->validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(statement, variable));
+    this->relationshipManager->storeRelationship(new UsesRelationship(statement, variable));
 }
 
 void PopulateFacade::storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
-    Statement *firstStatement = this->entityManager->getStatementByStatementNumber(firstStatementNumber);
-    Statement *secondStatement = this->entityManager->getStatementByStatementNumber(secondStatementNumber);
+    auto firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
+    auto secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
+    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
+    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
     this->validateEntityExists(firstStatement);
     this->validateEntityExists(secondStatement);
-    this->relationshipManager->storeRelationship(std::make_shared<FollowsRelationship>(firstStatement, secondStatement));
+
+    this->relationshipManager->storeRelationship(new FollowsRelationship(firstStatement, secondStatement));
 }
 
 void PopulateFacade::storeParentRelationship(int parentStatementNumber, int childStatementNumber) {
-    Statement *parentStatement = this->entityManager->getStatementByStatementNumber(parentStatementNumber);
-    Statement *childStatement = this->entityManager->getStatementByStatementNumber(childStatementNumber);
+    auto parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
+    auto childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
+    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
+    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
     this->validateEntityExists(parentStatement);
     this->validateEntityExists(childStatement);
-    this->relationshipManager->storeRelationship(std::make_shared<ParentRelationship>(parentStatement, childStatement));
+    this->relationshipManager->storeRelationship(new ParentRelationship(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
-    Procedure *procedure = this->entityManager->getProcedureByProcedureName(procedureName);
-    Variable *variable = this->entityManager->getVariableByVariableName(variableName);
+    auto procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
+    auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
     this->validateEntityExists(procedure);
     this->validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(std::make_shared<ModifiesRelationship>(procedure, variable));
+    this->relationshipManager->storeRelationship(new ModifiesRelationship(procedure, variable));
 }
 
 void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
-    Procedure *procedure = this->entityManager->getProcedureByProcedureName(procedureName);
-    Variable *variable = this->entityManager->getVariableByVariableName(variableName);
+    auto procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
+    auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
+    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
     this->validateEntityExists(procedure);
     this->validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(procedure, variable));
+    this->relationshipManager->storeRelationship(new UsesRelationship(procedure, variable));
 }
 
 void PopulateFacade::storeParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
-    Statement *parentStatement = this->entityManager->getStatementByStatementNumber(parentStatementNumber);
-    Statement *childStatement = this->entityManager->getStatementByStatementNumber(childStatementNumber);
+    auto parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
+    auto childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
+    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
+    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
     this->validateEntityExists(parentStatement);
     this->validateEntityExists(childStatement);
-    this->relationshipManager->storeRelationship(std::make_shared<ParentStarRelationship>(parentStatement, childStatement));
+    this->relationshipManager->storeRelationship(new ParentStarRelationship(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
-    Statement *firstStatement = this->entityManager->getStatementByStatementNumber(firstStatementNumber);
-    Statement *secondStatement = this->entityManager->getStatementByStatementNumber(secondStatementNumber);
+    auto firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
+    auto secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
+    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
+    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
     this->validateEntityExists(firstStatement);
     this->validateEntityExists(secondStatement);
-    this->relationshipManager->storeRelationship(std::make_shared<FollowsStarRelationship>(firstStatement, secondStatement));
+    this->relationshipManager->storeRelationship(new FollowsStarRelationship(firstStatement, secondStatement));
 }
 
 void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression) {
-    Statement *statement = this->entityManager->getStatementByStatementNumber(statementNumber);
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+
     this->validateEntityExists(statement);
 
-    if (statement->getEntityType() != EntityType::ASSIGN_STATEMENT) {
+    if (!(statement->getEntityType() == AssignStatement::getEntityTypeStatic())) {
         throw std::runtime_error("Statement is not an assign statement, cannot store postfix expressions");
     }
 
     this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, new std::string(postfixExpression));
 }
 
+void PopulateFacade::storeIfStatementConditionVariable(int statementNumber, std::string variableName) {
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+
+    this->validateEntityExists(statement);
+
+    if (!(statement->getEntityType() == IfStatement::getEntityTypeStatic())) {
+        throw std::runtime_error("Statement is not an if statement, cannot store pattern");
+    }
+
+    this->patternManager->storeIfStatementConditionVariable((IfStatement *)statement, &variableName);
+}
+
+void PopulateFacade::storeWhileStatementConditionVariable(int statementNumber, std::string variableName) {
+    auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
+
+    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
+
+    this->validateEntityExists(statement);
+
+    if (!(statement->getEntityType() == WhileStatement::getEntityTypeStatic())) {
+        throw std::runtime_error("Statement is not a while statement, cannot store pattern");
+    }
+
+    this->patternManager->storeWhileStatementConditionVariable((WhileStatement *)statement, &variableName);
+}
+
 void PopulateFacade::storeCallsRelationship(std::string firstProcedureName, std::string secondProcedureName) {
-    Procedure *firstProcedure = this->entityManager->getProcedureByProcedureName(firstProcedureName);
-    Procedure *secondProcedure = this->entityManager->getProcedureByProcedureName(secondProcedureName);
+    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &firstProcedureName);
+    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &secondProcedureName);
+    Procedure *firstProcedure = (Procedure *)this->entityManager->getEntity(firstProcedureKey);
+    Procedure *secondProcedure = (Procedure *)this->entityManager->getEntity(secondProcedureKey);
     this->validateEntityExists(firstProcedure);
     this->validateEntityExists(secondProcedure);
-    this->relationshipManager->storeRelationship(std::make_shared<CallsRelationship>(firstProcedure, secondProcedure));
+    this->relationshipManager->storeRelationship(new CallsRelationship(firstProcedure, secondProcedure));
 }
 
 void PopulateFacade::storeCallsStarRelationship(std::string firstProcedureName, std::string secondProcedureName) {
-    Procedure *firstProcedure = this->entityManager->getProcedureByProcedureName(firstProcedureName);
-    Procedure *secondProcedure = this->entityManager->getProcedureByProcedureName(secondProcedureName);
+    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &firstProcedureName);
+    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &secondProcedureName);
+    Procedure *firstProcedure = (Procedure *)this->entityManager->getEntity(firstProcedureKey);
+    Procedure *secondProcedure = (Procedure *)this->entityManager->getEntity(secondProcedureKey);
     this->validateEntityExists(firstProcedure);
     this->validateEntityExists(secondProcedure);
-    this->relationshipManager->storeRelationship(std::make_shared<CallsStarRelationship>(firstProcedure, secondProcedure));
+    this->relationshipManager->storeRelationship(new CallsStarRelationship(firstProcedure, secondProcedure));
 }
 
 void PopulateFacade::validateEntityExists(Entity *entity) {
     if (entity == nullptr) {
         throw std::runtime_error("Entity does not exist in PKB and the relationship cannot be added, please populate PKB with all entities before storing relationships.");
     }
+}
+
+void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
+    this->cfgManager->storeCFG(cfg);
 }

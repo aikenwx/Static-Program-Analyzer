@@ -1,6 +1,6 @@
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
-#include "catch.hpp"
 #include "common.h"
 #include "tokenizer/simple_tokenizer.h"
 

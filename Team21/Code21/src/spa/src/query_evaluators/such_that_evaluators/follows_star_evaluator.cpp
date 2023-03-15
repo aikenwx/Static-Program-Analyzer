@@ -9,10 +9,10 @@ namespace qps {
 	}
 
 	std::vector<EntityType> FollowsStarEvaluator::GetLeftHandTypes(Ref& left_arg) {
-		return { EntityType::STATEMENT };
+		return { Statement::getEntityTypeStatic() };
 	}
 
 	std::vector<EntityType> FollowsStarEvaluator::GetRightHandTypes(Ref& right_arg) {
-		return { EntityType::STATEMENT };
+		return { Statement::getEntityTypeStatic() };
 	}
 } // qps

@@ -1,7 +1,12 @@
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
+
 #include "PKB/PKB.h"
-#include "catch.hpp"
 #include "exceptions/syntax_error.h"
 #include "sp/sp.h"
+
+namespace test_sp {
+using Catch::Matchers::Message;
 
 SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]") {
   PKB pkb = PKB();
@@ -16,7 +21,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid identifier"));
+            Message("Syntax error: Invalid identifier"));
       }
     }
   };
@@ -30,7 +35,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Unexpected symbol"));
+            Message("Syntax error: Unexpected symbol"));
       }
     }
   };
@@ -42,7 +47,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Empty program"));
+            Message("Syntax error: Empty program"));
       }
     }
   };
@@ -54,7 +59,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid program"));
+            Message("Syntax error: Invalid program"));
       }
     }
   };
@@ -66,8 +71,9 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
             sp.process(program, &pkb), exceptions::SyntaxError,
-            Catch::Message("Syntax error: Invalid program"));
+            Message("Syntax error: Invalid program"));
       }
     }
   };
 }
+}  // namespace test_sp

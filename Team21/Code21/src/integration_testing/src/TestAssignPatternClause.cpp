@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
@@ -161,10 +160,5 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
       REQUIRE(qps_test::RunQuery("assign a; Select a pattern a(\"cenY\", \"2*count+1+2*cenX\")", *pkb_querier) == expected);
 
     }
-  }
-
-  //To be added haha
-  SECTION("catching syntx errors in expression-spec") {
-
   }
 }

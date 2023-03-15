@@ -5,23 +5,17 @@
 #ifndef SPA_FOLLOWSSTARRELATIONSHIP_H
 #define SPA_FOLLOWSSTARRELATIONSHIP_H
 
-
-#include "Relationship.h"
 #include "../EntityClasses/Statement.h"
+#include "Relationship.h"
 
 class FollowsStarRelationship : public Relationship {
-private:
-    Statement* followedStatement;
-    Statement* followerStatement;
+   private:
+    static RelationshipType relationshipType;
 
-public:
+   public:
+    static RelationshipType &getRelationshipTypeStatic();
     FollowsStarRelationship(Statement *followedStatement, Statement *followerStatement);
-    bool containsEntityOnLeftHand(Entity *entity) override;
-    bool containsEntityOnRightHand(Entity *entity) override;
-    RelationshipType getRelationshipType() override;
-    Entity* getLeftHandEntity() override;
-    Entity* getRightHandEntity() override;
+    RelationshipType &getRelationshipType() const override;
 };
 
-
-#endif //SPA_FOLLOWSSTARRELATIONSHIP_H
+#endif  // SPA_FOLLOWSSTARRELATIONSHIP_H

@@ -10,13 +10,9 @@ class AssignEvaluator : public PatternEvaluator {
  public:
   AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
       : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-  std::vector<Relationship *> CallPkb(QueryFacade &pkb) override;
+  std::vector<Product> CallPkb(QueryFacade &pkb) override;
 
 private:
-  int postfixHelper(char a);
-
-  std::string makePostfix(std::string str);
-
   std::vector<ModifiesRelationship *> checkExpressionContained(std::vector<ModifiesRelationship *> pkb_res,
                                                                std::string postfix,
                                                                bool is_partial);

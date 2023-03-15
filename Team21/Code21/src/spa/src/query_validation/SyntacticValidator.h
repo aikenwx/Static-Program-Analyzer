@@ -7,10 +7,10 @@
 
 namespace qps {
 
-	//check if synonyms are IDENT is done in QueryParser
+	//check if synonyms are IDENT is done in QueryParser. It checks for if synonym type matches with clause type. Errors regarding relation between stuff.
 	class SyntacticValidator : public QueryValidator {
 	public:
-		SyntacticValidator(Query query);
+		SyntacticValidator(Query& query);
 
 		bool validateQuery();
 

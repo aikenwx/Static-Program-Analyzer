@@ -5,31 +5,19 @@
 
 #include <stdexcept>
 
-bool UsesRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->user->equals(entity);
-}
-
-bool UsesRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->usedVariable->equals(entity);
-}
-
-UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) {
-    // user can only be Statement or Procedure
-    if (!Entity::isStatementType(user->getEntityType()) && user->getEntityType() != EntityType::PROCEDURE) {
+UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) : Relationship(&UsesRelationship::getRelationshipType(),
+                                                                                        user, usedVariable) {
+    if (!Statement::isStatement(user) && dynamic_cast<Procedure *>(user) == nullptr) {
         throw std::invalid_argument("user can only be Statement or Procedure");
     }
-    this->user = user;
-    this->usedVariable = usedVariable;
 }
 
-RelationshipType UsesRelationship::getRelationshipType() {
-    return RelationshipType::USES;
+RelationshipType &UsesRelationship::getRelationshipType() const {
+    return UsesRelationship::relationshipType;
 }
 
-Entity *UsesRelationship::getLeftHandEntity() {
-    return this->user;
-}
+RelationshipType UsesRelationship::relationshipType = RelationshipType();
 
-Entity *UsesRelationship::getRightHandEntity() {
-    return this->usedVariable;
+RelationshipType &UsesRelationship::getRelationshipTypeStatic() {
+    return UsesRelationship::relationshipType;
 }

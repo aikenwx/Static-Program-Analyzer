@@ -6,7 +6,7 @@
 
 namespace qps {
 
-SemanticValidator::SemanticValidator(Query query) : QueryValidator(query) {}
+SemanticValidator::SemanticValidator(Query& query) : QueryValidator(query) {}
 
 bool SemanticValidator::validateQuery() {
   checkForDuplicateDeclarations();

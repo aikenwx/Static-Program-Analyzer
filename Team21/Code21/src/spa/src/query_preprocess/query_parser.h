@@ -29,6 +29,7 @@ class QueryParser {
 
 		Ref parseRef();
 		ExpressionSpec parseExpressionSpec();
+		std::string validateExpressionHelper(std::string s);
 		Element parseElement();
 		WithRef parseWithRef();
 		std::vector<Element> parseTupleSelect();
@@ -42,6 +43,9 @@ class QueryParser {
 		bool parseSuchThatClause();
 		bool parsePatternClause();
 		bool parseWithClause();
+
+		int operatorHelper(char a);
+		std::string makePostfix(std::string str);
 
 	public:
 		QueryParser(std::vector<std::string> tokens_);

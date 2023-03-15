@@ -1,10 +1,14 @@
 #include "ReadStatement.h"
 
-ReadStatement::ReadStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
+ReadStatement::ReadStatement(int statementNumber) : Statement(statementNumber) {
 }
 
-EntityType ReadStatement::getEntityType() {
-    return EntityType::READ_STATEMENT;
+EntityType &ReadStatement::getEntityTypeStatic() {
+    return ReadStatement::readStatementType;
 }
+
+EntityType &ReadStatement::getEntityType() const {
+    return ReadStatement::getEntityTypeStatic();
+}
+
+EntityType ReadStatement::readStatementType = EntityType();

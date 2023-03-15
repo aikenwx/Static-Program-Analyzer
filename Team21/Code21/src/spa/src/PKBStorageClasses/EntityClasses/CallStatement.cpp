@@ -1,10 +1,14 @@
 #include "CallStatement.h"
 
-CallStatement::CallStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
+CallStatement::CallStatement(int statementNumber) : Statement(statementNumber) {
 }
 
-EntityType CallStatement::getEntityType() {
-    return EntityType::CALL_STATEMENT;
+EntityType& CallStatement::getEntityTypeStatic() {
+    return CallStatement::callStatementType;
 }
+
+EntityType& CallStatement::getEntityType() const {
+    return CallStatement::callStatementType;
+}
+
+EntityType CallStatement::callStatementType = EntityType();

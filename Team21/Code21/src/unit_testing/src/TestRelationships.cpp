@@ -1,4 +1,5 @@
 
+#include <catch2/catch_test_macros.hpp>
 #include <stdexcept>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -17,7 +18,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "catch.hpp"
 
 TEST_CASE("Relationships can instantiate") {
     PrintStatement *printStatement = new PrintStatement(2);

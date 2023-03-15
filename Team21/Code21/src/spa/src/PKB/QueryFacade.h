@@ -7,7 +7,9 @@
 
 #include <vector>
 
+#include "PKB/CFGManager.h"
 #include "PKB/EntityManager.h"
+#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -30,14 +32,17 @@
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "QueryFacade.h"
+#include "sp/cfg/cfg.h"
 
 class QueryFacade {
    private:
     EntityManager* entityManager;
     RelationshipManager* relationshipManager;
+    CFGManager* cfgManager;
+    PatternManager* patternManager;
 
    public:
-    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager);
+    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGManager* cfgManager);
 
     std::vector<AssignStatement*>* getAllAssignStatements();
     std::vector<IfStatement*>* getAllIfStatements();
@@ -59,6 +64,9 @@ class QueryFacade {
     std::vector<CallsRelationship*>* getAllCallsRelationships();
     std::vector<CallsStarRelationship*>* getAllCallsStarRelationships();
 
+    std::set<WhileStatement*>* getWhileStatementsUsingVariableInCondition(std::string variableName);
+    std::set<IfStatement*>* getIfStatementsUsingVariableInCondition(std::string variableName);
+
     ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
     UsesRelationship* getStatementUsesVariableRelationship(int statementNumber, std::string variableName);
@@ -69,6 +77,8 @@ class QueryFacade {
     FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
     CallsRelationship* getCallsRelationship(std::string callerName, std::string calleeName);
     CallsStarRelationship* getCallsStarRelationship(std::string callerName, std::string calleeName);
+
+    cfg::CFG* getCFG();
 };
 
 #endif  // SPA_QUERYFACADE_H

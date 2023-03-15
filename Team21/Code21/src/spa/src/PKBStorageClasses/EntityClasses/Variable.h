@@ -8,15 +8,17 @@
 
 class Variable : public Entity {
    private:
-    std::shared_ptr<std::string> variableName;
+    static EntityType variableType;
+    size_t hash;
 
    public:
+    static EntityType& getEntityTypeStatic();
+
     Variable(std::string* variableValue);
 
-    std::string * getEntityValue() override;
+    ~Variable() = default;
 
-    EntityType getEntityType() override;
-    ;
+    EntityType& getEntityType() const override;
 };
 
 #endif  // SPA_VARIABLE_H

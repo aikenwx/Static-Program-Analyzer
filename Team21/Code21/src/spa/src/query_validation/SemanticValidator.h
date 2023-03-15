@@ -8,7 +8,7 @@ namespace qps {
 
 	class SemanticValidator : public QueryValidator {
 	public:
-		SemanticValidator(Query query);
+		SemanticValidator(Query& query);
 
 		//checks query by calling all the other check functions
 		bool validateQuery();

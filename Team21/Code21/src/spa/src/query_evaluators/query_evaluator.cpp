@@ -4,6 +4,7 @@
 #include "such_that_evaluators/such_that_evaluator_factory.h"
 #include "pattern_evaluators/pattern_evaluator_factory.h"
 #include "join/constraints_solver.h"
+#include "tables/table_helpers.h"
 
 namespace qps {
 QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)), early_return_(false) {
@@ -32,7 +33,7 @@ void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
       if (!std::get<bool>(res)) early_return_ = true;
     } else {
       auto table = std::get<SynonymTable>(res);
-      if (table.Empty()) early_return_ = true;
+      if (table.IsEmpty()) early_return_ = true;
       else tables_.push_back(std::move(table));
     }
   }
@@ -41,16 +42,28 @@ void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
 std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb) {
   auto target = getSynonynm(query_);
   if (tables_.empty()) {
-    return std::get<SynonymTable>(select_evalautor_->Evaluate(pkb)).Extract(target);
+    auto syn_table = std::get<SynonymTable>(select_evalautor_->Evaluate(pkb));
+    auto entities = ExtractCol(syn_table, target);
+    std::unordered_set<std::string> entity_str;
+    for (const auto &entity : entities) {
+      entity_str.insert(*entity->getEntityValue());
+    }
+    return entity_str;
   }
   auto final_table = ConstraintsSolver::solve(tables_);
-  if (final_table.Empty()) {
+  if (final_table.IsEmpty()) {
     return {};
   }
-  if (!final_table.HasSynonym(target)) {
+  if (!final_table.HasKey(target)) {
     final_table = std::get<SynonymTable>(select_evalautor_->Evaluate(pkb));
   }
-  return final_table.Extract(target);
+
+  auto entities = ExtractCol(final_table, target);
+  std::unordered_set<std::string> entity_str;
+  for (const auto &entity : entities) {
+    entity_str.insert(*entity->getEntityValue());
+  }
+  return entity_str;
 }
 
 std::unordered_set<std::string> QueryEvaluator::EvaluateQuery(QueryFacade &pkb) {

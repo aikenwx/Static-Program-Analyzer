@@ -1,6 +1,6 @@
 #pragma once
 
-#include "query_evaluators/synonym_table.h"
+#include "query_evaluators/clause_evaluator.h"
 
 namespace qps {
 class ConstraintsSolver {

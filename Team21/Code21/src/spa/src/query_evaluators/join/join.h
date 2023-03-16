@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "query_evaluators/tables/table_helpers.h"
-#include "query_evaluators/helper.h"
+#include "query_evaluators/string_helpers.h"
 
 namespace std {
 template<typename T1, typename T2>

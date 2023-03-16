@@ -17,6 +17,8 @@ class RowTable {
   using Row = std::vector<Value>;
   using Rows = std::vector<Row>;
 
+  RowTable() = default;
+
   RowTable(Header header) : header_(std::move(header)) {
     for (std::size_t i = 0; i < header_.size(); ++i) {
       header_idx_[header_[i]] = i;

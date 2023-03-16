@@ -1,8 +1,7 @@
-#include "join.h"
-
 #include <numeric>
 
 #include "constraints_solver.h"
+#include "join.h"
 
 namespace qps {
 

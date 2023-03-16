@@ -1,15 +1,14 @@
 #include "term_node.h"
 
+#include <utility>
+
 namespace ast {
-TermNode::TermNode(std::shared_ptr<INode> operand) {
-  this->operand = operand;
-}
+TermNode::TermNode(std::shared_ptr<INode> operand)
+    : operand(std::move(operand)) {}
 
-std::shared_ptr<INode> TermNode::GetOperand() {
-  return operand;
-}
+auto TermNode::GetOperand() -> std::shared_ptr<INode> { return operand; }
 
-std::string TermNode::ToString() const {
+auto TermNode::ToString() const -> std::string {
   return "term:" + operand->ToString() + "\n";
 }
-}
+}  // namespace ast

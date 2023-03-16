@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 
 #include "i_node.h"
 
@@ -9,15 +10,15 @@ class BinaryOperationNode : public INode {
 public:
   BinaryOperationNode(std::shared_ptr<INode> left, std::shared_ptr<INode> right);
 
-  std::shared_ptr<INode> GetLeft();
-  std::shared_ptr<INode> GetRight();
-  virtual std::string ToString() const override = 0;
-  virtual void AcceptVisitor(
-      std::shared_ptr<INode> currentNode,
-      std::shared_ptr<design_extractor::Extractor> extractor, int depth) override;
+  [[nodiscard]] auto GetLeft() const -> std::shared_ptr<INode>;
+  [[nodiscard]] auto GetRight() const -> std::shared_ptr<INode>;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
+                     int depth) override;
 
-protected:
-  std::shared_ptr<INode> left;
-  std::shared_ptr<INode> right;
+ private:
+  std::shared_ptr<INode> left_;
+  std::shared_ptr<INode> right_;
 };
-}
+}  // namespace ast

@@ -1,20 +1,17 @@
 #include "assign_exp_relationship.h"
 
+#include <utility>
+
 namespace rel {
-std::unique_ptr<AssignExpRelationship> AssignExpRelationship::CreateRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp) {
-  return std::unique_ptr<AssignExpRelationship>(new AssignExpRelationship(assignNode, postfixExp));
+auto AssignExpRelationship::CreateRelationship(std::shared_ptr<ast::AssignNode> assignNode, const std::string& postfixExp) -> std::unique_ptr<AssignExpRelationship> {
+  return std::unique_ptr<AssignExpRelationship>(new AssignExpRelationship(std::move(assignNode), postfixExp));
 };
 
-std::shared_ptr<ast::AssignNode> AssignExpRelationship::assignNode() { return assignNode_; }
+auto AssignExpRelationship::assignNode() const -> std::shared_ptr<ast::AssignNode> { return assignNode_; }
 
-std::string AssignExpRelationship::varName() { return assignNode_->GetVariable()->GetName(); }
+auto AssignExpRelationship::varName() const -> std::string { return assignNode_->GetVariable()->GetName(); }
 
-int AssignExpRelationship::statementNumber() { return assignNode_->GetStatementNumber(); }
+auto AssignExpRelationship::statementNumber() const -> int { return assignNode_->GetStatementNumber(); }
 
-std::string AssignExpRelationship::postfixExp() { return postfixExp_; }
-
-AssignExpRelationship::AssignExpRelationship(std::shared_ptr<ast::AssignNode> assignNode, std::string postfixExp) {
-  assignNode_ = assignNode;
-  postfixExp_ = postfixExp;
-};
-}
+auto AssignExpRelationship::postfixExp() const -> std::string { return postfixExp_; }
+}  // namespace rel

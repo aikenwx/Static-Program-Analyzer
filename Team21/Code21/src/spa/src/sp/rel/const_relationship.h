@@ -7,12 +7,12 @@
 namespace rel {
 class ConstRelationship : public Relationship {
  public:
-  static std::unique_ptr<ConstRelationship> CreateRelationship(int value);
-  int value();
-  RelationshipType relationshipType() override { return RelationshipType::CONST; };
+  static auto CreateRelationship(int value) -> std::unique_ptr<ConstRelationship>;
+  [[nodiscard]] auto value() const -> int;
+  [[nodiscard]] auto relationshipType() const -> RelationshipType override { return RelationshipType::CONST; };
 
  private:
-  ConstRelationship(int value);
+  explicit ConstRelationship(int value) : value_(value) {};
   int value_;
 };
 } // namespace rel

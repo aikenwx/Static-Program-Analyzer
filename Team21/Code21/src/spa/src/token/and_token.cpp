@@ -6,7 +6,7 @@
 
 namespace token {
 const std::unique_ptr<Token> AndToken::CreateToken(std::string str) {
-  assert(str == "&&");
+  assert(str == "&&"); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<AndToken>(new AndToken());
 };
 

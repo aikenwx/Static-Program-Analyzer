@@ -5,9 +5,9 @@
 #ifndef SPA_PATTERNMANAGER_H
 #define SPA_PATTERNMANAGER_H
 
-#include <set>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "../PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "../PKBStorageClasses/EntityClasses/IfStatement.h"
@@ -15,8 +15,8 @@
 
 class PatternManager {
    private:
-    std::unordered_map<std::string, std::shared_ptr<std::set<WhileStatement*>>> usedConditionVariableToWhileStatementStore;
-    std::unordered_map<std::string, std::shared_ptr<std::set<IfStatement*>>> usedConditionVariableToIfStatementStore;
+    std::unordered_map<std::string, std::shared_ptr<std::unordered_set<WhileStatement*>>> usedConditionVariableToWhileStatementStore;
+    std::unordered_map<std::string, std::shared_ptr<std::unordered_set<IfStatement*>>> usedConditionVariableToIfStatementStore;
 
    public:
     PatternManager() = default;
@@ -26,9 +26,9 @@ class PatternManager {
 
     void storeIfStatementConditionVariable(IfStatement* ifStatement, std::string* conditionVariable);
 
-    std::set<WhileStatement*>* getWhileStatementsByConditionVariable(std::string* conditionVariable);
+    std::unordered_set<WhileStatement*>* getWhileStatementsByConditionVariable(std::string* conditionVariable);
 
-    std::set<IfStatement*>* getIfStatementsByConditionVariable(std::string* conditionVariable);
+    std::unordered_set<IfStatement*>* getIfStatementsByConditionVariable(std::string* conditionVariable);
 };
 
 #endif  // SPA_PATTERNMANAGER_H

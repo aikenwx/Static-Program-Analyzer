@@ -44,7 +44,7 @@ bool VerifyAstRoot(std::shared_ptr<ast::INode> root) {
   std::unordered_set<std::string> procedures;
   for (const auto& procNode : programNode->GetProcedures()) {
     if (procedures.find(procNode->GetName()) != procedures.end()) {
-      throw exceptions::SemanticError("Duplicate procedure name");
+      throw exceptions::SemanticError("Duplicate procedure name: " + procNode->GetName());
     }
     procedures.insert(procNode->GetName());
   }
@@ -152,6 +152,9 @@ void ResolveCallsStarSingleProc(
     // a shortcut, basically
     try {
       for (const auto& called : callsStar.at(calledProcName)) {
+        if (proc == called) {
+          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+        }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
         }
@@ -168,6 +171,9 @@ void ResolveCallsStarSingleProc(
     // then, check calls
     try {
       for (const auto& called : calls.at(calledProcName)) {
+        if (proc == called) {
+          throw exceptions::SemanticError("Procedure call is recursive: " + proc);
+        }
         if (traversed.find(called) == traversed.end()) {
           traverseQueue.push(called);
         }

@@ -905,7 +905,7 @@ TEST_CASE("PKB can store while and if statememt pattern information") {
 
     populateFacade->storeIfStatementConditionVariable(4, "y");
 
-    std::set<WhileStatement *> *whileStatements = queryFacade->getWhileStatementsUsingVariableInCondition("x");
+    std::unordered_set<WhileStatement *> *whileStatements = queryFacade->getWhileStatementsUsingVariableInCondition("x");
 
     REQUIRE(whileStatements->size() == 2);
 
@@ -918,7 +918,7 @@ TEST_CASE("PKB can store while and if statememt pattern information") {
 
     REQUIRE(whileStatements->size() == 0);
 
-    std::set<IfStatement *> *ifStatements = queryFacade->getIfStatementsUsingVariableInCondition("y");
+    std::unordered_set<IfStatement *> *ifStatements = queryFacade->getIfStatementsUsingVariableInCondition("y");
 
     REQUIRE(ifStatements->size() == 2);
     // convert to array
@@ -930,6 +930,142 @@ TEST_CASE("PKB can store while and if statememt pattern information") {
     ifStatements = queryFacade->getIfStatementsUsingVariableInCondition("x");
 
     REQUIRE(ifStatements->size() == 0);
+
+    delete pkb;
+}
+
+TEST_CASE("Can add procedure name to calls") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    // Procedure1 calls Procedure2
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+    populateFacade->storeCallStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+
+    populateFacade->storeAssignStatementPostfixExpression(2, "ab-");
+
+    populateFacade->storeCallStatementProcedureName(1, "Procedure2");
+
+    populateFacade->storeAssignStatementPostfixExpression(2, "ab-");
+
+    populateFacade->storeCallStatementProcedureName(1, "Procedure2");
+
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure2");
+
+    CallStatement *callStatement = (CallStatement *)queryFacade->getEntity(CallStatement::getEntityTypeStatic(), 1);
+    REQUIRE(*callStatement->getProcedureName() == "Procedure2");
+
+    AssignStatement *assignStatement = (AssignStatement *)queryFacade->getEntity(AssignStatement::getEntityTypeStatic(), 2);
+
+    REQUIRE(*assignStatement->getPostFixExpression() == "ab-");
+    delete pkb;
+}
+
+TEST_CASE("PKB general query API works") {
+    PKB *pkb = new PKB();
+    PopulateFacade *populateFacade = pkb->getPopulateFacade();
+    QueryFacade *queryFacade = pkb->getQueryFacade();
+
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeCallStatement(3);
+    populateFacade->storePrintStatement(4);
+    populateFacade->storeWhileStatement(1);
+    populateFacade->storeAssignmentStatement(2);
+    populateFacade->storeCallStatement(3);
+    populateFacade->storePrintStatement(4);
+
+    populateFacade->storeVariable("x");
+    populateFacade->storeVariable("y");
+    populateFacade->storeVariable("x");
+    populateFacade->storeVariable("y");
+
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+    populateFacade->storeProcedure("Procedure1");
+    populateFacade->storeProcedure("Procedure2");
+
+    populateFacade->storeParentRelationship(1, 2);
+    populateFacade->storeParentRelationship(1, 3);
+    populateFacade->storeParentRelationship(1, 4);
+
+    populateFacade->storeFollowsRelationship(2, 3);
+    populateFacade->storeFollowsRelationship(3, 4);
+
+    populateFacade->storeFollowsStarRelationship(2, 3);
+
+    populateFacade->storeStatementUsesVariableRelationship(2, "x");
+    populateFacade->storeStatementUsesVariableRelationship(3, "y");
+    populateFacade->storeStatementUsesVariableRelationship(3, "y");
+
+    populateFacade->storeStatementModifiesVariableRelationship(2, "y");
+    populateFacade->storeStatementModifiesVariableRelationship(2, "y");
+    populateFacade->storeStatementModifiesVariableRelationship(3, "x");
+    populateFacade->storeStatementModifiesVariableRelationship(3, "y");
+
+    populateFacade->storeProcedureModifiesVariableRelationship("Procedure1", "x");
+
+    populateFacade->storeCallsRelationship("Procedure1", "Procedure2");
+
+    populateFacade->storeCallsStarRelationship("Procedure1", "Procedure2");
+
+    std::vector<Entity *> *entities = queryFacade->getEntitiesByType(Statement::getEntityTypeStatic());
+
+    REQUIRE(entities->size() == 4);
+
+    auto statement1 = queryFacade->getEntity(Statement::getEntityTypeStatic(), 1);
+    auto statement3 = queryFacade->getEntity(CallStatement::getEntityTypeStatic(), 3);
+    REQUIRE(entities->at(0)->equals(statement1));
+    REQUIRE(entities->at(1)->equals(std::make_shared<AssignStatement>(2).get()));
+    REQUIRE(entities->at(2)->equals(statement3));
+    REQUIRE(entities->at(3)->equals(std::make_shared<PrintStatement>(4).get()));
+
+    entities = queryFacade->getEntitiesByType(Variable::getEntityTypeStatic());
+
+    REQUIRE(entities->size() == 2);
+
+    auto variable1 = queryFacade->getEntity(Variable::getEntityTypeStatic(), "x");
+    auto variable2 = queryFacade->getEntity(Variable::getEntityTypeStatic(), "y");
+
+    REQUIRE(entities->at(0)->equals(variable1));
+    REQUIRE(entities->at(1)->equals(variable2));
+
+    std::vector<Relationship *> *relationships = queryFacade->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+
+    REQUIRE(relationships->size() == 2);
+
+    REQUIRE(relationships->at(0)->equals(std::make_shared<FollowsRelationship>(std::make_shared<AssignStatement>(2).get(), std::make_shared<CallStatement>(3).get()).get()));
+    REQUIRE(relationships->at(1)->equals(std::make_shared<FollowsRelationship>(std::make_shared<CallStatement>(3).get(), std::make_shared<PrintStatement>(4).get()).get()));
+
+    std::vector<Relationship *> *relationships2 = queryFacade->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+
+    REQUIRE(relationships2->size() == 2);
+
+    REQUIRE(relationships2->at(0)->equals(std::make_shared<UsesRelationship>(std::make_shared<AssignStatement>(2).get(), std::make_shared<Variable>(new std::string("x")).get()).get()));
+
+    REQUIRE(relationships2->at(1)->equals(std::make_shared<UsesRelationship>(std::make_shared<CallStatement>(3).get(), std::make_shared<Variable>(new std::string("y")).get()).get()));
+
+    std::vector<Relationship *> *relationships3 = queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+
+    REQUIRE(relationships3->size() == 2);
+
+    REQUIRE(relationships3->at(0)->equals(std::make_shared<ModifiesRelationship>(std::make_shared<CallStatement>(3).get(), std::make_shared<Variable>(new std::string("x")).get()).get()));
+
+    std::vector<Entity *> *entities2 = queryFacade->getRelationshipsByLeftEntityLiteralAndRightEntityType(ModifiesRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), 3, Variable::getEntityTypeStatic());
+
+    REQUIRE(entities2->size() == 2);
+
+    auto result1 = std::make_shared<Variable>(new std::string("x"));
+    REQUIRE(entities2->at(0)->equals(result1.get()));
+    REQUIRE(entities2->at(1)->equals(std::make_shared<Variable>(new std::string("y")).get()));
+
+    std::vector<Entity *> *entities3 = queryFacade->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(UsesRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic(), "x");
+
+    REQUIRE(entities3->size() == 1);
+    REQUIRE(entities3->at(0)->equals(std::make_shared<AssignStatement>(2).get()));
 
     delete pkb;
 }

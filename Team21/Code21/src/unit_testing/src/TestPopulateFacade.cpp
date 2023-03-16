@@ -208,8 +208,9 @@ TEST_CASE("PopulateFacade can populate follow relationship") {
     populateFacade->storePrintStatement(2);
     populateFacade->storeFollowsRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            FollowsRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == FollowsRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -233,8 +234,9 @@ TEST_CASE("PopulateFacade can populate parent relationship") {
     populateFacade->storePrintStatement(2);
     populateFacade->storeParentRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(ParentRelationship::getRelationshipTypeStatic(), WhileStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            ParentRelationship::getRelationshipTypeStatic(), WhileStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == ParentRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -258,9 +260,10 @@ TEST_CASE("PopulateFacade can populate parentStar relationship") {
     populateFacade->storePrintStatement(2);
     populateFacade->storeParentStarRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(ParentStarRelationship::getRelationshipTypeStatic(),
-                                                                                              WhileStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            ParentStarRelationship::getRelationshipTypeStatic(),
+            WhileStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == ParentStarRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -284,9 +287,10 @@ TEST_CASE("PopulateFacade can populate followStar relationship") {
     populateFacade->storePrintStatement(2);
     populateFacade->storeFollowsStarRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsStarRelationship::getRelationshipTypeStatic(),
-                                                                                              CallStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            FollowsStarRelationship::getRelationshipTypeStatic(),
+            CallStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == FollowsStarRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -328,9 +332,10 @@ TEST_CASE("PopulateFacade can populate statement modifies relationship") {
     populateFacade->storeVariable(variableName);
     populateFacade->storeStatementModifiesVariableRelationship(1, variableName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
-                                                                                              AssignStatement::getEntityTypeStatic(),
-                                                                                              Variable::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            ModifiesRelationship::getRelationshipTypeStatic(),
+            AssignStatement::getEntityTypeStatic(),
+            Variable::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == ModifiesRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -356,8 +361,9 @@ TEST_CASE("PopulateFacade can populate statement uses relationship") {
 
     populateFacade->storeStatementUsesVariableRelationship(1, variableName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
-                                                                                              Variable::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            UsesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
+            Variable::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == UsesRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -381,9 +387,10 @@ TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
     populateFacade->storePrintStatement(2);
     populateFacade->storeParentStarRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(ParentStarRelationship::getRelationshipTypeStatic(),
-                                                                                              AssignStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            ParentStarRelationship::getRelationshipTypeStatic(),
+            AssignStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == ParentStarRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -408,9 +415,10 @@ TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
 
     populateFacade->storeFollowsStarRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsStarRelationship::getRelationshipTypeStatic(),
-                                                                                              AssignStatement::getEntityTypeStatic(),
-                                                                                              PrintStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            FollowsStarRelationship::getRelationshipTypeStatic(),
+            AssignStatement::getEntityTypeStatic(),
+            PrintStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == FollowsStarRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
@@ -437,9 +445,10 @@ TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
     populateFacade->storeVariable(variableName);
     populateFacade->storeProcedureModifiesVariableRelationship(procedureName, variableName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic(),
-                                                                                              Variable::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            ModifiesRelationship::getRelationshipTypeStatic(),
+            Procedure::getEntityTypeStatic(),
+            Variable::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == ModifiesRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
@@ -466,9 +475,10 @@ TEST_CASE("PopulateFacade can populate procedure uses relationship") {
     populateFacade->storeProcedure(procedureName);
     populateFacade->storeProcedureUsesVariableRelationship(procedureName, variableName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic(),
-                                                                                              Variable::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            UsesRelationship::getRelationshipTypeStatic(),
+            Procedure::getEntityTypeStatic(),
+            Variable::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == UsesRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
@@ -496,9 +506,10 @@ TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
 
     populateFacade->storeCallsRelationship(callerName, calleeName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(CallsRelationship::getRelationshipTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            CallsRelationship::getRelationshipTypeStatic(),
+            Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == CallsRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "caller");
@@ -526,9 +537,10 @@ TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
 
     populateFacade->storeCallsStarRelationship(callerName, calleeName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(CallsStarRelationship::getRelationshipTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic(),
-                                                                                              Procedure::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            CallsStarRelationship::getRelationshipTypeStatic(),
+            Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == CallsStarRelationship::getRelationshipTypeStatic());
     REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "caller");
@@ -574,9 +586,10 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(entities2->at(0)->getEntityType() == CallStatement::getEntityTypeStatic());
     REQUIRE(*entities2->at(0)->getEntityValue() == "2");
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(),
-                                                                                              AssignStatement::getEntityTypeStatic(),
-                                                                                              AssignStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+            FollowsRelationship::getRelationshipTypeStatic(),
+            AssignStatement::getEntityTypeStatic(),
+            AssignStatement::getEntityTypeStatic());
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->getRelationshipType() == FollowsRelationship::getRelationshipTypeStatic());
     REQUIRE(relationships->at(0)->getLeftHandEntity()->getEntityType() == AssignStatement::getEntityTypeStatic());
@@ -585,7 +598,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "3");
 
     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
-        FollowsRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+            FollowsRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(),
+            AssignStatement::getEntityTypeStatic());
     REQUIRE(relationships2->size() == 1);
     REQUIRE(relationships2->at(0)->getRelationshipType() == FollowsRelationship::getRelationshipTypeStatic());
     REQUIRE(relationships2->at(0)->getLeftHandEntity()->getEntityType() == CallStatement::getEntityTypeStatic());
@@ -594,7 +608,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(*relationships2->at(0)->getRightHandEntity()->getEntityValue() == "4");
 
     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(
-        ParentStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), CallStatement::getEntityTypeStatic());
+            ParentStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
+            CallStatement::getEntityTypeStatic());
     REQUIRE(relationships3->size() == 1);
     REQUIRE(relationships3->at(0)->getRelationshipType() == ParentStarRelationship::getRelationshipTypeStatic());
     REQUIRE(relationships3->at(0)->getLeftHandEntity()->getEntityType() == AssignStatement::getEntityTypeStatic());
@@ -603,7 +618,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(*relationships3->at(0)->getRightHandEntity()->getEntityValue() == "2");
 
     std::vector<Relationship *> *relationships4 = relationshipManager->getRelationshipsByTypes(
-        FollowsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+            FollowsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
+            AssignStatement::getEntityTypeStatic());
     REQUIRE(relationships4->size() == 1);
     REQUIRE(relationships4->at(0)->getRelationshipType() == FollowsStarRelationship::getRelationshipTypeStatic());
     REQUIRE(relationships4->at(0)->getLeftHandEntity()->getEntityType() == AssignStatement::getEntityTypeStatic());
@@ -612,7 +628,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(*relationships4->at(0)->getRightHandEntity()->getEntityValue() == "3");
 
     std::vector<Relationship *> *relationships5 = relationshipManager->getRelationshipsByTypes(
-        CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+            CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
 
     REQUIRE(relationships5->size() == 1);
     REQUIRE(relationships5->at(0)->getRelationshipType() == CallsRelationship::getRelationshipTypeStatic());
@@ -622,7 +639,8 @@ TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
     REQUIRE(*relationships5->at(0)->getRightHandEntity()->getEntityValue() == "Procedure2");
 
     std::vector<Relationship *> *relationships6 = relationshipManager->getRelationshipsByTypes(
-        CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+            CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(),
+            Procedure::getEntityTypeStatic());
 
     REQUIRE(relationships6->size() == 1);
     REQUIRE(relationships6->at(0)->getRelationshipType() == CallsRelationship::getRelationshipTypeStatic());

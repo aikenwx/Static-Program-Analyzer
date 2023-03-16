@@ -8,8 +8,9 @@
 namespace ast {
 class ProgramNode : public INode {
 public:
+  virtual ~ProgramNode() = default;
   void AddProcedure(std::shared_ptr<ProcedureNode> procedure);
-  std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
+  std::vector<std::shared_ptr<ProcedureNode>> GetProcedures() const;
   std::string ToString() const override;
   int GetTotalStatementCount();
   bool ContainsProcedure(std::string const &procedureName);

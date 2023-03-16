@@ -19,22 +19,6 @@ struct std::hash<RelationshipType> {
     std::size_t operator()(const RelationshipType &relationshipType) const;
 };
 
-struct RelationshipSynonymKey : public StorageKey {
-   private:
-    RelationshipType *relationshipType;
-    EntityType *leftHandEntityType;
-    EntityType *rightHandEntityType;
-
-   public:
-    RelationshipSynonymKey(RelationshipType *relationshipType, EntityType *leftHandEntityType, EntityType *rightHandEntityType);
-    bool operator==(const RelationshipSynonymKey &otherRelationshipSynonymKey) const;
-};
-
-template <>
-struct std::hash<RelationshipSynonymKey> {
-    std::size_t operator()(const RelationshipSynonymKey &relationshipSynonymKey) const;
-};
-
 struct RelationshipKey : public StorageKey {
    private:
     RelationshipType *relationshipType;
@@ -54,7 +38,6 @@ struct std::hash<RelationshipKey> {
 class Relationship {
    private:
     RelationshipKey relationshipKey;
-    RelationshipSynonymKey relationshipSynonymKey;
     Entity *leftHandEntity;
     Entity *rightHandEntity;
 
@@ -64,8 +47,6 @@ class Relationship {
     virtual ~Relationship() = default;
 
     RelationshipKey &getRelationshipKey();
-
-    RelationshipSynonymKey &getRelationshipSynonymKey();
 
     bool containsEntityOnLeftHand(Entity *entity);
 

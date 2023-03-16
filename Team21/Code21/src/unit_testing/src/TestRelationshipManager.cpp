@@ -48,7 +48,9 @@ TEST_CASE("RelationshipManager retrieves relationship") {
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
     relationshipManager->storeRelationship(relationship);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+        ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 1);
     REQUIRE(relationships->at(0)->equals(relationship));
@@ -71,7 +73,9 @@ TEST_CASE("RelationshipManager retrieves multitple relationships") {
     relationshipManager->storeRelationship(relationship);
     relationshipManager->storeRelationship(relationship2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+        ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
     REQUIRE(relationships->at(0)->equals(relationship));
@@ -87,7 +91,9 @@ TEST_CASE("RelationshipManager retrieves multitple relationships") {
 TEST_CASE("RelationshipManager returns empty vector if no entries") {
     RelationshipManager *relationshipManager = new RelationshipManager();
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+        ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 0);
 
@@ -102,7 +108,9 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
     relationshipManager->storeRelationship(relationship);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+        FollowsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+        ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 0);
 
@@ -134,13 +142,17 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
     relationshipManager->storeRelationship(relationship3);
     relationshipManager->storeRelationship(relationship4);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), ReadStatement::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+        ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), relationship));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), relationship2));
 
-    std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+    std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
+        ModifiesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
+        Variable::getEntityTypeStatic());
 
     REQUIRE(relationships2->size() == 2);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(0), relationship3));
@@ -179,7 +191,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship3);
 //     relationshipManager->storeRelationship(relationship4);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
 
 //     REQUIRE(relationships->size() == 4);
@@ -221,7 +233,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship3);
 //     relationshipManager->storeRelationship(relationship4);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
 
 //     REQUIRE(relationships->size() == 4);
@@ -230,13 +242,13 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //         REQUIRE(Statement::isStatement(relationship->getRightHandEntity()));
 //     }
 
-//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(FOLLOWS, READ_STATEMENT,
+//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, READ_STATEMENT,
 //                                                                                                READ_STATEMENT);
 
 //     REQUIRE(relationships2->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(0), relationship.get()));
 
-//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(FOLLOWS, PRINT_STATEMENT,
+//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, PRINT_STATEMENT,
 //                                                                                                PRINT_STATEMENT);
 
 //     REQUIRE(relationships3->size() == 1);
@@ -266,7 +278,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(followsRelationship);
 //     relationshipManager->storeRelationship(followsRelationship2);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
 
 //     REQUIRE(relationships->size() == 2);
@@ -275,12 +287,12 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //         REQUIRE(Statement::isStatement(relationship->getRightHandEntity()));
 //     }
 
-//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(FOLLOWS, IF_STATEMENT,
+//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, IF_STATEMENT,
 //                                                                                                WHILE_STATEMENT);
 
 //     REQUIRE(relationships2->size() == 1);
 
-//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(FOLLOWS, WHILE_STATEMENT,
+//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, WHILE_STATEMENT,
 //                                                                                                READ_STATEMENT);
 
 //     REQUIRE(relationships3->size() == 1);
@@ -309,7 +321,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship2);
 //     relationshipManager->storeRelationship(relationship3);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT, WHILE_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, WHILE_STATEMENT,
 //                                                                                               WHILE_STATEMENT);
 
 //     REQUIRE(relationships->size() == 3);
@@ -342,7 +354,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship2);
 //     relationshipManager->storeRelationship(relationship3);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, CALL_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, CALL_STATEMENT,
 //                                                                                               CALL_STATEMENT);
 
 //     REQUIRE(relationships->size() == 3);
@@ -350,10 +362,10 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), relationship2.get()));
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(2), relationship3.get()));
 
-//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                                STATEMENT);
 
-//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(FOLLOWS, CALL_STATEMENT,
+//     std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, CALL_STATEMENT,
 //                                                                                                CALL_STATEMENT);
 
 //     REQUIRE(relationships3->size() == 3);
@@ -392,7 +404,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship3);
 //     relationshipManager->storeRelationship(relationship4);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, STATEMENT,
 //                                                                                               ASSIGN_STATEMENT);
 
 //     REQUIRE(relationships->size() == 3);
@@ -434,7 +446,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship3);
 //     relationshipManager->storeRelationship(relationship4);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT, ASSIGN_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, ASSIGN_STATEMENT,
 //                                                                                               STATEMENT);
 
 //     REQUIRE(relationships->size() == 1);
@@ -454,7 +466,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // TEST_CASE("Retrieve Statement Follows Statement from empty RelationshipManager") {
 //     RelationshipManager *relationshipManager = new RelationshipManager();
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
 //     REQUIRE(relationships->size() == 0);
 
@@ -478,7 +490,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship2);
 //     relationshipManager->storeRelationship(relationship3);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
 //                                                                                               WHILE_STATEMENT);
 
 //     REQUIRE(relationships->size() == 3);
@@ -519,7 +531,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship5);
 //     relationshipManager->storeRelationship(relationship6);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
 //                                                                                               STATEMENT);
 
 //     REQUIRE(relationships->size() == 5);
@@ -568,7 +580,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship5);
 //     relationshipManager->storeRelationship(relationship6);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT_STAR, IF_STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT_STAR, IF_STATEMENT,
 //                                                                                               CALL_STATEMENT);
 
 //     REQUIRE(relationships->size() == 5);
@@ -612,7 +624,7 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     relationshipManager->storeRelationship(relationship5);
 //     relationshipManager->storeRelationship(relationship6);
 
-//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, STATEMENT,
+//     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               CALL_STATEMENT);
 
 //     REQUIRE(relationships->size() == 5);
@@ -647,8 +659,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 
 //     relationshipManager->storeRelationship(relationship);
 //     relationshipManager->storeRelationship(relationship2);
-//     REQUIRE(relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->size() == 1);
-//     REQUIRE(relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->at(0) ==
+//     REQUIRE(relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->size() == 1);
+//     REQUIRE(relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->at(0) ==
 //             relationship.get());
 
 //     RelationshipLiteralHashkeyGenerator generator;

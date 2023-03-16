@@ -104,10 +104,9 @@ SCENARIO("SP can process and store a simple program into PKB") {
     }
     procedure baz {
       x = 4;
-      call bar;
     }
     procedure qux {
-      call foo;
+      print w;
     }
     procedure quux {
       call main;
@@ -131,7 +130,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about call "
           "statements") {
         std::vector<CallStatement*> const* calls = qf->getAllCallStatements();
-        RequireStmtNumsMatch(calls, {4, 6, 9, 10, 12, 13, 14});
+        RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
       THEN(
@@ -154,7 +153,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "statements") {
         std::vector<PrintStatement*> const* prints =
             qf->getAllPrintStatements();
-        RequireStmtNumsMatch(prints, {3});
+        RequireStmtNumsMatch(prints, {3, 12});
       }
 
       THEN(
@@ -172,7 +171,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain the correct information about variables") {
         std::vector<Variable*> const* vars = qf->getAllVariables();
-        RequireEntityValuesMatch(vars, {"x", "y", "z"});
+        RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
@@ -183,7 +182,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain the correct information about statements") {
         std::vector<Statement*> const* stmts = qf->getAllStatements();
         RequireStmtNumsMatch(stmts,
-                             {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+                             {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
       }
 
       THEN("The PKB should contain all Calls relationships") {
@@ -203,12 +202,6 @@ SCENARIO("SP can process and store a simple program into PKB") {
             RelPair{CallsRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "bar"},
                     {Procedure::getEntityTypeStatic(), "qux"}},
-            RelPair{CallsRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Procedure::getEntityTypeStatic(), "bar"}},
-            RelPair{CallsRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Procedure::getEntityTypeStatic(), "foo"}},
             RelPair{CallsRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "quux"},
                     {Procedure::getEntityTypeStatic(), "main"}}};
@@ -243,43 +236,10 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {Procedure::getEntityTypeStatic(), "foo"},
                     {Procedure::getEntityTypeStatic(), "qux"}},
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "foo"},
-                    {Procedure::getEntityTypeStatic(), "foo"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "bar"},
                     {Procedure::getEntityTypeStatic(), "baz"}},
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "bar"},
-                    {Procedure::getEntityTypeStatic(), "qux"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "bar"},
-                    {Procedure::getEntityTypeStatic(), "foo"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "bar"},
-                    {Procedure::getEntityTypeStatic(), "bar"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Procedure::getEntityTypeStatic(), "bar"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Procedure::getEntityTypeStatic(), "baz"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Procedure::getEntityTypeStatic(), "qux"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Procedure::getEntityTypeStatic(), "foo"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Procedure::getEntityTypeStatic(), "foo"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Procedure::getEntityTypeStatic(), "bar"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Procedure::getEntityTypeStatic(), "baz"}},
-            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
                     {Procedure::getEntityTypeStatic(), "qux"}},
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "quux"},
@@ -325,20 +285,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {Procedure::getEntityTypeStatic(), "bar"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "bar"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "baz"},
                     {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "qux"},
-                    {Variable::getEntityTypeStatic(), "z"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "quux"},
                     {Variable::getEntityTypeStatic(), "x"}},
@@ -377,52 +325,25 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {CallStatement::getEntityTypeStatic(), "6"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "6"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {AssignStatement::getEntityTypeStatic(), "7"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {IfStatement::getEntityTypeStatic(), "8"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {IfStatement::getEntityTypeStatic(), "8"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "9"},
                     {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "9"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "10"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "10"},
-                    {Variable::getEntityTypeStatic(), "z"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {AssignStatement::getEntityTypeStatic(), "11"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "12"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "12"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "13"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "13"},
-                    {Variable::getEntityTypeStatic(), "z"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "14"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "14"},
                     {Variable::getEntityTypeStatic(), "y"}},
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "14"},
+                    {CallStatement::getEntityTypeStatic(), "13"},
                     {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(modifiesRels, expectedRels);
@@ -436,22 +357,31 @@ SCENARIO("SP can process and store a simple program into PKB") {
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "main"},
                     {Variable::getEntityTypeStatic(), "z"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "foo"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
                     {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "bar"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
-                    {Procedure::getEntityTypeStatic(), "baz"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "qux"},
-                    {Variable::getEntityTypeStatic(), "x"}},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "quux"},
                     {Variable::getEntityTypeStatic(), "x"}},
@@ -473,30 +403,36 @@ SCENARIO("SP can process and store a simple program into PKB") {
                     {Variable::getEntityTypeStatic(), "z"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "4"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "4"},
                     {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "6"},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "6"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {IfStatement::getEntityTypeStatic(), "8"},
-                    {Variable::getEntityTypeStatic(), "x"}},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "9"},
+                    {IfStatement::getEntityTypeStatic(), "8"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "10"},
-                    {Variable::getEntityTypeStatic(), "x"}},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "12"},
-                    {Variable::getEntityTypeStatic(), "x"}},
+                    {PrintStatement::getEntityTypeStatic(), "12"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "w"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
                     {CallStatement::getEntityTypeStatic(), "13"},
                     {Variable::getEntityTypeStatic(), "x"}},
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "14"},
-                    {Variable::getEntityTypeStatic(), "x"}},
-            RelPair{UsesRelationship::getRelationshipTypeStatic(),
-                    {CallStatement::getEntityTypeStatic(), "14"},
+                    {CallStatement::getEntityTypeStatic(), "13"},
                     {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(usesRels, expectedRels);

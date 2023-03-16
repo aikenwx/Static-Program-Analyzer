@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <cassert>
+
 
 #include "query/attr_ref.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"

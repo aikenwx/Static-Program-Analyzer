@@ -7,8 +7,7 @@
 namespace sp {
 class SP {
  public:
-  SP() = default;
-  ~SP() = default;
-  bool process(const std::string& program, PKB* pkb) const;
+  SP() = delete;
+  static auto process(const std::string& program, PKB* pkb) -> bool;
 };
 }  // namespace sp

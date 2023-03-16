@@ -5,8 +5,8 @@
 namespace ast {
 class ContainerStatementNode : public StatementNode {
 public:
-  virtual std::string ToString() const override = 0;
-  virtual int GetEndStatementNumber() = 0;
-  virtual void IncrementStatementNumber(int value) override = 0;
+ [[nodiscard]] auto ToString() const -> std::string override = 0;
+ virtual auto GetEndStatementNumber() -> int = 0;
+ void IncrementStatementNumber(int value) override = 0;
 };
 }

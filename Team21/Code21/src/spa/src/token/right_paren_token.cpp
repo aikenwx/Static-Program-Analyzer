@@ -7,7 +7,7 @@
 namespace token {
 const std::unique_ptr<Token> RightParenToken::CreateToken(
     std::string str) {
-  assert(str == ")");
+  assert(str == ")"); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<RightParenToken>(new RightParenToken());
 };
 

@@ -1,32 +1,36 @@
 #include "while_node.h"
 
+#include <utility>
+
 namespace ast {
 WhileNode::WhileNode(std::shared_ptr<INode> condition,
-                     std::shared_ptr<StatementListNode> body) {
-  this->condition = condition;
-  this->body = body;
+                     std::shared_ptr<StatementListNode> body)
+    : condition(std::move(condition)),
+      body(std::move(body)) {
   IncrementStatementNumber(1);
 }
 
-std::shared_ptr<INode> WhileNode::GetCondition() { return condition; }
+auto WhileNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
 
-std::shared_ptr<StatementListNode> WhileNode::GetBody() { return body; }
+auto WhileNode::GetBody() -> std::shared_ptr<StatementListNode> { return body; }
 
-std::string WhileNode::ToString() const {
+auto WhileNode::ToString() const -> std::string {
   return "while:\n{\ncondition:" + condition->ToString() +
          "body:" + body->ToString() + "}\n";
 }
 
-int WhileNode::GetEndStatementNumber() { return body->GetEndStatementNumber(); }
+auto WhileNode::GetEndStatementNumber() -> int {
+  return body->GetEndStatementNumber();
+}
 
 void WhileNode::IncrementStatementNumber(int value) {
-  statementNumber = body->GetStartStatementNumber();
+  SetStatementNumber(body->GetStartStatementNumber());
   body->IncrementStatementNumbers(value);
 }
 
 void WhileNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementNode(
       std::static_pointer_cast<StatementNode>(currentNode), depth);
   extractor->HandleWhileNode(std::static_pointer_cast<WhileNode>(currentNode),

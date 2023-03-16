@@ -5,7 +5,7 @@
 
 namespace token {
 const std::unique_ptr<Token> GreaterEqualToken::CreateToken(std::string str) {
-  assert(str == ">=");
+  assert(str == ">="); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<GreaterEqualToken>(new GreaterEqualToken());
 };
 

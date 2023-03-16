@@ -1,17 +1,17 @@
 #include "constant_node.h"
 
 namespace ast {
-ConstantNode::ConstantNode(int value) { this->value = value; }
+ConstantNode::ConstantNode(int value) : value(value) {}
 
-int ConstantNode::GetValue() { return this->value; }
+auto ConstantNode::GetValue() const -> int { return this->value; }
 
-std::string ConstantNode::ToString() const {
+auto ConstantNode::ToString() const -> std::string {
   return "constant:" + std::to_string(value) + "\n";
 }
 
 void ConstantNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleConstantNode(
       std::static_pointer_cast<ConstantNode>(currentNode), depth);
 }

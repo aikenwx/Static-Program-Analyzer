@@ -16,8 +16,8 @@
 #include "PKB/QueryFacade.h"
 
 namespace qps {
-std::string GetVarName(ReadStatement *read, QueryFacade &pkb) {
-  auto entities =
+auto GetVarName(ReadStatement *read, QueryFacade &pkb) -> std::string {
+  auto *entities =
       pkb.getRelationshipsByLeftEntityLiteralAndRightEntityType(ModifiesRelationship::getRelationshipTypeStatic(),
                                                                 read->getEntityType(), read->getStatementNumber(),
                                                                 Variable::getEntityTypeStatic());
@@ -25,8 +25,8 @@ std::string GetVarName(ReadStatement *read, QueryFacade &pkb) {
   return *(*entities)[0]->getEntityValue();
 }
 
-std::string GetVarName(PrintStatement *print, QueryFacade &pkb) {
-  auto entities =
+auto GetVarName(PrintStatement *print, QueryFacade &pkb) -> std::string {
+  auto *entities =
       pkb.getRelationshipsByLeftEntityLiteralAndRightEntityType(UsesRelationship::getRelationshipTypeStatic(),
                                                                 print->getEntityType(), print->getStatementNumber(),
                                                                 Variable::getEntityTypeStatic());
@@ -34,7 +34,7 @@ std::string GetVarName(PrintStatement *print, QueryFacade &pkb) {
   return *(*entities)[0]->getEntityValue();
 }
 
-std::string EvaluateAttrRef(Entity *entity, AttrName attr_name, QueryFacade &pkb) {
+auto EvaluateAttrRef(Entity *entity, AttrName attr_name, QueryFacade &pkb) -> std::string {
   switch (attr_name) {
     case AttrName::ProcName:
       if (entity->getEntityType() == CallStatement::getEntityTypeStatic()) {
@@ -52,4 +52,4 @@ std::string EvaluateAttrRef(Entity *entity, AttrName attr_name, QueryFacade &pkb
     default:return *entity->getEntityValue();
   }
 }
-}
+}  // namespace qps

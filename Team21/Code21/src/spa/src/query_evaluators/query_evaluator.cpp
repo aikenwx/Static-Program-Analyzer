@@ -19,27 +19,37 @@ void QueryEvaluator::CreateClauseEvaluators() {
   }
 }
 
-ClauseResult QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
+auto QueryEvaluator::EvaluateClauses(QueryFacade &pkb) -> ClauseResult {
   CreateClauseEvaluators();
-  if (clause_evaluators_.empty()) return true;
+  if (clause_evaluators_.empty()) {
+    return true;
+  }
   std::vector<SynonymTable> tables;
   for (const auto &evaluator : clause_evaluators_) {
     auto res = evaluator->Evaluate(pkb);
     if (std::holds_alternative<bool>(res)) {
-      if (!std::get<bool>(res)) return false;
+      if (!std::get<bool>(res)) {
+        return false;
+      }
     } else {
       auto table = std::get<SynonymTable>(res);
-      if (table.IsEmpty()) return false;
-      else tables.push_back(std::move(table));
+      if (table.IsEmpty()) {
+        return false;
+      }
+      tables.push_back(std::move(table));
     }
   }
-  if (tables.empty()) return true;
+  if (tables.empty()) {
+    return true;
+  }
   auto final_table = ConstraintsSolver::solve(tables);
-  if (final_table.IsEmpty()) return false;
+  if (final_table.IsEmpty()) {
+    return false;
+  }
   return final_table;
 }
 
-FinalResult QueryEvaluator::EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result) {
+auto QueryEvaluator::EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result) -> FinalResult {
   SelectEvaluator select_evaluator{query_.getSelectClause(), query_.getDeclarations()};
   auto result = select_evaluator.Evaluate(pkb, std::move(clause_result));
   return result;
@@ -58,4 +68,4 @@ void QueryEvaluator::EvaluateQuery(QueryFacade &pkb, std::list<std::string> &res
     }
   }
 }
-} // qps
+}  // namespace qps

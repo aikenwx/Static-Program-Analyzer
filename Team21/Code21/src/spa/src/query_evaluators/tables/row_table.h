@@ -15,62 +15,69 @@ class RowTable {
   using HeaderIdx = std::unordered_map<Key, std::size_t>;
 
   using Row = std::vector<Value>;
-  using Rows = std::vector<Row>;
+  using Rows [[maybe_unused]] = std::vector<Row>;
 
   RowTable() = default;
 
-  RowTable(Header header) : header_(std::move(header)) {
+  [[maybe_unused]]
+  explicit RowTable(Header header) : header_(std::move(header)) {
     for (std::size_t i = 0; i < header_.size(); ++i) {
       header_idx_[header_[i]] = i;
     }
   }
 
-  RowTable(std::vector<Key> header, Rows results) : header_(std::move(header)), rows_(std::move(results)) {
+  [[maybe_unused]]
+  RowTable(std::vector<Key> header, Rows results)
+      : header_(std::move(header)), rows_(std::move(results)) {
     for (std::size_t i = 0; i < header_.size(); ++i) {
       header_idx_[header_[i]] = i;
     }
   }
 
-  const Header &GetHeader() const {
+  auto GetHeader() const -> const Header & {
     return header_;
   }
 
-  const Rows &GetRows() const {
+  auto GetRows() const -> const Rows & {
     return rows_;
   }
 
-  const V &GetCell(std::size_t row, Key key) const {
+  auto GetCell(std::size_t row, Key key) const -> const V & {
     return rows_[row][KeyIndex(key)];
   }
 
-  std::size_t KeyIndex(const Key &key) const {
-    auto it = header_idx_.find(key);
-    if (it != header_idx_.end()) return it->second;
+  auto KeyIndex(const Key &key) const -> std::size_t {
+    auto iterator = header_idx_.find(key);
+    if (iterator != header_idx_.end()) {
+      return iterator->second;
+    }
     return -1;
   }
 
-  std::size_t HeaderSize() const {
+  [[nodiscard]] auto HeaderSize() const -> std::size_t {
     return header_.size();
   };
 
-  std::size_t ResultSize() const {
+  [[nodiscard]] auto ResultSize() const -> std::size_t {
     return rows_.size();
   };
 
-  bool IsEmpty() const {
+  [[nodiscard]] auto IsEmpty() const -> bool {
     return ResultSize() == 0;
   }
 
-  bool HasKey(const Key &key) const {
+  auto HasKey(const Key &key) const -> bool {
     return KeyIndex(key) != -1;
   }
 
   void AddRow(std::vector<Value> row) {
-    if (row.size() != header_.size()) throw std::invalid_argument("Row size doesnt match header");
+    if (row.size() != header_.size()) {
+      throw std::invalid_argument("Row size doesnt match header");
+    }
     rows_.push_back(std::move(row));
   }
 
-  Row Extract(const Key &key) {
+  [[maybe_unused]] auto Extract(const Key &key) -> Row {
     if (!HasKey(key)) {
       throw std::invalid_argument("Extracting key not in table");
     }
@@ -82,7 +89,7 @@ class RowTable {
     return extracted;
   }
 
-  Row ExtractRow(size_t row_idx, const Header &common_keys) {
+  [[maybe_unused]] auto ExtractRow(size_t row_idx, const Header &common_keys) -> Row {
     Row row;
     row.reserve(common_keys.size());
     for (const auto &key : common_keys) {
@@ -97,4 +104,4 @@ class RowTable {
   Rows rows_;
 };
 
-} // qps
+}  // namespace qps

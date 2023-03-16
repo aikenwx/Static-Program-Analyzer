@@ -11,10 +11,10 @@ class SelectEvaluator {
   SelectEvaluator(Result result, std::vector<Declaration> declarations)
       : result_(std::move(result)), declarations_(std::move(declarations)) {}
 
-  FinalResult Evaluate(QueryFacade &pkb, ClauseResult current_result);
+  auto Evaluate(QueryFacade &pkb, ClauseResult current_result) -> FinalResult;
  private:
   Result result_;
   std::vector<Declaration> declarations_;
 };
 
-} // qps
+}  // namespace qps

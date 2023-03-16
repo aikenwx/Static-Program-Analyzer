@@ -4,14 +4,14 @@
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 
 namespace qps {
-std::string to_string(std::string str);
+auto to_string(std::string str) -> std::string;
 
-std::string to_string(bool b);
+auto to_string(bool boolean) -> std::string;
 
-std::string to_string(Entity *entity);
+auto to_string(Entity *entity) -> std::string;
 
 template<typename T>
-std::string Join(const std::vector<T> &vec, const std::string &sep) {
+auto Join(const std::vector<T> &vec, const std::string &sep) -> std::string {
   std::string res;
   for (int i = 0; i < vec.size(); ++i) {
     if (i != 0) {
@@ -21,4 +21,4 @@ std::string Join(const std::vector<T> &vec, const std::string &sep) {
   }
   return res;
 }
-} // qps
+}  // namespace qps

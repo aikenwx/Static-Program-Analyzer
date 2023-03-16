@@ -1,16 +1,18 @@
 #include "string_helpers.h"
 
 namespace qps {
-std::string to_string(std::string str) {
+auto to_string(std::string str) -> std::string {
   return str;
 }
 
-std::string to_string(bool b) {
-  if (b) return "TRUE";
-  else return "FALSE";
+auto to_string(bool boolean) -> std::string {
+  if (boolean) {
+    return "TRUE";
+  }
+  return "FALSE";
 }
 
-std::string to_string(Entity *entity) {
+auto to_string(Entity *entity) -> std::string {
   return *entity->getEntityValue();
 }
-} // qps
+}  // namespace qps

@@ -29,4 +29,4 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     return;
   }
 }
-} // qps
+}  // namespace qps

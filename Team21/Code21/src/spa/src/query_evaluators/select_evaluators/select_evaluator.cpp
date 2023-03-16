@@ -7,20 +7,24 @@ namespace qps {
 class SelectVisitor {
  public:
   SelectVisitor(QueryFacade &pkb, std::vector<Declaration> &declarations) : pkb_(pkb), declarations_(declarations) {}
-  FinalResult operator()(Boolean &&, bool &&current_result) {
+  auto operator()([[maybe_unused]] Boolean &&boolean, bool &&current_result) -> FinalResult {
     return current_result;
   }
-  FinalResult operator()(Boolean &&, SynonymTable &&current_table) {
+  auto operator()([[maybe_unused]] Boolean &&boolean, SynonymTable &&current_table) -> FinalResult {
     return !current_table.IsEmpty();
   }
-  FinalResult operator()(std::vector<Element> &&elements, bool &&current_result) {
-    if (!current_result) return FinalTable{};
+  auto operator()(std::vector<Element> &&elements, bool &&current_result) -> FinalResult {
+    if (!current_result) {
+      return FinalTable{};
+    }
     UnpackElements(elements);
     EvaluateSelectSyns();
     return EvaluateFinalResult();
   }
-  FinalResult operator()(std::vector<Element> &&elements, SynonymTable &&current_table) {
-    if (current_table.IsEmpty()) return FinalTable{};
+  auto operator()(std::vector<Element> &&elements, SynonymTable &&current_table) -> FinalResult {
+    if (current_table.IsEmpty()) {
+      return FinalTable{};
+    }
     UnpackElements(elements);
     EvaluateSelectSyns(current_table);
     tables_.push_back(std::move(current_table));
@@ -28,15 +32,14 @@ class SelectVisitor {
   }
 
  private:
-  FinalResult EvaluateFinalResult() {
+  auto EvaluateFinalResult() -> FinalResult {
     auto final_syn_table = ConstraintsSolver::solve(tables_);
     FinalTable final_table{{syns_}};
     for (size_t row_idx = 0; row_idx < final_syn_table.ResultSize(); ++row_idx) {
       FinalTable::Row row;
       size_t attr_refs_idx = 0;
-      for (size_t col_idx = 0; col_idx < syns_.size(); ++col_idx) {
-        auto &syn = syns_[col_idx];
-        auto val = final_syn_table.GetCell(row_idx, syn);
+      for (auto &syn : syns_) {
+        auto *val = final_syn_table.GetCell(row_idx, syn);
         if (attr_refs_idx < attr_refs_.size() && attr_refs_[attr_refs_idx].synonym == syn) {
           row.push_back(EvaluateAttrRef(val,
                                         attr_refs_[attr_refs_idx].attrName, pkb_));
@@ -70,16 +73,20 @@ class SelectVisitor {
 
   void EvaluateSelectSyns(const SynonymTable &current_table) {
     for (auto &syn : syns_) {
-      if (current_table.HasKey(syn)) continue;
+      if (current_table.HasKey(syn)) {
+        continue;
+      }
       EvaluateSingleSelect(syn);
     }
   }
 
   void EvaluateSingleSelect(Synonym &syn) {
     auto design_entity = Declaration::findDeclarationWithSynonym(declarations_, syn);
-    if (!design_entity) return;
+    if (!design_entity) {
+      return;
+    }
     auto entity_type = ClauseEvaluator::DesignEntityToEntityType(design_entity->getDesignEntity());
-    auto entities = pkb_.getEntitiesByType(entity_type);
+    auto *entities = pkb_.getEntitiesByType(entity_type);
     std::vector<std::vector<Entity *>> rows;
     rows.reserve(entities->size());
     for (const auto &entity : *entities) {
@@ -96,9 +103,9 @@ class SelectVisitor {
   std::vector<SynonymTable> tables_;
 };
 
-FinalResult SelectEvaluator::Evaluate(QueryFacade &pkb, ClauseResult current_result) {
+auto SelectEvaluator::Evaluate(QueryFacade &pkb, ClauseResult current_result) -> FinalResult {
   SelectVisitor visitor{pkb, declarations_};
   return std::visit(visitor, std::move(result_), std::move(current_result));
 }
 
-} // qps
+} // namespace qps

@@ -12,7 +12,7 @@ namespace qps {
 
 class QueryEvaluator {
  public:
-  QueryEvaluator(Query query);
+  explicit QueryEvaluator(Query query);
 
   void EvaluateQuery(QueryFacade &pkb, std::list<std::string> &results);
 
@@ -20,8 +20,8 @@ class QueryEvaluator {
   Query query_;
   std::vector<std::unique_ptr<ClauseEvaluator>> clause_evaluators_;
   void CreateClauseEvaluators();
-  ClauseResult EvaluateClauses(QueryFacade &pkb);
-  FinalResult EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result);
+  auto EvaluateClauses(QueryFacade &pkb) -> ClauseResult;
+  auto EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result) -> FinalResult;
 
 };
-} // qps
+}  // namespace qps

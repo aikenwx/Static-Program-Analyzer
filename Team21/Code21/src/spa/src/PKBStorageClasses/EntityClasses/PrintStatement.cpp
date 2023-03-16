@@ -3,12 +3,12 @@
 PrintStatement::PrintStatement(int statementNumber) : Statement(&PrintStatement::getEntityTypeStatic(), statementNumber) {
 }
 
-EntityType &PrintStatement::getEntityTypeStatic() {
-    return PrintStatement::printStatementType;
+auto PrintStatement::getEntityTypeStatic() -> EntityType& {
+  return PrintStatement::printStatementType;
 }
 
-EntityType &PrintStatement::getEntityType() const {
-    return PrintStatement::getEntityTypeStatic();
+auto PrintStatement::getEntityType() const -> EntityType& {
+  return PrintStatement::getEntityTypeStatic();
 }
 
 EntityType PrintStatement::printStatementType = EntityType();

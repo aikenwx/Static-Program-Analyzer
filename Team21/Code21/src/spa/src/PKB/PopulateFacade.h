@@ -55,7 +55,7 @@ class PopulateFacade {
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
    private:
-    void validateEntityExists(Entity *entity);
+    static void validateEntityExists(Entity *entity);
 };
 
 #endif  // SPA_POPULATEFACADE_H

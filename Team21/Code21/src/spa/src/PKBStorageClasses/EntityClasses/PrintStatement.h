@@ -8,11 +8,11 @@ class PrintStatement : public Statement {
     static EntityType printStatementType;
 
    public:
-    PrintStatement(int statementNumber);
+    explicit PrintStatement(int statementNumber);
 
-    static EntityType &getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType &;
 
-    EntityType &getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType & override;
 };
 
 #endif

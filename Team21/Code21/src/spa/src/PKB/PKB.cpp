@@ -13,10 +13,8 @@ PKB::PKB() {
     this->queryFacade = std::make_shared<QueryFacade>(entityManager.get(), relationshipManager.get(), patternManager.get(), cfgManager.get());
 }
 
-PopulateFacade *PKB::getPopulateFacade() {
-    return this->populateFacade.get();
+auto PKB::getPopulateFacade() -> PopulateFacade* {
+  return this->populateFacade.get();
 }
 
-QueryFacade *PKB::getQueryFacade() {
-    return this->queryFacade.get();
-}
+auto PKB::getQueryFacade() -> QueryFacade* { return this->queryFacade.get(); }

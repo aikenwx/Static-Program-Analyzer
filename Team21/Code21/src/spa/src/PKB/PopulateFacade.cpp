@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <utility>
 
 #include "PKB/EntityManager.h"
 #include "PKB/RelationshipManager.h"
@@ -28,12 +29,14 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGManager *cfgManager) {
-    this->entityManager = entityManager;
-    this->relationshipManager = relationshipManager;
-    this->patternManager = patternManager;
-    this->cfgManager = cfgManager;
-}
+PopulateFacade::PopulateFacade(EntityManager *entityManager,
+                               RelationshipManager *relationshipManager,
+                               PatternManager *patternManager,
+                               CFGManager *cfgManager)
+    : entityManager(entityManager),
+      relationshipManager(relationshipManager),
+      patternManager(patternManager),
+      cfgManager(cfgManager) {}
 
 void PopulateFacade::storeAssignmentStatement(int statementNumber) {
     this->entityManager->storeEntity(new AssignStatement(statementNumber));
@@ -64,40 +67,48 @@ void PopulateFacade::storeConstant(int constantValue) {
 }
 
 void PopulateFacade::storeVariable(std::string variableName) {
-    this->entityManager->storeEntity(new Variable(new std::string(variableName)));
+  this->entityManager->storeEntity(
+      new Variable(new std::string(std::move(variableName))));
 }
 
 void PopulateFacade::storeProcedure(std::string procedureName) {
-    this->entityManager->storeEntity(new Procedure(new std::string(procedureName)));
+  this->entityManager->storeEntity(
+      new Procedure(new std::string(std::move(procedureName))));
 }
 
 void PopulateFacade::storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
     auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
     auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
-    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
-    this->validateEntityExists(statement);
-    this->validateEntityExists(variable);
+    auto *statement =
+        dynamic_cast<Statement *>(this->entityManager->getEntity(statementKey));
+    auto *variable =
+        dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
+    PopulateFacade::validateEntityExists(statement);
+    PopulateFacade::validateEntityExists(variable);
     this->relationshipManager->storeRelationship(new ModifiesRelationship(statement, variable));
 }
 
 void PopulateFacade::storeStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
     auto statementKey = EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
     auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-    Statement *statement = (Statement *)this->entityManager->getEntity(statementKey);
-    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
-    this->validateEntityExists(statement);
-    this->validateEntityExists(variable);
+    auto *statement =
+        dynamic_cast<Statement *>(this->entityManager->getEntity(statementKey));
+    auto *variable =
+        dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
+    PopulateFacade::validateEntityExists(statement);
+    PopulateFacade::validateEntityExists(variable);
     this->relationshipManager->storeRelationship(new UsesRelationship(statement, variable));
 }
 
 void PopulateFacade::storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
     auto firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
     auto secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
-    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
-    this->validateEntityExists(firstStatement);
-    this->validateEntityExists(secondStatement);
+    auto *firstStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(firstStatementKey));
+    auto *secondStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(secondStatementKey));
+    PopulateFacade::validateEntityExists(firstStatement);
+    PopulateFacade::validateEntityExists(secondStatement);
 
     this->relationshipManager->storeRelationship(new FollowsRelationship(firstStatement, secondStatement));
 }
@@ -105,104 +116,125 @@ void PopulateFacade::storeFollowsRelationship(int firstStatementNumber, int seco
 void PopulateFacade::storeParentRelationship(int parentStatementNumber, int childStatementNumber) {
     auto parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
     auto childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
-    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
-    this->validateEntityExists(parentStatement);
-    this->validateEntityExists(childStatement);
+    auto *parentStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(parentStatementKey));
+    auto *childStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(childStatementKey));
+    PopulateFacade::validateEntityExists(parentStatement);
+    PopulateFacade::validateEntityExists(childStatement);
     this->relationshipManager->storeRelationship(new ParentRelationship(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
     auto procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
     auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
-    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
-    this->validateEntityExists(procedure);
-    this->validateEntityExists(variable);
+    auto *procedure =
+        dynamic_cast<Procedure *>(this->entityManager->getEntity(procedureKey));
+    auto *variable =
+        dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
+    PopulateFacade::validateEntityExists(procedure);
+    PopulateFacade::validateEntityExists(variable);
     this->relationshipManager->storeRelationship(new ModifiesRelationship(procedure, variable));
 }
 
 void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
     auto procedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
     auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-    Procedure *procedure = (Procedure *)this->entityManager->getEntity(procedureKey);
-    Variable *variable = (Variable *)this->entityManager->getEntity(variableKey);
-    this->validateEntityExists(procedure);
-    this->validateEntityExists(variable);
+    auto *procedure =
+        dynamic_cast<Procedure *>(this->entityManager->getEntity(procedureKey));
+    auto *variable =
+        dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
+    PopulateFacade::validateEntityExists(procedure);
+    PopulateFacade::validateEntityExists(variable);
     this->relationshipManager->storeRelationship(new UsesRelationship(procedure, variable));
 }
 
 void PopulateFacade::storeParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
     auto parentStatementKey = EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
     auto childStatementKey = EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-    Statement *parentStatement = (Statement *)this->entityManager->getEntity(parentStatementKey);
-    Statement *childStatement = (Statement *)this->entityManager->getEntity(childStatementKey);
-    this->validateEntityExists(parentStatement);
-    this->validateEntityExists(childStatement);
+    auto *parentStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(parentStatementKey));
+    auto *childStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(childStatementKey));
+    PopulateFacade::validateEntityExists(parentStatement);
+    PopulateFacade::validateEntityExists(childStatement);
     this->relationshipManager->storeRelationship(new ParentStarRelationship(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
     auto firstStatementKey = EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
     auto secondStatementKey = EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-    Statement *firstStatement = (Statement *)this->entityManager->getEntity(firstStatementKey);
-    Statement *secondStatement = (Statement *)this->entityManager->getEntity(secondStatementKey);
-    this->validateEntityExists(firstStatement);
-    this->validateEntityExists(secondStatement);
+    auto *firstStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(firstStatementKey));
+    auto *secondStatement = dynamic_cast<Statement *>(
+        this->entityManager->getEntity(secondStatementKey));
+    PopulateFacade::validateEntityExists(firstStatement);
+    PopulateFacade::validateEntityExists(secondStatement);
     this->relationshipManager->storeRelationship(new FollowsStarRelationship(firstStatement, secondStatement));
 }
 
 void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression) {
     auto assignStatementKey = EntityKey(&AssignStatement::getEntityTypeStatic(), statementNumber);
-    AssignStatement *statement = (AssignStatement *)this->entityManager->getEntity(assignStatementKey);
+    auto *statement = dynamic_cast<AssignStatement *>(
+        this->entityManager->getEntity(assignStatementKey));
 
-    this->validateEntityExists(statement);
-    this->patternManager->storeAssignStatementPostfixExpression((AssignStatement *)statement, new std::string(postfixExpression));
+    PopulateFacade::validateEntityExists(statement);
+    PatternManager::storeAssignStatementPostfixExpression(
+        statement, new std::string(std::move(postfixExpression)));
 }
 
 void PopulateFacade::storeCallStatementProcedureName(int statementNumber, std::string procedureName) {
     auto callStatementKey = EntityKey(&CallStatement::getEntityTypeStatic(), statementNumber);
 
-    CallStatement *callStatement = (CallStatement *)this->entityManager->getEntity(callStatementKey);
-    this->validateEntityExists(callStatement);
-    callStatement->setProcedureName(new std::string(procedureName));
+    auto *callStatement = dynamic_cast<CallStatement *>(
+        this->entityManager->getEntity(callStatementKey));
+    PopulateFacade::validateEntityExists(callStatement);
+    callStatement->setProcedureName(new std::string(std::move(procedureName)));
 }
 
 void PopulateFacade::storeIfStatementConditionVariable(int statementNumber, std::string variableName) {
     auto ifStatementKey = EntityKey(&IfStatement::getEntityTypeStatic(), statementNumber);
 
-    IfStatement *statement = (IfStatement *)this->entityManager->getEntity(ifStatementKey);
+    auto *statement = dynamic_cast<IfStatement *>(
+        this->entityManager->getEntity(ifStatementKey));
 
-    this->validateEntityExists(statement);
-    this->patternManager->storeIfStatementConditionVariable((IfStatement *)statement, &variableName);
+    PopulateFacade::validateEntityExists(statement);
+    this->patternManager->storeIfStatementConditionVariable(statement,
+                                                            &variableName);
 }
 
 void PopulateFacade::storeWhileStatementConditionVariable(int statementNumber, std::string variableName) {
     auto whileStatementKey = EntityKey(&WhileStatement::getEntityTypeStatic(), statementNumber);
 
-    WhileStatement *statement = (WhileStatement *)this->entityManager->getEntity(whileStatementKey);
+    auto *statement = dynamic_cast<WhileStatement *>(
+        this->entityManager->getEntity(whileStatementKey));
 
-    this->validateEntityExists(statement);
-    this->patternManager->storeWhileStatementConditionVariable((WhileStatement *)statement, &variableName);
+    PopulateFacade::validateEntityExists(statement);
+    this->patternManager->storeWhileStatementConditionVariable(statement,
+                                                               &variableName);
 }
 
-void PopulateFacade::storeCallsRelationship(std::string firstProcedureName, std::string secondProcedureName) {
-    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &firstProcedureName);
-    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &secondProcedureName);
-    Procedure *firstProcedure = (Procedure *)this->entityManager->getEntity(firstProcedureKey);
-    Procedure *secondProcedure = (Procedure *)this->entityManager->getEntity(secondProcedureKey);
-    this->validateEntityExists(firstProcedure);
-    this->validateEntityExists(secondProcedure);
+void PopulateFacade::storeCallsRelationship(std::string caller, std::string callee) {
+    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &caller);
+    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &callee);
+    auto *firstProcedure = dynamic_cast<Procedure *>(
+        this->entityManager->getEntity(firstProcedureKey));
+    auto *secondProcedure = dynamic_cast<Procedure *>(
+        this->entityManager->getEntity(secondProcedureKey));
+    PopulateFacade::validateEntityExists(firstProcedure);
+    PopulateFacade::validateEntityExists(secondProcedure);
     this->relationshipManager->storeRelationship(new CallsRelationship(firstProcedure, secondProcedure));
 }
 
-void PopulateFacade::storeCallsStarRelationship(std::string firstProcedureName, std::string secondProcedureName) {
-    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &firstProcedureName);
-    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &secondProcedureName);
-    Procedure *firstProcedure = (Procedure *)this->entityManager->getEntity(firstProcedureKey);
-    Procedure *secondProcedure = (Procedure *)this->entityManager->getEntity(secondProcedureKey);
-    this->validateEntityExists(firstProcedure);
-    this->validateEntityExists(secondProcedure);
+void PopulateFacade::storeCallsStarRelationship(std::string caller, std::string callee) {
+    auto firstProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &caller);
+    auto secondProcedureKey = EntityKey(&Procedure::getEntityTypeStatic(), &callee);
+    auto *firstProcedure = dynamic_cast<Procedure *>(
+        this->entityManager->getEntity(firstProcedureKey));
+    auto *secondProcedure = dynamic_cast<Procedure *>(
+        this->entityManager->getEntity(secondProcedureKey));
+    PopulateFacade::validateEntityExists(firstProcedure);
+    PopulateFacade::validateEntityExists(secondProcedure);
     this->relationshipManager->storeRelationship(new CallsStarRelationship(firstProcedure, secondProcedure));
 }
 
@@ -213,5 +245,5 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 }
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-    this->cfgManager->storeCFG(cfg);
+  this->cfgManager->storeCFG(std::move(cfg));
 }

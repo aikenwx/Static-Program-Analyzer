@@ -4,10 +4,10 @@
 
 #include "CFGManager.h"
 
+#include <utility>
+
 void CFGManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-    this->cfg = cfg;
+  this->cfg = std::move(cfg);
 }
 
-cfg::CFG* CFGManager::getCFG() {
-    return this->cfg.get();
-}
+auto CFGManager::getCFG() -> cfg::CFG* { return this->cfg.get(); }

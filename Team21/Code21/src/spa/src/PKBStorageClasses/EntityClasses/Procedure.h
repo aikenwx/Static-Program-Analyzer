@@ -14,25 +14,25 @@
 class Procedure : public Entity {
    private:
     static EntityType procedureType;
-    size_t hash;
+    size_t hash{};
 
     std::shared_ptr<std::string> procedureName;
 
    public:
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType&;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType& override;
 
-    Procedure(std::string* variableValue);
+    explicit Procedure(std::string* variableValue);
 
-    ~Procedure() = default;
+    ~Procedure() override = default;
 
-    bool operator==(const Procedure& procedure) const;
+    auto operator==(const Procedure& procedure) const -> bool;
 };
 
 template <>
 struct std::hash<Procedure> {
-    size_t operator()(const Procedure& procedure) const;
+  auto operator()(const Procedure& procedure) const -> size_t;
 };
 
 #endif  // SPA_PROCEDURE_H

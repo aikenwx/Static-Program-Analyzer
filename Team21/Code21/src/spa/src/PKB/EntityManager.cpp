@@ -26,16 +26,16 @@ void EntityManager::storeEntity(Entity *entity) {
     this->storeInEntityTypeStore(entity);
 }
 
-Entity *EntityManager::getEntity(EntityKey &key) {
-    if (entityStore.find(key) != entityStore.end()) {
-        return this->entityStore.at(key).get();
-    }
+auto EntityManager::getEntity(EntityKey &key) -> Entity * {
+  if (entityStore.find(key) != entityStore.end()) {
+    return this->entityStore.at(key).get();
+  }
 
-    return nullptr;
+  return nullptr;
 }
 
 void EntityManager::storeInEntityTypeStore(Entity *entity) {
-    EntityType &entityType = entity->getEntityType();
+    const EntityType &entityType = entity->getEntityType();
 
     initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
 
@@ -47,12 +47,13 @@ void EntityManager::storeInEntityTypeStore(Entity *entity) {
     }
 }
 
-std::vector<Entity *> *EntityManager::getEntitiesByType(EntityType &entityType) {
-    this->initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
-    return this->entityTypeToEntityStore.at(entityType).get();
+auto EntityManager::getEntitiesByType(const EntityType &entityType)
+    -> std::vector<Entity *> * {
+  this->initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
+  return this->entityTypeToEntityStore.at(entityType).get();
 }
 
-void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType &entityType) {
+void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(const EntityType &entityType) {
     if (this->entityTypeToEntityStore.find(entityType) == this->entityTypeToEntityStore.end()) {
         this->entityTypeToEntityStore.insert({entityType, std::make_shared<std::vector<Entity *>>()});
     }

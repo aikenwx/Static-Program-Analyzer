@@ -7,11 +7,11 @@ class ReadStatement : public Statement {
     static EntityType readStatementType;
 
    public:
-    ReadStatement(int statementNumber);
+    explicit ReadStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType&;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType& override;
 };
 
 #endif

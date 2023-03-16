@@ -31,14 +31,14 @@ class EntityManager {
 
     void storeEntity(Entity* entity);
 
-    Entity* getEntity(EntityKey& key);
+    auto getEntity(EntityKey& key) -> Entity*;
 
-    std::vector<Entity*>* getEntitiesByType(EntityType& entityType);
+    auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
    private:
     void storeInEntityTypeStore(Entity* entity);
 
-    void initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType& entityType);
+    void initialiseVectorForEntityTypeStoreIfIndexNotExist(const EntityType& entityType);
 };
 
 #endif  // SPA_ENTITYMANAGER_H

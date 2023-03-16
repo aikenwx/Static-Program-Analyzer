@@ -8,13 +8,13 @@ class CallStatement : public Statement {
     std::shared_ptr<std::string> procedureName;
 
    public:
-    CallStatement(int statementNumber);
+    explicit CallStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType&;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType& override;
 
-    std::string* getProcedureName();
+    auto getProcedureName() -> std::string*;
 
     void setProcedureName(std::string* procedureName);
 };

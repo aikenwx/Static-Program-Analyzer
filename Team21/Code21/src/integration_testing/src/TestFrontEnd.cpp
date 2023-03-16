@@ -55,10 +55,10 @@ struct RelPair {
 
   struct Hasher {
     auto operator()(const RelPair& rel) const -> std::size_t {
-      return std::hash<int>()(rel.relType.getKey()) ^
-             (std::hash<int>()(rel.leftEntity.first.getKey()) ^
+      return std::hash<size_t>()(rel.relType.getKey()) ^
+             (std::hash<size_t>()(rel.leftEntity.first.getKey()) ^
               (std::hash<std::string>()(rel.leftEntity.second) ^
-               (std::hash<int>()(rel.rightEntity.first.getKey()) ^
+               (std::hash<size_t>()(rel.rightEntity.first.getKey()) ^
                 std::hash<std::string>()(rel.rightEntity.second))));
     }
   };

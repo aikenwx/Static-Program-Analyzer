@@ -8,7 +8,7 @@ bool NameSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (!context->IsLookaheadTypeOf<token::IdentifierToken>()) {
-    // N <- id
+    // A name is a wrapper to an identifier
     if (util::instance_of<ast::IdentifierNode>(*i)) {
       // References identifier node
       std::shared_ptr<ast::IdentifierNode> id = std::static_pointer_cast<ast::IdentifierNode>(stack->back());

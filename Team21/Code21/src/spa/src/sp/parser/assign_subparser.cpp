@@ -8,7 +8,7 @@ bool AssignSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
-    // S(a) -> V = E
+    // assign: var_name '=' expr ';'
     if (stack->size() >= 3
       && util::instance_of<ast::ExpressionNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kAssign

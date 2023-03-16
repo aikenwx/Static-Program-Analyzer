@@ -34,7 +34,7 @@ bool VariableSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // V <- N
+    // A variable is a name
     if (util::instance_of<ast::NameNode>(*i)) {
       // References name node for variable name
       std::shared_ptr<ast::NameNode> n = std::static_pointer_cast<ast::NameNode>(stack->back());

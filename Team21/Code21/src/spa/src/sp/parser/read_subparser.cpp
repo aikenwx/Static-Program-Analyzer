@@ -8,7 +8,7 @@ bool ReadSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
-    // S(r) <- read V
+    // read: 'read' var_name';'
     if (stack->size() >= 2
       && util::instance_of<ast::VariableNode>(*i)
       && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 1)))->GetValue() == "read") {

@@ -8,7 +8,7 @@ bool CallSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
-    // S(c) <- call N
+    // call: 'call' proc_name';'
     if (stack->size() >= 2
       && util::instance_of<ast::NameNode>(*i)
       && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 1)))->GetValue() == "call") {

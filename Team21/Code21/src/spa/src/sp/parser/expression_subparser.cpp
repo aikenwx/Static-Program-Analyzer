@@ -26,7 +26,7 @@ bool ExpressionSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // E <- E + T <;, +, ->
+    // expr: expr '+' term
     if (stack->size() >= 3
       && util::instance_of<ast::TermNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kPlus
@@ -49,7 +49,7 @@ bool ExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e2);
       return true;
     }
-    // E <- E - T <;, +, ->
+    // expr: expr '-' term
     if (stack->size() >= 3
       && util::instance_of<ast::TermNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMinus
@@ -72,7 +72,7 @@ bool ExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e2);
       return true;
     }
-    // E <- T < ;, +, ->
+    // expr: term
     if (util::instance_of<ast::TermNode>(*i)) {
       // References term node
       std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());

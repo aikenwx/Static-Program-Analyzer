@@ -6,7 +6,7 @@ namespace parser {
 bool WhileSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
-  // Sc(w) <- while ( O ) { S+ }
+  // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
   if (stack->size() >= 7
     && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(i, 1))

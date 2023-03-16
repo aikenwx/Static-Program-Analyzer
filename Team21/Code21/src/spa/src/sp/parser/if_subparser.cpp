@@ -6,7 +6,7 @@ namespace parser {
 bool IfSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
-  // Sc(i) -> if ( O ) then { S+ } else { S+ }
+  // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
   if (stack->size() >= 12
     && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(i, 1))

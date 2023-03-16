@@ -32,7 +32,7 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // F <- V
+    // factor: var_name
     if (util::instance_of<ast::VariableNode>(*i)) {
       // References variable node
       std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
@@ -44,7 +44,7 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // F <- C
+    // factor: const_value
     if (util::instance_of<ast::ConstantNode>(*i)) {
       // References constant node
       std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
@@ -56,7 +56,7 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // F <- ( E )
+    // factor: '(' expr ')'
     if (stack->size() >= 3
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))

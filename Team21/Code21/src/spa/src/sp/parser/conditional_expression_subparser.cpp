@@ -8,7 +8,7 @@ bool ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
-    // O <- ! ( O )
+    // cond_expr: '!' '(' cond_expr ')'
     if (stack->size() >= 4
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
@@ -32,7 +32,7 @@ bool ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // O <- ( O ) && ( O )
+    // cond_expr: '(' cond_expr ')' '&&' '(' cond_expr ')'
     if (stack->size() >= 7
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
@@ -67,7 +67,7 @@ bool ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // O <- ( O ) || ( O )
+    // cond_expr: '(' cond_expr ')' '||' '(' cond_expr ')'
     if (stack->size() >= 7
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(i, 1))
@@ -102,7 +102,7 @@ bool ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // O <- R
+    // cond_expr: rel_expr
     if (util::instance_of<ast::RelationalExpressionNode>(*i)) {
       // References relational expression node
       std::shared_ptr<ast::RelationalExpressionNode> r = std::static_pointer_cast<ast::RelationalExpressionNode>(stack->back());

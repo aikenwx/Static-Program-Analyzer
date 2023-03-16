@@ -8,7 +8,7 @@ bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightBraceToken>()) {
-    // S+ <- Sc S+
+    // stmtLst: stmt+ (adds container statement to statement list)
     if (stack->size() >= 2
       && util::instance_of<ast::StatementListNode>(*i)
       && util::instance_of<ast::ContainerStatementNode>(*std::next(i, 1))) {
@@ -26,7 +26,7 @@ bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(sl);
       return true;
     }
-    // S+ <- Sc
+    // stmtLst: stmt+ (creates a one container statement statement list)
     if (util::instance_of<ast::ContainerStatementNode>(*i)) {
       // References (container) statement node
       std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
@@ -40,7 +40,7 @@ bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(sl);
       return true;
     }
-    // S+ <- S ; S+
+    // stmtLst: stmt+ (adds statement to statement list)
     if (stack->size() >= 3
       && util::instance_of<ast::StatementListNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kSemicolon
@@ -62,7 +62,7 @@ bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(sl);
       return true;
     }
-    // S+ <- S ;
+    // stmtLst: stmt+ (creates a one statement statement list)
     if (stack->size() >= 2
       && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kSemicolon
       && util::instance_of<ast::StatementNode>(*std::next(i, 1))) {

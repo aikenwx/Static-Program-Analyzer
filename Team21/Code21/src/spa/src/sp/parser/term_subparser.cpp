@@ -32,7 +32,7 @@ bool TermSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // T <- T * F
+    // term: term '*' factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMultiply
@@ -55,7 +55,7 @@ bool TermSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(t2);
       return true;
     }
-    // T <- T / F
+    // term: term '/' factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kDivide
@@ -78,7 +78,7 @@ bool TermSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(t2);
       return true;
     }
-    // T <- T % F
+    // term: term '%' factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kModulo
@@ -101,7 +101,7 @@ bool TermSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(t2);
       return true;
     }
-    // T <- F
+    // term: factor
     if (util::instance_of<ast::FactorNode>(*i)) {
       // References factor node
       std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack->back());

@@ -6,7 +6,7 @@ namespace parser {
 bool ProcedureSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
-  // P <- procedure N { S+ }
+  // procedure: 'procedure' proc_name '{' stmtLst '}'
   if (stack->size() >= 5
     && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(i, 1))

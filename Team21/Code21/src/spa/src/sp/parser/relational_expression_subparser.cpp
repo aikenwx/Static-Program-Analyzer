@@ -8,7 +8,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
-    // R <- L > L
+    // rel_expr: rel_factor '>' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreater
@@ -31,7 +31,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // R <- L < L
+    // rel_expr: rel_factor '<' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
@@ -54,7 +54,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // R <- L == L
+    // rel_expr: rel_factor '==' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kEqual
@@ -77,7 +77,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // R <- L >= L
+    // rel_expr: rel_factor '>=' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreaterEqual
@@ -100,7 +100,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // R <- L <= L
+    // rel_expr: rel_factor '<=' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesserEqual
@@ -123,7 +123,7 @@ bool RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(e);
       return true;
     }
-    // R <- L == L
+    // rel_expr: rel_factor '!=' rel_factor
     if (stack->size() >= 3
       && util::instance_of<ast::RelationalFactorNode>(*i)
       && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNotEqual

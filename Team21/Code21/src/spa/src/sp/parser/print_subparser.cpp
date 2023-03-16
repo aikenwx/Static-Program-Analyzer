@@ -8,7 +8,7 @@ bool PrintSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
-    // S(p) <- print V
+    // print: 'print' var_name';'
     if (stack->size() >= 2
       && util::instance_of<ast::VariableNode>(*i)
       && util::instance_of<ast::IdentifierNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(i, 1)))->GetValue() == "print") {

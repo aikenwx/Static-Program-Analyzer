@@ -20,7 +20,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // L <- E
+    // rel_factor: expr
     if (util::instance_of<ast::ExpressionNode>(*i)) {
       // References expression node
       std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
@@ -32,7 +32,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // L <- V
+    // rel_factor: var_name
     if (util::instance_of<ast::VariableNode>(*i)) {
       // References variable node
       std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
@@ -44,7 +44,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // L <- C
+    // rel_factor: const_value
     if (util::instance_of<ast::ConstantNode>(*i)) {
       // References constant node
       std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
@@ -59,7 +59,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
   }
   // Secondary parsing case (RHS of relational expression)
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
-    // L <- E
+    // rel_factor: expr
     if (stack->size() >= 2
       && util::instance_of<ast::ExpressionNode>(*i)
       && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
@@ -78,7 +78,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // L <- V
+    // rel_factor: var_name
     if (stack->size() >= 2
       && util::instance_of<ast::VariableNode>(*i)
       && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
@@ -97,7 +97,7 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(f);
       return true;
     }
-    // L <- C
+    // rel_factor: const_value
     if (stack->size() >= 2
       && util::instance_of<ast::ConstantNode>(*i)
       && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser

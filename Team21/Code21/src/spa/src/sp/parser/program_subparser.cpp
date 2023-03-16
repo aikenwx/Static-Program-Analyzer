@@ -8,7 +8,7 @@ bool ProgramSubparser::Parse(std::shared_ptr<Context> context) {
   auto stack = context->GetStack();
   auto i = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::EndToken>()) {
-    // Pr <- P Pr
+    // program: procedure+ (adds a procedure to a program)
     if (stack->size() >= 2
       && util::instance_of<ast::ProgramNode>(*i)
       && util::instance_of<ast::ProcedureNode>(*std::next(i, 1))) {
@@ -26,7 +26,7 @@ bool ProgramSubparser::Parse(std::shared_ptr<Context> context) {
       stack->push_back(pr);
       return true;
     }
-    // Pr <- P
+    // program: procedure+ (creates a one procedure program)
     if (util::instance_of<ast::ProcedureNode>(*i)) {
       // References procedure node
       std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack->back());

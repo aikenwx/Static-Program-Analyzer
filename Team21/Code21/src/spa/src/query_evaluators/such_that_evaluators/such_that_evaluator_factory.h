@@ -3,7 +3,7 @@
 #include "memory"
 
 #include "query/such_that_clause.h"
-#include "such_that_evaluator.h"
+#include "query_evaluators/such_that_evaluators/relationship_evaluators/relationship_evaluator.h"
 
 namespace qps {
 

@@ -38,19 +38,23 @@ class PopulatePKBHelper {
 
   }
 
+  void StoreCFG(std::shared_ptr<cfg::CFG> cfg) {
+    pkb_->getPopulateFacade()->storeCFG(cfg);
+  }
+
   void AddPostFixExpressions(const std::vector<std::pair<int, std::string>> &assignments) {
     for (const auto &[stmt, postfix] : assignments) {
       pkb_->getPopulateFacade()->storeAssignStatementPostfixExpression(stmt, postfix);
     }
   }
   void AddWhileStatementConditionVariable(const std::vector<std::pair<int, std::string>> &whiles) {
-    for (const auto& [stmt, var_name] : whiles) {
+    for (const auto &[stmt, var_name] : whiles) {
       pkb_->getPopulateFacade()->storeWhileStatementConditionVariable(stmt, var_name);
     }
   }
 
   void AddIfStatementConditionVariable(const std::vector<std::pair<int, std::string>> &ifs) {
-    for (const auto& [stmt, var_name] : ifs) {
+    for (const auto &[stmt, var_name] : ifs) {
       pkb_->getPopulateFacade()->storeIfStatementConditionVariable(stmt, var_name);
     }
   }
@@ -171,4 +175,3 @@ class PopulatePKBHelper {
   PKB *pkb_;
 };
 }
-

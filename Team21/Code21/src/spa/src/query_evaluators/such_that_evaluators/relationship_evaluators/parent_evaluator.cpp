@@ -12,7 +12,7 @@ std::vector<::Relationship *> ParentEvaluator::CallPkb(QueryFacade &pkb, EntityT
 }
 
 std::vector<EntityType> ParentEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  return SuchThatEvaluator::CONTAINER_TYPES;
+  return RelationshipEvaluator::CONTAINER_TYPES;
 }
 
 std::vector<EntityType> ParentEvaluator::GetRightHandTypes(Ref &right_arg) {

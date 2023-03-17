@@ -1,5 +1,6 @@
 #include "if_evaluator.h"
 #include "query/query_exceptions.h"
+#include <unordered_set>
 
 namespace qps {
 std::vector<Product> IfEvaluator::CallPkb(QueryFacade &pkb) {
@@ -7,7 +8,7 @@ std::vector<Product> IfEvaluator::CallPkb(QueryFacade &pkb) {
   Ref ref1 = clause_.getArg1();
 
   if (std::holds_alternative<QuotedIdentifier>(ref1)) {
-    std::set<IfStatement *>
+    std::unordered_set<IfStatement *>
         *set = pkb.getIfStatementsUsingVariableInCondition(std::get<QuotedIdentifier>(ref1).getQuotedId());
     for (const auto &row : *set) {
       Product p = Product(row);

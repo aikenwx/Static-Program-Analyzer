@@ -1,5 +1,7 @@
 #include "CallStatement.h"
 
+#include <utility>
+
 CallStatement::CallStatement(int statementNumber) : Statement(&CallStatement::getEntityTypeStatic(), statementNumber) {
 }
 
@@ -13,8 +15,8 @@ auto CallStatement::getEntityType() const -> EntityType& {
 
 EntityType CallStatement::callStatementType = EntityType();
 
-void CallStatement::setProcedureName(std::string* procedureName) {
-    this->procedureName = std::shared_ptr<std::string>(procedureName);
+void CallStatement::setProcedureName(std::shared_ptr<std::string> procedureNameString) {
+    this->procedureName = std::move(procedureNameString);
 }
 
 auto CallStatement::getProcedureName() -> std::string* {

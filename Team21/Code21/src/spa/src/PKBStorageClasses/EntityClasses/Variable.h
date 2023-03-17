@@ -14,7 +14,7 @@ class Variable : public Entity {
    public:
     static auto getEntityTypeStatic() -> EntityType&;
 
-    explicit Variable(std::string* variableValue);
+    explicit Variable(const std::shared_ptr<std::string>& variableValue);
 
     ~Variable() override = default;
 

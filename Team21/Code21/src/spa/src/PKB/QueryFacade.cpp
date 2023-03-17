@@ -34,56 +34,66 @@ QueryFacade::QueryFacade(EntityManager *entityManager,
       patternManager(patternManager) {}
 
 auto QueryFacade::getAllAssignStatements() -> std::vector<AssignStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<AssignStatement *> *>(
       this->entityManager->getEntitiesByType(
           AssignStatement::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllIfStatements() -> std::vector<IfStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<IfStatement *> *>(
       this->entityManager->getEntitiesByType(
           IfStatement::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllWhileStatements() -> std::vector<WhileStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<WhileStatement *> *>(
       this->entityManager->getEntitiesByType(
           WhileStatement::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllCallStatements() -> std::vector<CallStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<CallStatement *> *>(
       this->entityManager->getEntitiesByType(
           CallStatement::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllReadStatements() -> std::vector<ReadStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ReadStatement *> *>(
       this->entityManager->getEntitiesByType(
           ReadStatement::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllPrintStatements() -> std::vector<PrintStatement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<PrintStatement *> *>(
       this->entityManager->getEntitiesByType(
           PrintStatement::getEntityTypeStatic()));
 }
 auto QueryFacade::getAllProcedures() -> std::vector<Procedure *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<Procedure *> *>(
       this->entityManager->getEntitiesByType(Procedure::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllVariables() -> std::vector<Variable *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<Variable *> *>(
       this->entityManager->getEntitiesByType(Variable::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllConstants() -> std::vector<Constant *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<Constant *> *>(
       this->entityManager->getEntitiesByType(Constant::getEntityTypeStatic()));
 }
 
 auto QueryFacade::getAllStatements() -> std::vector<Statement *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<Statement *> *>(
       this->entityManager->getEntitiesByType(Statement::getEntityTypeStatic()));
 }
@@ -91,6 +101,7 @@ auto QueryFacade::getAllStatements() -> std::vector<Statement *> * {
 auto QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<ParentRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ParentRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -101,6 +112,7 @@ auto QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(
 auto QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<FollowsRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<FollowsRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -111,6 +123,7 @@ auto QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(
 auto QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<ModifiesRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ModifiesRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -121,6 +134,7 @@ auto QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(
 auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<UsesRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<UsesRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -131,6 +145,7 @@ auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
 auto QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<ParentStarRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ParentStarRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -141,6 +156,7 @@ auto QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(
 auto QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(
     EntityType leftEntityType, EntityType rightEntityType)
     -> std::vector<FollowsStarRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<FollowsStarRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -150,6 +166,7 @@ auto QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(
 
 auto QueryFacade::getAllCallsRelationships()
     -> std::vector<CallsRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<CallsRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 
@@ -159,6 +176,7 @@ auto QueryFacade::getAllCallsRelationships()
 
 auto QueryFacade::getAllCallsStarRelationships()
     -> std::vector<CallsStarRelationship *> * {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<CallsStarRelationship *> *>(
       this->relationshipManager->getRelationshipsByTypes(
 

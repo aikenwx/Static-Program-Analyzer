@@ -29,7 +29,7 @@ class EntityManager {
    public:
     EntityManager();
 
-    void storeEntity(Entity* entity);
+    void storeEntity(const std::shared_ptr<Entity>& entity);
 
     auto getEntity(EntityKey& key) -> Entity*;
 

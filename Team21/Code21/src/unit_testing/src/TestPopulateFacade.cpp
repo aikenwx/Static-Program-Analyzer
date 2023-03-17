@@ -9,6 +9,7 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBtestHelpers.h"
 
 TEST_CASE("PopulateFacade can instantiate") {
   auto entityManager = std::make_shared<EntityManager>();
@@ -39,7 +40,7 @@ TEST_CASE(
   REQUIRE(*entities->at(0)->getEntityValue() == "1");
   auto key = EntityKey(&Statement::getEntityTypeStatic(), 1);
   entityManager->getEntity(key);
-  REQUIRE(*((AssignStatement *)entityManager->getEntity(key))
+  REQUIRE(*(dynamic_cast<AssignStatement *>(entityManager->getEntity(key)))
                ->getPostFixExpression() == "xy+");
 }
 
@@ -170,7 +171,7 @@ TEST_CASE("PopulateFace can populate constant") {
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
-  populateFacade->storeConstant(5);
+  populateFacade->storeConstant(FIVE);
   std::vector<Entity *> *entities =
       entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
   REQUIRE(entities->size() == 1);

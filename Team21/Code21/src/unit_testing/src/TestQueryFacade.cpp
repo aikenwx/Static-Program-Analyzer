@@ -215,7 +215,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 
   std::vector<Statement *> *statements = queryFacade->getAllStatements();
   REQUIRE(statements->size() == 3);
-  REQUIRE(Statement::isStatement(statements->at(0)));
+  REQUIRE(Statement::isStatement(statements->at(0s
+  )));
   REQUIRE(Statement::isStatement(statements->at(1)));
   REQUIRE(Statement::isStatement(statements->at(2)));
 }

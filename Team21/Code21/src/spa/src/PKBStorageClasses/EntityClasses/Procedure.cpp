@@ -1,6 +1,6 @@
 #include "Procedure.h"
 
-Procedure::Procedure(std::shared_ptr<std::string> procedureName) : Entity(&Procedure::getEntityTypeStatic(), procedureName) {
+Procedure::Procedure(const std::shared_ptr<std::string>& procedureName) : Entity(&Procedure::getEntityTypeStatic(), procedureName) {
 }
 
 auto Procedure::operator==(const Procedure &procedure) const -> bool {

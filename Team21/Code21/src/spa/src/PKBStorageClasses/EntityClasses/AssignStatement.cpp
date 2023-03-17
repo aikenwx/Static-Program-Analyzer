@@ -1,6 +1,7 @@
 #include "AssignStatement.h"
 
 #include <stdexcept>
+#include <utility>
 
 AssignStatement::AssignStatement(int statementNumber) : Statement(&AssignStatement::getEntityTypeStatic(), statementNumber) {
 }
@@ -13,7 +14,7 @@ auto AssignStatement::getEntityTypeStatic() -> const EntityType & {
 }
 
 void AssignStatement::setPostfixExpression(std::shared_ptr<std::string> postfixExpression) {
-    this->postFixExpression = postfixExpression;
+    this->postFixExpression = std::move(postfixExpression);
 }
 
 auto AssignStatement::getPostFixExpression() -> std::string * {

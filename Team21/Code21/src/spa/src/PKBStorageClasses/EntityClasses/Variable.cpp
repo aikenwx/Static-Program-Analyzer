@@ -10,7 +10,7 @@ auto Variable::getEntityTypeStatic() -> EntityType& {
 
 EntityType Variable::variableType = EntityType();
 
-Variable::Variable(std::shared_ptr<std::string> variableValue) : Entity(&Variable::getEntityTypeStatic(), variableValue) {
+Variable::Variable(const std::shared_ptr<std::string>& variableValue) : Entity(&Variable::getEntityTypeStatic(), variableValue) {
 }
 
 auto Variable::getEntityType() const -> EntityType& {

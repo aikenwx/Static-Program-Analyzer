@@ -4,7 +4,7 @@
 
 #include "Entity.h"
 
-EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){};
+EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){}
 
 std::size_t EntityType::entityTypeKeyCounter = 0;
 

@@ -4,7 +4,7 @@
 
 #include "PatternManager.h"
 
-void PatternManager::storeAssignStatementPostfixExpression(AssignStatement *assignStatement, std::string *postfixExpression) {
+void PatternManager::storeAssignStatementPostfixExpression(AssignStatement *assignStatement, std::shared_ptr<std::string>postfixExpression) {
     assignStatement->setPostfixExpression(postfixExpression);
 }
 
@@ -22,18 +22,24 @@ void PatternManager::storeIfStatementConditionVariable(IfStatement *ifStatement,
     usedConditionVariableToIfStatementStore[*conditionVariable]->insert(ifStatement);
 }
 
-std::unordered_set<WhileStatement *> *PatternManager::getWhileStatementsByConditionVariable(std::string *conditionVariable) {
-    if (usedConditionVariableToWhileStatementStore.find(*conditionVariable) == usedConditionVariableToWhileStatementStore.end()) {
-        usedConditionVariableToWhileStatementStore[*conditionVariable] = std::make_shared<std::unordered_set<WhileStatement *>>();
-        return usedConditionVariableToWhileStatementStore[*conditionVariable].get();
-    }
+auto PatternManager::getWhileStatementsByConditionVariable(
+    std::string *conditionVariable) -> std::unordered_set<WhileStatement *> * {
+  if (usedConditionVariableToWhileStatementStore.find(*conditionVariable) ==
+      usedConditionVariableToWhileStatementStore.end()) {
+    usedConditionVariableToWhileStatementStore[*conditionVariable] =
+        std::make_shared<std::unordered_set<WhileStatement *>>();
     return usedConditionVariableToWhileStatementStore[*conditionVariable].get();
+  }
+  return usedConditionVariableToWhileStatementStore[*conditionVariable].get();
 }
 
-std::unordered_set<IfStatement *> *PatternManager::getIfStatementsByConditionVariable(std::string *conditionVariable) {
-    if (usedConditionVariableToIfStatementStore.find(*conditionVariable) == usedConditionVariableToIfStatementStore.end()) {
-        usedConditionVariableToIfStatementStore[*conditionVariable] = std::make_shared<std::unordered_set<IfStatement *>>();
-        return usedConditionVariableToIfStatementStore[*conditionVariable].get();
-    }
+auto PatternManager::getIfStatementsByConditionVariable(
+    std::string *conditionVariable) -> std::unordered_set<IfStatement *> * {
+  if (usedConditionVariableToIfStatementStore.find(*conditionVariable) ==
+      usedConditionVariableToIfStatementStore.end()) {
+    usedConditionVariableToIfStatementStore[*conditionVariable] =
+        std::make_shared<std::unordered_set<IfStatement *>>();
     return usedConditionVariableToIfStatementStore[*conditionVariable].get();
+  }
+  return usedConditionVariableToIfStatementStore[*conditionVariable].get();
 }

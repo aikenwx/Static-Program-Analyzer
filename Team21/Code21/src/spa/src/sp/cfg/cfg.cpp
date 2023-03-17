@@ -1,13 +1,13 @@
 #include "cfg.h"
 
 namespace cfg {
-CFG::CFG() { intervals_ = util::IntervalTree<int, std::shared_ptr<Block>>(); }
-
-std::optional<std::shared_ptr<Block>> CFG::GetBlockAt(int stmtNo) {
+auto CFG::GetBlockAt(int stmtNo) -> std::optional<std::shared_ptr<Block>> {
   return intervals_.Search(stmtNo);
 }
 
-void CFG::InsertBlock(std::shared_ptr<Block> block) {
+void CFG::InsertBlock(const std::shared_ptr<Block>& block) {
   intervals_.Insert({block->start(), block->end()}, block);
 }
+
+auto CFG::Size() const -> int { return intervals_.Size(); }
 }  // namespace cfg

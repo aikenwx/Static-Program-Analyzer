@@ -8,11 +8,11 @@ class WhileStatement : public Statement {
     static EntityType whileStatementType;
 
    public:
-    WhileStatement(int statementNumber);
+    explicit WhileStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType&;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType& override;
 };
 
 #endif

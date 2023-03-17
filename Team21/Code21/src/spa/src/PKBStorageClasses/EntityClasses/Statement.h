@@ -8,20 +8,21 @@
 
 class Statement : public Entity {
    private:
-    static EntityType statementType;
+    static const EntityType statementType;
     int statementNumber;
 
    public:
-    Statement( EntityType *entityType, int statementNumber);
+    Statement(const EntityType *entityType, int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
-    static bool isStatement(Entity* entity);
+    static auto getEntityTypeStatic() -> const EntityType&;
+    static auto isStatement(Entity* entity) -> bool;
 
-    virtual ~Statement(){};
+    ~Statement() override = default;
+    ;
 
-    int getStatementNumber() const;
+    [[nodiscard]] auto getStatementNumber() const -> int;
 
-    virtual EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType& override;
 };
 
 #endif

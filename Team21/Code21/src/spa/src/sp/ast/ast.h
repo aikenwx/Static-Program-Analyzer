@@ -7,8 +7,8 @@
 namespace ast {
 class AST {
 public:
-  std::shared_ptr<INode> GetRoot();
-  void SetRoot(std::shared_ptr<INode> node);
+ auto GetRoot() -> std::shared_ptr<INode>;
+ void SetRoot(std::shared_ptr<INode> node);
 
 private:
   std::shared_ptr<INode> root;

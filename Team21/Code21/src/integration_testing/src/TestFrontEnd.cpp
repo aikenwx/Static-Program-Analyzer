@@ -6,6 +6,8 @@
 #include "PKB/PKB.h"
 #include "sp/sp.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace test_frontend {
 template <typename T, typename std::enable_if_t<std::is_base_of_v<Statement, T>,
                                                 bool> = true>
@@ -39,24 +41,24 @@ struct RelPair {
   std::pair<EntityType, std::string> leftEntity;
   std::pair<EntityType, std::string> rightEntity;
 
-  bool operator==(const RelPair& other) const {
+  auto operator==(const RelPair& other) const -> bool {
     return relType == other.relType && leftEntity == other.leftEntity &&
            rightEntity == other.rightEntity;
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const RelPair& rel) {
-    os << "RelPair{type=" << rel.relType.getKey() << ", left=(" << rel.leftEntity.first.getKey()
+  friend auto operator<<(std::ostream& ostream, const RelPair& rel) -> std::ostream& {
+    ostream << "RelPair{type=" << rel.relType.getKey() << ", left=(" << rel.leftEntity.first.getKey()
        << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first.getKey()
        << ", " << rel.rightEntity.second << ")}";
-    return os;
+    return ostream;
   }
 
   struct Hasher {
-    std::size_t operator()(const RelPair& rel) const {
-      return std::hash<int>()(rel.relType.getKey()) ^
-             (std::hash<int>()(rel.leftEntity.first.getKey()) ^
+    auto operator()(const RelPair& rel) const -> std::size_t {
+      return std::hash<size_t>()(rel.relType.getKey()) ^
+             (std::hash<size_t>()(rel.leftEntity.first.getKey()) ^
               (std::hash<std::string>()(rel.leftEntity.second) ^
-               (std::hash<int>()(rel.rightEntity.first.getKey()) ^
+               (std::hash<size_t>()(rel.rightEntity.first.getKey()) ^
                 std::hash<std::string>()(rel.rightEntity.second))));
     }
   };
@@ -114,29 +116,28 @@ SCENARIO("SP can process and store a simple program into PKB") {
     WHEN("The program is processed") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-      sp.process(program, &pkb);
+      sp::SP::process(program, &pkb);
 
-      QueryFacade* qf = pkb.getQueryFacade();
+      QueryFacade* queryFacade = pkb.getQueryFacade();
       THEN(
           "The PKB should contain the correct information about assign "
           "statements") {
         std::vector<AssignStatement*> const* assigns =
-            qf->getAllAssignStatements();
+            queryFacade->getAllAssignStatements();
         RequireStmtNumsMatch(assigns, {1, 5, 7, 11});
       }
 
       THEN(
           "The PKB should contain the correct information about call "
           "statements") {
-        std::vector<CallStatement*> const* calls = qf->getAllCallStatements();
+        std::vector<CallStatement*> const* calls = queryFacade->getAllCallStatements();
         RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
       THEN(
           "The PKB should contain the correct information about if "
           "statements") {
-        std::vector<IfStatement*> const* ifs = qf->getAllIfStatements();
+        std::vector<IfStatement*> const* ifs = queryFacade->getAllIfStatements();
         RequireStmtNumsMatch(ifs, {8});
       }
 
@@ -144,7 +145,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about while "
           "statements") {
         std::vector<WhileStatement*> const* whiles =
-            qf->getAllWhileStatements();
+            queryFacade->getAllWhileStatements();
         RequireStmtNumsMatch(whiles, {});
       }
 
@@ -152,42 +153,42 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about print "
           "statements") {
         std::vector<PrintStatement*> const* prints =
-            qf->getAllPrintStatements();
+            queryFacade->getAllPrintStatements();
         RequireStmtNumsMatch(prints, {3, 12});
       }
 
       THEN(
           "The PKB should contain the correct information about read "
           "statements") {
-        std::vector<ReadStatement*> const* reads = qf->getAllReadStatements();
+        std::vector<ReadStatement*> const* reads = queryFacade->getAllReadStatements();
         RequireStmtNumsMatch(reads, {2});
       }
 
       THEN("The PKB should contain the correct information about procedures") {
-        std::vector<Procedure*> const* procs = qf->getAllProcedures();
+        std::vector<Procedure*> const* procs = queryFacade->getAllProcedures();
         RequireEntityValuesMatch(procs,
                                  {"main", "foo", "bar", "baz", "qux", "quux"});
       }
 
       THEN("The PKB should contain the correct information about variables") {
-        std::vector<Variable*> const* vars = qf->getAllVariables();
+        std::vector<Variable*> const* vars = queryFacade->getAllVariables();
         RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
-        std::vector<Constant*> const* consts = qf->getAllConstants();
+        std::vector<Constant*> const* consts = queryFacade->getAllConstants();
         RequireEntityValuesMatch(consts, {"1", "2", "4"});
       }
 
       THEN("The PKB should contain the correct information about statements") {
-        std::vector<Statement*> const* stmts = qf->getAllStatements();
+        std::vector<Statement*> const* stmts = queryFacade->getAllStatements();
         RequireStmtNumsMatch(stmts,
                              {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
       }
 
       THEN("The PKB should contain all Calls relationships") {
         std::vector<CallsRelationship*> const* callsRels =
-            qf->getAllCallsRelationships();
+            queryFacade->getAllCallsRelationships();
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsRelationship::getRelationshipTypeStatic(),
@@ -211,7 +212,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all Calls* relationships") {
         std::vector<CallsStarRelationship*> const* callsStarRels =
-            qf->getAllCallsStarRelationships();
+            queryFacade->getAllCallsStarRelationships();
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
@@ -262,7 +263,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all proc-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
-            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
+            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
                 Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
@@ -302,7 +303,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all stmt-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
-            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
+            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
                 Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
@@ -351,7 +352,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all proc-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
-            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
+            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
                 Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
@@ -394,7 +395,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all stmt-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
-            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
+            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
                 Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
@@ -441,3 +442,5 @@ SCENARIO("SP can process and store a simple program into PKB") {
   }
 }
 }  // namespace test_frontend
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

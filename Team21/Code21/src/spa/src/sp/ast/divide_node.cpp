@@ -1,7 +1,8 @@
 #include "divide_node.h"
+#include "sp/ast/binary_operation_node.h"
 
 namespace ast {
-std::string DivideNode::ToString() const {
-  return "divide:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+auto DivideNode::ToString() const -> std::string {
+  return "divide:\n" + BinaryOperationNode::ToString();
 }
 }

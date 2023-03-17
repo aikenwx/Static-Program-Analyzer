@@ -7,12 +7,12 @@
 namespace ast {
 class FactorNode : public INode {
 public:
-  FactorNode(std::shared_ptr<INode> operand);
+ explicit FactorNode(std::shared_ptr<INode> operand);
 
-  std::shared_ptr<INode> GetOperand();
-  std::string ToString() const override;
+ auto GetOperand() -> std::shared_ptr<INode>;
+ [[nodiscard]] auto ToString() const -> std::string override;
 
 private:
   std::shared_ptr<INode> operand;
 };
-}
+}  // namespace ast

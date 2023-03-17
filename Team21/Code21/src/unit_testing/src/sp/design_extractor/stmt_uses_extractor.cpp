@@ -6,6 +6,7 @@
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "util/unique_ptr_cast.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 namespace test_design_extractor {
 SCENARIO(
     "Uses extractor should be able to handle single-level assign node "
@@ -59,3 +60,5 @@ SCENARIO(
   };
 }
 }  // namespace test_design_extractor
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

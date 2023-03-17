@@ -8,25 +8,28 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-std::string BinExpExprNodeToOperator(
-    std::shared_ptr<ast::BinaryOperationNode> node) {
+auto BinExpExprNodeToOperator(
+    const std::shared_ptr<ast::BinaryOperationNode> &node) -> std::string {
   if (util::instance_of<ast::PlusNode>(node)) {
     return "+";
-  } else if (util::instance_of<ast::MinusNode>(node)) {
-    return "-";
-  } else if (util::instance_of<ast::TimesNode>(node)) {
-    return "*";
-  } else if (util::instance_of<ast::DivideNode>(node)) {
-    return "/";
-  } else if (util::instance_of<ast::ModuloNode>(node)) {
-    return "%";
-  } else {
-    return "";
   }
+  if (util::instance_of<ast::MinusNode>(node)) {
+    return "-";
+  }
+  if (util::instance_of<ast::TimesNode>(node)) {
+    return "*";
+  }
+  if (util::instance_of<ast::DivideNode>(node)) {
+    return "/";
+  }
+  if (util::instance_of<ast::ModuloNode>(node)) {
+    return "%";
+  }
+  return "";
 }
 
-std::stack<std::string> AssignExpToPostfixExpStack(
-    std::shared_ptr<ast::INode> node) {
+auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
+    -> std::stack<std::string> {
   std::stack<std::string> postfixExpStack;
 
   if (util::instance_of<ast::ConstantNode>(node)) {
@@ -60,9 +63,9 @@ std::stack<std::string> AssignExpToPostfixExpStack(
   return postfixExpStack;
 }
 
-std::string AssignExpToPostfixExp(std::shared_ptr<ast::INode> node) {
+auto AssignExpToPostfixExp(const std::shared_ptr<ast::INode>& node) -> std::string {
   std::stack<std::string> postfixExpStack = AssignExpToPostfixExpStack(node);
-  std::string postfixExp = "";
+  std::string postfixExp;
 
   while (!postfixExpStack.empty()) {
     postfixExp += (postfixExpStack.top() + " ");
@@ -72,16 +75,16 @@ std::string AssignExpToPostfixExp(std::shared_ptr<ast::INode> node) {
   return postfixExp;
 }
 
-void AssignExpExtractor::HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
-                                          int depth) {
+void AssignExpExtractor::HandleAssignNode(
+    const std::shared_ptr<ast::AssignNode> &node, int depth) {
   std::string postfixExp = AssignExpToPostfixExp(node->GetAssignment());
   std::shared_ptr<rel::AssignExpRelationship> relationship =
       rel::AssignExpRelationship::CreateRelationship(node, postfixExp);
   relns_.push_back(relationship);
 }
 
-std::vector<std::shared_ptr<rel::AssignExpRelationship>>
-AssignExpExtractor::GetRelationships() {
+auto
+AssignExpExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::AssignExpRelationship>> {
   return relns_;
 }
-}  // namespace design_extractor
+} // namespace design_extractor

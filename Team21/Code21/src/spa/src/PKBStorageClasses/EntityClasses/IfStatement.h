@@ -8,11 +8,11 @@ class IfStatement : public Statement {
     static EntityType ifStatementType;
 
    public:
-    IfStatement(int statementNumber);
+    explicit IfStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> EntityType&;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> EntityType& override;
 };
 
 #endif

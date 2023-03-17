@@ -32,8 +32,8 @@ class PopulateFacade {
     void storeReadStatement(int statementNumber);
     void storeWhileStatement(int statementNumber);
     void storeConstant(int constantValue);
-    void storeVariable(std::string variableName);
-    void storeProcedure(std::string procedureName);
+    void storeVariable(const std::string& variableName);
+    void storeProcedure(const std::string& procedureName);
 
     void storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     void storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
@@ -46,8 +46,8 @@ class PopulateFacade {
     void storeCallsRelationship(std::string caller, std::string callee);
     void storeCallsStarRelationship(std::string caller, std::string callee);
 
-    void storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression);
-    void storeCallStatementProcedureName(int statementNumber, std::string procedureName);
+    void storeAssignStatementPostfixExpression(int statementNumber, const std::string& postfixExpression);
+    void storeCallStatementProcedureName(int statementNumber, const std::string& procedureName);
 
     void storeWhileStatementConditionVariable(int statementNumber, std::string variableName);
     void storeIfStatementConditionVariable(int statementNumber, std::string variableName);
@@ -55,7 +55,7 @@ class PopulateFacade {
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
    private:
-    void validateEntityExists(Entity *entity);
+    static void validateEntityExists(Entity *entity);
 };
 
 #endif  // SPA_POPULATEFACADE_H

@@ -1,31 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
-#include <stdexcept>
 #include <string>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "PKBStorageClasses/EntityClasses/IfStatement.h"
-#include "PKBStorageClasses/EntityClasses/PrintStatement.h"
-#include "PKBStorageClasses/EntityClasses/Procedure.h"
-#include "PKBStorageClasses/EntityClasses/Variable.h"
-#include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "PKBtestHelpers.h"
 
-// std::string getTestHash(std::string firstEntityValue, testEntityType firstEntityType, std::string secondEntityValue,
-//                         testEntityType secondEntityType, testRelationshipType relationshipType) {
-//     std::string relationshipTypeHash = std::to_string((int)relationshipType * testBase * testBase + (int)firstEntityType * testBase + (int)secondEntityType);
-
-//     return firstEntityValue + "_" + relationshipTypeHash + "_" + secondEntityValue;
-// }
 
 TEST_CASE("Test Entity Key uniqueness and correctness") {
     REQUIRE(EntityKey(&AssignStatement::getEntityTypeStatic(), 1) == EntityKey(&AssignStatement::getEntityTypeStatic(), 1));

@@ -3,7 +3,6 @@
 // //
 
 #include <catch2/catch_test_macros.hpp>
-#include <iostream>
 #include <memory>
 
 #include "PKB/RelationshipManager.h"
@@ -110,12 +109,12 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
 TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple types") {
     auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
     RelationshipManager *relationshipManager = relationshipManagerOwner.get();
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
-    auto readStatement3 = std::make_shared<ReadStatement>(3);
-    auto readStatement4 = std::make_shared<ReadStatement>(4);
-    auto assignStatement = std::make_shared<AssignStatement>(5);
-    auto assignStatement2 = std::make_shared<AssignStatement>(6);
+    auto readStatement = std::make_shared<ReadStatement>(ONE);
+    auto readStatement2 = std::make_shared<ReadStatement>(TWO);
+    auto readStatement3 = std::make_shared<ReadStatement>(THREE);
+    auto readStatement4 = std::make_shared<ReadStatement>(FOUR);
+    auto assignStatement = std::make_shared<AssignStatement>(FIVE);
+    auto assignStatement2 = std::make_shared<AssignStatement>(SIX);
 
     auto aString = std::make_shared<std::string>("a");
     auto bString = std::make_shared<std::string>("b");
@@ -137,16 +136,15 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
         ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->size() == 2);
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), relationship.get()));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(1), relationship2.get()));
-
+    REQUIRE(relationship->equals(relationships->at(0)));
+    REQUIRE(relationship2->equals(relationships->at(1)));
     std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
         ModifiesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
         Variable::getEntityTypeStatic());
 
     REQUIRE(relationships2->size() == 2);
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(0), relationship3.get()));
-    REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(1), relationship4.get()));
+    REQUIRE(relationship3->equals(relationships2->at(0)));
+    REQUIRE(relationship4->equals(relationships2->at(1)));
 }
 
 // TEST_CASE("Retrieve Statement follow Statement") {
@@ -666,14 +664,14 @@ TEST_CASE("Can retrieve relationship by literal values") {
     auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
     RelationshipManager *relationshipManager = relationshipManagerOwner.get();
 
-    auto whileStatementOwner = std::make_shared<WhileStatement>(1);
-    auto whileStatementOwner2 = std::make_shared<WhileStatement>(2);
-    auto assignStatementOwner = std::make_shared<AssignStatement>(3);
-    auto assignStatementOwner2 = std::make_shared<AssignStatement>(4);
-    auto callStatementOwner = std::make_shared<CallStatement>(5);
-    auto readStatementOwner = std::make_shared<ReadStatement>(6);
-    auto printStatementOwner = std::make_shared<PrintStatement>(7);
-    auto ifStatementOwner = std::make_shared<IfStatement>(8);
+    auto whileStatementOwner = std::make_shared<WhileStatement>(ONE);
+    auto whileStatementOwner2 = std::make_shared<WhileStatement>(TWO);
+    auto assignStatementOwner = std::make_shared<AssignStatement>(THREE);
+    auto assignStatementOwner2 = std::make_shared<AssignStatement>(FOUR);
+    auto callStatementOwner = std::make_shared<CallStatement>(FIVE);
+    auto readStatementOwner = std::make_shared<ReadStatement>(SIX);
+    auto printStatementOwner = std::make_shared<PrintStatement>(SEVEN);
+    auto ifStatementOwner = std::make_shared<IfStatement>(EIGHT);
     auto variableOwner = std::make_shared<Variable>(std::make_shared<std::string>("x"));
     auto variableOwner2 = std::make_shared<Variable>(std::make_shared<std::string>("y"));
     auto procedureOwner = std::make_shared<Procedure>(std::make_shared<std::string>("main"));

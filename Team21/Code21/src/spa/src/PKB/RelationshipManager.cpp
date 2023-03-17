@@ -85,20 +85,26 @@ auto std::hash<RelationshipSynonymLiteralKey>::operator()(
 }
 
 RelationshipManager::RelationshipManager() {
-    this->relationshipDoubleSynonymStore = std::unordered_map<RelationshipDoubleSynonymKey, std::shared_ptr<std::vector<Relationship *>>>();
-    this->relationshipStore = std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();
+  this->relationshipDoubleSynonymStore =
+      std::unordered_map<RelationshipDoubleSynonymKey,
+                         std::shared_ptr<std::vector<Relationship *>>>();
+  this->relationshipStore =
+      std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();
 }
 
-void RelationshipManager::storeRelationship(const std::shared_ptr<Relationship>& relationship) {
-    if (relationshipStore.find(relationship->getRelationshipKey()) != relationshipStore.end()) {
-        return;
-    }
+void RelationshipManager::storeRelationship(
+    const std::shared_ptr<Relationship> &relationship) {
+  if (!this->relationshipStore
+           .try_emplace(relationship->getRelationshipKey(),
+                        std::shared_ptr<Relationship>(relationship))
+           .second) {
+    // early return if relationship already exists
+    return;
+  }
 
-    this->relationshipStore.try_emplace(relationship->getRelationshipKey(), std::shared_ptr<Relationship>(relationship));
-
-    this->storeInRelationshipDoubleSynonymStore(relationship.get());
-    this->storeInRelationshipLiteralSynonymStore(relationship.get());
-    this->storeInRelationshipSynonymLiteralStore(relationship.get());
+  this->storeInRelationshipDoubleSynonymStore(relationship.get());
+  this->storeInRelationshipLiteralSynonymStore(relationship.get());
+  this->storeInRelationshipSynonymLiteralStore(relationship.get());
 }
 
 auto RelationshipManager::getRelationship(RelationshipKey &key)
@@ -123,8 +129,9 @@ auto RelationshipManager::getRelationshipsByTypes(
 
 auto RelationshipManager::
     getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-        EntityKey &rightHandEntityKey) -> std::vector<Entity *> * {
+        RelationshipType &relationshipType,
+        const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+        -> std::vector<Entity *> * {
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
       RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
                                     &rightHandEntityKey);
@@ -149,93 +156,134 @@ auto RelationshipManager::
       .get();
 }
 
-void RelationshipManager::initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-    RelationshipDoubleSynonymKey relationshipSynonymKey) {
-    // inserts only if key doesn't exist
-    this->relationshipDoubleSynonymStore.try_emplace(relationshipSynonymKey, std::make_shared<std::vector<Relationship *>>());
+void RelationshipManager::
+    initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+        RelationshipDoubleSynonymKey relationshipSynonymKey) {
+  // inserts only if key doesn't exist
+  this->relationshipDoubleSynonymStore.try_emplace(
+      relationshipSynonymKey, std::make_shared<std::vector<Relationship *>>());
 }
 
-void RelationshipManager::initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-    RelationshipLiteralSynonymKey relationshipLiteralSynonymKey) {
-    // inserts only if key doesn't exist
-    this->relationshipLiteralSynonymStore.try_emplace(relationshipLiteralSynonymKey, std::make_shared<std::vector<Entity *>>());
+void RelationshipManager::
+    initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
+        RelationshipLiteralSynonymKey relationshipLiteralSynonymKey) {
+  // inserts only if key doesn't exist
+  this->relationshipLiteralSynonymStore.try_emplace(
+      relationshipLiteralSynonymKey, std::make_shared<std::vector<Entity *>>());
 }
 
-void RelationshipManager::initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-    RelationshipSynonymLiteralKey relationshipSynonymLiteralKey) {
-    // inserts only if key doesn't exist
-    this->relationshipSynonymLiteralStore.try_emplace(relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>());
+void RelationshipManager::
+    initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
+        RelationshipSynonymLiteralKey relationshipSynonymLiteralKey) {
+  // inserts only if key doesn't exist
+  this->relationshipSynonymLiteralStore.try_emplace(
+      relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>());
 }
 
-void RelationshipManager::storeInRelationshipDoubleSynonymStore(Relationship *relationship) {
-    RelationshipDoubleSynonymKey relationshipSynonymKey = RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
-                                                                                       &relationship->getLeftHandEntity()->getEntityType(),
-                                                                                       &relationship->getRightHandEntity()->getEntityType());
+void RelationshipManager::storeInRelationshipDoubleSynonymStore(
+    Relationship *relationship) {
+  RelationshipDoubleSynonymKey relationshipSynonymKey =
+      RelationshipDoubleSynonymKey(
+          &relationship->getRelationshipType(),
+          &relationship->getLeftHandEntity()->getEntityType(),
+          &relationship->getRightHandEntity()->getEntityType());
 
-    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(relationshipSynonymKey);
+  this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+      relationshipSynonymKey);
 
-    this->relationshipDoubleSynonymStore.at(relationshipSynonymKey)->push_back(relationship);
+  this->relationshipDoubleSynonymStore.at(relationshipSynonymKey)
+      ->push_back(relationship);
 
-    if (Statement::isStatement(relationship->getLeftHandEntity())) {
-        RelationshipDoubleSynonymKey leftStatementRelationship = RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
-                                                                                              &Statement::getEntityTypeStatic(),
-                                                                                              &relationship->getRightHandEntity()->getEntityType());
-        this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(leftStatementRelationship);
+  if (Statement::isStatement(relationship->getLeftHandEntity())) {
+    RelationshipDoubleSynonymKey leftStatementRelationship =
+        RelationshipDoubleSynonymKey(
+            &relationship->getRelationshipType(),
+            &Statement::getEntityTypeStatic(),
+            &relationship->getRightHandEntity()->getEntityType());
+    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+        leftStatementRelationship);
 
-        this->relationshipDoubleSynonymStore.at(leftStatementRelationship)->push_back(relationship);
-    }
-    if (Statement::isStatement(relationship->getRightHandEntity())) {
-        RelationshipDoubleSynonymKey rightStatementRelationship = RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
-                                                                                               &relationship->getLeftHandEntity()->getEntityType(),
-                                                                                               &Statement::getEntityTypeStatic());
-        this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(rightStatementRelationship);
+    this->relationshipDoubleSynonymStore.at(leftStatementRelationship)
+        ->push_back(relationship);
+  }
+  if (Statement::isStatement(relationship->getRightHandEntity())) {
+    RelationshipDoubleSynonymKey rightStatementRelationship =
+        RelationshipDoubleSynonymKey(
+            &relationship->getRelationshipType(),
+            &relationship->getLeftHandEntity()->getEntityType(),
+            &Statement::getEntityTypeStatic());
+    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+        rightStatementRelationship);
 
-        this->relationshipDoubleSynonymStore.at(rightStatementRelationship)->push_back(relationship);
-    }
-    if (Statement::isStatement(relationship->getLeftHandEntity()) && Statement::isStatement(relationship->getRightHandEntity())) {
-        RelationshipDoubleSynonymKey bothStatementRelationship = RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
-                                                                                              &Statement::getEntityTypeStatic(),
-                                                                                              &Statement::getEntityTypeStatic());
-        this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(bothStatementRelationship);
+    this->relationshipDoubleSynonymStore.at(rightStatementRelationship)
+        ->push_back(relationship);
+  }
+  if (Statement::isStatement(relationship->getLeftHandEntity()) &&
+      Statement::isStatement(relationship->getRightHandEntity())) {
+    RelationshipDoubleSynonymKey bothStatementRelationship =
+        RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
+                                     &Statement::getEntityTypeStatic(),
+                                     &Statement::getEntityTypeStatic());
+    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+        bothStatementRelationship);
 
-        this->relationshipDoubleSynonymStore.at(bothStatementRelationship)->push_back(relationship);
-    }
+    this->relationshipDoubleSynonymStore.at(bothStatementRelationship)
+        ->push_back(relationship);
+  }
 }
 
-void RelationshipManager::storeInRelationshipLiteralSynonymStore(Relationship *relationship) {
-    RelationshipLiteralSynonymKey relationshipLiteralSynonymKey = RelationshipLiteralSynonymKey(&relationship->getRelationshipType(),
-                                                                                                &relationship->getLeftHandEntity()->getEntityKey(),
-                                                                                                &relationship->getRightHandEntity()->getEntityType());
+void RelationshipManager::storeInRelationshipLiteralSynonymStore(
+    Relationship *relationship) {
+  RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
+      RelationshipLiteralSynonymKey(
+          &relationship->getRelationshipType(),
+          &relationship->getLeftHandEntity()->getEntityKey(),
+          &relationship->getRightHandEntity()->getEntityType());
 
-    this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(relationshipLiteralSynonymKey);
+  this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
+      relationshipLiteralSynonymKey);
 
-    this->relationshipLiteralSynonymStore.at(relationshipLiteralSynonymKey)->push_back(relationship->getRightHandEntity());
+  this->relationshipLiteralSynonymStore.at(relationshipLiteralSynonymKey)
+      ->push_back(relationship->getRightHandEntity());
 
-    if (Statement::isStatement(relationship->getRightHandEntity())) {
-        RelationshipLiteralSynonymKey rightStatementRelationship = RelationshipLiteralSynonymKey(&relationship->getRelationshipType(),
-                                                                                                 &relationship->getLeftHandEntity()->getEntityKey(),
-                                                                                                 &Statement::getEntityTypeStatic());
-        this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(rightStatementRelationship);
+  if (Statement::isStatement(relationship->getRightHandEntity())) {
+    RelationshipLiteralSynonymKey rightStatementRelationship =
+        RelationshipLiteralSynonymKey(
+            &relationship->getRelationshipType(),
+            &relationship->getLeftHandEntity()->getEntityKey(),
+            &Statement::getEntityTypeStatic());
+    this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
+        rightStatementRelationship);
 
-        this->relationshipLiteralSynonymStore.at(rightStatementRelationship)->push_back(relationship->getRightHandEntity());
-    }
+    this->relationshipLiteralSynonymStore.at(rightStatementRelationship)
+        ->push_back(relationship->getRightHandEntity());
+  }
 }
 
-void RelationshipManager::storeInRelationshipSynonymLiteralStore(Relationship *relationship) {
-    RelationshipSynonymLiteralKey relationshipSynonymLiteralKey = RelationshipSynonymLiteralKey(&relationship->getRelationshipType(),
-                                                                                                &relationship->getLeftHandEntity()->getEntityType(),
-                                                                                                &relationship->getRightHandEntity()->getEntityKey());
+void RelationshipManager::storeInRelationshipSynonymLiteralStore(
+    Relationship *relationship) {
+  RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
+      RelationshipSynonymLiteralKey(
+          &relationship->getRelationshipType(),
+          &relationship->getLeftHandEntity()->getEntityType(),
+          &relationship->getRightHandEntity()->getEntityKey());
 
-    this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(relationshipSynonymLiteralKey);
+  this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
+      relationshipSynonymLiteralKey);
 
-    this->relationshipSynonymLiteralStore.at(relationshipSynonymLiteralKey)->push_back(relationship->getLeftHandEntity());
+  this->relationshipSynonymLiteralStore.at(relationshipSynonymLiteralKey)
+      ->push_back(relationship->getLeftHandEntity());
 
-    if (Statement::isStatement(relationship->getLeftHandEntity())) {
-        RelationshipSynonymLiteralKey leftStatementRelationship = RelationshipSynonymLiteralKey(&relationship->getRelationshipType(),
-                                                                                                &Statement::getEntityTypeStatic(),
-                                                                                                &relationship->getRightHandEntity()->getEntityKey());
-        this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(leftStatementRelationship);
+  if (Statement::isStatement(relationship->getLeftHandEntity())) {
+    RelationshipSynonymLiteralKey leftStatementRelationship =
+        RelationshipSynonymLiteralKey(
+            &relationship->getRelationshipType(),
+            &Statement::getEntityTypeStatic(),
+            &relationship->getRightHandEntity()->getEntityKey());
+    this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
+        leftStatementRelationship);
 
-        this->relationshipSynonymLiteralStore.at(leftStatementRelationship)->push_back(relationship->getLeftHandEntity());
-    }
+    this->relationshipSynonymLiteralStore.at(leftStatementRelationship)
+        ->push_back(relationship->getLeftHandEntity());
+  }
 }

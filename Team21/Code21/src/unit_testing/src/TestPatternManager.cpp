@@ -3,7 +3,6 @@
 
 #include "PKB/PatternManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
-#include "PKBtestHelpers.h"
 
 TEST_CASE("PatternManager Instantiates") {
     auto patternManager = std::make_shared<PatternManager>();
@@ -12,7 +11,7 @@ TEST_CASE("PatternManager Instantiates") {
 TEST_CASE("PatternManager can store assign statement postfix expression") {
     auto patternManager = std::make_shared<PatternManager>();
 
-    auto assignStatement = std::make_shared<AssignStatement>(ONE);
+    auto assignStatement = std::make_shared<AssignStatement>(1);
 
     std::shared_ptr<std::string> postfixExpression = std::make_shared<std::string>("ab-");
 

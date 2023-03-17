@@ -19,13 +19,14 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "PKBtestHelpers.h"
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("Relationships can instantiate") {
-  auto printStatementOwner = std::make_shared<PrintStatement>(TWO);
-  auto readStatementOwner = std::make_shared<ReadStatement>(THREE);
-  auto whileStatementOwner = std::make_shared<WhileStatement>(FOUR);
-  auto assignStatementOwner = std::make_shared<AssignStatement>(FIVE);
+  auto printStatementOwner = std::make_shared<PrintStatement>(2);
+  auto readStatementOwner = std::make_shared<ReadStatement>(3);
+  auto whileStatementOwner = std::make_shared<WhileStatement>(4);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(5);
   auto procedureOwner =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variableOwner =
@@ -64,10 +65,10 @@ TEST_CASE("Relationships can instantiate") {
 }
 
 TEST_CASE("Relationships contain the correct left entity") {
-  auto printStatementOwner = std::make_shared<PrintStatement>(TWO);
-  auto readStatementOwner = std::make_shared<ReadStatement>(THREE);
-  auto whileStatementOwner = std::make_shared<WhileStatement>(FOUR);
-  auto assignStatementOwner = std::make_shared<AssignStatement>(FIVE);
+  auto printStatementOwner = std::make_shared<PrintStatement>(2);
+  auto readStatementOwner = std::make_shared<ReadStatement>(3);
+  auto whileStatementOwner = std::make_shared<WhileStatement>(4);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(5);
   auto procedureOwner =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variableOwner =
@@ -115,10 +116,10 @@ TEST_CASE("Relationships contain the correct left entity") {
 }
 
 TEST_CASE("Relationships contain the correct right entity") {
-  auto printStatementOwner = std::make_shared<PrintStatement>(TWO);
-  auto readStatementOwner = std::make_shared<ReadStatement>(THREE);
-  auto whileStatementOwner = std::make_shared<WhileStatement>(FOUR);
-  auto assignStatementOwner = std::make_shared<AssignStatement>(FIVE);
+  auto printStatementOwner = std::make_shared<PrintStatement>(2);
+  auto readStatementOwner = std::make_shared<ReadStatement>(3);
+  auto whileStatementOwner = std::make_shared<WhileStatement>(4);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(5);
   auto procedureOwner =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variableOwner =
@@ -166,10 +167,10 @@ TEST_CASE("Relationships contain the correct right entity") {
 }
 
 TEST_CASE("Relationships contain the wrong left entity") {
-  auto printStatementOwner = std::make_shared<PrintStatement>(TWO);
-  auto readStatementOwner = std::make_shared<ReadStatement>(THREE);
-  auto whileStatementOwner = std::make_shared<WhileStatement>(FOUR);
-  auto assignStatementOwner = std::make_shared<AssignStatement>(FIVE);
+  auto printStatementOwner = std::make_shared<PrintStatement>(2);
+  auto readStatementOwner = std::make_shared<ReadStatement>(3);
+  auto whileStatementOwner = std::make_shared<WhileStatement>(4);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(5);
   auto procedureOwner =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variableOwner =
@@ -219,10 +220,10 @@ TEST_CASE("Relationships contain the wrong left entity") {
 }
 
 TEST_CASE("Relationships contain the wrong right entity") {
-  auto printStatementOwner = std::make_shared<PrintStatement>(TWO);
-  auto readStatementOwner = std::make_shared<ReadStatement>(THREE);
-  auto whileStatementOwner = std::make_shared<WhileStatement>(FOUR);
-  auto assignStatementOwner = std::make_shared<AssignStatement>(FIVE);
+  auto printStatementOwner = std::make_shared<PrintStatement>(2);
+  auto readStatementOwner = std::make_shared<ReadStatement>(3);
+  auto whileStatementOwner = std::make_shared<WhileStatement>(4);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(5);
   auto procedureOwner =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variableOwner =
@@ -299,3 +300,5 @@ TEST_CASE(
   REQUIRE_THROWS_AS(std::make_shared<UsesRelationship>(variable2, variable),
                     std::invalid_argument);
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

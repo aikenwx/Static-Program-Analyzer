@@ -12,34 +12,35 @@
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "PKBtestHelpers.h"
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("Entities can instantiate") {
-  auto printStatement = std::make_shared<PrintStatement>(ONE);
-  auto readStatement = std::make_shared<ReadStatement>(TWO);
-  auto assignStatement = std::make_shared<AssignStatement>(THREE);
-  auto callStatement = std::make_shared<CallStatement>(FOUR);
-  auto whileStatement = std::make_shared<WhileStatement>(FIVE);
-  auto ifStatement = std::make_shared<IfStatement>(SIX);
+  auto printStatement = std::make_shared<PrintStatement>(1);
+  auto readStatement = std::make_shared<ReadStatement>(2);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  auto callStatement = std::make_shared<CallStatement>(4);
+  auto whileStatement = std::make_shared<WhileStatement>(5);
+  auto ifStatement = std::make_shared<IfStatement>(6);
   auto procedure =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variable =
       std::make_shared<Variable>(std::make_shared<std::string>("variable"));
-  auto constant = std::make_shared<Constant>(ONE);
+  auto constant = std::make_shared<Constant>(1);
 }
 
 TEST_CASE("Entities retrieve their stored values") {
-  auto printStatement = std::make_shared<PrintStatement>(ONE);
-  auto readStatement = std::make_shared<ReadStatement>(TWO);
-  auto assignStatement = std::make_shared<AssignStatement>(THREE);
-  auto callStatement = std::make_shared<CallStatement>(FOUR);
-  auto whileStatement = std::make_shared<WhileStatement>(FIVE);
-  auto ifStatement = std::make_shared<IfStatement>(SIX);
+  auto printStatement = std::make_shared<PrintStatement>(1);
+  auto readStatement = std::make_shared<ReadStatement>(2);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  auto callStatement = std::make_shared<CallStatement>(4);
+  auto whileStatement = std::make_shared<WhileStatement>(5);
+  auto ifStatement = std::make_shared<IfStatement>(6);
   auto procedure =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
   auto variable =
       std::make_shared<Variable>(std::make_shared<std::string>("variable"));
-  auto constant = std::make_shared<Constant>(ONE);
+  auto constant = std::make_shared<Constant>(1);
 
   REQUIRE(*printStatement->getEntityValue() == "1");
   REQUIRE(*readStatement->getEntityValue() == "2");
@@ -54,29 +55,29 @@ TEST_CASE("Entities retrieve their stored values") {
 }
 
 TEST_CASE("Entities can be compared") {
-  auto printStatement = std::make_shared<PrintStatement>(TWO);
-  auto printStatement2 = std::make_shared<PrintStatement>(TWO);
-  auto printStatement3 = std::make_shared<PrintStatement>(THREE);
+  auto printStatement = std::make_shared<PrintStatement>(2);
+  auto printStatement2 = std::make_shared<PrintStatement>(2);
+  auto printStatement3 = std::make_shared<PrintStatement>(3);
 
-  auto readStatement = std::make_shared<ReadStatement>(THREE);
-  auto readStatement2 = std::make_shared<ReadStatement>(THREE);
-  auto readStatement3 = std::make_shared<ReadStatement>(FOUR);
+  auto readStatement = std::make_shared<ReadStatement>(3);
+  auto readStatement2 = std::make_shared<ReadStatement>(3);
+  auto readStatement3 = std::make_shared<ReadStatement>(4);
 
-  auto assignStatement = std::make_shared<AssignStatement>(FOUR);
-  auto assignStatement2 = std::make_shared<AssignStatement>(FOUR);
-  auto assignStatement3 = std::make_shared<AssignStatement>(FIVE);
+  auto assignStatement = std::make_shared<AssignStatement>(4);
+  auto assignStatement2 = std::make_shared<AssignStatement>(4);
+  auto assignStatement3 = std::make_shared<AssignStatement>(5);
 
-  auto callStatement = std::make_shared<CallStatement>(FIVE);
-  auto callStatement2 = std::make_shared<CallStatement>(FIVE);
-  auto callStatement3 = std::make_shared<CallStatement>(SIX);
+  auto callStatement = std::make_shared<CallStatement>(5);
+  auto callStatement2 = std::make_shared<CallStatement>(5);
+  auto callStatement3 = std::make_shared<CallStatement>(6);
 
-  auto whileStatement = std::make_shared<WhileStatement>(SIX);
-  auto whileStatement2 = std::make_shared<WhileStatement>(SIX);
-  auto whileStatement3 = std::make_shared<WhileStatement>(SEVEN);
+  auto whileStatement = std::make_shared<WhileStatement>(6);
+  auto whileStatement2 = std::make_shared<WhileStatement>(6);
+  auto whileStatement3 = std::make_shared<WhileStatement>(7);
 
-  auto ifStatement = std::make_shared<IfStatement>(SEVEN);
-  auto ifStatement2 = std::make_shared<IfStatement>(SEVEN);
-  auto ifStatement3 = std::make_shared<IfStatement>(EIGHT);
+  auto ifStatement = std::make_shared<IfStatement>(7);
+  auto ifStatement2 = std::make_shared<IfStatement>(7);
+  auto ifStatement3 = std::make_shared<IfStatement>(8);
 
   auto variable =
       std::make_shared<Variable>(std::make_shared<std::string>("variable"));
@@ -92,9 +93,9 @@ TEST_CASE("Entities can be compared") {
   auto procedure3 =
       std::make_shared<Procedure>(std::make_shared<std::string>("procedure2"));
 
-  auto constant = std::make_shared<Constant>(ONE);
-  auto constant2 = std::make_shared<Constant>(ONE);
-  auto constant3 = std::make_shared<Constant>(TWO);
+  auto constant = std::make_shared<Constant>(1);
+  auto constant2 = std::make_shared<Constant>(1);
+  auto constant3 = std::make_shared<Constant>(2);
 
   REQUIRE(printStatement->equals(printStatement.get()));
   REQUIRE(readStatement->equals(readStatement.get()));
@@ -138,7 +139,7 @@ TEST_CASE("Entities can be compared") {
 }
 
 TEST_CASE("Assign Statement stores post-fix expression") {
-  auto assignStatement = std::make_shared<AssignStatement>(THREE);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
   assignStatement->setPostfixExpression(std::make_shared<std::string>("xy+"));
   REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
 }
@@ -146,6 +147,8 @@ TEST_CASE("Assign Statement stores post-fix expression") {
 TEST_CASE(
     "Assign Statement throws error if getting post-fix expression before "
     "setting") {
-  auto assignStatement = std::make_shared<AssignStatement>(THREE);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
   REQUIRE_THROWS(assignStatement->getPostFixExpression());
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

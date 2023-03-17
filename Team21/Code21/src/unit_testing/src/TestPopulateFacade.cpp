@@ -9,7 +9,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "PKBtestHelpers.h"
 
 TEST_CASE("PopulateFacade can instantiate") {
   auto entityManager = std::make_shared<EntityManager>();

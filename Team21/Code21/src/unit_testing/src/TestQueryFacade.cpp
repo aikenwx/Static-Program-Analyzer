@@ -2,7 +2,6 @@
 #include <memory>
 
 #include "PKB/QueryFacade.h"
-#include "PKBtestHelpers.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 

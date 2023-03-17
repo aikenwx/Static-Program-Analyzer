@@ -3,7 +3,6 @@
 
 #include "PKB/PatternManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
-#include "PKBtestHelpers.h"
 
 TEST_CASE("PatternManager Instantiates") {
     auto patternManager = std::make_shared<PatternManager>();

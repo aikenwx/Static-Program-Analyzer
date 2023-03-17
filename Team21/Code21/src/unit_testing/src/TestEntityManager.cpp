@@ -9,7 +9,6 @@
 #include "PKBStorageClasses/EntityClasses/Procedure.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
-#include "PKBtestHelpers.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 

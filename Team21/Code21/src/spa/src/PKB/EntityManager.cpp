@@ -4,14 +4,12 @@
 
 #include "EntityManager.h"
 
-#include <stdexcept>
-
 EntityManager::EntityManager() {
     this->entityTypeToEntityStore = std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity *>>>();
     this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();
 }
 
-void EntityManager::storeEntity(std::shared_ptr<Entity> entity) {
+void EntityManager::storeEntity(const std::shared_ptr<Entity>& entity) {
     if (entityStore.find(entity->getEntityKey()) != entityStore.end()) {
         return;
     }

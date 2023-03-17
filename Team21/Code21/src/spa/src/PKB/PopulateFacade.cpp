@@ -66,11 +66,11 @@ void PopulateFacade::storeConstant(int constantValue) {
     this->entityManager->storeEntity(std::make_shared<Constant>(constantValue));
 }
 
-void PopulateFacade::storeVariable(std::string variableName) {
+void PopulateFacade::storeVariable(const std::string& variableName) {
     this->entityManager->storeEntity(std::make_shared<Variable>(std::make_shared<std::string>(variableName)));
 }
 
-void PopulateFacade::storeProcedure(std::string procedureName) {
+void PopulateFacade::storeProcedure(const std::string& procedureName) {
     this->entityManager->storeEntity(std::make_shared<Procedure>(std::make_shared<std::string>(procedureName)));
 }
 
@@ -171,7 +171,7 @@ void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int 
     this->relationshipManager->storeRelationship(std::make_shared<FollowsStarRelationship>(firstStatement, secondStatement));
 }
 
-void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression) {
+void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, const std::string& postfixExpression) {
     auto assignStatementKey = EntityKey(&AssignStatement::getEntityTypeStatic(), statementNumber);
     auto *statement = dynamic_cast<AssignStatement *>(
         this->entityManager->getEntity(assignStatementKey));
@@ -181,7 +181,7 @@ void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, 
         statement, std::make_shared<std::string>(postfixExpression));
 }
 
-void PopulateFacade::storeCallStatementProcedureName(int statementNumber, std::string procedureName) {
+void PopulateFacade::storeCallStatementProcedureName(int statementNumber, const std::string& procedureName) {
     auto callStatementKey = EntityKey(&CallStatement::getEntityTypeStatic(), statementNumber);
 
     auto *callStatement = dynamic_cast<CallStatement *>(

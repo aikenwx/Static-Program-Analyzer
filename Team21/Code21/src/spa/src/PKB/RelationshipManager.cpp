@@ -4,9 +4,7 @@
 
 #include "RelationshipManager.h"
 
-#include <iostream>
 #include <memory>
-#include <stdexcept>
 
 RelationshipDoubleSynonymKey::RelationshipDoubleSynonymKey(
     RelationshipType *relationshipType, const EntityType *leftHandEntityType,
@@ -91,7 +89,7 @@ RelationshipManager::RelationshipManager() {
     this->relationshipStore = std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();
 }
 
-void RelationshipManager::storeRelationship(std::shared_ptr<Relationship> relationship) {
+void RelationshipManager::storeRelationship(const std::shared_ptr<Relationship>& relationship) {
     if (relationshipStore.find(relationship->getRelationshipKey()) != relationshipStore.end()) {
         return;
     }

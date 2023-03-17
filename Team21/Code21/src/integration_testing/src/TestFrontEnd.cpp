@@ -47,18 +47,18 @@ struct RelPair {
   }
 
   friend auto operator<<(std::ostream& ostream, const RelPair& rel) -> std::ostream& {
-    ostream << "RelPair{type=" << rel.relType << ", left=(" << rel.leftEntity.first
-       << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first
+    ostream << "RelPair{type=" << rel.relType.getKey() << ", left=(" << rel.leftEntity.first.getKey()
+       << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first.getKey()
        << ", " << rel.rightEntity.second << ")}";
     return ostream;
   }
 
   struct Hasher {
     auto operator()(const RelPair& rel) const -> std::size_t {
-      return std::hash<int>()(rel.relType) ^
-             (std::hash<int>()(rel.leftEntity.first) ^
+      return std::hash<size_t>()(rel.relType.getKey()) ^
+             (std::hash<size_t>()(rel.leftEntity.first.getKey()) ^
               (std::hash<std::string>()(rel.leftEntity.second) ^
-               (std::hash<int>()(rel.rightEntity.first.getKey()) ^
+               (std::hash<size_t>()(rel.rightEntity.first.getKey()) ^
                 std::hash<std::string>()(rel.rightEntity.second))));
     }
   };
@@ -264,7 +264,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain all proc-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
             queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::PROCEDURE, EntityType::VARIABLE);
+                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
@@ -304,7 +304,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain all stmt-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
             queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::STATEMENT, EntityType::VARIABLE);
+                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
@@ -353,7 +353,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain all proc-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
             queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::PROCEDURE, EntityType::VARIABLE);
+                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
@@ -396,7 +396,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN("The PKB should contain all stmt-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
             queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::STATEMENT, EntityType::VARIABLE);
+                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),

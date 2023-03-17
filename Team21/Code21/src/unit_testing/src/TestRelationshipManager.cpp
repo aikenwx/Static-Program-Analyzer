@@ -44,7 +44,6 @@ TEST_CASE("RelationshipManager retrieves relationship") {
     auto readStatement = std::make_shared<ReadStatement>(1);
     auto readStatement2 = std::make_shared<ReadStatement>(2);
 
-
     auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
     relationshipManager->storeRelationship(relationship);
 
@@ -89,7 +88,6 @@ TEST_CASE("RelationshipManager returns empty vector if no entries") {
         ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->empty());
-
 }
 
 TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
@@ -100,7 +98,6 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
 
     auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
 
-    
     relationshipManager->storeRelationship(relationship);
 
     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
@@ -108,7 +105,6 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
         ReadStatement::getEntityTypeStatic());
 
     REQUIRE(relationships->empty());
-
 }
 
 TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple types") {
@@ -151,7 +147,6 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
     REQUIRE(relationships2->size() == 2);
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(0), relationship3.get()));
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships2->at(1), relationship4.get()));
-
 }
 
 // TEST_CASE("Retrieve Statement follow Statement") {

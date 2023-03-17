@@ -11,19 +11,18 @@ EntityManager::EntityManager() {
     this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();
 }
 
-void EntityManager::storeEntity(Entity *entity) {
-    auto sharedEntity = std::shared_ptr<Entity>(entity);
+void EntityManager::storeEntity(std::shared_ptr<Entity> entity) {
     if (entityStore.find(entity->getEntityKey()) != entityStore.end()) {
         return;
     }
-    this->entityStore.insert(std::make_pair(entity->getEntityKey(), sharedEntity));
+    this->entityStore.insert(std::make_pair(entity->getEntityKey(), entity));
 
-    if (Statement::isStatement(entity)) {
+    if (Statement::isStatement(entity.get())) {
         EntityKey statementKey = EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
-        this->entityStore.insert(std::make_pair(statementKey, sharedEntity));
+        this->entityStore.insert(std::make_pair(statementKey, entity));
     }
 
-    this->storeInEntityTypeStore(entity);
+    this->storeInEntityTypeStore(entity.get());
 }
 
 auto EntityManager::getEntity(EntityKey &key) -> Entity * {

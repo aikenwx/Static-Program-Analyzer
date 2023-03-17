@@ -91,17 +91,16 @@ RelationshipManager::RelationshipManager() {
     this->relationshipStore = std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();
 }
 
-void RelationshipManager::storeRelationship(Relationship *relationship) {
+void RelationshipManager::storeRelationship(std::shared_ptr<Relationship> relationship) {
     if (relationshipStore.find(relationship->getRelationshipKey()) != relationshipStore.end()) {
-        delete relationship;
         return;
     }
 
     this->relationshipStore.insert(std::make_pair(relationship->getRelationshipKey(), std::shared_ptr<Relationship>(relationship)));
 
-    this->storeInRelationshipDoubleSynonymStore(relationship);
-    this->storeInRelationshipLiteralSynonymStore(relationship);
-    this->storeInRelationshipSynonymLiteralStore(relationship);
+    this->storeInRelationshipDoubleSynonymStore(relationship.get());
+    this->storeInRelationshipLiteralSynonymStore(relationship.get());
+    this->storeInRelationshipSynonymLiteralStore(relationship.get());
 }
 
 auto RelationshipManager::getRelationship(RelationshipKey &key)

@@ -18,7 +18,7 @@ class AssignStatement : public Statement {
 
     [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 
-    void setPostfixExpression(std::string *postfixExpression);
+    void setPostfixExpression(std::shared_ptr<std::string> postfixExpression);
 
     auto getPostFixExpression() -> std::string *;
 };

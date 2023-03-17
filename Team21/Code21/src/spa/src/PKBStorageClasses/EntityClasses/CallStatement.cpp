@@ -13,8 +13,8 @@ auto CallStatement::getEntityType() const -> EntityType& {
 
 EntityType CallStatement::callStatementType = EntityType();
 
-void CallStatement::setProcedureName(std::string* procedureName) {
-    this->procedureName = std::shared_ptr<std::string>(procedureName);
+void CallStatement::setProcedureName(std::shared_ptr<std::string> procedureName) {
+    this->procedureName = procedureName;
 }
 
 auto CallStatement::getProcedureName() -> std::string* {

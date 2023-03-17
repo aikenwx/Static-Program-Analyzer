@@ -86,7 +86,7 @@ class RelationshipManager {
    public:
     RelationshipManager();
 
-    void storeRelationship(Relationship *relationship);
+    void storeRelationship(std::shared_ptr<Relationship> relationship);
 
     auto getRelationship(RelationshipKey &key) -> Relationship *;
 

@@ -26,7 +26,7 @@ TEST_CASE("QueryFacade can retrieve read statement") {
 
     std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(1);
 
-    entityManager->storeEntity(new ReadStatement(1));
+    entityManager->storeEntity(std::make_shared<ReadStatement>(1));
 
     std::vector<ReadStatement *> *readStatements = queryFacade->getAllReadStatements();
 
@@ -48,7 +48,7 @@ TEST_CASE("QueryFacade can retrieve print statement") {
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(1);
-    entityManager->storeEntity(new PrintStatement(1));
+    entityManager->storeEntity(std::make_shared<PrintStatement>(1));
 
     std::vector<PrintStatement *> *printStatements = queryFacade->getAllPrintStatements();
 
@@ -70,7 +70,7 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
-    entityManager->storeEntity(new AssignStatement(1));
+    entityManager->storeEntity(std::make_shared<AssignStatement>(1));
 
     std::vector<AssignStatement *> *assignStatements = queryFacade->getAllAssignStatements();
 
@@ -92,7 +92,7 @@ TEST_CASE("QueryFacade can retrieve call statement") {
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
-    entityManager->storeEntity(new CallStatement(1));
+    entityManager->storeEntity(std::make_shared<CallStatement>(1));
 
     std::vector<CallStatement *> *callStatements = queryFacade->getAllCallStatements();
 
@@ -115,7 +115,7 @@ TEST_CASE("QueryFacade can retrieve while statement") {
 
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
 
-    entityManager->storeEntity(new WhileStatement(1));
+    entityManager->storeEntity(std::make_shared<WhileStatement>(1));
 
     std::vector<WhileStatement *> *whileStatements = queryFacade->getAllWhileStatements();
 
@@ -137,7 +137,7 @@ TEST_CASE("QueryFacade can retrieve if statement") {
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
-    entityManager->storeEntity(new IfStatement(1));
+    entityManager->storeEntity(std::make_shared<IfStatement>(1));
 
     std::vector<IfStatement *> *ifStatements = queryFacade->getAllIfStatements();
 
@@ -158,8 +158,8 @@ TEST_CASE("QueryFacade can retrieve procedure") {
     PatternManager *patternManager = new PatternManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
-    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
-    entityManager->storeEntity(new Procedure(new std::string("procedure")));
+    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+    entityManager->storeEntity(std::make_shared<Procedure>(std::make_shared<std::string>("procedure")));
 
     std::vector<Procedure *> *procedures = queryFacade->getAllProcedures();
     REQUIRE(procedures->size() == 1);
@@ -179,8 +179,8 @@ TEST_CASE("QueryFacade can retrieve variable") {
     PatternManager *patternManager = new PatternManager();
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-    entityManager->storeEntity(new Variable(new std::string("variable")));
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+    entityManager->storeEntity(std::make_shared<Variable>(std::make_shared<std::string>("variable")));
 
     std::vector<Variable *> *variables = queryFacade->getAllVariables();
     REQUIRE(variables->size() == 1);
@@ -201,7 +201,7 @@ TEST_CASE("QueryFacade can retrieve constant") {
     QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManager, patternManager, cfgManager);
 
     std::shared_ptr<Constant> constant = std::make_shared<Constant>(1);
-    entityManager->storeEntity(new Constant(1));
+    entityManager->storeEntity(std::make_shared<Constant>(1));
 
     std::vector<Constant *> *constants = queryFacade->getAllConstants();
     REQUIRE(constants->size() == 1);
@@ -225,11 +225,11 @@ TEST_CASE("QueryFace can retrieve all statements") {
     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
     std::shared_ptr<ReadStatement> readStatement = std::make_shared<ReadStatement>(2);
     std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(3);
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-    entityManager->storeEntity(new IfStatement(5));
-    entityManager->storeEntity(new WhileStatement(1));
-    entityManager->storeEntity(new ReadStatement(2));
-    entityManager->storeEntity(new Variable(new std::string("variable")));
+    std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+    entityManager->storeEntity(std::make_shared<IfStatement>(5));
+    entityManager->storeEntity(std::make_shared<WhileStatement>(1));
+    entityManager->storeEntity(std::make_shared<ReadStatement>(2));
+    entityManager->storeEntity(std::make_shared<Variable>(std::make_shared<std::string>("variable")));
 
     std::vector<Statement *> *statements = queryFacade->getAllStatements();
     REQUIRE(statements->size() == 3);
@@ -498,11 +498,11 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
-//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(variable);
+//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<able);
 
-//     std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(ifStatement.get(), variable.get());
+//   >  std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(ifStatement.get(), variable.get());
 
 //     relationshipManager->storeRelationship(modifiesRelationship);
 //     REQUIRE(queryFacade->getStatementModifiesVariableRelationship(1, "variable") != nullptr);
@@ -520,11 +520,11 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
-//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(variable);
+//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<able);
 
-//     std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(ifStatement.get(), variable.get());
+//   >  std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(ifStatement.get(), variable.get());
 
 //     relationshipManager->storeRelationship(usesRelationship);
 //     REQUIRE(queryFacade->getStatementUsesVariableRelationship(1, "variable") != nullptr);
@@ -541,12 +541,12 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
-//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-//     entityManager->storeEntity(procedure);
-//     entityManager->storeEntity(variable);
+//     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//     entityManager->storeEntity(std::make_shared<edure);
+//   >  entityManager->storeEntity(std::make_shared<able);
 
-//     std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(procedure.get(), variable.get());
+//   >  std::shared_ptr<ModifiesRelationship> modifiesRelationship = std::make_shared<ModifiesRelationship>(procedure.get(), variable.get());
 
 //     relationshipManager->storeRelationship(modifiesRelationship);
 //     REQUIRE(queryFacade->getProcedureModifiesVariableRelationship("procedure", "variable") != nullptr);
@@ -563,12 +563,12 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string("procedure"));
-//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-//     entityManager->storeEntity(procedure);
-//     entityManager->storeEntity(variable);
+//     std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+//     std::shared_ptr<Variable> variable = std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//     entityManager->storeEntity(std::make_shared<edure);
+//   >  entityManager->storeEntity(std::make_shared<able);
 
-//     std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(procedure.get(), variable.get());
+//   >  std::shared_ptr<UsesRelationship> usesRelationship = std::make_shared<UsesRelationship>(procedure.get(), variable.get());
 
 //     relationshipManager->storeRelationship(usesRelationship);
 //     REQUIRE(queryFacade->getProcedureUsesVariableRelationship("procedure", "variable") != nullptr);
@@ -587,8 +587,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(whileStatement);
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<eStatement);
 
 //     std::shared_ptr<FollowsRelationship> followsRelationship = std::make_shared<FollowsRelationship>(ifStatement.get(), whileStatement.get());
 
@@ -609,8 +609,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(whileStatement);
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<eStatement);
 
 //     std::shared_ptr<FollowsStarRelationship> followsStarRelationship = std::make_shared<FollowsStarRelationship>(ifStatement.get(), whileStatement.get());
 
@@ -631,8 +631,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(whileStatement);
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<eStatement);
 
 //     std::shared_ptr<ParentRelationship> parentRelationship = std::make_shared<ParentRelationship>(ifStatement.get(), whileStatement.get());
 
@@ -653,8 +653,8 @@ TEST_CASE("QueryFace can retrieve all statements") {
 
 //     std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
 //     std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(2);
-//     entityManager->storeEntity(ifStatement);
-//     entityManager->storeEntity(whileStatement);
+//     entityManager->storeEntity(std::make_shared<atement);
+// >    entityManager->storeEntity(std::make_shared<eStatement);
 
 //     std::shared_ptr<ParentStarRelationship> parentStarRelationship = std::make_shared<ParentStarRelationship>(ifStatement.get(), whileStatement.get());
 
@@ -673,12 +673,12 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
-//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
-//     entityManager->storeEntity(caller);
-//     entityManager->storeEntity(callee);
+//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(std::make_shared<std::string>("caller"));
+//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(std::make_shared<std::string>("callee"));
+//     entityManager->storeEntity(std::make_shared<er);
+//     e>ntityManager->storeEntity(std::make_shared<ee);
 
-//     std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
+//     >std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
 
 //     relationshipManager->storeRelationship(callsRelationship);
 //     REQUIRE(queryFacade->getCallsRelationship("caller", "callee") != nullptr);
@@ -695,12 +695,12 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
-//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
-//     entityManager->storeEntity(caller);
-//     entityManager->storeEntity(callee);
+//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(std::make_shared<std::string>("caller"));
+//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(std::make_shared<std::string>("callee"));
+//     entityManager->storeEntity(std::make_shared<er);
+//     e>ntityManager->storeEntity(std::make_shared<ee);
 
-//     std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
+//     >std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
 
 //     relationshipManager->storeRelationship(callsStarRelationship);
 //     REQUIRE(queryFacade->getCallsStarRelationship("caller", "callee") != nullptr);
@@ -717,18 +717,18 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
-//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(std::make_shared<std::string>("caller"));
+//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(std::make_shared<std::string>("callee"));
 
-//     std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(new std::string("caller2"));
-//     std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(new std::string("callee2"));
+//     std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(std::make_shared<std::string>("caller2"));
+//     std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(std::make_shared<std::string>("callee2"));
 
-//     entityManager->storeEntity(caller);
-//     entityManager->storeEntity(callee);
-//     entityManager->storeEntity(caller2);
-//     entityManager->storeEntity(callee2);
+//     entityManager->storeEntity(std::make_shared<er);
+//     e>ntityManager->storeEntity(std::make_shared<ee);
+//     e>ntityManager->storeEntity(std::make_shared<er2);
+//     >entityManager->storeEntity(std::make_shared<ee2);
 
-//     std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
+//    > std::shared_ptr<CallsRelationship> callsRelationship = std::make_shared<CallsRelationship>(caller.get(), callee.get());
 //     std::shared_ptr<CallsRelationship> callsRelationship2 = std::make_shared<CallsRelationship>(caller2.get(), callee2.get());
 
 //     relationshipManager->storeRelationship(callsRelationship);
@@ -748,18 +748,18 @@ TEST_CASE("QueryFace can retrieve all statements") {
 // CFGManager* cfgManager = new CFGManager();//
 //    QueryFacade *queryFacade = new QueryFacade(entityManager, relationshipManagecfgManagerr, );
 
-//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string("caller"));
-//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string("callee"));
+//     std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(std::make_shared<std::string>("caller"));
+//     std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(std::make_shared<std::string>("callee"));
 
-//     std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(new std::string("caller2"));
-//     std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(new std::string("callee2"));
+//     std::shared_ptr<Procedure> caller2 = std::make_shared<Procedure>(std::make_shared<std::string>("caller2"));
+//     std::shared_ptr<Procedure> callee2 = std::make_shared<Procedure>(std::make_shared<std::string>("callee2"));
 
-//     entityManager->storeEntity(caller);
-//     entityManager->storeEntity(callee);
-//     entityManager->storeEntity(caller2);
-//     entityManager->storeEntity(callee2);
+//     entityManager->storeEntity(std::make_shared<er);
+//     e>ntityManager->storeEntity(std::make_shared<ee);
+//     e>ntityManager->storeEntity(std::make_shared<er2);
+//     >entityManager->storeEntity(std::make_shared<ee2);
 
-//     std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
+//    > std::shared_ptr<CallsStarRelationship> callsStarRelationship = std::make_shared<CallsStarRelationship>(caller.get(), callee.get());
 //     std::shared_ptr<CallsStarRelationship> callsStarRelationship2 = std::make_shared<CallsStarRelationship>(caller2.get(), callee2.get());
 
 //     relationshipManager->storeRelationship(callsStarRelationship);

@@ -23,7 +23,7 @@ class Procedure : public Entity {
 
     [[nodiscard]] auto getEntityType() const -> EntityType& override;
 
-    explicit Procedure(std::string* variableValue);
+    explicit Procedure(std::shared_ptr<std::string> variableValue);
 
     ~Procedure() override = default;
 

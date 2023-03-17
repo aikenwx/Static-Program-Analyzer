@@ -39,41 +39,39 @@ PopulateFacade::PopulateFacade(EntityManager *entityManager,
       cfgManager(cfgManager) {}
 
 void PopulateFacade::storeAssignmentStatement(int statementNumber) {
-    this->entityManager->storeEntity(new AssignStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<AssignStatement>(statementNumber));
 }
 
 void PopulateFacade::storeCallStatement(int statementNumber) {
-    this->entityManager->storeEntity(new CallStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<CallStatement>(statementNumber));
 }
 
 void PopulateFacade::storeIfStatement(int statementNumber) {
-    this->entityManager->storeEntity(new IfStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<IfStatement>(statementNumber));
 }
 
 void PopulateFacade::storePrintStatement(int statementNumber) {
-    this->entityManager->storeEntity(new PrintStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<PrintStatement>(statementNumber));
 }
 
 void PopulateFacade::storeReadStatement(int statementNumber) {
-    this->entityManager->storeEntity(new ReadStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<ReadStatement>(statementNumber));
 }
 
 void PopulateFacade::storeWhileStatement(int statementNumber) {
-    this->entityManager->storeEntity(new WhileStatement(statementNumber));
+    this->entityManager->storeEntity(std::make_shared<WhileStatement>(statementNumber));
 }
 
 void PopulateFacade::storeConstant(int constantValue) {
-    this->entityManager->storeEntity(new Constant(constantValue));
+    this->entityManager->storeEntity(std::make_shared<Constant>(constantValue));
 }
 
 void PopulateFacade::storeVariable(std::string variableName) {
-  this->entityManager->storeEntity(
-      new Variable(new std::string(std::move(variableName))));
+    this->entityManager->storeEntity(std::make_shared<Variable>(std::make_shared<std::string>(variableName)));
 }
 
 void PopulateFacade::storeProcedure(std::string procedureName) {
-  this->entityManager->storeEntity(
-      new Procedure(new std::string(std::move(procedureName))));
+    this->entityManager->storeEntity(std::make_shared<Procedure>(std::make_shared<std::string>(procedureName)));
 }
 
 void PopulateFacade::storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName) {
@@ -85,7 +83,7 @@ void PopulateFacade::storeStatementModifiesVariableRelationship(int statementNum
         dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
     PopulateFacade::validateEntityExists(statement);
     PopulateFacade::validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(new ModifiesRelationship(statement, variable));
+    this->relationshipManager->storeRelationship(std::make_shared<ModifiesRelationship>(statement, variable));
 }
 
 void PopulateFacade::storeStatementUsesVariableRelationship(int statementNumber, std::string variableName) {
@@ -97,7 +95,7 @@ void PopulateFacade::storeStatementUsesVariableRelationship(int statementNumber,
         dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
     PopulateFacade::validateEntityExists(statement);
     PopulateFacade::validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(new UsesRelationship(statement, variable));
+    this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(statement, variable));
 }
 
 void PopulateFacade::storeFollowsRelationship(int firstStatementNumber, int secondStatementNumber) {
@@ -110,7 +108,7 @@ void PopulateFacade::storeFollowsRelationship(int firstStatementNumber, int seco
     PopulateFacade::validateEntityExists(firstStatement);
     PopulateFacade::validateEntityExists(secondStatement);
 
-    this->relationshipManager->storeRelationship(new FollowsRelationship(firstStatement, secondStatement));
+    this->relationshipManager->storeRelationship(std::make_shared<FollowsRelationship>(firstStatement, secondStatement));
 }
 
 void PopulateFacade::storeParentRelationship(int parentStatementNumber, int childStatementNumber) {
@@ -122,7 +120,7 @@ void PopulateFacade::storeParentRelationship(int parentStatementNumber, int chil
         this->entityManager->getEntity(childStatementKey));
     PopulateFacade::validateEntityExists(parentStatement);
     PopulateFacade::validateEntityExists(childStatement);
-    this->relationshipManager->storeRelationship(new ParentRelationship(parentStatement, childStatement));
+    this->relationshipManager->storeRelationship(std::make_shared<ParentRelationship>(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName) {
@@ -134,7 +132,7 @@ void PopulateFacade::storeProcedureModifiesVariableRelationship(std::string proc
         dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
     PopulateFacade::validateEntityExists(procedure);
     PopulateFacade::validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(new ModifiesRelationship(procedure, variable));
+    this->relationshipManager->storeRelationship(std::make_shared<ModifiesRelationship>(procedure, variable));
 }
 
 void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedureName, std::string variableName) {
@@ -146,7 +144,7 @@ void PopulateFacade::storeProcedureUsesVariableRelationship(std::string procedur
         dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
     PopulateFacade::validateEntityExists(procedure);
     PopulateFacade::validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(new UsesRelationship(procedure, variable));
+    this->relationshipManager->storeRelationship(std::make_shared<UsesRelationship>(procedure, variable));
 }
 
 void PopulateFacade::storeParentStarRelationship(int parentStatementNumber, int childStatementNumber) {
@@ -158,7 +156,7 @@ void PopulateFacade::storeParentStarRelationship(int parentStatementNumber, int 
         this->entityManager->getEntity(childStatementKey));
     PopulateFacade::validateEntityExists(parentStatement);
     PopulateFacade::validateEntityExists(childStatement);
-    this->relationshipManager->storeRelationship(new ParentStarRelationship(parentStatement, childStatement));
+    this->relationshipManager->storeRelationship(std::make_shared<ParentStarRelationship>(parentStatement, childStatement));
 }
 
 void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber) {
@@ -170,7 +168,7 @@ void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber, int 
         this->entityManager->getEntity(secondStatementKey));
     PopulateFacade::validateEntityExists(firstStatement);
     PopulateFacade::validateEntityExists(secondStatement);
-    this->relationshipManager->storeRelationship(new FollowsStarRelationship(firstStatement, secondStatement));
+    this->relationshipManager->storeRelationship(std::make_shared<FollowsStarRelationship>(firstStatement, secondStatement));
 }
 
 void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, std::string postfixExpression) {
@@ -180,7 +178,7 @@ void PopulateFacade::storeAssignStatementPostfixExpression(int statementNumber, 
 
     PopulateFacade::validateEntityExists(statement);
     PatternManager::storeAssignStatementPostfixExpression(
-        statement, new std::string(std::move(postfixExpression)));
+        statement, std::make_shared<std::string>(postfixExpression));
 }
 
 void PopulateFacade::storeCallStatementProcedureName(int statementNumber, std::string procedureName) {
@@ -189,7 +187,7 @@ void PopulateFacade::storeCallStatementProcedureName(int statementNumber, std::s
     auto *callStatement = dynamic_cast<CallStatement *>(
         this->entityManager->getEntity(callStatementKey));
     PopulateFacade::validateEntityExists(callStatement);
-    callStatement->setProcedureName(new std::string(std::move(procedureName)));
+    callStatement->setProcedureName(std::make_shared<std::string>(procedureName));
 }
 
 void PopulateFacade::storeIfStatementConditionVariable(int statementNumber, std::string variableName) {
@@ -223,7 +221,7 @@ void PopulateFacade::storeCallsRelationship(std::string caller, std::string call
         this->entityManager->getEntity(secondProcedureKey));
     PopulateFacade::validateEntityExists(firstProcedure);
     PopulateFacade::validateEntityExists(secondProcedure);
-    this->relationshipManager->storeRelationship(new CallsRelationship(firstProcedure, secondProcedure));
+    this->relationshipManager->storeRelationship(std::make_shared<CallsRelationship>(firstProcedure, secondProcedure));
 }
 
 void PopulateFacade::storeCallsStarRelationship(std::string caller, std::string callee) {
@@ -235,7 +233,7 @@ void PopulateFacade::storeCallsStarRelationship(std::string caller, std::string 
         this->entityManager->getEntity(secondProcedureKey));
     PopulateFacade::validateEntityExists(firstProcedure);
     PopulateFacade::validateEntityExists(secondProcedure);
-    this->relationshipManager->storeRelationship(new CallsStarRelationship(firstProcedure, secondProcedure));
+    this->relationshipManager->storeRelationship(std::make_shared<CallsStarRelationship>(firstProcedure, secondProcedure));
 }
 
 void PopulateFacade::validateEntityExists(Entity *entity) {
@@ -245,5 +243,5 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 }
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-  this->cfgManager->storeCFG(std::move(cfg));
+    this->cfgManager->storeCFG(std::move(cfg));
 }

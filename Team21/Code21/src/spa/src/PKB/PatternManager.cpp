@@ -4,7 +4,7 @@
 
 #include "PatternManager.h"
 
-void PatternManager::storeAssignStatementPostfixExpression(AssignStatement *assignStatement, std::string *postfixExpression) {
+void PatternManager::storeAssignStatementPostfixExpression(AssignStatement *assignStatement, std::shared_ptr<std::string>postfixExpression) {
     assignStatement->setPostfixExpression(postfixExpression);
 }
 

@@ -320,12 +320,12 @@ TEST_CASE("PKB can store multiple assignment uses variable relationships and ret
 
     auto as1 = AssignStatement(1);
     // will be stored in a shared_ptr internally then dealloc'd automatically
-    auto v_x = Variable(new std::string("x"));
+    auto v_x = Variable(std::make_shared<std::string>("x"));
     auto expectedRelationship1 = UsesRelationship(&as1, &v_x);
 
     auto as2 = AssignStatement(2);
     // will be stored in a shared_ptr internally then dealloc'd automatically
-    auto v_y = Variable(new std::string("y"));
+    auto v_y = Variable(std::make_shared<std::string>("y"));
     auto expectedRelationship2 = UsesRelationship(&as2, &v_y);
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), &expectedRelationship1));
@@ -348,11 +348,11 @@ TEST_CASE("PKB can store multiple procedure uses variable relationships and retr
 
     REQUIRE(relationships->size() == 2);
 
-    auto p_Procedure1 = Procedure(new std::string("Procedure1"));
-    auto v_x = Variable(new std::string("x"));
+    auto p_Procedure1 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto v_x = Variable(std::make_shared<std::string>("x"));
     auto expectedRelationship1 = UsesRelationship(&p_Procedure1, &v_x);
-    auto p_Procedure2 = Procedure(new std::string("Procedure2"));
-    auto v_y = Variable(new std::string("y"));
+    auto p_Procedure2 = Procedure(std::make_shared<std::string>("Procedure2"));
+    auto v_y = Variable(std::make_shared<std::string>("y"));
     auto expectedRelationship2 = UsesRelationship(&p_Procedure2, &v_y);
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), &expectedRelationship1));
@@ -376,10 +376,10 @@ TEST_CASE("PKB can store multiple call modifies variable relationships and retri
     REQUIRE(relationships->size() == 2);
 
     auto cs1 = CallStatement(1);
-    auto v_x = Variable(new std::string("x"));
+    auto v_x = Variable(std::make_shared<std::string>("x"));
     auto expectedRelationship1 = ModifiesRelationship(&cs1, &v_x);
     auto cs2 = CallStatement(2);
-    auto v_y = Variable(new std::string("y"));
+    auto v_y = Variable(std::make_shared<std::string>("y"));
     auto expectedRelationship2 = ModifiesRelationship(&cs2, &v_y);
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), &expectedRelationship1));
@@ -402,11 +402,11 @@ TEST_CASE("PKB can store multiple procedure modifies variable relationships and 
 
     REQUIRE(relationships->size() == 2);
 
-    auto p_Procedure1 = Procedure(new std::string("Procedure1"));
-    auto v_x = Variable(new std::string("x"));
+    auto p_Procedure1 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto v_x = Variable(std::make_shared<std::string>("x"));
     auto expectedRelationship1 = ModifiesRelationship(&p_Procedure1, &v_x);
-    auto p_Procedure2 = Procedure(new std::string("Procedure2"));
-    auto v_y = Variable(new std::string("y"));
+    auto p_Procedure2 = Procedure(std::make_shared<std::string>("Procedure2"));
+    auto v_y = Variable(std::make_shared<std::string>("y"));
     auto expectedRelationship2 = ModifiesRelationship(&p_Procedure2, &v_y);
 
     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationships->at(0), &expectedRelationship1));
@@ -453,6 +453,7 @@ TEST_CASE("PKB can store mulitple types of statements and retrieve them all") {
                              [&statement](Statement *expectedStatement) {
                                  return statement->equals(expectedStatement);
                              }) != expectedStatements.end());
+
     }
 }
 
@@ -742,20 +743,20 @@ TEST_CASE("PKB can store multiple Calls relationships and retrieve them all") {
 
     REQUIRE(relationships->size() == 4);
 
-    auto proc_Procedure1_1 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure2 = Procedure(new std::string("Procedure2"));
+    auto proc_Procedure1_1 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure2 = Procedure(std::make_shared<std::string>("Procedure2"));
     auto expectedRelationship1 = CallsRelationship(&proc_Procedure1_1, &proc_Procedure2);
 
-    auto proc_Procedure1_2 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure3 = Procedure(new std::string("Procedure3"));
+    auto proc_Procedure1_2 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure3 = Procedure(std::make_shared<std::string>("Procedure3"));
     auto expectedRelationship2 = CallsRelationship(&proc_Procedure1_2, &proc_Procedure3);
 
-    auto proc_Procedure1_3 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure4 = Procedure(new std::string("Procedure4"));
+    auto proc_Procedure1_3 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure4 = Procedure(std::make_shared<std::string>("Procedure4"));
     auto expectedRelationship3 = CallsRelationship(&proc_Procedure1_3, &proc_Procedure4);
 
-    auto proc_Procedure1_4 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure5 = Procedure(new std::string("Procedure5"));
+    auto proc_Procedure1_4 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure5 = Procedure(std::make_shared<std::string>("Procedure5"));
     auto expectedRelationship4 = CallsRelationship(&proc_Procedure1_4, &proc_Procedure5);
 
     std::vector<CallsRelationship *> expectedRelationships = {&expectedRelationship1,
@@ -818,20 +819,20 @@ TEST_CASE("PKB can store multiple CallsStar relationships and retrieve them all"
 
     REQUIRE(relationships->size() == 4);
 
-    auto proc_Procedure1_1 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure2 = Procedure(new std::string("Procedure2"));
+    auto proc_Procedure1_1 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure2 = Procedure(std::make_shared<std::string>("Procedure2"));
     auto expectedRelationship1 = CallsStarRelationship(&proc_Procedure1_1, &proc_Procedure2);
 
-    auto proc_Procedure1_2 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure3 = Procedure(new std::string("Procedure3"));
+    auto proc_Procedure1_2 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure3 = Procedure(std::make_shared<std::string>("Procedure3"));
     auto expectedRelationship2 = CallsStarRelationship(&proc_Procedure1_2, &proc_Procedure3);
 
-    auto proc_Procedure1_3 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure4 = Procedure(new std::string("Procedure4"));
+    auto proc_Procedure1_3 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure4 = Procedure(std::make_shared<std::string>("Procedure4"));
     auto expectedRelationship3 = CallsStarRelationship(&proc_Procedure1_3, &proc_Procedure4);
 
-    auto proc_Procedure1_4 = Procedure(new std::string("Procedure1"));
-    auto proc_Procedure5 = Procedure(new std::string("Procedure5"));
+    auto proc_Procedure1_4 = Procedure(std::make_shared<std::string>("Procedure1"));
+    auto proc_Procedure5 = Procedure(std::make_shared<std::string>("Procedure5"));
     auto expectedRelationship4 = CallsStarRelationship(&proc_Procedure1_4, &proc_Procedure5);
 
     std::vector<CallsStarRelationship *> expectedRelationships = {&expectedRelationship1,
@@ -1006,10 +1007,10 @@ TEST_CASE("PKB general query API works") {
 
     REQUIRE(relationships2->size() == 2);
 
-    auto v_x = Variable(new std::string("x"));
+    auto v_x = Variable(std::make_shared<std::string>("x"));
     REQUIRE(relationships2->at(0)->equals(std::make_shared<UsesRelationship>(std::make_shared<AssignStatement>(2).get(), &v_x).get()));
 
-    auto v_y = Variable(new std::string("y"));
+    auto v_y = Variable(std::make_shared<std::string>("y"));
     REQUIRE(relationships2->at(1)->equals(std::make_shared<UsesRelationship>(std::make_shared<CallStatement>(3).get(), &v_y).get()));
 
     std::vector<Relationship *> *relationships3 = queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Variable::getEntityTypeStatic());

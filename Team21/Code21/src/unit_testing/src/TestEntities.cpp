@@ -1,5 +1,6 @@
 // add guards
 #include <catch2/catch_test_macros.hpp>
+#include <memory>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -21,8 +22,8 @@ TEST_CASE("Entities can instantiate") {
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
     Constant *constant = new Constant(1);
 
     delete printStatement;
@@ -43,8 +44,8 @@ TEST_CASE("Entities retrieve their stored values") {
     CallStatement *callStatement = new CallStatement(5);
     WhileStatement *whileStatement = new WhileStatement(6);
     IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
     Constant *constant = new Constant(1);
 
     REQUIRE(*printStatement->getEntityValue() == "2");
@@ -93,13 +94,13 @@ TEST_CASE("Entities can be compared") {
     IfStatement *ifStatement2 = new IfStatement(7);
     IfStatement *ifStatement3 = new IfStatement(8);
 
-    Variable *variable = new Variable(new std::string("variable"));
-    Variable *variable2 = new Variable(new std::string("variable"));
-    Variable *variable3 = new Variable(new std::string("variable2"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable"));
+    Variable *variable3 = new Variable(std::make_shared<std::string>("variable2"));
 
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure"));
-    Procedure *procedure3 = new Procedure(new std::string("procedure2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure"));
+    Procedure *procedure3 = new Procedure(std::make_shared<std::string>("procedure2"));
 
     Constant *constant = new Constant(1);
     Constant *constant2 = new Constant(1);
@@ -176,7 +177,7 @@ TEST_CASE("Entities can be compared") {
 
 TEST_CASE("Assign Statement stores post-fix expression") {
     AssignStatement *assignStatement = new AssignStatement(4);
-    assignStatement->setPostfixExpression(new std::string("xy+"));
+    assignStatement->setPostfixExpression(std::make_shared<std::string>("xy+"));
     REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
     delete assignStatement;
 }

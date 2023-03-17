@@ -1,5 +1,6 @@
 
 #include <catch2/catch_test_macros.hpp>
+#include <memory>
 #include <stdexcept>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -24,10 +25,10 @@ TEST_CASE("Relationships can instantiate") {
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
     AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure2"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
     CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
@@ -63,10 +64,10 @@ TEST_CASE("Relationships contain the correct left entity") {
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
     AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure2"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
     CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
@@ -109,10 +110,10 @@ TEST_CASE("Relationships contain the correct right entity") {
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
     AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure2"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
     CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
@@ -154,10 +155,10 @@ TEST_CASE("Relationships contain the wrong left entity") {
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
     AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure2"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
     CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
     CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
 
@@ -200,10 +201,10 @@ TEST_CASE("Relationships contain the wrong right entity") {
     ReadStatement *readStatement = new ReadStatement(3);
     WhileStatement *whileStatement = new WhileStatement(4);
     AssignStatement *assignStatement = new AssignStatement(5);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure2"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("procedure"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Procedure *procedure2 = new Procedure(std::make_shared<std::string>("procedure2"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     CallsRelationship *callsRelationship = new CallsRelationship(procedure, procedure2);
     CallsStarRelationship *callsStarRelationship = new CallsStarRelationship(procedure, procedure2);
@@ -242,8 +243,8 @@ TEST_CASE("Relationships contain the wrong right entity") {
 }
 
 TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Statement as LHS throws an exception") {
-    Variable *variable = new Variable(new std::string("variable"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     REQUIRE_THROWS_AS(new ModifiesRelationship(variable2, variable), std::invalid_argument);
 
@@ -252,8 +253,8 @@ TEST_CASE("Instantiating a ModifiesRelationship with a non-Procedure or non-Stat
 }
 
 TEST_CASE("Instantiating a UsesRelationship with a non-Procedure or non-Statement as LHS entity throws an exception") {
-    Variable *variable = new Variable(new std::string("variable"));
-    Variable *variable2 = new Variable(new std::string("variable2"));
+    Variable *variable = new Variable(std::make_shared<std::string>("variable"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("variable2"));
 
     REQUIRE_THROWS_AS(new UsesRelationship(variable2, variable), std::invalid_argument);
 

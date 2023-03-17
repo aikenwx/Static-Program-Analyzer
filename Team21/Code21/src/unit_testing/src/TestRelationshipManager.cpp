@@ -4,6 +4,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include <memory>
 
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
@@ -34,7 +35,7 @@ TEST_CASE("RelationshipManager stores relationship") {
     ReadStatement *readStatement = new ReadStatement(1);
     ReadStatement *readStatement2 = new ReadStatement(2);
 
-    relationshipManager->storeRelationship(new FollowsRelationship(readStatement, readStatement2));
+    relationshipManager->storeRelationship(std::make_shared<FollowsRelationship>(readStatement, readStatement2));
 
     delete relationshipManager;
     delete readStatement;
@@ -46,7 +47,7 @@ TEST_CASE("RelationshipManager retrieves relationship") {
     ReadStatement *readStatement = new ReadStatement(1);
     ReadStatement *readStatement2 = new ReadStatement(2);
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
-    relationshipManager->storeRelationship(relationship);
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
 
     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
         FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
@@ -70,8 +71,8 @@ TEST_CASE("RelationshipManager retrieves multitple relationships") {
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
     auto relationship2 = new FollowsRelationship(readStatement3, readStatement4);
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
 
     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
         FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
@@ -106,7 +107,7 @@ TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
     ReadStatement *readStatement2 = new ReadStatement(2);
 
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
-    relationshipManager->storeRelationship(relationship);
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
 
     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
         FollowsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
@@ -129,18 +130,18 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
     AssignStatement *assignStatement = new AssignStatement(1);
     AssignStatement *assignStatement2 = new AssignStatement(2);
 
-    Variable *variable = new Variable(new std::string("a"));
-    Variable *variable2 = new Variable(new std::string("b"));
+    Variable *variable = new Variable(std::make_shared<std::string>("a"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("b"));
 
     auto relationship = new FollowsRelationship(readStatement, readStatement2);
     auto relationship2 = new FollowsRelationship(readStatement3, readStatement4);
     auto relationship3 = new ModifiesRelationship(assignStatement, variable);
     auto relationship4 = new ModifiesRelationship(assignStatement2, variable2);
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
-    relationshipManager->storeRelationship(relationship3);
-    relationshipManager->storeRelationship(relationship4);
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship3));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship4));
 
     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
         FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
@@ -186,10 +187,10 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(printStatement2, printStatement3);
 //     std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship>(printStatement4, readStatement4);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
@@ -228,10 +229,10 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(printStatement2, printStatement3);
 //     std::shared_ptr<Relationship> relationship4 = std::make_shared<FollowsRelationship>(printStatement4, readStatement4);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               STATEMENT);
@@ -317,9 +318,9 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship2 = std::make_shared<ParentRelationship>(whileStatement3, whileStatement4);
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<ParentRelationship>(whileStatement5, whileStatement6);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, WHILE_STATEMENT,
 //                                                                                               WHILE_STATEMENT);
@@ -350,9 +351,9 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(callStatement3, callStatement4);
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsRelationship>(callStatement5, callStatement6);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, CALL_STATEMENT,
 //                                                                                               CALL_STATEMENT);
@@ -399,10 +400,10 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<ParentRelationship>(printStatement, printStatement2);
 //     std::shared_ptr<Relationship> relationship4 = std::make_shared<ParentRelationship>(printStatement3, assignStatement4);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, STATEMENT,
 //                                                                                               ASSIGN_STATEMENT);
@@ -441,10 +442,10 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<ParentRelationship>(assignStatement3, printStatement2);
 //     std::shared_ptr<Relationship> relationship4 = std::make_shared<ParentRelationship>(printStatement3, assignStatement4);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT, ASSIGN_STATEMENT,
 //                                                                                               STATEMENT);
@@ -486,9 +487,9 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsStarRelationship>(whileStatement3, whileStatement4);
 //     std::shared_ptr<Relationship> relationship3 = std::make_shared<FollowsStarRelationship>(whileStatement5, whileStatement6);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
 //                                                                                               WHILE_STATEMENT);
@@ -524,12 +525,12 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship5 = std::make_shared<FollowsStarRelationship>(whileStatement3, ifStatement);
 //     std::shared_ptr<Relationship> relationship6 = std::make_shared<FollowsStarRelationship>(ifStatement, callStatement);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
-//     relationshipManager->storeRelationship(relationship5);
-//     relationshipManager->storeRelationship(relationship6);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship5));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship6));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT,
 //                                                                                               STATEMENT);
@@ -573,12 +574,12 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship5 = std::make_shared<ParentStarRelationship>(ifStatement, callStatement5);
 //     std::shared_ptr<Relationship> relationship6 = std::make_shared<ParentStarRelationship>(ifStatement, printStatement);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
-//     relationshipManager->storeRelationship(relationship5);
-//     relationshipManager->storeRelationship(relationship6);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship5));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship6));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(PARENT_STAR, IF_STATEMENT,
 //                                                                                               CALL_STATEMENT);
@@ -617,12 +618,12 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship5 = std::make_shared<FollowsRelationship>(assignStatement5, callStatement);
 //     std::shared_ptr<Relationship> relationship6 = std::make_shared<FollowsRelationship>(printStatement, assignStatement5);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
-//     relationshipManager->storeRelationship(relationship3);
-//     relationshipManager->storeRelationship(relationship4);
-//     relationshipManager->storeRelationship(relationship5);
-//     relationshipManager->storeRelationship(relationship6);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship3));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship4));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship5));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship> (relationship6));
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
 //                                                                                               CALL_STATEMENT);
@@ -657,8 +658,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 //     std::shared_ptr<Relationship> relationship = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
 //     std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
 
-//     relationshipManager->storeRelationship(relationship);
-//     relationshipManager->storeRelationship(relationship2);
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+//     relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
 //     REQUIRE(relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->size() == 1);
 //     REQUIRE(relationshipManager->getRelationshipsVectorByTypes(FOLLOWS_STAR, WHILE_STATEMENT, WHILE_STATEMENT)->at(0) ==
 //             relationship.get());
@@ -693,9 +694,9 @@ TEST_CASE("Can retrieve relationship by literal values") {
     ReadStatement *readStatement = new ReadStatement(6);
     PrintStatement *printStatement = new PrintStatement(7);
     IfStatement *ifStatement = new IfStatement(8);
-    Variable *variable = new Variable(new std::string("x"));
-    Variable *variable2 = new Variable(new std::string("y"));
-    Procedure *procedure = new Procedure(new std::string("main"));
+    Variable *variable = new Variable(std::make_shared<std::string>("x"));
+    Variable *variable2 = new Variable(std::make_shared<std::string>("y"));
+    Procedure *procedure = new Procedure(std::make_shared<std::string>("main"));
 
     // std::shared_ptr<Relationship> relationship = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
     // std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(whileStatement, assignStatement);
@@ -719,16 +720,16 @@ TEST_CASE("Can retrieve relationship by literal values") {
     auto relationship10 = new ModifiesRelationship(ifStatement, variable2);
     auto relationship11 = new UsesRelationship(printStatement, variable2);
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
-    relationshipManager->storeRelationship(relationship3);
-    relationshipManager->storeRelationship(relationship4);
-    relationshipManager->storeRelationship(relationship5);
-    relationshipManager->storeRelationship(relationship6);
-    relationshipManager->storeRelationship(relationship7);
-    relationshipManager->storeRelationship(relationship9);
-    relationshipManager->storeRelationship(relationship10);
-    relationshipManager->storeRelationship(relationship11);
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship2));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship3));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship4));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship5));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship6));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship7));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship9));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship10));
+    relationshipManager->storeRelationship(std::shared_ptr<Relationship>(relationship11));
 
     //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship.get(),
     //                                                            relationshipManager->getRelationshipIfExist(

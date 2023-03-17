@@ -12,8 +12,8 @@ auto AssignStatement::getEntityTypeStatic() -> const EntityType & {
   return AssignStatement::assignStatementType;
 }
 
-void AssignStatement::setPostfixExpression(std::string *postfixExpression) {
-    this->postFixExpression = std::shared_ptr<std::string>(postfixExpression);
+void AssignStatement::setPostfixExpression(std::shared_ptr<std::string> postfixExpression) {
+    this->postFixExpression = postfixExpression;
 }
 
 auto AssignStatement::getPostFixExpression() -> std::string * {

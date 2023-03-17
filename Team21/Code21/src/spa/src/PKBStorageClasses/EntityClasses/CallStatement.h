@@ -16,7 +16,7 @@ class CallStatement : public Statement {
 
     auto getProcedureName() -> std::string*;
 
-    void setProcedureName(std::shared_ptr<std::string> procedureName);
+    void setProcedureName(std::shared_ptr<std::string> procedureNameString);
 };
 
 #endif

@@ -4,6 +4,8 @@
 #include "PKB/QueryFacade.h"
 #include "PKBtestHelpers.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("QueryFacade Instantiates") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>();
@@ -198,18 +200,18 @@ TEST_CASE("QueryFace can retrieve all statements") {
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
 
-  std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(FIVE);
+  std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(5);
   std::shared_ptr<WhileStatement> whileStatement =
-      std::make_shared<WhileStatement>(ONE);
+      std::make_shared<WhileStatement>(1);
   std::shared_ptr<ReadStatement> readStatement =
-      std::make_shared<ReadStatement>(TWO);
+      std::make_shared<ReadStatement>(2);
   std::shared_ptr<PrintStatement> printStatement =
-      std::make_shared<PrintStatement>(THREE);
+      std::make_shared<PrintStatement>(3);
   std::shared_ptr<Variable> variable =
       std::make_shared<Variable>(std::make_shared<std::string>("variable"));
-  entityManager->storeEntity(std::make_shared<IfStatement>(FIVE));
-  entityManager->storeEntity(std::make_shared<WhileStatement>(ONE));
-  entityManager->storeEntity(std::make_shared<ReadStatement>(TWO));
+  entityManager->storeEntity(std::make_shared<IfStatement>(5));
+  entityManager->storeEntity(std::make_shared<WhileStatement>(1));
+  entityManager->storeEntity(std::make_shared<ReadStatement>(2));
   entityManager->storeEntity(
       std::make_shared<Variable>(std::make_shared<std::string>("variable")));
 
@@ -882,3 +884,5 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     delete entityManager;
 //     delete relationshipManager;
 // }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

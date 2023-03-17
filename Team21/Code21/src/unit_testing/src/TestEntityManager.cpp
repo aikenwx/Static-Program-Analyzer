@@ -11,6 +11,8 @@
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 #include "PKBtestHelpers.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("EntityManager Instantiates") {
   auto entityManager = std::make_shared<EntityManager>();
 }
@@ -124,46 +126,46 @@ TEST_CASE("EntityManager can retrieve all Statements") {
   auto entityManager = std::make_shared<EntityManager>();
 
   std::shared_ptr<ReadStatement> readStatement1 =
-      std::make_shared<ReadStatement>(ONE);
+      std::make_shared<ReadStatement>(1);
   std::shared_ptr<ReadStatement> readStatement2 =
-      std::make_shared<ReadStatement>(TWO);
+      std::make_shared<ReadStatement>(2);
   std::shared_ptr<PrintStatement> printStatement1 =
-      std::make_shared<PrintStatement>(THREE);
+      std::make_shared<PrintStatement>(3);
   std::shared_ptr<PrintStatement> printStatement2 =
-      std::make_shared<PrintStatement>(FOUR);
+      std::make_shared<PrintStatement>(4);
   std::shared_ptr<AssignStatement> assignStatement1 =
-      std::make_shared<AssignStatement>(FIVE);
+      std::make_shared<AssignStatement>(5);
   std::shared_ptr<AssignStatement> assignStatement2 =
-      std::make_shared<AssignStatement>(SIX);
+      std::make_shared<AssignStatement>(6);
   std::shared_ptr<CallStatement> callStatement1 =
-      std::make_shared<CallStatement>(SEVEN);
+      std::make_shared<CallStatement>(7);
   std::shared_ptr<CallStatement> callStatement2 =
-      std::make_shared<CallStatement>(EIGHT);
+      std::make_shared<CallStatement>(8);
   std::shared_ptr<WhileStatement> whileStatement1 =
-      std::make_shared<WhileStatement>(NINE);
+      std::make_shared<WhileStatement>(9);
   std::shared_ptr<WhileStatement> whileStatement2 =
-      std::make_shared<WhileStatement>(TEN);
+      std::make_shared<WhileStatement>(10);
   std::shared_ptr<IfStatement> ifStatement1 =
-      std::make_shared<IfStatement>(ELEVEN);
+      std::make_shared<IfStatement>(11);
   std::shared_ptr<IfStatement> ifStatement2 =
-      std::make_shared<IfStatement>(TWELVE);
+      std::make_shared<IfStatement>(12);
   std::shared_ptr<Variable> variable =
       std::make_shared<Variable>(std::make_shared<std::string>("x"));
   std::shared_ptr<Procedure> procedure =
       std::make_shared<Procedure>(std::make_shared<std::string>("main"));
 
-  entityManager->storeEntity(std::make_shared<ReadStatement>(ONE));
-  entityManager->storeEntity(std::make_shared<ReadStatement>(TWO));
-  entityManager->storeEntity(std::make_shared<PrintStatement>(THREE));
-  entityManager->storeEntity(std::make_shared<PrintStatement>(FOUR));
-  entityManager->storeEntity(std::make_shared<AssignStatement>(FIVE));
-  entityManager->storeEntity(std::make_shared<AssignStatement>(SIX));
-  entityManager->storeEntity(std::make_shared<CallStatement>(SEVEN));
-  entityManager->storeEntity(std::make_shared<CallStatement>(EIGHT));
-  entityManager->storeEntity(std::make_shared<WhileStatement>(NINE));
-  entityManager->storeEntity(std::make_shared<WhileStatement>(TEN));
-  entityManager->storeEntity(std::make_shared<IfStatement>(ELEVEN));
-  entityManager->storeEntity(std::make_shared<IfStatement>(TWELVE));
+  entityManager->storeEntity(std::make_shared<ReadStatement>(1));
+  entityManager->storeEntity(std::make_shared<ReadStatement>(2));
+  entityManager->storeEntity(std::make_shared<PrintStatement>(3));
+  entityManager->storeEntity(std::make_shared<PrintStatement>(4));
+  entityManager->storeEntity(std::make_shared<AssignStatement>(5));
+  entityManager->storeEntity(std::make_shared<AssignStatement>(6));
+  entityManager->storeEntity(std::make_shared<CallStatement>(7));
+  entityManager->storeEntity(std::make_shared<CallStatement>(8));
+  entityManager->storeEntity(std::make_shared<WhileStatement>(9));
+  entityManager->storeEntity(std::make_shared<WhileStatement>(10));
+  entityManager->storeEntity(std::make_shared<IfStatement>(11));
+  entityManager->storeEntity(std::make_shared<IfStatement>(12));
   entityManager->storeEntity(
       std::make_shared<Variable>(std::make_shared<std::string>("x")));
   entityManager->storeEntity(
@@ -277,3 +279,5 @@ TEST_CASE("Can store and retrieve statement by statement number") {
 
   REQUIRE(retrievedReadStatement->equals(readStatement.get()));
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

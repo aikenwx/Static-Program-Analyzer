@@ -27,11 +27,9 @@ SCENARIO("SP should terminate if there are non-unique procedure names") {
     WHEN("SP is run") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp.process(program, &pkb), exceptions::SemanticError,
+            sp::SP::process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Duplicate procedure name: ")));
       }
     }
@@ -50,11 +48,9 @@ SCENARIO("SP should terminate if a nonexistent procedure is called") {
     WHEN("SP is run") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp.process(program, &pkb), exceptions::SemanticError,
+            sp::SP::process(program, &pkb), exceptions::SemanticError,
             Message("Semantic error: Call node cannot call procedure "
                            "that does not exist"));
       }
@@ -71,11 +67,9 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
     WHEN("SP is run") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp.process(program, &pkb), exceptions::SemanticError,
+            sp::SP::process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }
@@ -94,11 +88,9 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
     WHEN("SP is run") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp.process(program, &pkb), exceptions::SemanticError,
+            sp::SP::process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }

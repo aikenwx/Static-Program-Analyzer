@@ -1,24 +1,20 @@
 #include "modifies_proc_var_relationship.h"
 
 #include <string>
+#include <utility>
 
 namespace rel {
-std::string ModifiesProcVarRelationship::procedureName() {
+auto ModifiesProcVarRelationship::procedureName() const -> std::string {
   return procedureName_;
 };
 
-std::string ModifiesProcVarRelationship::variableName() {
+auto ModifiesProcVarRelationship::variableName() const -> std::string {
   return variableName_;
 };
 
-std::unique_ptr<ModifiesProcVarRelationship>
-ModifiesProcVarRelationship::CreateRelationship(std::string procedureName,
-                                                std::string variableName) {
+auto
+ModifiesProcVarRelationship::CreateRelationship(const std::string& procedureName,
+                                                const std::string& variableName) -> std::unique_ptr<ModifiesProcVarRelationship> {
   return std::unique_ptr<ModifiesProcVarRelationship>(new ModifiesProcVarRelationship(procedureName, variableName));
 };
-
-ModifiesProcVarRelationship::ModifiesProcVarRelationship(std::string procedureName, std::string variableName) {
-  procedureName_ = procedureName;
-  variableName_ = variableName;
-}
 }  // namespace rel

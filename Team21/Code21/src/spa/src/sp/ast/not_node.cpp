@@ -1,7 +1,7 @@
 #include "not_node.h"
 
 namespace ast {
-std::string NotNode::ToString() const {
-  return "not:\n{\n" + operand->ToString() + "}\n";
+auto NotNode::ToString() const -> std::string {
+  return "not:\n" + UnaryOperationNode::ToString();
 }
 }

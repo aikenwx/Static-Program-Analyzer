@@ -23,27 +23,29 @@ namespace design_extractor {
 class Extractor {
  public:
   virtual ~Extractor() = default;
-  virtual void HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+
+  // default implementations included for convenience
+  virtual void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                                 int depth){};
-  virtual void HandleCallNode(std::shared_ptr<ast::CallNode> node, int depth){};
-  virtual void HandleIfNode(std::shared_ptr<ast::IfNode> node, int depth){};
-  virtual void HandleWhileNode(std::shared_ptr<ast::WhileNode> node,
+  virtual void HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth){};
+  virtual void HandleIfNode(const std::shared_ptr<ast::IfNode>& node, int depth){};
+  virtual void HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                                int depth){};
-  virtual void HandleConstantNode(std::shared_ptr<ast::ConstantNode> node,
+  virtual void HandleConstantNode(const std::shared_ptr<ast::ConstantNode>& node,
                                   int depth){};
-  virtual void HandlePrintNode(std::shared_ptr<ast::PrintNode> node,
+  virtual void HandlePrintNode(const std::shared_ptr<ast::PrintNode>& node,
                                int depth){};
-  virtual void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
+  virtual void HandleProcedureNode(const std::shared_ptr<ast::ProcedureNode>& node,
                                    int depth){};
-  virtual void HandleProgramNode(std::shared_ptr<ast::ProgramNode> node,
+  virtual void HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node,
                                  int depth){};
-  virtual void HandleReadNode(std::shared_ptr<ast::ReadNode> node, int depth){};
+  virtual void HandleReadNode(const std::shared_ptr<ast::ReadNode>& node, int depth){};
   virtual void HandleStatementListNode(
-      std::shared_ptr<ast::StatementListNode> node, int depth){};
-  virtual void HandleStatementNode(std::shared_ptr<ast::StatementNode> node,
+      const std::shared_ptr<ast::StatementListNode>& node, int depth){};
+  virtual void HandleStatementNode(const std::shared_ptr<ast::StatementNode>& node,
                                    int depth){};
-  virtual void HandleVariableNode(std::shared_ptr<ast::VariableNode> node,
+  virtual void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
                                   int depth){};
-  virtual void HandleOtherNode(std::shared_ptr<ast::INode> node, int depth){};
+  virtual void HandleOtherNode(const std::shared_ptr<ast::INode>& node, int depth){};
 };
 }  // namespace design_extractor

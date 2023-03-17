@@ -94,7 +94,7 @@ void RelationshipManager::storeRelationship(const std::shared_ptr<Relationship>&
         return;
     }
 
-    this->relationshipStore.insert(std::make_pair(relationship->getRelationshipKey(), std::shared_ptr<Relationship>(relationship)));
+    this->relationshipStore.try_emplace(relationship->getRelationshipKey(), std::shared_ptr<Relationship>(relationship));
 
     this->storeInRelationshipDoubleSynonymStore(relationship.get());
     this->storeInRelationshipLiteralSynonymStore(relationship.get());
@@ -151,23 +151,20 @@ auto RelationshipManager::
 
 void RelationshipManager::initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
     RelationshipDoubleSynonymKey relationshipSynonymKey) {
-    if (this->relationshipDoubleSynonymStore.find(relationshipSynonymKey) == this->relationshipDoubleSynonymStore.end()) {
-        this->relationshipDoubleSynonymStore.insert({relationshipSynonymKey, std::make_shared<std::vector<Relationship *>>()});
-    }
+    // inserts only if key doesn't exist
+    this->relationshipDoubleSynonymStore.try_emplace(relationshipSynonymKey, std::make_shared<std::vector<Relationship *>>());
 }
 
 void RelationshipManager::initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
     RelationshipLiteralSynonymKey relationshipLiteralSynonymKey) {
-    if (this->relationshipLiteralSynonymStore.find(relationshipLiteralSynonymKey) == this->relationshipLiteralSynonymStore.end()) {
-        this->relationshipLiteralSynonymStore.insert({relationshipLiteralSynonymKey, std::make_shared<std::vector<Entity *>>()});
-    }
+    // inserts only if key doesn't exist
+    this->relationshipLiteralSynonymStore.try_emplace(relationshipLiteralSynonymKey, std::make_shared<std::vector<Entity *>>());
 }
 
 void RelationshipManager::initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
     RelationshipSynonymLiteralKey relationshipSynonymLiteralKey) {
-    if (this->relationshipSynonymLiteralStore.find(relationshipSynonymLiteralKey) == this->relationshipSynonymLiteralStore.end()) {
-        this->relationshipSynonymLiteralStore.insert({relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>()});
-    }
+    // inserts only if key doesn't exist
+    this->relationshipSynonymLiteralStore.try_emplace(relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>());
 }
 
 void RelationshipManager::storeInRelationshipDoubleSynonymStore(Relationship *relationship) {

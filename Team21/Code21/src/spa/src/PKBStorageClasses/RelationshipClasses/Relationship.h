@@ -7,6 +7,7 @@
 
 struct RelationshipType : public StorageKey {
    private:
+    // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
     static std::size_t relationshipTypeKeyCounter;
 
    public:

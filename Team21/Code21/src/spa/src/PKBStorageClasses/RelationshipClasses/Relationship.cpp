@@ -3,6 +3,7 @@
 //
 #include "Relationship.h"
 
+// NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
 std::size_t RelationshipType::relationshipTypeKeyCounter = 0;
 
 RelationshipType::RelationshipType() : StorageKey(RelationshipType::relationshipTypeKeyCounter++){};

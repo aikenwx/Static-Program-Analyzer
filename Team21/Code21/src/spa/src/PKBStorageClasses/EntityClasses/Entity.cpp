@@ -6,6 +6,7 @@
 
 EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){}
 
+// NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
 std::size_t EntityType::entityTypeKeyCounter = 0;
 
 auto std::hash<EntityType>::operator()(const EntityType &entityType) const

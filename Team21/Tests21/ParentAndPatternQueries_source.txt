@@ -1,0 +1,50 @@
+procedure main {
+  print x;
+  print y;
+  if (x == 1) then {
+    x = x + 1;
+    print x;
+    while (x + y == f + 1) {
+      x = x + 1;
+      print x;
+      while (x + y == f + 1) {
+        call funcx;
+      }
+      if (f == 1) then {
+        read x;
+      } else {
+        print f;
+      }
+    }
+  } else {
+
+  }
+  y = x + 1;
+  print y;
+}
+
+procedure funcx {
+  read x;
+  while (1 == 1) { 
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}

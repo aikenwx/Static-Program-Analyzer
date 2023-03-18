@@ -5,6 +5,6 @@
 namespace qps {
 class ConstraintsSolver {
  public:
-  static SynonymTable solve(const std::vector<SynonymTable> &evaluators);
+  static auto solve(const std::vector<SynonymTable> &evaluators) -> SynonymTable;
 };
 }

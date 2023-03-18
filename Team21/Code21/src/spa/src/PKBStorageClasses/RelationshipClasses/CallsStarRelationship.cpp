@@ -6,13 +6,13 @@
 
 RelationshipType CallsStarRelationship::relationshipType = RelationshipType();
 
-RelationshipType &CallsStarRelationship::getRelationshipTypeStatic() {
-    return CallsStarRelationship::relationshipType;
+auto CallsStarRelationship::getRelationshipTypeStatic() -> RelationshipType & {
+  return CallsStarRelationship::relationshipType;
 }
 
 CallsStarRelationship::CallsStarRelationship(Procedure *caller, Procedure *callee) : Relationship(&CallsStarRelationship::relationshipType, caller, callee) {
 }
 
-RelationshipType &CallsStarRelationship::getRelationshipType() const {
-    return CallsStarRelationship::getRelationshipTypeStatic();
+auto CallsStarRelationship::getRelationshipType() const -> RelationshipType & {
+  return CallsStarRelationship::getRelationshipTypeStatic();
 }

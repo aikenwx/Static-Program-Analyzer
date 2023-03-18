@@ -9,10 +9,10 @@ FollowsStarRelationship::FollowsStarRelationship(Statement* followedStatement, S
 
 RelationshipType FollowsStarRelationship::relationshipType = RelationshipType();
 
-RelationshipType& FollowsStarRelationship::getRelationshipType() const {
-    return FollowsStarRelationship::relationshipType;
+auto FollowsStarRelationship::getRelationshipType() const -> RelationshipType& {
+  return FollowsStarRelationship::relationshipType;
 }
 
-RelationshipType& FollowsStarRelationship::getRelationshipTypeStatic() {
-    return FollowsStarRelationship::relationshipType;
+auto FollowsStarRelationship::getRelationshipTypeStatic() -> RelationshipType& {
+  return FollowsStarRelationship::relationshipType;
 }

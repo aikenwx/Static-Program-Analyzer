@@ -15,9 +15,10 @@ class ParentStarRelationship : public Relationship {
    public:
     ParentStarRelationship(Statement *parentStatement, Statement *childStatement);
 
-    static RelationshipType &getRelationshipTypeStatic();
+    static auto getRelationshipTypeStatic() -> RelationshipType &;
 
-    RelationshipType &getRelationshipType() const override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> RelationshipType & override;
 };
 
 #endif  // SPA_PARENTSTARRELATIONSHIP_H

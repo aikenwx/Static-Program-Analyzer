@@ -9,10 +9,10 @@ ParentStarRelationship::ParentStarRelationship(Statement *parentStatement, State
 
 RelationshipType ParentStarRelationship::relationshipType = RelationshipType();
 
-RelationshipType &ParentStarRelationship::getRelationshipTypeStatic() {
-    return ParentStarRelationship::relationshipType;
+auto ParentStarRelationship::getRelationshipTypeStatic() -> RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }
 
-RelationshipType &ParentStarRelationship::getRelationshipType() const {
-    return ParentStarRelationship::relationshipType;
+auto ParentStarRelationship::getRelationshipType() const -> RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }

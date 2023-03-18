@@ -13,9 +13,10 @@ class FollowsRelationship : public Relationship {
     static RelationshipType relationshipType;
 
    public:
-    static RelationshipType& getRelationshipTypeStatic();
+    static auto getRelationshipTypeStatic() -> RelationshipType&;
     FollowsRelationship(Statement* followedStatement, Statement* followerStatement);
-    RelationshipType& getRelationshipType() const override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> RelationshipType& override;
 };
 
 #endif  // SPA_FOLLOWSRELATIONSHIP_H

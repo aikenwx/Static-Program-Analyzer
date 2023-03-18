@@ -15,9 +15,10 @@ class CallsStarRelationship : public Relationship {
    public:
     CallsStarRelationship(Procedure* caller, Procedure* callee);
 
-    static RelationshipType& getRelationshipTypeStatic();
+    static auto getRelationshipTypeStatic() -> RelationshipType&;
 
-    RelationshipType& getRelationshipType() const override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> RelationshipType& override;
 };
 
 #endif  // INC_22S2_CP_SPA_TEAM_21_CALLSSTARRELATIONSHIP_H

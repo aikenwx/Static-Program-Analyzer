@@ -12,12 +12,12 @@ UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) : Relat
     }
 }
 
-RelationshipType &UsesRelationship::getRelationshipType() const {
-    return UsesRelationship::relationshipType;
+auto UsesRelationship::getRelationshipType() const -> RelationshipType & {
+  return UsesRelationship::relationshipType;
 }
 
 RelationshipType UsesRelationship::relationshipType = RelationshipType();
 
-RelationshipType &UsesRelationship::getRelationshipTypeStatic() {
-    return UsesRelationship::relationshipType;
+auto UsesRelationship::getRelationshipTypeStatic() -> RelationshipType & {
+  return UsesRelationship::relationshipType;
 }

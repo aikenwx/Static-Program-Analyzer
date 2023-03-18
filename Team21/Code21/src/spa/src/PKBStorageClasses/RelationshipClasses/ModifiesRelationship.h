@@ -15,9 +15,10 @@ class ModifiesRelationship : public Relationship {
    public:
     ModifiesRelationship(Entity* modifier, Variable* modifiedVariable);
 
-    static RelationshipType& getRelationshipTypeStatic();
+    static auto getRelationshipTypeStatic() -> RelationshipType&;
 
-    RelationshipType& getRelationshipType() const override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> RelationshipType& override;
 };
 
 #endif  // SPA_MODIFIESRELATIONSHIP_H

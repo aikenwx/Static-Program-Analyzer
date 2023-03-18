@@ -3,9 +3,9 @@
 #include <vector>
 
 namespace qps {
-auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>*> {
-  std::vector<std::vector<Entity *>*> equalResult;
-  std::vector<Entity *> firstResult;
+auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
+  std::vector<std::vector<Entity *>> equalResult = {};
+  std::vector<Entity *> firstResult = {};
 
   std::vector<Declaration> decl = getDeclarations();
 
@@ -29,7 +29,7 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
 
   if (pkb_res != nullptr) {
     firstResult.push_back(pkb_res);
-    equalResult.push_back(&firstResult);
+    equalResult.push_back(firstResult);
     return equalResult;
   }
 

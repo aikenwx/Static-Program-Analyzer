@@ -3,6 +3,7 @@
 #include "query/query_exceptions.h"
 
 #include "QueryValidator.h"
+#include "query/relationship.h"
 
 namespace qps {
 
@@ -45,6 +46,8 @@ namespace qps {
 		static void checkWithRefSynonymDeclareHelper(WithRef reff, std::vector<Declaration>& declr);
 
 		static void checkSynonymStatementHelper(DesignEntity des, const std::string &relStr);
+
+		static void checkSecondSynonymHelper(DesignEntity des, const std::string &relStr, Relationship rel);
 
 		static void checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr);
 	};

@@ -147,15 +147,25 @@ void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
     if (std::holds_alternative<Synonym>(suchClause.getArg2())) {
       Synonym syn2 = std::get<Synonym>(suchClause.getArg2());
       DesignEntity des2 = Declaration::findDeclarationWithSynonym(declr, syn2).value().getDesignEntity();
-      if (des2 != DesignEntity::PROCEDURE && (rel == Relationship::Calls || rel == Relationship::CallsT)) {
-        throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-      }
-      if (des2 != DesignEntity::VARIABLE && (rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS
-          || rel == Relationship::UsesS)) {
-        throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-      }
-      checkSynonymStatementHelper(des2, relStr);
+      checkSecondSynonymHelper(des2, relStr, rel);
     }
+  }
+}
+
+void SemanticValidator::checkSecondSynonymHelper(DesignEntity des2, const std::string &relStr, Relationship rel) {
+  if ((rel == Relationship::Calls || rel == Relationship::CallsT)) {
+    if (des2 != DesignEntity::PROCEDURE) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+    }
+  }
+  else if ((rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS
+            || rel == Relationship::UsesS)) {
+    if (des2 != DesignEntity::VARIABLE) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+    }
+  }
+  else {
+    checkSynonymStatementHelper(des2, relStr);
   }
 }
 

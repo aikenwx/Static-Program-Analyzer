@@ -8,10 +8,10 @@
 #include <vector>
 
 namespace qps {
-auto WithDoubleAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>*> {
-  std::vector<std::vector<Entity *>*> equalResult;
-  std::vector<Entity *> firstResult;
-  std::vector<Entity *> secondResult;
+auto WithDoubleAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
+  std::vector<std::vector<Entity *>> equalResult = {};
+  std::vector<Entity *> firstResult = {};
+  std::vector<Entity *> secondResult = {};
 
   WithRef ref1 = getClause().getRef1();
   WithRef ref2 = getClause().getRef2();
@@ -40,8 +40,8 @@ auto WithDoubleAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vect
     }
   }
 
-  equalResult.push_back(&firstResult);
-  equalResult.push_back(&secondResult);
+  equalResult.push_back(firstResult);
+  equalResult.push_back(secondResult);
   return equalResult;
 }
 }  // namespace qps

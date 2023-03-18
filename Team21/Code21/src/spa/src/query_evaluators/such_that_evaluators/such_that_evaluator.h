@@ -13,7 +13,4 @@ class SuchThatEvaluator : public ClauseEvaluator {
   SuchThatClause clause_;
   std::vector<Declaration> declarations_;
 };
-
-auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> EntityType;
-
 } // namespace qps

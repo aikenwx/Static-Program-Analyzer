@@ -8,7 +8,7 @@ class NextStarVisitor {
       : pkb_(pkb), cfg_(*pkb.getCFG()), declarations_(declarations) {}
 
   auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
-    return Reachable(from, dest, pkb_);
+    return Reachable<ForwardBlockIterator>(from, dest, pkb_);
   }
 
   auto operator()(StatementNumber from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
@@ -20,16 +20,16 @@ class NextStarVisitor {
   }
 
   auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
-    auto dest_entities = FindReachableEntities(src, GetEntityType(dest, declarations_),
-                                               BlockChildren,
-                                               pkb_);
+    auto dest_entities = FindReachableEntities<ForwardBlockIterator>(src,
+                                                                     GetEntityType(dest, declarations_),
+                                                                     pkb_);
     return SynonymTable{std::move(dest), dest_entities};
   }
 
   auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
-    auto src_entities = FindReachableEntities(dest, GetEntityType(from, declarations_),
-                                              BlockParents,
-                                              pkb_);
+    auto src_entities = FindReachableEntities<ReverseBlockIterator>(dest,
+                                                                    GetEntityType(from, declarations_),
+                                                                    pkb_);
     return SynonymTable{std::move(from), src_entities};
   }
 
@@ -54,23 +54,19 @@ class NextStarVisitor {
     auto *src_entities = pkb_.getEntitiesByType(src_entity_type);
     auto dest_entity_type = GetEntityType(dest, declarations_);
     auto *dest_entities = pkb_.getEntitiesByType(dest_entity_type);
-    std::vector<std::vector<Entity *>> rows;
     if (src_entities->size() < dest_entities->size()) {
-      FindReachableEntities(*src_entities,
-                            BlockChildren,
-                            [&](Entity *entity) { return MatchesEntityType(entity, src_entity_type); },
-                            [&](Entity *entity) { return MatchesEntityType(entity, dest_entity_type); },
-                            [&](Entity *src, Entity *dst) { rows.push_back({src, dst}); },
-                            pkb_);
-    } else {
-      FindReachableEntities(*dest_entities,
-                            BlockParents,
-                            [&](Entity *entity) { return MatchesEntityType(entity, dest_entity_type); },
-                            [&](Entity *entity) { return MatchesEntityType(entity, src_entity_type); },
-                            [&](Entity *src, Entity *dst) { rows.push_back({dst, src}); },
-                            pkb_);
+      auto rows = FindReachableEntities<ForwardBlockIterator>(*src_entities,
+                                                              src_entity_type,
+                                                              dest_entity_type,
+                                                              pkb_);
+      return SynonymTable{{src, dest}, std::move(rows)};
     }
-    return SynonymTable{{src, dest}, std::move(rows)};
+    auto rows = FindReachableEntities<ReverseBlockIterator>(*dest_entities,
+                                                            dest_entity_type,
+                                                            src_entity_type,
+                                                            pkb_);
+    return SynonymTable{{dest, src}, std::move(rows)};
+
   }
 
   auto operator()([[maybe_unused]] Underscore underscore_1, [[maybe_unused]] Underscore underscore_2) -> ClauseResult {

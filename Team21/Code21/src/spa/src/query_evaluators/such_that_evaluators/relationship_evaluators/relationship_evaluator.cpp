@@ -1,6 +1,8 @@
 #include "relationship_evaluator.h"
 #include "query/ref.h"
 #include "query/query_exceptions.h"
+#include "query_evaluators/query_evaluator.h"
+#include "query_evaluators/pkb_helpers.h"
 
 namespace qps {
 const std::vector<EntityType>

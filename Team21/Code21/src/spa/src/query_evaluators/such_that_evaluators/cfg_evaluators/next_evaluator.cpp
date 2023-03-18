@@ -9,7 +9,7 @@ class NextVisitor {
       : pkb_(pkb), cfg_(*pkb.getCFG()), declarations_(declarations) {}
 
   auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
-    auto next_statements = Next(cfg_, from);
+    auto next_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, from);
     return find(next_statements.begin(), next_statements.end(), dest) != next_statements.end();
   }
 
@@ -22,13 +22,13 @@ class NextVisitor {
   }
 
   auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
-    auto next_statements = Next(cfg_, src);
+    auto next_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, src);
     auto filtered_entities = FilterEntities(next_statements, GetEntityType(dest, declarations_));
     return SynonymTable{dest, filtered_entities};
   }
 
   auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
-    auto prev_statements = Prev(cfg_, dest);
+    auto prev_statements = DirectNeighbors<ReverseBlockIterator>(cfg_, dest);
     auto filtered_entities = FilterEntities(prev_statements, GetEntityType(from, declarations_));
     return SynonymTable{from, filtered_entities};
   }
@@ -55,11 +55,11 @@ class NextVisitor {
     auto dest_entity_type = GetEntityType(dest, declarations_);
     const auto *dest_entities = pkb_.getEntitiesByType(dest_entity_type);
     if (src_entities->size() < dest_entities->size()) {
-      auto rows = GetNextRelationships(*src_entities, dest_entity_type);
+      auto rows = GetRelationships<ForwardBlockIterator>(*src_entities, dest_entity_type);
       return SynonymTable{{src, dest}, rows};
     }
-    auto rows = GetPrevRelationships(*dest_entities, src_entity_type);
-    return SynonymTable{{src, dest}, std::move(rows)};
+    auto rows = GetRelationships<ReverseBlockIterator>(*dest_entities, src_entity_type);
+    return SynonymTable{{dest, src}, std::move(rows)};
   }
 
   auto operator()([[maybe_unused]] Underscore underscore_1, [[maybe_unused]] Underscore underscore_2) -> ClauseResult {
@@ -91,11 +91,12 @@ class NextVisitor {
     return entities;
   }
 
-  auto GetNextRelationships(const std::vector<Entity *> &entities,
-                            EntityType filter) -> std::vector<std::vector<Entity *>> {
+  template<typename BlockIterator>
+  auto GetRelationships(const std::vector<Entity *> &entities,
+                        EntityType filter) -> std::vector<std::vector<Entity *>> {
     std::vector<SynonymTable::Row> rows;
     for (const auto &left : entities) {
-      auto next_statements = Next(cfg_, left);
+      auto next_statements = DirectNeighbors<BlockIterator>(cfg_, left);
       auto filtered_entities = FilterEntities(next_statements, filter);
       for (const auto &right : filtered_entities) {
         rows.push_back({left, right});
@@ -103,19 +104,31 @@ class NextVisitor {
     }
     return rows;
   }
-
-  auto GetPrevRelationships(const std::vector<Entity *> &entities,
-                            EntityType filter) -> std::vector<std::vector<Entity *>> {
-    std::vector<SynonymTable::Row> rows;
-    for (const auto &right : entities) {
-      auto prev_statements = Prev(cfg_, right);
-      auto filtered_entities = FilterEntities(prev_statements, filter);
-      for (const auto &left : filtered_entities) {
-        rows.push_back({left, right});
-      }
-    }
-    return rows;
-  }
+//  auto GetNextRelationships(const std::vector<Entity *> &entities,
+//                            EntityType filter) -> std::vector<std::vector<Entity *>> {
+//    std::vector<SynonymTable::Row> rows;
+//    for (const auto &left : entities) {
+//      auto next_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, left);
+//      auto filtered_entities = FilterEntities(next_statements, filter);
+//      for (const auto &right : filtered_entities) {
+//        rows.push_back({left, right});
+//      }
+//    }
+//    return rows;
+//  }
+//
+//  auto GetPrevRelationships(const std::vector<Entity *> &entities,
+//                            EntityType filter) -> std::vector<std::vector<Entity *>> {
+//    std::vector<SynonymTable::Row> rows;
+//    for (const auto &right : entities) {
+//      auto prev_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, right);
+//      auto filtered_entities = FilterEntities(prev_statements, filter);
+//      for (const auto &left : filtered_entities) {
+//        rows.push_back({left, right});
+//      }
+//    }
+//    return rows;
+//  }
 };
 
 auto NextEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {

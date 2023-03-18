@@ -15,8 +15,6 @@ using ClauseResult = std::variant<bool, SynonymTable>;
 
 class ClauseEvaluator {
  public:
-
-  static EntityType DesignEntityToEntityType(DesignEntity entity);
   virtual ~ClauseEvaluator() = default;
   virtual ClauseResult Evaluate(QueryFacade &pkb) = 0;
 };

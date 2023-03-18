@@ -1,11 +1,4 @@
 #include "with_quote_attr_evaluator.h"
-#include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "query/attr_ref.h"
-#include "query/declaration.h"
-#include "query/query_exceptions.h"
-#include "query/quoted_identifier.h"
-#include "query/with_ref.h"
-#include "query_evaluators/clause_evaluator.h"
 #include <unordered_set>
 #include <vector>
 

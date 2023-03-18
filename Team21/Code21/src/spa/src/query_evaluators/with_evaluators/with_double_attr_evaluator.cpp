@@ -31,8 +31,8 @@ auto WithDoubleAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vect
 
   for (const auto &res1 : *pkb_res1) {
     for (const auto &res2 : *pkb_res2) {
-      auto attrValue1 = EvaluateAttrRef(res1, ref1Attr.attrName, pkb);
-      auto attrValue2 = EvaluateAttrRef(res2, ref2Attr.attrName, pkb);
+      auto attrValue1 = AttributeReferenceEvaluator::EvaluateAttrRef(res1, ref1Attr.attrName, pkb);
+      auto attrValue2 = AttributeReferenceEvaluator::EvaluateAttrRef(res2, ref2Attr.attrName, pkb);
       if ( attrValue1 == attrValue2) {
         firstResult.push_back(res1);
         secondResult.push_back(res2);

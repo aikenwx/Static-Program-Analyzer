@@ -2,6 +2,7 @@
 
 #include "query_evaluators/clause_evaluator.h"
 #include "query/query.h"
+#include "query_evaluators/select_evaluators/attr_ref_eval.h"
 
 namespace qps {
 using FinalTable = RowTable<Synonym, std::string>;

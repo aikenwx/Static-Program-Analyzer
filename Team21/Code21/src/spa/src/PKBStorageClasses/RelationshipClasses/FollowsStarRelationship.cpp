@@ -7,12 +7,12 @@
 FollowsStarRelationship::FollowsStarRelationship(Statement* followedStatement, Statement* followerStatement) : Relationship(&FollowsStarRelationship::relationshipType, followedStatement, followerStatement) {
 }
 
-RelationshipType FollowsStarRelationship::relationshipType = RelationshipType();
+const RelationshipType FollowsStarRelationship::relationshipType = RelationshipType();
 
-auto FollowsStarRelationship::getRelationshipType() const -> RelationshipType& {
+auto FollowsStarRelationship::getRelationshipType() const -> const RelationshipType & {
   return FollowsStarRelationship::relationshipType;
 }
 
-auto FollowsStarRelationship::getRelationshipTypeStatic() -> RelationshipType& {
+auto FollowsStarRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
   return FollowsStarRelationship::relationshipType;
 }

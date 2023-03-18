@@ -1,14 +1,14 @@
 #include "WhileStatement.h"
 
-auto WhileStatement::getEntityType() const -> EntityType& {
+auto WhileStatement::getEntityType() const -> const EntityType & {
   return WhileStatement::whileStatementType;
 }
 
 WhileStatement::WhileStatement(int statementNumber) : Statement(&WhileStatement::getEntityTypeStatic(), statementNumber) {
 }
 
-auto WhileStatement::getEntityTypeStatic() -> EntityType& {
+auto WhileStatement::getEntityTypeStatic() -> const EntityType & {
   return WhileStatement::whileStatementType;
 }
 
-EntityType WhileStatement::whileStatementType = EntityType();
+const EntityType WhileStatement::whileStatementType = EntityType();

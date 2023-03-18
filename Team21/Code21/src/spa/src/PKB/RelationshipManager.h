@@ -16,12 +16,12 @@
 
 struct RelationshipDoubleSynonymKey : public StorageKey {
    private:
-    RelationshipType *relationshipType;
+    const RelationshipType *relationshipType;
     const EntityType *leftHandEntityType;
     const EntityType *rightHandEntityType;
 
    public:
-    RelationshipDoubleSynonymKey(RelationshipType *relationshipType, const EntityType *leftHandEntityType, const EntityType *rightHandEntityType);
+    RelationshipDoubleSynonymKey(const RelationshipType *relationshipType, const EntityType *leftHandEntityType, const EntityType *rightHandEntityType);
     auto operator==(
         const RelationshipDoubleSynonymKey &otherRelationshipSynonymKey) const
         -> bool;
@@ -35,12 +35,12 @@ struct std::hash<RelationshipDoubleSynonymKey> {
 
 struct RelationshipSynonymLiteralKey : public StorageKey {
    private:
-    RelationshipType *relationshipType;
+    const RelationshipType *relationshipType;
     const EntityType *leftHandEntityType;
     EntityKey *rightHandEntityKey;
 
    public:
-    RelationshipSynonymLiteralKey(RelationshipType *relationshipType, const EntityType *entityType, EntityKey *entityKey);
+    RelationshipSynonymLiteralKey(const RelationshipType *relationshipType, const EntityType *entityType, EntityKey *entityKey);
     auto operator==(const RelationshipSynonymLiteralKey
                         &otherRelationshipLiteralSynonymKey) const -> bool;
 };
@@ -54,12 +54,12 @@ struct std::hash<RelationshipSynonymLiteralKey> {
 
 struct RelationshipLiteralSynonymKey : public StorageKey {
    private:
-    RelationshipType *relationshipType;
+    const RelationshipType *relationshipType;
     EntityKey *leftHandEntityKey;
     const EntityType *rightHandEntityType;
 
    public:
-    RelationshipLiteralSynonymKey(RelationshipType *relationshipType, EntityKey *entityKey, const EntityType *entityType);
+    RelationshipLiteralSynonymKey(const RelationshipType *relationshipType, EntityKey *entityKey, const EntityType *entityType);
     auto operator==(const RelationshipLiteralSynonymKey
                         &otherRelationshipLiteralSynonymKey) const -> bool;
 };
@@ -90,7 +90,7 @@ class RelationshipManager {
 
     auto getRelationship(RelationshipKey &key) -> Relationship *;
 
-    auto getRelationshipsByTypes(RelationshipType &relationshipType,
+    auto getRelationshipsByTypes(const RelationshipType &relationshipType,
                                  const EntityType &leftHandEntityType,
                                  const EntityType &rightHandEntityType)
         -> std::vector<Relationship *> *;

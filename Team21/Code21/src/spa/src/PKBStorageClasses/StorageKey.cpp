@@ -4,18 +4,18 @@
 
 #include "StorageKey.h"
 
-StorageKey::StorageKey(std::size_t key) {
-    this->key = key;
+StorageKey::StorageKey(std::size_t key) : key(key) {
+
 }
 
-const std::size_t &StorageKey::getKey() const {
+auto StorageKey::getKey() const -> const std::size_t & {
     return this->key;
 }
 
-size_t std::hash<StorageKey>::operator()(const StorageKey &storageKey) const {
+auto std::hash<StorageKey>::operator()(const StorageKey &storageKey) const -> size_t {
     return storageKey.getKey();
 }
 
-bool StorageKey::operator==(const StorageKey &storageKey) const {
+auto StorageKey::operator==(const StorageKey &storageKey) const -> bool {
     return this->key == storageKey.key;
 }

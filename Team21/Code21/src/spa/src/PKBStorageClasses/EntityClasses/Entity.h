@@ -12,13 +12,14 @@
 #include "../StorageKey.h"
 
 struct EntityType : public StorageKey {
-   private:
-    static std::size_t entityTypeKeyCounter;
+ private:
+  // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
+  static std::size_t entityTypeKeyCounter;
 
-   public:
-    EntityType();
+ public:
+  EntityType();
 
-    auto operator==(const EntityType &entityType) const -> bool;
+  auto operator==(const EntityType &entityType) const -> bool;
 };
 
 template <>
@@ -27,37 +28,37 @@ struct std::hash<EntityType> {
 };
 
 struct EntityKey : public StorageKey {
-   private:
-    const EntityType *entityType;
-    std::string *entityValue;
-    std::string entityValueStore;
+ private:
+  const EntityType *entityType;
+  std::string *entityValue;
+  std::string entityValueStore;
 
-   public:
-    EntityKey(const EntityType *entityType, std::string *entityValue);
-    EntityKey(const EntityType *entityType, int entityIntValue);
+ public:
+  EntityKey(const EntityType *entityType, std::string *entityValue);
+  EntityKey(const EntityType *entityType, int entityIntValue);
 
-    auto operator==(const EntityKey &entityKey) const -> bool;
+  auto operator==(const EntityKey &entityKey) const -> bool;
 };
 
 class Entity {
-   private:
-    EntityKey entityKey;
-    std::shared_ptr<std::string> entityValue;
+ private:
+  EntityKey entityKey;
+  std::shared_ptr<std::string> entityValue;
 
-   public:
-    Entity(const EntityType *entityType,
-           const std::shared_ptr<std::string> &entityValue);
+ public:
+  Entity(const EntityType *entityType,
+         const std::shared_ptr<std::string> &entityValue);
 
-    virtual ~Entity() = default;
-    ;
+  virtual ~Entity() = default;
+  ;
 
-    [[nodiscard]] virtual auto getEntityType() const -> const EntityType & = 0;
+  [[nodiscard]] virtual auto getEntityType() const -> const EntityType & = 0;
 
-    [[nodiscard]] auto getEntityValue() const -> std::string *;
+  [[nodiscard]] auto getEntityValue() const -> std::string *;
 
-    auto equals(Entity *otherEntity) -> bool;
+  auto equals(Entity *otherEntity) -> bool;
 
-    auto getEntityKey() -> EntityKey &;
+  auto getEntityKey() -> EntityKey &;
 };
 
 template <>

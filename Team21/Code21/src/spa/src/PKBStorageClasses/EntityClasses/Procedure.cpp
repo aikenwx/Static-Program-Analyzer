@@ -7,11 +7,11 @@ auto Procedure::operator==(const Procedure &procedure) const -> bool {
     return this->getEntityValue() == procedure.getEntityValue();
 }
 
-auto Procedure::getEntityTypeStatic() -> EntityType & {
+auto Procedure::getEntityTypeStatic() -> const EntityType & {
     return Procedure::procedureType;
 }
 
-auto Procedure::getEntityType() const -> EntityType & {
+auto Procedure::getEntityType() const -> const EntityType & {
     return Procedure::getEntityTypeStatic();
 }
 
@@ -20,4 +20,4 @@ auto std::hash<Procedure>::operator()(const Procedure &procedure) const
     return std::hash<std::string *>()(procedure.getEntityValue());
 }
 
-EntityType Procedure::procedureType = EntityType();
+const EntityType Procedure::procedureType = EntityType();

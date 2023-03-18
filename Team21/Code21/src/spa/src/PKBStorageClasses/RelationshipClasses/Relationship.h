@@ -22,12 +22,12 @@ struct std::hash<RelationshipType> {
 
 struct RelationshipKey : public StorageKey {
    private:
-    RelationshipType *relationshipType;
+    const RelationshipType *relationshipType;
     EntityKey *leftEntityKey;
     EntityKey *rightEntityKey;
 
    public:
-    RelationshipKey(RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
+    RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
     auto operator==(const RelationshipKey &otherRelationshipLiteralKey) const
         -> bool;
 };
@@ -44,7 +44,7 @@ class Relationship {
     Entity *rightHandEntity;
 
    public:
-    Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity);
+    Relationship(const RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity);
 
     virtual ~Relationship() = default;
 
@@ -55,7 +55,7 @@ class Relationship {
     auto containsEntityOnRightHand(Entity *entity) const -> bool;
 
     [[nodiscard]] virtual auto getRelationshipType() const
-        -> RelationshipType & = 0;
+        -> const RelationshipType & = 0;
 
     [[nodiscard]] auto getLeftHandEntity() const -> Entity *;
 

@@ -3,12 +3,12 @@
 ReadStatement::ReadStatement(int statementNumber) : Statement(&ReadStatement::getEntityTypeStatic(), statementNumber) {
 }
 
-auto ReadStatement::getEntityTypeStatic() -> EntityType& {
+auto ReadStatement::getEntityTypeStatic() -> const EntityType & {
   return ReadStatement::readStatementType;
 }
 
-auto ReadStatement::getEntityType() const -> EntityType& {
+auto ReadStatement::getEntityType() const -> const EntityType & {
   return ReadStatement::getEntityTypeStatic();
 }
 
-EntityType ReadStatement::readStatementType = EntityType();
+const EntityType ReadStatement::readStatementType = EntityType();

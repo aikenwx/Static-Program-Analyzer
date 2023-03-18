@@ -11,20 +11,17 @@
 
 class Constant : public Entity {
    private:
-    static EntityType entityType;
-    int constantValue;
+    static const EntityType entityType;
     std::shared_ptr<std::string> constantValueString;
 
    public:
-    static auto getEntityTypeStatic() -> EntityType &;
+    static auto getEntityTypeStatic() -> const EntityType &;
 
     explicit Constant(int constantValue);
 
     ~Constant() override = default;
 
-    [[nodiscard]] auto getEntityType() const -> EntityType & override;
-
-    [[nodiscard]] auto getConstantNumber() const -> int;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif  // SPA_CONSTANT_H

@@ -5,14 +5,14 @@
 
 class WhileStatement : public Statement {
    private:
-    static EntityType whileStatementType;
+    static const EntityType whileStatementType;
 
    public:
     explicit WhileStatement(int statementNumber);
 
-    static auto getEntityTypeStatic() -> EntityType&;
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    [[nodiscard]] auto getEntityType() const -> EntityType& override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

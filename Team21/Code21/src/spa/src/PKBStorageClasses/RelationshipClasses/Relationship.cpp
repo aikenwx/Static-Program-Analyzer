@@ -7,7 +7,7 @@ std::size_t RelationshipType::relationshipTypeKeyCounter = 0;
 
 RelationshipType::RelationshipType() : StorageKey(RelationshipType::relationshipTypeKeyCounter++){};
 
-Relationship::Relationship(RelationshipType *relationshipType,
+Relationship::Relationship(const RelationshipType *relationshipType,
                            Entity *leftHandEntity, Entity *rightHandEntity)
     : relationshipKey(relationshipType, &leftHandEntity->getEntityKey(),
                       &rightHandEntity->getEntityKey()),
@@ -19,7 +19,7 @@ auto RelationshipType::operator==(
   return this->getKey() == otherRelationshipType.getKey();
 }
 
-RelationshipKey::RelationshipKey(RelationshipType *relationshipType,
+RelationshipKey::RelationshipKey(const RelationshipType *relationshipType,
                                  EntityKey *leftEntityKey,
                                  EntityKey *rightEntityKey)
     : StorageKey(relationshipType->getKey() ^ leftEntityKey->getKey() ^

@@ -13,15 +13,15 @@ class StorageKey {
     std::size_t key;
 
    public:
-    StorageKey(std::size_t key);
-    const std::size_t &getKey() const;
+    explicit StorageKey(std::size_t key);
+    [[nodiscard]] auto getKey() const -> const std::size_t &;
 
-    bool operator==(const StorageKey &storageKey) const;
+    auto operator==(const StorageKey &storageKey) const -> bool;
 };
 
 template <>
 struct std::hash<StorageKey> {
-    std::size_t operator()(const StorageKey &storageKey) const;
+    auto operator()(const StorageKey &storageKey) const -> std::size_t;
 };
 
 #endif  // SPA_STORAGEKEY_H

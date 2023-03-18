@@ -13,13 +13,13 @@
 
 class Procedure : public Entity {
    private:
-    static EntityType procedureType;
+    static const EntityType procedureType;
     size_t hash{};
 
    public:
-    static auto getEntityTypeStatic() -> EntityType&;
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    [[nodiscard]] auto getEntityType() const -> EntityType& override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 
     explicit Procedure(const std::shared_ptr<std::string>& procedureName);
 

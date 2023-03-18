@@ -7,8 +7,8 @@
 #include <memory>
 
 RelationshipDoubleSynonymKey::RelationshipDoubleSynonymKey(
-    RelationshipType *relationshipType, const EntityType *leftHandEntityType,
-    const EntityType *rightHandEntityType)
+        const RelationshipType *relationshipType, const EntityType *leftHandEntityType,
+        const EntityType *rightHandEntityType)
     : StorageKey(relationshipType->getKey() ^ leftHandEntityType->getKey() ^
                  rightHandEntityType->getKey()),
       relationshipType(relationshipType),
@@ -33,8 +33,8 @@ auto std::hash<RelationshipDoubleSynonymKey>::operator()(
 }
 
 RelationshipLiteralSynonymKey::RelationshipLiteralSynonymKey(
-    RelationshipType *relationshipType, EntityKey *entityKey,
-    const EntityType *entityType)
+        const RelationshipType *relationshipType, EntityKey *entityKey,
+        const EntityType *entityType)
     : StorageKey(relationshipType->getKey() ^ entityKey->getKey() ^
                  entityType->getKey()),
       relationshipType(relationshipType),
@@ -59,8 +59,8 @@ auto std::hash<RelationshipLiteralSynonymKey>::operator()(
 }
 
 RelationshipSynonymLiteralKey::RelationshipSynonymLiteralKey(
-    RelationshipType *relationshipType, const EntityType *entityType,
-    EntityKey *entityKey)
+        const RelationshipType *relationshipType, const EntityType *entityType,
+        EntityKey *entityKey)
     : StorageKey(relationshipType->getKey() ^ entityType->getKey() ^
                  entityKey->getKey()),
       relationshipType(relationshipType),
@@ -116,8 +116,8 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
 }
 
 auto RelationshipManager::getRelationshipsByTypes(
-    RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-    const EntityType &rightHandEntityType) -> std::vector<Relationship *> * {
+        const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
+        const EntityType &rightHandEntityType) -> std::vector<Relationship *> * {
   RelationshipDoubleSynonymKey relationshipSynonymKey =
       RelationshipDoubleSynonymKey(&relationshipType, &leftHandEntityType,
                                    &rightHandEntityType);

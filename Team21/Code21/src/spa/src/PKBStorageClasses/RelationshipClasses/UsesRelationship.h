@@ -10,15 +10,15 @@
 
 class UsesRelationship : public Relationship {
    private:
-    static RelationshipType relationshipType;
+    static const RelationshipType relationshipType;
 
    public:
-    static auto getRelationshipTypeStatic() -> RelationshipType &;
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
     UsesRelationship(Entity *user, Variable *usedVariable);
 
     [[nodiscard]] auto getRelationshipType() const
-        -> RelationshipType & override;
+        -> const RelationshipType & override;
 };
 
 #endif  // SPA_USESRELATIONSHIP_H

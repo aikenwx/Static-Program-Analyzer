@@ -7,12 +7,12 @@
 ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *childStatement) : Relationship(&ParentRelationship::relationshipType, parentStatement, childStatement) {
 }
 
-RelationshipType ParentRelationship::relationshipType = RelationshipType();
+const RelationshipType ParentRelationship::relationshipType = RelationshipType();
 
-auto ParentRelationship::getRelationshipTypeStatic() -> RelationshipType & {
+auto ParentRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
   return ParentRelationship::relationshipType;
 }
 
-auto ParentRelationship::getRelationshipType() const -> RelationshipType & {
+auto ParentRelationship::getRelationshipType() const -> const RelationshipType & {
   return ParentRelationship::relationshipType;
 }

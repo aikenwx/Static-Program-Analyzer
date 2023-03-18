@@ -10,15 +10,15 @@
 
 class ParentRelationship : public Relationship {
    private:
-    static RelationshipType relationshipType;
+    static const RelationshipType relationshipType;
 
    public:
     ParentRelationship(Statement *parentStatement, Statement *childStatement);
 
-    static auto getRelationshipTypeStatic() -> RelationshipType &;
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
     [[nodiscard]] auto getRelationshipType() const
-        -> RelationshipType & override;
+        -> const RelationshipType & override;
 };
 
 #endif  // SPA_PARENTRELATIONSHIP_H

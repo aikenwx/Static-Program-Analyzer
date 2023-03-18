@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <unordered_set>
+#include <functional>
 
 #include "query/declaration.h"
 #include "query/such_that_clause.h"

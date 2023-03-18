@@ -104,31 +104,6 @@ class NextVisitor {
     }
     return rows;
   }
-//  auto GetNextRelationships(const std::vector<Entity *> &entities,
-//                            EntityType filter) -> std::vector<std::vector<Entity *>> {
-//    std::vector<SynonymTable::Row> rows;
-//    for (const auto &left : entities) {
-//      auto next_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, left);
-//      auto filtered_entities = FilterEntities(next_statements, filter);
-//      for (const auto &right : filtered_entities) {
-//        rows.push_back({left, right});
-//      }
-//    }
-//    return rows;
-//  }
-//
-//  auto GetPrevRelationships(const std::vector<Entity *> &entities,
-//                            EntityType filter) -> std::vector<std::vector<Entity *>> {
-//    std::vector<SynonymTable::Row> rows;
-//    for (const auto &right : entities) {
-//      auto prev_statements = DirectNeighbors<ForwardBlockIterator>(cfg_, right);
-//      auto filtered_entities = FilterEntities(prev_statements, filter);
-//      for (const auto &left : filtered_entities) {
-//        rows.push_back({left, right});
-//      }
-//    }
-//    return rows;
-//  }
 };
 
 auto NextEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {

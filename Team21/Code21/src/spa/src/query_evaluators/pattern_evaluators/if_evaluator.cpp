@@ -1,3 +1,5 @@
+#include <unordered_set>
+
 #include "if_evaluator.h"
 #include "query/query_exceptions.h"
 #include "query_evaluators/pattern_evaluators/pattern_evaluator.h"

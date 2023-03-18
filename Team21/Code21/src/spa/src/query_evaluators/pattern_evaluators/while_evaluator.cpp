@@ -1,3 +1,5 @@
+#include <unordered_set>
+
 #include "while_evaluator.h"
 #include "query/query_exceptions.h"
 #include <unordered_set>

@@ -109,5 +109,4 @@ class NextVisitor {
 auto NextEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
   return std::visit(NextVisitor{pkb, declarations_}, clause_.getArg1(), clause_.getArg2());
 }
-
 }  // namespace qps

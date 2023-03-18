@@ -3,6 +3,7 @@
 #include "select_evaluators/select_evaluator.h"
 #include "such_that_evaluators/such_that_evaluator_factory.h"
 #include "pattern_evaluators/pattern_evaluator_factory.h"
+#include "with_evaluators/with_evaluator_factory.h"
 #include "join/constraints_solver.h"
 #include "tables/table_helpers.h"
 
@@ -11,7 +12,7 @@ QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)), early_re
   CreateEvaluators();
 }
 
-Synonym getSynonynm(Query &query) {
+auto getSynonynm(Query &query) -> Synonym {
   auto elements = std::get<std::vector<Element>>(query.getSelectClause());
   return std::get<Synonym>(elements[0]);
 }
@@ -24,22 +25,27 @@ void QueryEvaluator::CreateEvaluators() {
   for (auto &clause : query_.getPatternClause()) {
     clause_evaluators_.push_back(PatternEvaluatorFactory::Create(clause, declarations));
   }
+  for (auto &clause : query_.getWithClause()) {
+    clause_evaluators_.push_back(WithEvaluatorFactory::Create(clause, declarations));
+  }
 }
 
 void QueryEvaluator::EvaluateClauses(QueryFacade &pkb) {
   for (const auto &evaluator : clause_evaluators_) {
     auto res = evaluator->Evaluate(pkb);
     if (std::holds_alternative<bool>(res)) {
-      if (!std::get<bool>(res)) early_return_ = true;
+      if (!std::get<bool>(res)) { early_return_ = true;
+}
     } else {
       auto table = std::get<SynonymTable>(res);
-      if (table.IsEmpty()) early_return_ = true;
-      else tables_.push_back(std::move(table));
+      if (table.IsEmpty()) { early_return_ = true;
+      } else { tables_.push_back(std::move(table));
+}
     }
   }
 }
 
-std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb) {
+auto QueryEvaluator::EvaluateSelect(QueryFacade &pkb) -> std::unordered_set<std::string> {
   auto target = getSynonynm(query_);
   if (tables_.empty()) {
     auto syn_table = std::get<SynonymTable>(select_evalautor_->Evaluate(pkb));
@@ -66,9 +72,10 @@ std::unordered_set<std::string> QueryEvaluator::EvaluateSelect(QueryFacade &pkb)
   return entity_str;
 }
 
-std::unordered_set<std::string> QueryEvaluator::EvaluateQuery(QueryFacade &pkb) {
+auto QueryEvaluator::EvaluateQuery(QueryFacade &pkb) -> std::unordered_set<std::string> {
   EvaluateClauses(pkb);
-  if (early_return_) return {};
+  if (early_return_) { return {};
+}
   return EvaluateSelect(pkb);
 }
-} // qps
+}  // namespace qps

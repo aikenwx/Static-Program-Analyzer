@@ -10,9 +10,9 @@ namespace qps {
 
 class QueryEvaluator {
  public:
-  QueryEvaluator(Query query);
+  explicit QueryEvaluator(Query query);
 
-  std::unordered_set<std::string> EvaluateQuery(QueryFacade &pkb);
+  auto EvaluateQuery(QueryFacade &pkb) -> std::unordered_set<std::string>;
 
  private:
   Query query_;
@@ -22,7 +22,7 @@ class QueryEvaluator {
   std::vector<SynonymTable> tables_;
   void CreateEvaluators();
   void EvaluateClauses(QueryFacade &pkb);
-  std::unordered_set<std::string> EvaluateSelect(QueryFacade &pkb);
+  auto EvaluateSelect(QueryFacade &pkb) -> std::unordered_set<std::string>;
 
 };
-} // qps
+}  // namespace qps

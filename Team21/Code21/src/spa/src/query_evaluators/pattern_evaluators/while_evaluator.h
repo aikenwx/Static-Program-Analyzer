@@ -10,7 +10,7 @@ namespace qps {
   public:
     WhileEvaluator(PatternClause clause, std::vector<Declaration> declarations)
       : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-    std::vector<Product> CallPkb(QueryFacade& pkb) override;
+    auto CallPkb(QueryFacade& pkb) -> std::vector<Product> override;
   };
 
-} // qps
+} // namespace qps

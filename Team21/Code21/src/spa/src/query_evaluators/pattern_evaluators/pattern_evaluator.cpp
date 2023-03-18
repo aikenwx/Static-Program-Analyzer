@@ -29,7 +29,6 @@ auto PatternEvaluator::ConstructResult(const std::vector<Product> &statements) -
 
   SynonymTable table(syns);
   for (auto prod : statements) {
-     std::size_t ind = prod.index();
     if (std::holds_alternative<ModifiesRelationship *>(prod)) {
       auto *mod = std::get<ModifiesRelationship *>(prod);
       SynonymTable::Row row = {mod->getLeftHandEntity()};

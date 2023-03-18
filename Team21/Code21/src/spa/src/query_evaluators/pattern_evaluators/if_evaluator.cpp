@@ -3,7 +3,6 @@
 #include "if_evaluator.h"
 #include "query/query_exceptions.h"
 #include "query_evaluators/pattern_evaluators/pattern_evaluator.h"
-#include <unordered_set>
 
 namespace qps {
 auto IfEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {

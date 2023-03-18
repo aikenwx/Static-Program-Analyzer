@@ -2,7 +2,6 @@
 
 #include "while_evaluator.h"
 #include "query/query_exceptions.h"
-#include <unordered_set>
 
 namespace qps {
 auto WhileEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {

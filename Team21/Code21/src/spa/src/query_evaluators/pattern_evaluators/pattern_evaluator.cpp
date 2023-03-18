@@ -9,7 +9,7 @@ PatternEvaluator::PatternEvaluator(PatternClause clause, std::vector<Declaration
     : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
 auto PatternEvaluator::getClause() -> PatternClause {
-  return clause_;; 
+  return clause_;
 }
 
 auto PatternEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {

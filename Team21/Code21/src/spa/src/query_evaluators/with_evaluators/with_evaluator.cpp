@@ -1,60 +1,77 @@
+#include "with_evaluator.h"
+#include "query/attr_ref.h"
+#include "query/ref.h"
+#include "query/query_exceptions.h"
+#include "query_evaluators/pattern_evaluators/pattern_evaluator.h"
+#include "query_evaluators/with_evaluators/with_evaluator.h"
 
-    // std::vector<AssignStatement*>* getAllAssignStatements();
-    // std::vector<IfStatement*>* getAllIfStatements();
-    // std::vector<WhileStatement*>* getAllWhileStatements();
-    // std::vector<CallStatement*>* getAllCallStatements();
-    // std::vector<ReadStatement*>* getAllReadStatements();
-    // std::vector<PrintStatement*>* getAllPrintStatements();
-    // std::vector<Procedure*>* getAllProcedures();
-    // std::vector<Variable*>* getAllVariables();
-    // std::vector<Constant*>* getAllConstants();
-    // std::vector<Statement*>* getAllStatements();
+namespace qps {
 
-    // std::vector<ParentRelationship*>* getParentRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<FollowsRelationship*>* getFollowsRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<ModifiesRelationship*>* getModifiesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<UsesRelationship*>* getUsesRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<ParentStarRelationship*>* getParentStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<FollowsStarRelationship*>* getFollowsStarRelationshipsByLeftAndRightEntityTypes(EntityType leftEntityType, EntityType rightEntityType);
-    // std::vector<CallsRelationship*>* getAllCallsRelationships();
-    // std::vector<CallsStarRelationship*>* getAllCallsStarRelationships();
+WithEvaluator::WithEvaluator(WithClause clause, std::vector<Declaration> declarations)
+    : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
-    // std::unordered_set<WhileStatement*>* getWhileStatementsUsingVariableInCondition(std::string variableName);
-    // std::unordered_set<IfStatement*>* getIfStatementsUsingVariableInCondition(std::string variableName);
+auto WithEvaluator::getClause() -> WithClause {
+  return clause_;
+}
 
-    // ModifiesRelationship* getStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
-    // ModifiesRelationship* getProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
-    // UsesRelationship* getStatementUsesVariableRelationship(int statementNumber, std::string variableName);
-    // UsesRelationship* getProcedureUsesVariableRelationship(std::string procedureName, std::string variableName);
-    // ParentRelationship* getParentRelationship(int parentStatementNumber, int childStatementNumber);
-    // FollowsRelationship* getFollowsRelationship(int firstStatementNumber, int secondStatementNumber);
-    // ParentStarRelationship* getParentStarRelationship(int parentStatementNumber, int childStatementNumber);
-    // FollowsStarRelationship* getFollowsStarRelationship(int firstStatementNumber, int secondStatementNumber);
-    // CallsRelationship* getCallsRelationship(std::string callerName, std::string calleeName);
-    // CallsStarRelationship* getCallsStarRelationship(std::string callerName, std::string calleeName);
+auto WithEvaluator::getDeclarations() -> std::vector<Declaration> {
+  return declarations_;
+}
 
-    // Entity* getEntity(EntityType entityType, int entityValue);
+auto WithEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
+  return qps::WithEvaluator::ConstructResult(CallPkb(pkb));
+}
 
-    // Entity* getEntity(EntityType entityType, std::string entityValue);
+auto WithEvaluator::ConstructResult(const std::vector<std::vector<Entity *>*> &statements) -> ClauseResult {
+  std::vector<Synonym> syns;
 
-    // std::vector<Entity*>* getEntitiesByType(EntityType entityType);
+  WithRefType  ref1 = clause_.getRef1().ref;
+  WithRefType  ref2 = clause_.getRef2().ref;
 
-    // Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, int rightEntityValue);
+  Synonym *syn1 = nullptr;
+  Synonym *syn2 = nullptr;
 
-    // Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, std::string rightEntityValue);
+  AttrRef *attr1 = std::get_if<AttrRef>(&ref1);
+  AttrRef *attr2 = std::get_if<AttrRef>(&ref2);
 
-    // Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType, std::string rightEntityValue);
+  if (attr1 != nullptr) {
+    *syn1 = attr1->synonym;
+    syns.push_back(*syn1);
+  }
 
-    // Relationship* getRelationship(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType, int rightEntityValue);
+  if (attr2 != nullptr) {
+    *syn2 = attr2->synonym;
+    syns.push_back(*syn2);
+  }
 
-    // std::vector<Relationship*>* getRelationshipsByTypes(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType);
+  SynonymTable table(syns);
 
-    // std::vector<Entity*>* getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, int rightEntityValue);
+  if (statements.empty()) {
+    return false;
+  }
 
-    // std::vector<Entity*>* getRelationshipsByLeftEntityTypeAndRightEntityLiteral(RelationshipType relationshipType, EntityType leftEntityType, EntityType rightEntityType, std::string rightEntityValue);
+  if (statements.size() == 1 && statements[0]->empty()) {
+    return true;
+  }
 
-    // std::vector<Entity*>* getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, int leftEntityValue, EntityType rightEntityType);
+  if (statements.size() == 1) {
+    SynonymTable::Row row;
+    for (auto *entity : *statements[0]) {
+      row = {};
+      row.push_back(entity);
+      table.AddRow(row);
+    }
+  }
+  else if (statements.size() == 2) {
+    SynonymTable::Row row;
+    for (int num = 0; num < statements[0]->size(); num++) {
+      row = {};
+      row.push_back(statements[0]->at(num));
+      row.push_back(statements[1]->at(num));
+      table.AddRow(row);
+    }
+  }
 
-    // std::vector<Entity*>* getRelationshipsByLeftEntityLiteralAndRightEntityType(RelationshipType relationshipType, EntityType leftEntityType, std::string leftEntityValue, EntityType rightEntityType);
-
-    // cfg::CFG* getCFG();
+  return table;
+}
+}  // namespace qps

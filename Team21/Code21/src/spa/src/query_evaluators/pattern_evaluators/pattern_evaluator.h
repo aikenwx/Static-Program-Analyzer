@@ -21,7 +21,7 @@ class PatternEvaluator : public ClauseEvaluator {
 
  private:
   PatternClause clause_;
-  
+
   auto ConstructResult(const std::vector<Product> &) -> ClauseResult;
 
   std::vector<Declaration> declarations_;

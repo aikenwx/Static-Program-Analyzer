@@ -3,6 +3,7 @@
 #include "query/declaration.h"
 #include "query/with_clause.h"
 #include "query_evaluators/clause_evaluator.h"
+#include "query_evaluators/select_evaluators/attr_ref_eval.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
@@ -14,6 +15,8 @@ class WithEvaluator : public ClauseEvaluator {
 
   auto getClause() -> WithClause;
 
+  auto getDeclarations() -> std::vector<Declaration>;
+
   auto Evaluate(QueryFacade &pkb) -> ClauseResult override;
 
   virtual auto CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>*> = 0;
@@ -21,7 +24,7 @@ class WithEvaluator : public ClauseEvaluator {
  private:
   WithClause clause_;
 
-  //nullPtr means false result while emppty vector means true result
+  //nullPtr means false result while empty vector means true result
   auto ConstructResult(const std::vector<std::vector<Entity *>*> &) -> ClauseResult;
 
   std::vector<Declaration> declarations_;

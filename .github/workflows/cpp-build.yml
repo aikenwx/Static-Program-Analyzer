@@ -8,19 +8,33 @@ jobs:
       matrix:
         platform: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
+        toolchain: [msvc, clang, gcc]
         std: [17]
         include:
-          - platform: ubuntu-latest
-            cxx: clang++-14
-            other_pkgs: clang-14
-            cmake_configurations:
-          - platform: windows-latest
+          - toolchain: msvc
+            cc: cl
             cxx: cl
-            cmake_configurations:
-          - platform: macos-latest
+          - toolchain: gcc
+            cc: gcc
+            cxx: g++
+          - toolchain: clang
+            cc: clang
             cxx: clang++
-            other_pkgs: llvm@14
-            cmake_configurations:
+        exclude:
+          # msvc isn't available on ubuntu/macos, duh
+          - platform: ubuntu-latest
+            toolchain: msvc
+          - platform: macos-latest
+            toolchain: msvc
+          # limit number of builds we do
+          # should be covered by ubuntu+gcc build
+          - platform: windows-latest
+            toolchain: gcc
+          - platform: windows-latest
+            toolchain: clang
+          - platform: macos-latest
+            toolchain: gcc
+          # include other_pkgs, cmake_configurations as required
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -50,6 +64,7 @@ jobs:
       - name: Configure build
         working-directory: ${{github.workspace}}/Team21/Code21
         env:
+          CC: ${{matrix.cc}}
           CXX: ${{matrix.cxx}}
           CXXFLAGS: ${{matrix.cxxflags}}
         # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.

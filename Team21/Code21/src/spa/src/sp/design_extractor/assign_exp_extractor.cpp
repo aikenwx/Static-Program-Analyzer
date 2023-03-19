@@ -1,6 +1,7 @@
 #include "assign_exp_extractor.h"
 
 #include <queue>
+#include <sstream>
 
 #include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
@@ -67,12 +68,17 @@ auto AssignExpToPostfixExp(const std::shared_ptr<ast::INode>& node) -> std::stri
   std::queue<std::string> postfixExpStack = AssignExpToPostfixExpStack(node);
   std::string postfixExp;
 
+  std::ostringstream pfeStream;
+
   while (!postfixExpStack.empty()) {
-    postfixExp += (postfixExpStack.front() + " ");
+    pfeStream << postfixExpStack.front();
     postfixExpStack.pop();
+    if (!postfixExpStack.empty()) {
+      pfeStream << " ";
+    }
   }
 
-  return postfixExp;
+  return pfeStream.str();
 }
 
 void AssignExpExtractor::HandleAssignNode(

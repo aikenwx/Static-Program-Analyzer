@@ -1,6 +1,6 @@
 #include "sp/ast/astlib.h"
 #include "print_subparser.h"
-#include "token/semicolon_token.h"
+#include "sp/token/semicolon_token.h"
 #include "util/instance_of.h"
 
 namespace parser {

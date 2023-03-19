@@ -1,6 +1,6 @@
 #include "sp/ast/astlib.h"
 #include "relational_expression_subparser.h"
-#include "token/right_paren_token.h"
+#include "sp/token/right_paren_token.h"
 #include "util/instance_of.h"
 
 namespace parser {

@@ -1,4 +1,5 @@
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -9,11 +10,10 @@
 namespace token_factory {
 class SimpleTokenFactory : public TokenFactory {
  public:
-  std::unique_ptr<token::Token> CreateToken(std::string_view value) override;
-  bool isWhitespace(const char& c) override;
-  bool isSymbolPrefixChar(const char& c) override;
-  CheckSymbolResult checkSymbol(const std::string& value) override;
-  SimpleTokenFactory();
+  auto CreateToken(std::string_view value) -> std::unique_ptr<token::Token> override;
+  auto isWhitespace(const char& chr) -> bool override;
+  auto isSymbolPrefixChar(const char& chr) -> bool override;
+  auto checkSymbol(std::string_view value) -> CheckSymbolResult override;
 
  private:
   static const std::unordered_map<char, std::vector<std::string>> kSymbolTokens;

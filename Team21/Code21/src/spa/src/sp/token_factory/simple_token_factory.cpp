@@ -32,90 +32,110 @@
 #include "util/is_integer.h"
 
 namespace token_factory {
-std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string_view value) {
+auto SimpleTokenFactory::CreateToken(std::string_view value)
+    -> std::unique_ptr<token::Token> {
   if (value == "{") {
     return token::LeftBraceToken::CreateToken(value);
-  } else if (value == "}") {
-    return token::RightBraceToken::CreateToken(value);
-  } else if (value == "(") {
-    return token::LeftParenToken::CreateToken(value);
-  } else if (value == ")") {
-    return token::RightParenToken::CreateToken(value);
-  } else if (value == ";") {
-    return token::SemicolonToken::CreateToken(value);
-  } else if (value == "+") {
-    return token::PlusToken::CreateToken(value);
-  } else if (value == "-") {
-    return token::MinusToken::CreateToken(value);
-  } else if (value == "*") {
-    return token::MultiplyToken::CreateToken(value);
-  } else if (value == "/") {
-    return token::DivideToken::CreateToken(value);
-  } else if (value == "%") {
-    return token::ModuloToken::CreateToken(value);
-  } else if (value == "==") {
-    return token::EqualToken::CreateToken(value);
-  } else if (value == "!=") {
-    return token::NotEqualToken::CreateToken(value);
-  } else if (value == "<") {
-    return token::LessThanToken::CreateToken(value);
-  } else if (value == "<=") {
-    return token::LessEqualToken::CreateToken(value);
-  } else if (value == ">") {
-    return token::GreaterThanToken::CreateToken(value);
-  } else if (value == ">=") {
-    return token::GreaterEqualToken::CreateToken(value);
-  } else if (value == "!") {
-    return token::NotToken::CreateToken(value);
-  } else if (value == "=") {
-    return token::AssignToken::CreateToken(value);
-  } else if (value == "&&") {
-    return token::AndToken::CreateToken(value);
-  } else if (value == "||") {
-    return token::OrToken::CreateToken(value);
-  } else if (util::is_integer(value)) {
-    return token::IntegerToken::CreateToken(value);
-  } else {
-    return token::IdentifierToken::CreateToken(value);
   }
+  if (value == "}") {
+    return token::RightBraceToken::CreateToken(value);
+  }
+  if (value == "(") {
+    return token::LeftParenToken::CreateToken(value);
+  }
+  if (value == ")") {
+    return token::RightParenToken::CreateToken(value);
+  }
+  if (value == ";") {
+    return token::SemicolonToken::CreateToken(value);
+  }
+  if (value == "+") {
+    return token::PlusToken::CreateToken(value);
+  }
+  if (value == "-") {
+    return token::MinusToken::CreateToken(value);
+  }
+  if (value == "*") {
+    return token::MultiplyToken::CreateToken(value);
+  }
+  if (value == "/") {
+    return token::DivideToken::CreateToken(value);
+  }
+  if (value == "%") {
+    return token::ModuloToken::CreateToken(value);
+  }
+  if (value == "==") {
+    return token::EqualToken::CreateToken(value);
+  }
+  if (value == "!=") {
+    return token::NotEqualToken::CreateToken(value);
+  }
+  if (value == "<") {
+    return token::LessThanToken::CreateToken(value);
+  }
+  if (value == "<=") {
+    return token::LessEqualToken::CreateToken(value);
+  }
+  if (value == ">") {
+    return token::GreaterThanToken::CreateToken(value);
+  }
+  if (value == ">=") {
+    return token::GreaterEqualToken::CreateToken(value);
+  }
+  if (value == "!") {
+    return token::NotToken::CreateToken(value);
+  }
+  if (value == "=") {
+    return token::AssignToken::CreateToken(value);
+  }
+  if (value == "&&") {
+    return token::AndToken::CreateToken(value);
+  }
+  if (value == "||") {
+    return token::OrToken::CreateToken(value);
+  }
+  if (util::is_integer(value)) {
+    return token::IntegerToken::CreateToken(value);
+  }
+  return token::IdentifierToken::CreateToken(value);
 };
 
-bool SimpleTokenFactory::isWhitespace(const char& c) {
-  return (kWhitespaceTokens.find(c) != kWhitespaceTokens.end());
+auto SimpleTokenFactory::isWhitespace(const char &chr) -> bool {
+  return kWhitespaceTokens.find(chr) != kWhitespaceTokens.end();
 }
 
-bool SimpleTokenFactory::isSymbolPrefixChar(const char& c) {
-  return (kSymbolTokens.find(c) != kSymbolTokens.end());
+auto SimpleTokenFactory::isSymbolPrefixChar(const char &chr) -> bool {
+  return kSymbolTokens.find(chr) != kSymbolTokens.end();
 }
 
-CheckSymbolResult SimpleTokenFactory::checkSymbol(const std::string& value) {
-  auto it = kSymbolTokens.find(value[0]);
-  if (it == kSymbolTokens.end()) {
+auto SimpleTokenFactory::checkSymbol(std::string_view value)
+    -> CheckSymbolResult {
+  auto iter = kSymbolTokens.find(value[0]);
+  if (iter == kSymbolTokens.end()) {
     return {false, false};
   }
-  std::vector<std::string> candidates = it->second;
+  std::vector<std::string> candidates = iter->second;
   bool isValidPrefix = false;
   for (std::string candidate : candidates) {
     if (candidate.size() < value.size()) {
       continue;
     }
 
-    auto res = std::mismatch(value.begin(), value.end(), candidate.begin());
-    if (res.first == value.end()) { // prefix match
+    auto [first, second] =
+        std::mismatch(value.begin(), value.end(), candidate.begin());
+    if (first == value.end()) { // prefix match
       isValidPrefix = true;
-      if (res.second == candidate.end()) { // exact match
-        return {isValidPrefix, true}; // {isValidPrefix, isValidSymbol}
+      if (second == candidate.end()) { // exact match
+        return {isValidPrefix, true};
       }
     }
   }
   return {isValidPrefix, false};
 }
 
-SimpleTokenFactory::SimpleTokenFactory() {}
-
 const std::unordered_map<char, std::vector<std::string>>
     SimpleTokenFactory::kSymbolTokens{
-        {'+', {"+"}}, {'-', {"-"}}, {'*', {"*"}},
+        {'+', {"+"}},       {'-', {"-"}},       {'*', {"*"}},
         {'/', {"/"}},       {'%', {"%"}},       {'(', {"("}},
         {')', {")"}},       {'{', {"{"}},       {'}', {"}"}},
         {';', {";"}},       {'=', {"==", "="}}, {'!', {"!=", "!"}},
@@ -123,6 +143,6 @@ const std::unordered_map<char, std::vector<std::string>>
         {'|', {"||"}},
     };
 
-const std::unordered_set<char> SimpleTokenFactory::kWhitespaceTokens{' ', '\t',
-                                                                    '\n', '\r'};
-}  // namespace token_factory
+const std::unordered_set<char> SimpleTokenFactory::kWhitespaceTokens{
+    ' ', '\t', '\n', '\r'};
+} // namespace token_factory

@@ -161,7 +161,7 @@ SyntaxError
 32 - Select Clause: Invalid attributeName with synonym in tuple
 assign a; while w;
 Select <w.value, a> such that Follows*(a, w) pattern a(_, "4")
-SyntaxError
+SemanticError
 5000
 33 - Such That Clause: Invalid Ref type in Calls
 assign a; while w;
@@ -171,7 +171,7 @@ SyntaxError
 34 - Such That Clause: Invalid synonym type in Calls
 assign a; while w;
 Select <w, a> such that Calls(a, _)
-SyntaxError
+SemanticError
 5000
 35 - Such That Clause: Invalid Ref type in Next
 assign a; while w;
@@ -241,11 +241,11 @@ SemanticError
 48 - With Clause: Invalid attributeName
 while a; variable v; constant c;
 Select a with a.stmt = c.value
-SemanticError
+SyntaxError
 5000
 49 - With Clause: Invalid attributeName for synonym
 while a; variable v; constant c;
-Select a with a.stmt = c.procName
+Select a with a.stmt# = c.procName
 SemanticError
 5000
 50 - With Clause: Invalid attribute Comparison

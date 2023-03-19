@@ -38,13 +38,13 @@ class SelectVisitor {
     FinalTable final_table{{syns_}};
     for (size_t row_idx = 0; row_idx < final_syn_table.ResultSize(); ++row_idx) {
       FinalTable::Row row;
-      size_t attr_refs_idx = 0;
-      for (auto &syn : syns_) {
+      for (size_t col_idx = 0; col_idx < syns_.size(); ++col_idx) {
+        auto &syn = syns_[col_idx];
         auto *val = final_syn_table.GetCell(row_idx, syn);
-        if (attr_refs_idx < attr_refs_.size() && attr_refs_[attr_refs_idx].synonym == syn) {
+        auto attr_name = attr_refs_.find(col_idx);
+        if(attr_name != attr_refs_.end()) {
           row.push_back(AttributeReferenceEvaluator::EvaluateAttrRef(val,
-                                                                     attr_refs_[attr_refs_idx].attrName, pkb_));
-          attr_refs_idx++;
+                                                                     attr_name->second, pkb_));
         } else {
           row.push_back(*val->getEntityValue());
         }
@@ -55,11 +55,12 @@ class SelectVisitor {
   }
 
   void UnpackElements(const std::vector<Element> &elements) {
-    for (const auto &element : elements) {
+    for (size_t i = 0; i < elements.size(); ++i) {
+      const auto& element = elements[i];
       if (std::holds_alternative<AttrRef>(element)) {
         auto attr_ref = std::get<AttrRef>(element);
         syns_.push_back(attr_ref.synonym);
-        attr_refs_.push_back(std::move(attr_ref));
+        attr_refs_[i] = attr_ref.attrName;
       } else {
         syns_.push_back(std::get<Synonym>(element));
       }
@@ -99,7 +100,7 @@ class SelectVisitor {
 
   QueryFacade &pkb_;
   std::vector<Declaration> &declarations_;
-  std::vector<AttrRef> attr_refs_;
+  std::unordered_map<size_t, AttrName> attr_refs_;
   std::vector<Synonym> syns_;
   std::vector<SynonymTable> tables_;
 };

@@ -21,7 +21,7 @@ procedure duc {
     while (i>0) {
       x = z * 4 +  y;
       call nguyen;
-      if (x <= 15) {
+      if (x <= 15) then {
 	x = y * z;
 	z = 10; }
       else {

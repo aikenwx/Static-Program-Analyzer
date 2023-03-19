@@ -1,4 +1,7 @@
 #include "extractor.h"
+#include "sp/ast/conditional_node.h"
+#include "util/instance_of.h"
+#include "variable_extractor.h"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -8,10 +11,18 @@ template <typename T> class CondVarExtractor : public Extractor {
 public:
   CondVarExtractor() = default;
 
-  void HandleConditionalNode(
-      const std::shared_ptr<ast::ConditionalNode> &node, int depth) override;
+  void HandleConditionalNode(const std::shared_ptr<ast::ConditionalNode> &node,
+                             int depth) override {
+    if (!util::instance_of<T>(node)) {
+      return;
+    }
 
-  [[nodiscard]] auto stmtNoCondVarMap() const
+    auto varExtractor = VariableExtractor();
+    node->AcceptVisitor(varExtractor, depth);
+    condVars_[node->GetStatementNumber()] = varExtractor.vars();
+  }
+
+  [[nodiscard]] auto condVars() const
       -> std::unordered_map<int, std::unordered_set<std::string>> {
     return condVars_;
   };

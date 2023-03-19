@@ -33,6 +33,7 @@ void IfNode::IncrementStatementNumber(int value) {
 }
 
 void IfNode::AcceptVisitor(design_extractor::Extractor &extractor, int depth) {
+  auto currentNode = shared_from_this();
   extractor.HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
   extractor.HandleConditionalNode(std::static_pointer_cast<ConditionalNode>(currentNode),

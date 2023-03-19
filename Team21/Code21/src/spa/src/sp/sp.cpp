@@ -507,13 +507,13 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
   auto cfg = cfgExtractor.cfg();
 
   // process AST to get vars used in if/while cond expr
-  auto condVarExtractor = design_extractor::CondVarExtractor<ast::IfNode>();
-  programNode->AcceptVisitor(condVarExtractor, 0);
-  auto ifCondVarRels = condVarExtractor.condVars();
+  auto ifCondVarExtractor = design_extractor::CondVarExtractor<ast::IfNode>();
+  programNode->AcceptVisitor(ifCondVarExtractor, 0);
+  auto ifCondVarRels = ifCondVarExtractor.condVars();
 
-  condVarExtractor = design_extractor::CondVarExtractor<ast::WhileNode>();
-  programNode->AcceptVisitor(condVarExtractor, 0);
-  auto whileCondVarRels = condVarExtractor.condVars();
+  auto whileCondVarExtractor = design_extractor::CondVarExtractor<ast::WhileNode>();
+  programNode->AcceptVisitor(whileCondVarExtractor, 0);
+  auto whileCondVarRels = whileCondVarExtractor.condVars();
 
   // postprocess relationships
 

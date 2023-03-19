@@ -1,16 +1,45 @@
-Elliot
-// do vary select clause return tuples
-1 - relationship(literal, literal)
-2 - relationship(synonym, literal)
-3 - relationship(wildcard, literal)
-4 - relationship(literal, synonym)
-5 - relationship(synonym, synonym)
-6 - relationship(wildcard, literal)
-7 - relationship(literal, wildcard)
-8 - relationship(synonym, wildcard)
-9 - relationship(wildcard, wildcard)
-
-
-
-
-
+1 - BOOLEAN relationship(literal, literal)
+stmt s;
+Select BOOLEAN such that Parent(4, 5)
+TRUE
+5000
+2 - ELEM relationship(synonym, literal)
+stmt s;
+Select s such that Parent(s, 11)
+8
+5000
+3 - BOOLEAN relationship(wildcard, literal)
+stmt s;
+Select BOOLEAN such that Parent(_, 8)
+FALSE
+5000
+4 - TUPLE relationship(literal, synonym)
+stmt s;
+Select <s> such that Parent(11, s)
+12, 15
+5000
+5 - TUPLE relationship(synonym, synonym)
+stmt s, z;
+Select <s, z> such that Parent(z, s)
+3 2, 4 2, 5 4, 6 4, 7 4, 9 8, 10 8, 11 8, 12 11, 15 11, 13 12, 14 13, 16 15, 17 15
+5000
+6 - ELEM relationship(wildcard, synonym)
+stmt s;
+Select s such that Parent(_, s)
+3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+7 - BOOLEAN relationship(literal, wildcard)
+stmt s;
+Select BOOLEAN such that Parent(14, _)
+FALSE
+5000
+8 - TUPLE relationship(synonym, wildcard)
+stmt s;
+Select <s> such that Parent(s, _)
+2, 4, 8, 11, 12, 13, 15
+5000
+9 - TUPLE relationship(wildcard, wildcard)
+stmt s;
+Select <s> such that Parent(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000

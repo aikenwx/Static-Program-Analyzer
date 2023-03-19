@@ -8,8 +8,8 @@ jobs:
       matrix:
         platform: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
-        std: [17]
         toolchain: [msvc, clang, gcc]
+        std: [17]
         include:
           - toolchain: msvc
             cc: cl

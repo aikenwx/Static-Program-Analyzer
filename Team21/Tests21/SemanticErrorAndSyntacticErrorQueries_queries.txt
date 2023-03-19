@@ -1,5 +1,3 @@
-Danh add any test cases that you think are missing here and applicable for milestone 2
-
 1 - relationship(literal, literal) pattern(literal, int)
 assign a;
 Select a such that Follows*(1, 4) pattern a("a", 2)

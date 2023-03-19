@@ -15,16 +15,18 @@
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
 struct RelationshipDoubleSynonymKey : public StorageKey {
-   private:
-    const RelationshipType *relationshipType;
-    const EntityType *leftHandEntityType;
-    const EntityType *rightHandEntityType;
+ private:
+  const RelationshipType *relationshipType;
+  const EntityType *leftHandEntityType;
+  const EntityType *rightHandEntityType;
 
-   public:
-    RelationshipDoubleSynonymKey(const RelationshipType *relationshipType, const EntityType *leftHandEntityType, const EntityType *rightHandEntityType);
-    auto operator==(
-        const RelationshipDoubleSynonymKey &otherRelationshipSynonymKey) const
-        -> bool;
+ public:
+  RelationshipDoubleSynonymKey(const RelationshipType *relationshipType,
+                               const EntityType *leftHandEntityType,
+                               const EntityType *rightHandEntityType);
+  auto operator==(
+      const RelationshipDoubleSynonymKey &otherRelationshipSynonymKey) const
+      -> bool;
 };
 
 template <>
@@ -34,15 +36,17 @@ struct std::hash<RelationshipDoubleSynonymKey> {
 };
 
 struct RelationshipSynonymLiteralKey : public StorageKey {
-   private:
-    const RelationshipType *relationshipType;
-    const EntityType *leftHandEntityType;
-    EntityKey *rightHandEntityKey;
+ private:
+  const RelationshipType *relationshipType;
+  const EntityType *leftHandEntityType;
+  EntityKey *rightHandEntityKey;
 
-   public:
-    RelationshipSynonymLiteralKey(const RelationshipType *relationshipType, const EntityType *entityType, EntityKey *entityKey);
-    auto operator==(const RelationshipSynonymLiteralKey
-                        &otherRelationshipLiteralSynonymKey) const -> bool;
+ public:
+  RelationshipSynonymLiteralKey(const RelationshipType *relationshipType,
+                                const EntityType *entityType,
+                                EntityKey *entityKey);
+  auto operator==(const RelationshipSynonymLiteralKey
+                      &otherRelationshipLiteralSynonymKey) const -> bool;
 };
 
 template <>
@@ -53,15 +57,17 @@ struct std::hash<RelationshipSynonymLiteralKey> {
 };
 
 struct RelationshipLiteralSynonymKey : public StorageKey {
-   private:
-    const RelationshipType *relationshipType;
-    EntityKey *leftHandEntityKey;
-    const EntityType *rightHandEntityType;
+ private:
+  const RelationshipType *relationshipType;
+  EntityKey *leftHandEntityKey;
+  const EntityType *rightHandEntityType;
 
-   public:
-    RelationshipLiteralSynonymKey(const RelationshipType *relationshipType, EntityKey *entityKey, const EntityType *entityType);
-    auto operator==(const RelationshipLiteralSynonymKey
-                        &otherRelationshipLiteralSynonymKey) const -> bool;
+ public:
+  RelationshipLiteralSynonymKey(const RelationshipType *relationshipType,
+                                EntityKey *entityKey,
+                                const EntityType *entityType);
+  auto operator==(const RelationshipLiteralSynonymKey
+                      &otherRelationshipLiteralSynonymKey) const -> bool;
 };
 
 template <>
@@ -72,48 +78,64 @@ struct std::hash<RelationshipLiteralSynonymKey> {
 };
 
 class RelationshipManager {
-   private:
-    std::unordered_map<RelationshipDoubleSynonymKey, std::shared_ptr<std::vector<Relationship *>>> relationshipDoubleSynonymStore;
+ private:
+  std::unordered_map<RelationshipDoubleSynonymKey,
+                     std::shared_ptr<std::vector<Relationship *>>>
+      relationshipDoubleSynonymStore;
 
-    std::unordered_map<RelationshipSynonymLiteralKey, std::shared_ptr<std::vector<Entity *>>> relationshipSynonymLiteralStore;
+  std::unordered_map<RelationshipSynonymLiteralKey,
+                     std::shared_ptr<std::vector<Entity *>>>
+      relationshipSynonymLiteralStore;
 
-    std::unordered_map<RelationshipSynonymLiteralKey, std::shared_ptr<std::vector<Entity *>>> relationshipSynonymLiteralVectorStore;
+  std::unordered_map<RelationshipSynonymLiteralKey,
+                     std::shared_ptr<std::vector<Entity *>>>
+      relationshipSynonymLiteralVectorStore;
 
-    std::unordered_map<RelationshipLiteralSynonymKey, std::shared_ptr<std::vector<Entity *>>> relationshipLiteralSynonymStore;
+  std::unordered_map<RelationshipLiteralSynonymKey,
+                     std::shared_ptr<std::vector<Entity *>>>
+      relationshipLiteralSynonymStore;
 
-    std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>> relationshipStore;
+  std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
+      relationshipStore;
 
-   public:
-    RelationshipManager();
+  std::vector<Relationship *> emptyDoubleSynonymVector;
 
-    void storeRelationship(const std::shared_ptr<Relationship>& relationship);
+  std::vector<Entity *> emptyEntityVector;
 
-    auto getRelationship(RelationshipKey &key) -> Relationship *;
+ public:
+  RelationshipManager();
 
-    auto getRelationshipsByTypes(const RelationshipType &relationshipType,
-                                 const EntityType &leftHandEntityType,
-                                 const EntityType &rightHandEntityType)
-        -> std::vector<Relationship *> *;
+  void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
-    auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-        EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
-    auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-        RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-        const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+  auto getRelationship(RelationshipKey &key) -> Relationship *;
 
-   private:
-    void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
+  auto getRelationshipsByTypes(const RelationshipType &relationshipType,
+                               const EntityType &leftHandEntityType,
+                               const EntityType &rightHandEntityType)
+      -> std::vector<Relationship *> *;
 
-    void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
+  auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
+      RelationshipType &relationshipType, const EntityType &leftHandEntityType,
+      EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
+  auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
+      RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
-    void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
+ private:
+  void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
 
-    void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(RelationshipDoubleSynonymKey relationshipSynonymKey);
+  void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
 
-    void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);
+  void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
 
-    void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(RelationshipSynonymLiteralKey relationshipSynonymLiteralKey);
+  void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+      RelationshipDoubleSynonymKey relationshipSynonymKey);
+
+  void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
+      RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);
+
+  void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
+      RelationshipSynonymLiteralKey relationshipSynonymLiteralKey);
 };
 
 #endif  // SPA_RELATIONSHIPMANAGER_H

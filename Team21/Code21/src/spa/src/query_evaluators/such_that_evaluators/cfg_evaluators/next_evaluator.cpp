@@ -50,7 +50,9 @@ class NextVisitor {
   }
 
   auto operator()(Synonym src, Synonym dest) -> ClauseResult {
-    if(src == dest) return false;
+    if(src == dest) {
+      return false;
+    }
     auto src_entity_type = GetEntityType(src, declarations_);
     const auto *src_entities = pkb_.getEntitiesByType(src_entity_type);
     auto dest_entity_type = GetEntityType(dest, declarations_);

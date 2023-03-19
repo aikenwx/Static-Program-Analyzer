@@ -116,7 +116,7 @@ Select w such that Parent*(w, i) pattern i(_,_,_)
 24 - relationship(wildcard, synonym) and if(synonym)
 while w; if i; stmt s1, s2; variable v;
 Select <i, v> such that Parent*(_, i) pattern i(v,_,_)
-7 i, 7 x, 20 i, 20 x
+7 i, 20 x
 5000
 25 - relationship(literal, wildcard) and if(literal)
 while w; if i; stmt s1, s2;

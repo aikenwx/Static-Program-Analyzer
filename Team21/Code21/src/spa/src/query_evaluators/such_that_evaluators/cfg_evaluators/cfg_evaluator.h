@@ -124,7 +124,7 @@ class ReachableEntityFinder {
   DestPredicate include_dest_;
   ProcessRow process_row_;
   QueryFacade &pkb_;
-  
+
   void ReachableEntities(Entity *entity, cfg::CFG &cfg) {
     int src = GetStmtNo(entity);
     auto opt_block = cfg.GetBlockAt(src);
@@ -213,5 +213,4 @@ auto Reachable(int src, int dest, QueryFacade &pkb) -> bool {
                         pkb)();
   return found;
 }
-
 }  // namespace qps

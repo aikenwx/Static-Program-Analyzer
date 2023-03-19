@@ -19,7 +19,11 @@ public:
 
     auto varExtractor = VariableExtractor();
     node->GetCondition()->AcceptVisitor(varExtractor, depth);
-    condVars_[node->GetStatementNumber()] = varExtractor.vars();
+    auto vars = varExtractor.vars();
+
+    if (!vars.empty()) {
+      condVars_[node->GetStatementNumber()] = vars;
+    }
   }
 
   [[nodiscard]] auto condVars() const

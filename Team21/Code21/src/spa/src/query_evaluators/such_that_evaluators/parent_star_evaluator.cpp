@@ -9,10 +9,10 @@ std::vector<::Relationship *> ParentStarEvaluator::CallPkb(QueryFacade &pkb, Ent
 }
 
 std::vector<EntityType> ParentStarEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  return {EntityType::WHILE_STATEMENT, EntityType::IF_STATEMENT};
+  return {WhileStatement::getEntityTypeStatic(), IfStatement::getEntityTypeStatic()};
 }
 
 std::vector<EntityType> ParentStarEvaluator::GetRightHandTypes(Ref &right_arg) {
-  return {EntityType::STATEMENT};
+  return {Statement::getEntityTypeStatic()};
 }
 } // qps

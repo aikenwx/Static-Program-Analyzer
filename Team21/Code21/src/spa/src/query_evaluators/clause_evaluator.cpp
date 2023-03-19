@@ -3,18 +3,28 @@
 namespace qps {
 
 EntityType ClauseEvaluator::DesignEntityToEntityType(DesignEntity entity) {
-  switch (entity) {
-    case DesignEntity::STMT:return EntityType::STATEMENT;
-    case DesignEntity::READ:return EntityType::READ_STATEMENT;
-    case DesignEntity::PRINT:return EntityType::PRINT_STATEMENT;
-    case DesignEntity::CALL:return EntityType::CALL_STATEMENT;
-    case DesignEntity::WHILE:return EntityType::WHILE_STATEMENT;
-    case DesignEntity::IF:return EntityType::IF_STATEMENT;
-    case DesignEntity::ASSIGN:return EntityType::ASSIGN_STATEMENT;
-    case DesignEntity::VARIABLE:return EntityType::VARIABLE;
-    case DesignEntity::CONSTANT:return EntityType::CONSTANT;
-    case DesignEntity::PROCEDURE:return EntityType::PROCEDURE;
-  }
+    switch (entity) {
+        case DesignEntity::STMT:
+            return Statement::getEntityTypeStatic();
+        case DesignEntity::READ:
+            return ReadStatement::getEntityTypeStatic();
+        case DesignEntity::PRINT:
+            return PrintStatement::getEntityTypeStatic();
+        case DesignEntity::CALL:
+            return CallStatement::getEntityTypeStatic();
+        case DesignEntity::WHILE:
+            return WhileStatement::getEntityTypeStatic();
+        case DesignEntity::IF:
+            return IfStatement::getEntityTypeStatic();
+        case DesignEntity::ASSIGN:
+            return AssignStatement::getEntityTypeStatic();
+        case DesignEntity::VARIABLE:
+            return Variable::getEntityTypeStatic();
+        case DesignEntity::CONSTANT:
+            return Constant::getEntityTypeStatic();
+        case DesignEntity::PROCEDURE:
+            return Procedure::getEntityTypeStatic();
+    }
 }
 
-} // qps
+}  // namespace qps

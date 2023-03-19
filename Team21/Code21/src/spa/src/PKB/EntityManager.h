@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "../PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "../PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -24,39 +23,22 @@
 
 class EntityManager {
    private:
+    std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
     std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToEntityStore;
-    std::unordered_map<int, std::shared_ptr<Statement>> statementNumberToStatementStore;
-    std::unordered_map<std::string, std::shared_ptr<Variable>> variableNameToVariableStore;
-    std::unordered_map<std::string, std::shared_ptr<Procedure>> procedureNameToProcedureStore;
-    std::unordered_map<int, std::shared_ptr<Constant>> constantValueToConstantStore;
 
    public:
     EntityManager();
 
-    ~EntityManager();
+    void storeEntity(const std::shared_ptr<Entity>& entity);
 
-    void storeConstant(std::shared_ptr<Constant> constant);
-    void storeVariable(std::shared_ptr<Variable> variable);
-    void storeProcedure(std::shared_ptr<Procedure> procedure);
-    void storeStatement(std::shared_ptr<Statement> statement);
+    auto getEntity(EntityKey& key) -> Entity*;
 
-    std::vector<Entity*>* getEntitiesByType(EntityType entityType);
-
-    Statement* getStatementByStatementNumber(int statementNumber);
-    Variable* getVariableByVariableName(std::string variableName);
-    Procedure* getProcedureByProcedureName(std::string procedureName);
-    Constant* getConstantByConstantValue(int constantValue);
+    auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
    private:
-    void storeInEntityTypeToEntityStore(Entity* entity);
+    void storeInEntityTypeStore(Entity* entity);
 
-    void initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType entityType);
-
-    std::vector<Entity*>* getAllStatements();
-
-    template <typename T, typename S>
-
-    bool checkIfEntityIsDuplicate(T hash, std::unordered_map<T, S>* entityStore);
+    void initialiseVectorForEntityTypeStoreIfIndexNotExist(const EntityType& entityType);
 };
 
 #endif  // SPA_ENTITYMANAGER_H

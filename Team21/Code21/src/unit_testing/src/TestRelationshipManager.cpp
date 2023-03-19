@@ -729,40 +729,7 @@ TEST_CASE("Can retrieve relationship by literal values") {
     relationshipManager->storeRelationship(relationship9);
     relationshipManager->storeRelationship(relationship10);
     relationshipManager->storeRelationship(relationship11);
-
-    //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship.get(),
-    //                                                            relationshipManager->getRelationshipIfExist(
-    //                                                                relationship.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship2.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship2.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship3.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship3.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship4.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship4.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship5.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship5.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship6.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship6.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship7.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship7.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship9.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship9.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship10.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship10.get())));
-    // REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(relationship11.get(),
-    //                                                        relationshipManager->getRelationshipIfExist(
-    //                                                            relationship11.get())));
-    // print hi
-
-    //std::cout << "hi" << std::endl;
+    
     auto relationshipKey1 = RelationshipKey(&relationship->getRelationshipType(), &relationship->getLeftHandEntity()->getEntityKey(),
                                             &relationship->getRightHandEntity()->getEntityKey());
 

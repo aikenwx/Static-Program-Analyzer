@@ -95,6 +95,15 @@ auto HasPrev(cfg::CFG &cfg, T stmt) -> bool {
   return !DirectNeighbors<ReverseBlockIterator>(cfg, stmt).empty();
 }
 
+/* This class is smth like a functor to encapsulate the graph search.
+ * It takes in a list of srcs we want to start the search of the cfg from
+ * templated because it takes in certain functions that allow reuse of the
+ * core graph search while adding some customisation pts.
+ * Takes in a Blockiterator (so that the same graph search can be done in forward or reverse).
+ * Takes in a DestPredicate which tells us if we want to include an entity as our destination
+ * Takes in a ProcessRow function which basically can decide what to do with a relationship once found.
+ * This function is customised below by giving some default values for the templates for common use cases.
+*/
 template<typename DestPredicate, typename BlockIterator, typename ProcessRow>
 class ReachableEntityFinder {
  public:

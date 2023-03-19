@@ -133,4 +133,3 @@ while w; if i; stmt s1, s2; call c; variable v;
 Select v such that Parent*(_, _) pattern i(v,_,_)
 i, x, y
 5000
-

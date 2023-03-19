@@ -43,8 +43,3 @@ call c;
 Select <c> such that Follows*(_, _)
 17
 5000
-
-
-
-
-

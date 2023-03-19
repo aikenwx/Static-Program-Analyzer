@@ -30,7 +30,7 @@ Select <i, a> such that Parent*(_, i) pattern a(_, "x+i")
 5000
 7 - relationship(literal, wildcard) and assign(synonym, wildcard)
 while w; if i; stmt s1, s2; assign a; variable v;
-Select v such that Parent*(9, _) and pattern a(v,_)
+Select v such that Parent*(9, _) pattern a(v,_)
 x, y, z, i, a, b
 5000
 8 - relationship(synonym, wildcard) and assign(synonym, sub_expr)

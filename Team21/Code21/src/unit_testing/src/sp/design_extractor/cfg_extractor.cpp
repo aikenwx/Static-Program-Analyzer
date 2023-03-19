@@ -306,7 +306,7 @@ SCENARIO(
     "CFGExtractor can handle procedures containing one container statement "
     "with non-container statements surrounding it",
     "[sp][sp/design_extractor][sp/design_extractor/cfg_extractor]") {
-  GIVEN("A simple program with one procedure") {
+  GIVEN("A simple program with one procedure and one if-block") {
     std::string program = R"(
       procedure main {
         a = 1;
@@ -430,6 +430,109 @@ SCENARIO(
 
         REQUIRE(elseBlock->children().size() == 1);
         REQUIRE(elseBlock->children().at(0).lock() == stmtBlock2);
+
+        REQUIRE(stmtBlock2->children().empty());
+      }
+    }
+  }
+
+  GIVEN("A simple program with one procedure and one while-block") {
+    std::string program = R"(
+      procedure main {
+        a = 3;
+        while (a > 1) {
+          a = a + 1;
+          a = a / 2;
+        }
+        print a;
+      })";
+
+    auto programNode = ProgramStringToProgramNode(program);
+
+    WHEN("The CFGExtractor is run on the program") {
+      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
+      programNode->AcceptVisitor(programNode, extractor, 0);
+      auto cfg = extractor->cfg();
+
+      THEN("The CFGExtractor should have extracted a CFG with 4 blocks") {
+        REQUIRE(cfg->Size() == 4);
+      }
+
+      THEN(
+          "The correct blocks are returned with GetBlockAt() for any valid "
+          "statement number") {
+        // for dupe check
+        std::unordered_set<std::shared_ptr<cfg::Block>> blocks;
+
+        auto stmtBlock1 = cfg->GetBlockAt(1);
+        REQUIRE(stmtBlock1.has_value());
+        blocks.insert(stmtBlock1.value());
+
+        auto condBlock = cfg->GetBlockAt(2);
+        REQUIRE(condBlock.has_value());
+        blocks.insert(condBlock.value());
+
+        auto thenBlock = cfg->GetBlockAt(3);
+        REQUIRE(thenBlock.has_value());
+        blocks.insert(thenBlock.value());
+
+        auto stmtBlock2 = cfg->GetBlockAt(5);
+        REQUIRE(stmtBlock2.has_value());
+        blocks.insert(stmtBlock2.value());
+
+        REQUIRE(blocks.size() == 4);
+
+        // just in case
+        blocks.insert(stmtBlock2.value());
+        REQUIRE(blocks.size() == 4);
+
+        REQUIRE(cfg->GetBlockAt(4) == thenBlock);
+      }
+
+      // at this point we should've validated that the blocks exist
+      auto stmtBlock1 = cfg->GetBlockAt(1).value();
+      auto condBlock = cfg->GetBlockAt(2).value();
+      auto thenBlock = cfg->GetBlockAt(3).value();
+      auto stmtBlock2 = cfg->GetBlockAt(5).value();
+
+      THEN("The blocks have the correct start and end statement numbers") {
+        REQUIRE(stmtBlock1->start() == 1);
+        REQUIRE(stmtBlock1->end() == 1);
+
+        REQUIRE(condBlock->start() == 2);
+        REQUIRE(condBlock->end() == 2);
+
+        REQUIRE(thenBlock->start() == 3);
+        REQUIRE(thenBlock->end() == 4);
+
+        REQUIRE(stmtBlock2->start() == 5);
+        REQUIRE(stmtBlock2->end() == 5);
+      }
+
+      THEN("The blocks have the correct parent relationships") {
+        REQUIRE(stmtBlock1->parents().empty());
+
+        REQUIRE(condBlock->parents().size() == 2);
+        REQUIRE(condBlock->parents().at(0).lock() == stmtBlock1);
+        REQUIRE(condBlock->parents().at(1).lock() == thenBlock);
+
+        REQUIRE(thenBlock->parents().size() == 1);
+        REQUIRE(thenBlock->parents().at(0).lock() == condBlock);
+
+        REQUIRE(stmtBlock2->parents().size() == 1);
+        REQUIRE(stmtBlock2->parents().at(0).lock() == condBlock);
+      }
+
+      THEN("The blocks have the correct child relationships") {
+        REQUIRE(stmtBlock1->children().size() == 1);
+        REQUIRE(stmtBlock1->children().at(0).lock() == condBlock);
+
+        REQUIRE(condBlock->children().size() == 2);
+        REQUIRE(condBlock->children().at(0).lock() == thenBlock);
+        REQUIRE(condBlock->children().at(1).lock() == stmtBlock2);
+
+        REQUIRE(thenBlock->children().size() == 1);
+        REQUIRE(thenBlock->children().at(0).lock() == condBlock);
 
         REQUIRE(stmtBlock2->children().empty());
       }

@@ -12,10 +12,13 @@ jobs:
         toolchain: []
         include:
           - toolchain: msvc
+            cc: cl
             cxx: cl
           - toolchain: gcc
+            cc: gcc
             cxx: g++
           - toolchain: clang
+            cc: clang
             cxx: clang++
           - platform: ubuntu-latest
             toolchain: [clang, gcc]
@@ -60,6 +63,7 @@ jobs:
       - name: Configure build
         working-directory: ${{github.workspace}}/Team21/Code21
         env:
+          CC: ${{matrix.cc}}
           CXX: ${{matrix.cxx}}
           CXXFLAGS: ${{matrix.cxxflags}}
         # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.

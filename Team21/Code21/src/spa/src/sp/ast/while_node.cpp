@@ -10,16 +10,16 @@ WhileNode::WhileNode(std::shared_ptr<INode> condition,
   IncrementStatementNumber(1);
 }
 
-auto WhileNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
+auto WhileNode::GetCondition() const -> std::shared_ptr<INode> { return condition; }
 
-auto WhileNode::GetBody() -> std::shared_ptr<StatementListNode> { return body; }
+auto WhileNode::GetBody() const -> std::shared_ptr<StatementListNode> { return body; }
 
 auto WhileNode::ToString() const -> std::string {
   return "while:\n{\ncondition:" + condition->ToString() +
          "body:" + body->ToString() + "}\n";
 }
 
-auto WhileNode::GetEndStatementNumber() -> int {
+auto WhileNode::GetEndStatementNumber() const -> int {
   return body->GetEndStatementNumber();
 }
 

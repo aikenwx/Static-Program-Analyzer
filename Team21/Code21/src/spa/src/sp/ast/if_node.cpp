@@ -12,18 +12,18 @@ IfNode::IfNode(std::shared_ptr<INode> condition,
   IncrementStatementNumber(1);
 }
 
-auto IfNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
+auto IfNode::GetCondition() const -> std::shared_ptr<INode> { return condition; }
 
-auto IfNode::GetThen() -> std::shared_ptr<StatementListNode> { return then; }
+auto IfNode::GetThen() const -> std::shared_ptr<StatementListNode> { return then; }
 
-auto IfNode::GetElse() -> std::shared_ptr<StatementListNode> { return els; }
+auto IfNode::GetElse() const -> std::shared_ptr<StatementListNode> { return els; }
 
 auto IfNode::ToString() const -> std::string {
   return "if:\n{\ncondition:" + condition->ToString() +
          "then:" + then->ToString() + "else:" + els->ToString() + "}\n";
 }
 
-auto IfNode::GetEndStatementNumber() -> int {
+auto IfNode::GetEndStatementNumber() const -> int {
   return els->GetEndStatementNumber();
 }
 

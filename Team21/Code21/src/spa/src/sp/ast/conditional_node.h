@@ -6,6 +6,6 @@
 namespace ast {
 class ConditionalNode : public ContainerStatementNode {
 public:
-  virtual auto GetCondition() -> std::shared_ptr<INode> = 0;
+  [[nodiscard]] virtual auto GetCondition() const -> std::shared_ptr<INode> = 0;
 };
 } // namespace ast

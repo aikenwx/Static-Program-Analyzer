@@ -14,7 +14,7 @@ procedure main {
         print x;
         read y;
       } 
-      ƒ(g == 1) then {
+      if (g == 1) then {
         read f;
       } else {
         print h;

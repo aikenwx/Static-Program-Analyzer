@@ -1,41 +1,41 @@
 procedure main {
-  read x;                    1
-  read y;                    2
-  print x;                   3
-  z = x + y + 1;             4
-  x = z + 1;                 5
-  y = x + 1;                 6
+  read x;
+  read y;
+  print x;
+  z = x + y + 1;
+  x = z + 1;
+  y = x + 1;
 
-  while (x < 10) {           7
-    print x;                 8
-    x = x + 1;               9
+  while (x < 10) {
+    print x;
+    x = x + 1;
   }
 
-  if (x < 10) then {         10
-    print x;                 11
-    while (1 == 1) {         12
-      read x;                13
-      print x;               14
+  if (x < 10) then {
+    print x;
+    while (1 == 1) {
+      read x;
+      print x;
     }
-    a = 1;                   15
+    a = 1;
   } else {
-    print y;                 16
+    print y;
   }
-  call funcY;                17
+  call funcY;
 }
 
 procedure funcY {
-  print y;                   18
+  print y;
   
-  a = x + 1;                 19
-  b = a + 1;                 20
+  a = x + 1;
+  b = a + 1;
 
-  if (a * b < x / 5) then {  21
-    print a;                 22
-    read x;                  23
-    read y;                  24
+  if (a * b < x / 5) then {
+    print a;
+    read x;
+    read y;
   } else {
-    print b;                 25
+    print b;
   }
-  read x;                    26
+  read x;
 }

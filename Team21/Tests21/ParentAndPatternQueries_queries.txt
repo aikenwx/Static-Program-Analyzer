@@ -11,7 +11,7 @@ Select <a> such that Parent(18, 20) pattern a("y", _"x"_)
 3 - ELEM relationship(literal, literal) assignPattern(literal, wildcard)
 assign a;
 Select a such that Parent(20, 2) pattern a("y", _)
-None
+none
 5000
 4 - TUPLE relationship(literal, literal) assignPattern(synonym, literal)
 assign a; variable vegatable;
@@ -41,7 +41,7 @@ Select <a, c> such that Parent(6, 11) pattern a(_, _"x"_)
 9 - TUPLE relationship(literal, literal) assignPattern(wildcard, wildcard)
 assign a;
 Select <a> such that Parent(23, 25) pattern a(_, _)
-None
+none
 5000
 10 - TUPLE relationship(literal, literal) whilePattern(synonym, wildcard)
 while w; variable v;
@@ -101,7 +101,7 @@ Select <a, c> such that Parent(3, a) pattern a(_, "x + 1")
 21 - TUPLE relationship(literal, synonym) assignPattern(wildcard, subexpression)
 assign a; call c; variable v; stmt s;
 Select <a, c, v, s> such that Parent(3, a) pattern a(_, _"2"_)
-None
+none
 5000
 22 - TUPLE relationship(literal, synonym) assignPattern(wildcard, wildcard)
 assign a;
@@ -131,7 +131,7 @@ Select <i> such that Parent(6, i) pattern i(_, _, _)
 27 - TUPLE relationship(synonym, literal) assignPattern(literal, literal)
 assign a; variable v;
 Select <a, v> such that Parent(a, 4) pattern a("x", "x + 1")
-None
+none
 5000
 28 - TUPLE relationship(synonym, literal) assignPattern(literal, subexpression)
 assign a; if i;
@@ -146,7 +146,7 @@ Select <w, v> such that Parent(w, 9) pattern w(v, _)
 37 - ELEM relationship(synonym, literal) whilePattern(wildcard, wildcard)
 while w;
 Select w such that Parent(w, 20) pattern w(_, _)
-None
+none
 5000
 38 - TUPLE relationship(synonym, literal) ifPattern(synonym, wildcard, wildcard)
 if i; variable v;

@@ -5,13 +5,13 @@ TRUE
 5000
 2 - TUPLE relationship(literal, literal) assignPattern(literal, subexpression)
 assign a;
-Select <a> such that Next(1, 2) pattern a("x", _"y_)
+Select <a> such that Next(1, 2) pattern a("x", _"y"_)
 5, 20
 5000
 3 - ELEM relationship(literal, literal) assignPattern(literal, wildcard)
 assign a;
 Select a such that Next(3, 4) pattern a("x", _)
-None
+none
 5000
 4 - TUPLE relationship(literal, literal) assignPattern(synonym, literal)
 assign a; variable v;
@@ -106,7 +106,7 @@ Select <abc, var, con> such that Next(21, abc) pattern abc(_, "z + 1")
 21 - TUPLE relationship(literal, synonym) assignPattern(wildcard, subexpression)
 assign a; variable v;
 Select <a, v> such that Next(17, a) pattern a(_, _"y"_)
-None
+none
 5000
 22 - TUPLE relationship(literal, synonym) assignPattern(wildcard, wildcard)
 assign a; variable v;
@@ -196,7 +196,7 @@ Select <i, v> such that Next(i, 20) pattern i(v, _, _)
 39 - ELEM relationship(synonym, literal) ifPattern(wildcard, wildcard, wildcard)
 if i; variable v;
 Select i such that Next(i, 8) pattern i(_, _, _)
-None
+none
 5000
 40 - TUPLE relationship(synonym, synonym) assignPattern(literal, literal)
 assign a; while w; assign a1;

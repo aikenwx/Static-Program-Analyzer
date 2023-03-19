@@ -125,3 +125,10 @@ TEST_CASE("Tokenizer: stmt#") {
 		"a", ".", "stmt#", "such", "that", "Modifies", "(", "p", ",", "u", ")", "pattern", "a", "(", "\"", "y", "\"", ",", "_", ")"};
 	REQUIRE(tokens == correct_tokens);
 }
+
+TEST_CASE("Tokenizer: missing ending double quote") {
+	qps::QueryTokenizer tokenizer("Select <a>  pattern a(\"x\", _\"y_)");
+	std::vector<std::string> tokens = tokenizer.tokenize();
+	std::vector<std::string> correct_tokens{ "Select", "<", "a", ">", "pattern", "a", "(", "\"", "x", "\"", ",", "_", "\"", "y_)" };
+	REQUIRE(tokens == correct_tokens);
+}

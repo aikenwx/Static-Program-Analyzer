@@ -11,18 +11,18 @@ IfNode::IfNode(std::shared_ptr<INode> condition,
   IncrementStatementNumber(1);
 }
 
-auto IfNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
+auto IfNode::GetCondition() const -> std::shared_ptr<INode> { return condition; }
 
-auto IfNode::GetThen() -> std::shared_ptr<StatementListNode> { return then; }
+auto IfNode::GetThen() const -> std::shared_ptr<StatementListNode> { return then; }
 
-auto IfNode::GetElse() -> std::shared_ptr<StatementListNode> { return els; }
+auto IfNode::GetElse() const -> std::shared_ptr<StatementListNode> { return els; }
 
 auto IfNode::ToString() const -> std::string {
   return "if:\n{\ncondition:" + condition->ToString() +
          "then:" + then->ToString() + "else:" + els->ToString() + "}\n";
 }
 
-auto IfNode::GetEndStatementNumber() -> int {
+auto IfNode::GetEndStatementNumber() const -> int {
   return els->GetEndStatementNumber();
 }
 
@@ -33,9 +33,10 @@ void IfNode::IncrementStatementNumber(int value) {
 }
 
 void IfNode::AcceptVisitor(design_extractor::Extractor &extractor, int depth) {
-  auto currentNode = shared_from_this();
-  extractor.HandleStatementNode(
-      std::static_pointer_cast<StatementNode>(currentNode), depth);
+  extractor.HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
+                                 depth);
+  extractor.HandleConditionalNode(std::static_pointer_cast<ConditionalNode>(currentNode),
+                                   depth);
   extractor.HandleIfNode(std::static_pointer_cast<IfNode>(currentNode), depth);
 
   condition->AcceptVisitor(extractor, depth + 1);

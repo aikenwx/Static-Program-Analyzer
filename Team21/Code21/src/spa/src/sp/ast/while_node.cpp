@@ -1,5 +1,7 @@
 #include "while_node.h"
+#include "sp/ast/conditional_node.h"
 
+#include <memory>
 #include <utility>
 
 namespace ast {
@@ -9,16 +11,16 @@ WhileNode::WhileNode(std::shared_ptr<INode> condition,
   IncrementStatementNumber(1);
 }
 
-auto WhileNode::GetCondition() -> std::shared_ptr<INode> { return condition; }
+auto WhileNode::GetCondition() const -> std::shared_ptr<INode> { return condition; }
 
-auto WhileNode::GetBody() -> std::shared_ptr<StatementListNode> { return body; }
+auto WhileNode::GetBody() const -> std::shared_ptr<StatementListNode> { return body; }
 
 auto WhileNode::ToString() const -> std::string {
   return "while:\n{\ncondition:" + condition->ToString() +
          "body:" + body->ToString() + "}\n";
 }
 
-auto WhileNode::GetEndStatementNumber() -> int {
+auto WhileNode::GetEndStatementNumber() const -> int {
   return body->GetEndStatementNumber();
 }
 
@@ -32,8 +34,10 @@ void WhileNode::AcceptVisitor(design_extractor::Extractor &extractor,
   auto currentNode = shared_from_this();
   extractor.HandleStatementNode(
       std::static_pointer_cast<StatementNode>(currentNode), depth);
+  extractor.HandleConditionalNode(
+      std::static_pointer_cast<ConditionalNode>(currentNode), depth);
   extractor.HandleWhileNode(std::static_pointer_cast<WhileNode>(currentNode),
-                            depth);
+                             depth);
 
   condition->AcceptVisitor(extractor, depth + 1);
   body->AcceptVisitor(extractor, depth + 1);

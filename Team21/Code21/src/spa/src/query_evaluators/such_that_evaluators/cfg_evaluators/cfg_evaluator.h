@@ -95,23 +95,6 @@ auto HasPrev(cfg::CFG &cfg, T stmt) -> bool {
   return !DirectNeighbors<ReverseBlockIterator>(cfg, stmt).empty();
 }
 
-template<typename BlockIterator, typename DestPredicate>
-auto GetEntitiesFromBlock(int src_stmt,
-                          std::shared_ptr<cfg::Block> &block,
-                          BlockIterator iterator,
-                          DestPredicate include_dest,
-                          QueryFacade &pkb) -> std::vector<Entity *> {
-  std::vector<Entity *> entities;
-  int end = iterator.NextStmt(iterator.BlockEnd(block));
-  for (int stmt = src_stmt; stmt != end; stmt = iterator.NextStmt(stmt)) {
-    auto *statement = GetStatement(stmt, pkb);
-    if (include_dest(statement)) {
-      entities.push_back(statement);
-    }
-  }
-  return entities;
-}
-
 template<typename DestPredicate, typename BlockIterator, typename ProcessRow>
 class ReachableEntityFinder {
  public:

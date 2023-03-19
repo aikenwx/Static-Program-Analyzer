@@ -59,7 +59,7 @@ auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // References statement node
       std::shared_ptr<ast::StatementNode> sta =
           std::static_pointer_cast<ast::StatementNode>(stack->back());
-      sta->SetStatementNumber(sl->GetStartStatementNumber() - 1);
+      sta->SetStatementNumber(lis->GetStartStatementNumber() - 1);
       // Pops statement node
       stack->pop_back();
       // Adds statement to statement list node

@@ -7,8 +7,8 @@
 #include <memory>
 
 RelationshipDoubleSynonymKey::RelationshipDoubleSynonymKey(
-        const RelationshipType *relationshipType, const EntityType *leftHandEntityType,
-        const EntityType *rightHandEntityType)
+    const RelationshipType *relationshipType,
+    const EntityType *leftHandEntityType, const EntityType *rightHandEntityType)
     : StorageKey(relationshipType->getKey() ^ leftHandEntityType->getKey() ^
                  rightHandEntityType->getKey()),
       relationshipType(relationshipType),
@@ -33,8 +33,8 @@ auto std::hash<RelationshipDoubleSynonymKey>::operator()(
 }
 
 RelationshipLiteralSynonymKey::RelationshipLiteralSynonymKey(
-        const RelationshipType *relationshipType, EntityKey *entityKey,
-        const EntityType *entityType)
+    const RelationshipType *relationshipType, EntityKey *entityKey,
+    const EntityType *entityType)
     : StorageKey(relationshipType->getKey() ^ entityKey->getKey() ^
                  entityType->getKey()),
       relationshipType(relationshipType),
@@ -59,8 +59,8 @@ auto std::hash<RelationshipLiteralSynonymKey>::operator()(
 }
 
 RelationshipSynonymLiteralKey::RelationshipSynonymLiteralKey(
-        const RelationshipType *relationshipType, const EntityType *entityType,
-        EntityKey *entityKey)
+    const RelationshipType *relationshipType, const EntityType *entityType,
+    EntityKey *entityKey)
     : StorageKey(relationshipType->getKey() ^ entityType->getKey() ^
                  entityKey->getKey()),
       relationshipType(relationshipType),
@@ -116,13 +116,17 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
 }
 
 auto RelationshipManager::getRelationshipsByTypes(
-        const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-        const EntityType &rightHandEntityType) -> std::vector<Relationship *> * {
+    const RelationshipType &relationshipType,
+    const EntityType &leftHandEntityType, const EntityType &rightHandEntityType)
+    -> std::vector<Relationship *> * {
   RelationshipDoubleSynonymKey relationshipSynonymKey =
       RelationshipDoubleSynonymKey(&relationshipType, &leftHandEntityType,
                                    &rightHandEntityType);
-  this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      relationshipSynonymKey);
+
+  if (this->relationshipDoubleSynonymStore.find(relationshipSynonymKey) ==
+      this->relationshipDoubleSynonymStore.end()) {
+    return &this->emptyDoubleSynonymVector;
+  }
 
   return this->relationshipDoubleSynonymStore.at(relationshipSynonymKey).get();
 }
@@ -135,9 +139,11 @@ auto RelationshipManager::
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
       RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
                                     &rightHandEntityKey);
-  this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      relationshipSynonymLiteralKey);
-
+  if (this->relationshipSynonymLiteralStore.find(
+          relationshipSynonymLiteralKey) ==
+      this->relationshipSynonymLiteralStore.end()) {
+    return &this->emptyEntityVector;
+  }
   return this->relationshipSynonymLiteralStore.at(relationshipSynonymLiteralKey)
       .get();
 }
@@ -149,8 +155,12 @@ auto RelationshipManager::
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
-  this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-      relationshipLiteralSynonymKey);
+
+  if (this->relationshipLiteralSynonymStore.find(
+          relationshipLiteralSynonymKey) ==
+      this->relationshipLiteralSynonymStore.end()) {
+    return &this->emptyEntityVector;
+  }
 
   return this->relationshipLiteralSynonymStore.at(relationshipLiteralSynonymKey)
       .get();

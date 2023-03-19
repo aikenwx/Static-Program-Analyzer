@@ -22,23 +22,26 @@
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
 class EntityManager {
-   private:
-    std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
-    std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>> entityTypeToEntityStore;
+ private:
+  std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
+  std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>>
+      entityTypeToEntityStore;
+  std::vector<Entity*> emptyEntityVector;
 
-   public:
-    EntityManager();
+ public:
+  EntityManager();
 
-    void storeEntity(const std::shared_ptr<Entity>& entity);
+  void storeEntity(const std::shared_ptr<Entity>& entity);
 
-    auto getEntity(EntityKey& key) -> Entity*;
+  auto getEntity(EntityKey& key) -> Entity*;
 
-    auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
+  auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
-   private:
-    void storeInEntityTypeStore(Entity* entity);
+ private:
+  void storeInEntityTypeStore(Entity* entity);
 
-    void initialiseVectorForEntityTypeStoreIfIndexNotExist(const EntityType& entityType);
+  void initialiseVectorForEntityTypeStoreIfIndexNotExist(
+      const EntityType& entityType);
 };
 
 #endif  // SPA_ENTITYMANAGER_H

@@ -1,6 +1,6 @@
 procedure main {
   while (x + y < f - 5) {
-    if (x > 5) {
+    if (x > 5) then {
       call f;
     }
     else {                   
@@ -17,7 +17,7 @@ procedure main {
 }
 
 procedure f {
-  if (x > 5) {
+  if (x > 5) then {
     call g;
   }
   else {

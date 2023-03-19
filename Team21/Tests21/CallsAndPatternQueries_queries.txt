@@ -6,7 +6,7 @@ TRUE
 2 - relationship(synonym, literal) and assign(literal, sub_expr)
 while w; if i; stmt s1, s2; assign a; procedure p;
 Select <p, a> such that Calls(p, "nguyen") pattern a("x", _"x"_)
-danh 8, danh 26, duc 8, duc 26 
+danh 8, danh 26, duc 8, duc 26
 5000
 3 - relationship(wildcard, literal) and assign(literal, expr)
 while w; if i; stmt s1, s2; assign a;
@@ -86,7 +86,7 @@ TRUE
 18 - relationship(wildcard, wildcard) and while(synonym)
 while w; if i; stmt s1, s2; call c; variable v;
 Select <i, v> such that Calls(_, _) pattern w(v,_)
-7 z, 7 y, 7 i, 16 z, 16 y, 16 i, 20 z, 20 y, 20 i, 31 z, 31 y, 31 i 
+7 z, 7 y, 7 i, 16 z, 16 y, 16 i, 20 z, 20 y, 20 i, 31 z, 31 y, 31 i
 5000
 19 - relationship(literal, literal) and if(literal)
 while w; if i; stmt s;

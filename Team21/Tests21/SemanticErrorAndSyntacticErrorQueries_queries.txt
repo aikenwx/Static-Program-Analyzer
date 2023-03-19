@@ -179,7 +179,7 @@ Select <w, a> such that Next("a", _)
 SyntaxError
 5000
 36 - Such That Clause: Invalid synonym type in Next
-procedure p; while w; 
+procedure p; while w;
 Select <w, p> such that Next*(p, _)
 SyntaxError
 5000

@@ -61,4 +61,3 @@ procedure e {
 procedure f {
   y =  15;
   z = y * 6; }
-  

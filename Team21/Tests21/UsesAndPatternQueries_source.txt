@@ -13,7 +13,7 @@ procedure main {
         a = z + 1;
         print x;
         read y;
-      } 
+      }
       if (g == 1) then {
         read f;
       } else {

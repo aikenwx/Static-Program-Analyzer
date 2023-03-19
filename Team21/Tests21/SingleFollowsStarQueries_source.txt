@@ -26,7 +26,7 @@ procedure main {
 
 procedure funcY {
   print y;
-  
+
   a = x + 1;
   b = a + 1;
 

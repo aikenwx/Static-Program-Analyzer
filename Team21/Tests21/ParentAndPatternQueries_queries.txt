@@ -1,5 +1,5 @@
 1 - TUPLE relationship(literal, literal) assignPattern(literal, literal)
-assign a; 
+assign a;
 Select <a> such that Parent(11, 13) pattern a("x", "(x) + (1)")
 4, 7, 19, 21, 26
 5000

@@ -4,6 +4,11 @@
 
 namespace parser {
 class RelationalFactorSubparser : public Subparser {
-  bool Parse(std::shared_ptr<Context> context) override;
+public:
+  auto Parse(std::shared_ptr<Context> context) -> bool override;
+
+private:
+  static auto ParsePrimaryCase(const std::shared_ptr<Context> &context) -> bool;
+  static auto ParseSecondaryCase(const std::shared_ptr<Context> &context) -> bool;
 };
-}
+}  // namespace parser

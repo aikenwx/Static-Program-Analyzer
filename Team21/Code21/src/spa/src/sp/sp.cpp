@@ -78,7 +78,10 @@ void PopulateAstEntities(
       std::shared_ptr<rel::CallStmtRelationship> callStmtRel =
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
 
-      popFacade->storeCallStatement(callStmtRel->statementNumber());
+      int stmtNum = callStmtRel->statementNumber();
+      std::string procName = callStmtRel->procedureName();
+      popFacade->storeCallStatement(stmtNum);
+      popFacade->storeCallStatementProcedureName(stmtNum, procName);
     } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       std::shared_ptr<rel::ProcRelationship> procRel =
           std::static_pointer_cast<rel::ProcRelationship>(rel);

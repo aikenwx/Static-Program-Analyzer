@@ -5,7 +5,6 @@
 
 #include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
-#include "sp/parser/simple_parser.h"
 #include "sp/parser/simple_chain_parser.h"
 #include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"

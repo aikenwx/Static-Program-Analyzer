@@ -17,9 +17,9 @@
 #include "util/instance_of.h"
 
 namespace parser {
-bool VariableSubparser::Parse(std::shared_ptr<Context> context) {
+auto VariableSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::AssignToken>()
     || context->IsLookaheadTypeOf<token::SemicolonToken>()
     || context->IsLookaheadTypeOf<token::RightParenToken>()
@@ -34,15 +34,21 @@ bool VariableSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    if (util::instance_of<ast::NameNode>(*i)) {
-      // V <- N
-      std::shared_ptr<ast::NameNode> n = std::static_pointer_cast<ast::NameNode>(stack->back());
+    // A variable is a name
+    if (util::instance_of<ast::NameNode>(*iter)) {
+      // References name node for variable name
+      std::shared_ptr<ast::NameNode> nam =
+          std::static_pointer_cast<ast::NameNode>(stack->back());
+      // Pops name node
       stack->pop_back();
-      std::shared_ptr<ast::VariableNode> v = std::make_shared<ast::VariableNode>(n->GetName());
-      stack->push_back(v);
+      // Creates variable node
+      std::shared_ptr<ast::VariableNode> var =
+          std::make_shared<ast::VariableNode>(nam->GetName());
+      // Pushes variable node to parse stack
+      stack->push_back(var);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

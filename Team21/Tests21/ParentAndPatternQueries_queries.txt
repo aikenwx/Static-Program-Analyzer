@@ -5,10 +5,10 @@ Select <a> such that Parent(11, 13) pattern a("x", "(x) + (1)")
 5000
 2 - TUPLE relationship(literal, literal) assignPattern(literal, subexpression)
 assign a;
-Select <a> such that Parent(18, 20) pattern a("y", _"x"_)
-14, 30
+Select <a.stmt#> such that Parent(18, 20) pattern a("y", _"x"_)
+15, 30, 32
 5000
-3 - ELEM relationship(literal, literal) assignPattern(literal, wildcard)
+3 - ELEM relationship(literal, literal) assignPattern(literal, wildcardg)
 assign a;
 Select a such that Parent(20, 2) pattern a("y", _)
 none
@@ -31,12 +31,12 @@ TRUE
 7 - TUPLE relationship(literal, literal) assignPattern(wildcard, literal)
 assign a; constant c;
 Select <a, c> such that Parent(3, 5) pattern a(_, "y")
-x 1
+31 1
 5000
 8 - TUPLE relationship(literal, literal) assignPattern(wildcard, subexpression)
 assign a; call c;
-Select <a, c> such that Parent(6, 11) pattern a(_, _"x"_)
-4 10, 7 10, 14 10, 19 10, 21 10, 26 10, 30 10, 32 10
+Select <a, c.procName> such that Parent(6, 11) pattern a(_, _"x"_)
+4 funcx, 7 funcx, 15 funcx, 19 funcx, 21 funcx, 26 funcx, 30 funcx, 32 funcx
 5000
 9 - TUPLE relationship(literal, literal) assignPattern(wildcard, wildcard)
 assign a;
@@ -85,7 +85,7 @@ TRUE
 5000
 18 - TUPLE relationship(literal, synonym) assignPattern(synonym, subexpression)
 assign a; variable v; procedure p;
-Select <a, c> such that Parent(25, a) pattern a(v, _"x"_)
+Select <a, p> such that Parent(25, a) pattern a(v, _"x"_)
 26 main, 26 funcx
 5000
 19 - TUPLE relationship(literal, synonym) assignPattern(synonym, wildcard)
@@ -136,7 +136,7 @@ none
 28 - TUPLE relationship(synonym, literal) assignPattern(literal, subexpression)
 assign a; if i;
 Select <a> such that Parent(i, 4) pattern a("x", _"1"_)
-4, 7, 15, 19, 21, 26
+4, 7, 19, 21, 26
 5000
 36 - TUPLE relationship(synonym, literal) whilePattern(synonym, wildcard)
 while w; variable v;
@@ -159,7 +159,7 @@ Select <i> such that Parent(i, 13) pattern i(_, _, _)
 11
 5000
 40 - ELEM relationship(synonym, synonym) assignPattern(literal, literal)
-assign a; variable v; stmt s;
+assign a; stmt s;
 Select s such that Parent(s, a) pattern a("x", "x + 1")
 3, 6, 18, 20, 25
 5000
@@ -174,7 +174,7 @@ Select <i, a> such that Parent(i, a) pattern a("x", _)
 3 4, 20 21, 25 26
 5000
 43 - TUPLE relationship(synonym, synonym) assignPattern(synonym, literal)
-assign a; variable v; statement s;
+assign a; variable v; stmt s;
 Select <s, a> such that Parent(s, a) pattern a(v, "((x)) + 1")
 3 4, 6 7, 18 19, 20 21, 25 26
 5000

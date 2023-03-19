@@ -26,8 +26,8 @@ class PKB {
    public:
     PKB();
 
-    PopulateFacade* getPopulateFacade();
-    QueryFacade* getQueryFacade();
+    auto getPopulateFacade() -> PopulateFacade*;
+    auto getQueryFacade() -> QueryFacade*;
 };
 
 #endif  // SPA_PKB_H

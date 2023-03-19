@@ -7,12 +7,12 @@
 ParentStarRelationship::ParentStarRelationship(Statement *parentStatement, Statement *childStatement) : Relationship(&ParentStarRelationship::relationshipType, parentStatement, childStatement) {
 }
 
-RelationshipType ParentStarRelationship::relationshipType = RelationshipType();
+const RelationshipType ParentStarRelationship::relationshipType = RelationshipType();
 
-RelationshipType &ParentStarRelationship::getRelationshipTypeStatic() {
-    return ParentStarRelationship::relationshipType;
+auto ParentStarRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }
 
-RelationshipType &ParentStarRelationship::getRelationshipType() const {
-    return ParentStarRelationship::relationshipType;
+auto ParentStarRelationship::getRelationshipType() const -> const RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }

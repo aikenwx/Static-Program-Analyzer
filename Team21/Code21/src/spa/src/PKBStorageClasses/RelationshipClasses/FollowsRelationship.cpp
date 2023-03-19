@@ -4,15 +4,15 @@
 
 #include "FollowsRelationship.h"
 
-RelationshipType FollowsRelationship::relationshipType = RelationshipType();
+const RelationshipType FollowsRelationship::relationshipType = RelationshipType();
 
 FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement *followerStatement) : Relationship(&FollowsRelationship::relationshipType, followedStatement, followerStatement) {
 }
 
-RelationshipType &FollowsRelationship::getRelationshipTypeStatic() {
-    return FollowsRelationship::relationshipType;
+auto FollowsRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return FollowsRelationship::relationshipType;
 }
 
-RelationshipType &FollowsRelationship::getRelationshipType() const {
-    return FollowsRelationship::relationshipType;
+auto FollowsRelationship::getRelationshipType() const -> const RelationshipType & {
+  return FollowsRelationship::relationshipType;
 }

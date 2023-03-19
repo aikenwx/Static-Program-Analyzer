@@ -20,15 +20,18 @@ class PatternManager {
 
    public:
     PatternManager() = default;
-    void storeAssignStatementPostfixExpression(AssignStatement* assignStatement, std::string* postfixExpression);
+    static void storeAssignStatementPostfixExpression(
+        AssignStatement* assignStatement, std::shared_ptr<std::string> postfixExpression);
 
     void storeWhileStatementConditionVariable(WhileStatement* whileStatement, std::string* conditionVariable);
 
     void storeIfStatementConditionVariable(IfStatement* ifStatement, std::string* conditionVariable);
 
-    std::unordered_set<WhileStatement*>* getWhileStatementsByConditionVariable(std::string* conditionVariable);
+    auto getWhileStatementsByConditionVariable(std::string* conditionVariable)
+        -> std::unordered_set<WhileStatement*>*;
 
-    std::unordered_set<IfStatement*>* getIfStatementsByConditionVariable(std::string* conditionVariable);
+    auto getIfStatementsByConditionVariable(std::string* conditionVariable)
+        -> std::unordered_set<IfStatement*>*;
 };
 
 #endif  // SPA_PATTERNMANAGER_H

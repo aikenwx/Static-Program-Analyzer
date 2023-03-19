@@ -3,24 +3,25 @@
 //
 #include "Statement.h"
 
-Statement::Statement( EntityType *entityType, int statementNumber) : Entity(entityType, std::make_shared<std::string>(std::to_string(statementNumber))) {
-    this->statementNumber = statementNumber;
+Statement::Statement(const EntityType *entityType, int statementNumber)
+    : Entity(entityType,
+             std::make_shared<std::string>(std::to_string(statementNumber))),
+      statementNumber(statementNumber) {}
+
+auto Statement::getStatementNumber() const -> int {
+  return this->statementNumber;
 }
 
-int Statement::getStatementNumber() const {
-    return this->statementNumber;
+auto Statement::isStatement(Entity *entity) -> bool {
+  return dynamic_cast<Statement *>(entity) != nullptr;
 }
 
-bool Statement::isStatement(Entity *entity) {
-    return dynamic_cast<Statement *>(entity) != nullptr;
+auto Statement::getEntityTypeStatic() -> const EntityType & {
+  return Statement::statementType;
 }
 
-EntityType &Statement::getEntityTypeStatic() {
-    return Statement::statementType;
-}
+const EntityType Statement::statementType = EntityType();
 
-EntityType Statement::statementType = EntityType();
-
-EntityType &Statement::getEntityType() const {
-    return Statement::statementType;
+auto Statement::getEntityType() const -> const EntityType & {
+  return Statement::statementType;
 }

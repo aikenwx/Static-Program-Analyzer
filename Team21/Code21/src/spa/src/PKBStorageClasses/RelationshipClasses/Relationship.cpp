@@ -3,58 +3,65 @@
 //
 #include "Relationship.h"
 
+// NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
 std::size_t RelationshipType::relationshipTypeKeyCounter = 0;
 
 RelationshipType::RelationshipType() : StorageKey(RelationshipType::relationshipTypeKeyCounter++){};
 
-Relationship::Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity) : relationshipKey(relationshipType, &leftHandEntity->getEntityKey(), &rightHandEntity->getEntityKey()) {
-    this->leftHandEntity = leftHandEntity;
-    this->rightHandEntity = rightHandEntity;
+Relationship::Relationship(const RelationshipType *relationshipType,
+                           Entity *leftHandEntity, Entity *rightHandEntity)
+    : relationshipKey(relationshipType, &leftHandEntity->getEntityKey(),
+                      &rightHandEntity->getEntityKey()),
+      leftHandEntity(leftHandEntity),
+      rightHandEntity(rightHandEntity) {}
+
+auto RelationshipType::operator==(
+    const RelationshipType &otherRelationshipType) const -> bool {
+  return this->getKey() == otherRelationshipType.getKey();
 }
 
-bool RelationshipType::operator==(const RelationshipType &otherRelationshipType) const {
-    return this->getKey() == otherRelationshipType.getKey();
+RelationshipKey::RelationshipKey(const RelationshipType *relationshipType,
+                                 EntityKey *leftEntityKey,
+                                 EntityKey *rightEntityKey)
+    : StorageKey(relationshipType->getKey() ^ leftEntityKey->getKey() ^
+                 rightEntityKey->getKey()),
+      relationshipType(relationshipType),
+      leftEntityKey(leftEntityKey),
+      rightEntityKey(rightEntityKey) {}
+
+auto RelationshipKey::operator==(
+    const RelationshipKey &otherRelationshipLiteralKey) const -> bool {
+  return *this->relationshipType ==
+             *otherRelationshipLiteralKey.relationshipType &&
+         *this->leftEntityKey == *otherRelationshipLiteralKey.leftEntityKey &&
+         *this->rightEntityKey == *otherRelationshipLiteralKey.rightEntityKey;
 }
 
-
-RelationshipKey::RelationshipKey(RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey) : StorageKey(relationshipType->getKey() ^ leftEntityKey->getKey() ^ rightEntityKey->getKey()) {
-    this->relationshipType = relationshipType;
-    this->leftEntityKey = leftEntityKey;
-    this->rightEntityKey = rightEntityKey;
+auto Relationship::containsEntityOnLeftHand(Entity *entity) const -> bool {
+  return this->getLeftHandEntity()->equals(entity);
 }
 
-bool RelationshipKey::operator==(const RelationshipKey &otherRelationshipLiteralKey) const {
-    return *this->relationshipType == *otherRelationshipLiteralKey.relationshipType &&
-           *this->leftEntityKey == *otherRelationshipLiteralKey.leftEntityKey &&
-           *this->rightEntityKey == *otherRelationshipLiteralKey.rightEntityKey;
+auto Relationship::containsEntityOnRightHand(Entity *entity) const -> bool {
+  return this->getRightHandEntity()->equals(entity);
 }
 
-bool Relationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->getLeftHandEntity()->equals(entity);
+auto Relationship::equals(Relationship *otherRelationship) -> bool {
+  return this->getRelationshipKey() == otherRelationship->getRelationshipKey();
 }
 
-bool Relationship::containsEntityOnRightHand(Entity *entity) {
-    return this->getRightHandEntity()->equals(entity);
+auto Relationship::getLeftHandEntity() const -> Entity * {
+  return leftHandEntity;
 }
 
-bool Relationship::equals(Relationship *otherRelationship) {
-    return this->getRelationshipKey() == otherRelationship->getRelationshipKey();
+auto Relationship::getRightHandEntity() const -> Entity * {
+  return rightHandEntity;
 }
 
-Entity *Relationship::getLeftHandEntity() const {
-    return leftHandEntity;
+auto Relationship::getRelationshipKey() -> RelationshipKey & {
+  return this->relationshipKey;
 }
 
-Entity *Relationship::getRightHandEntity() const {
-    return rightHandEntity;
-}
-
-
-
-RelationshipKey &Relationship::getRelationshipKey() {
-    return this->relationshipKey;
-}
-
-size_t std::hash<RelationshipKey>::operator()(const RelationshipKey &relationshipKey) const {
-    return relationshipKey.getKey();
+auto std::hash<RelationshipKey>::operator()(
+    const RelationshipKey &relationshipKey) const -> size_t {
+  return relationshipKey.getKey();
 }

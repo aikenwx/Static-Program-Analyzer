@@ -12,55 +12,59 @@
 #include "../StorageKey.h"
 
 struct EntityType : public StorageKey {
-   private:
-    static std::size_t entityTypeKeyCounter;
+ private:
 
-   public:
-    EntityType();
+  // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
+  static std::size_t entityTypeKeyCounter;
 
-    bool operator==(const EntityType &entityType) const;
+ public:
+  EntityType();
+
+  auto operator==(const EntityType &entityType) const -> bool;
 };
 
 template <>
 struct std::hash<EntityType> {
-    std::size_t operator()(const EntityType &entityType) const;
+  auto operator()(const EntityType &entityType) const -> std::size_t;
 };
 
 struct EntityKey : public StorageKey {
-   private:
-    EntityType *entityType;
-    std::string *entityValue;
-    std::string entityValueStore;
+ private:
+  const EntityType *entityType;
+  std::string *entityValue;
+  std::string entityValueStore;
 
-   public:
-    EntityKey(EntityType *entityType, std::string *entityValue);
-    EntityKey(EntityType *entityType, int entityIntValue);
+ public:
+  EntityKey(const EntityType *entityType, std::string *entityValue);
+  EntityKey(const EntityType *entityType, int entityIntValue);
 
-    bool operator==(const EntityKey &entityKey) const;
+  auto operator==(const EntityKey &entityKey) const -> bool;
 };
 
 class Entity {
-   private:
-    EntityKey entityKey;
-    std::shared_ptr<std::string> entityValue;
+ private:
+  EntityKey entityKey;
+  std::shared_ptr<std::string> entityValue;
 
-   public:
-    Entity(EntityType *entityType, std::shared_ptr<std::string> entityValue);
+ public:
+  Entity(const EntityType *entityType,
+         const std::shared_ptr<std::string> &entityValue);
 
-    virtual ~Entity(){};
+  virtual ~Entity() = default;
+  ;
 
-    virtual EntityType &getEntityType() const = 0;
+  [[nodiscard]] virtual auto getEntityType() const -> const EntityType & = 0;
 
-    std::string *getEntityValue() const;
+  [[nodiscard]] auto getEntityValue() const -> std::string *;
 
-    bool equals(Entity *otherEntity);
+  auto equals(Entity *otherEntity) -> bool;
 
-    EntityKey &getEntityKey();
+  auto getEntityKey() -> EntityKey &;
 };
 
 template <>
 struct std::hash<EntityKey> {
-    std::size_t operator()(const EntityKey &entityKey) const;
+  auto operator()(const EntityKey &entityKey) const -> std::size_t;
 };
 
 #endif

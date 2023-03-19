@@ -4,19 +4,19 @@
 #include "Statement.h"
 class CallStatement : public Statement {
    private:
-    static EntityType callStatementType;
+    static EntityType const callStatementType;
     std::shared_ptr<std::string> procedureName;
 
    public:
-    CallStatement(int statementNumber);
+    explicit CallStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 
-    std::string* getProcedureName();
+    auto getProcedureName() -> std::string*;
 
-    void setProcedureName(std::string* procedureName);
+    void setProcedureName(std::shared_ptr<std::string> procedureNameString);
 };
 
 #endif

@@ -7,32 +7,35 @@
 
 struct RelationshipType : public StorageKey {
    private:
+    // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
     static std::size_t relationshipTypeKeyCounter;
 
    public:
     RelationshipType();
-    bool operator==(const RelationshipType &relationshipType) const;
+    auto operator==(const RelationshipType &relationshipType) const -> bool;
 };
 
 template <>
 struct std::hash<RelationshipType> {
-    std::size_t operator()(const RelationshipType &relationshipType) const;
+  auto operator()(const RelationshipType &relationshipType) const
+      -> std::size_t;
 };
 
 struct RelationshipKey : public StorageKey {
    private:
-    RelationshipType *relationshipType;
+    const RelationshipType *relationshipType;
     EntityKey *leftEntityKey;
     EntityKey *rightEntityKey;
 
    public:
-    RelationshipKey(RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
-    bool operator==(const RelationshipKey &otherRelationshipLiteralKey) const;
+    RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
+    auto operator==(const RelationshipKey &otherRelationshipLiteralKey) const
+        -> bool;
 };
 
 template <>
 struct std::hash<RelationshipKey> {
-    std::size_t operator()(const RelationshipKey &relationshipKey) const;
+  auto operator()(const RelationshipKey &relationshipKey) const -> std::size_t;
 };
 
 class Relationship {
@@ -42,23 +45,24 @@ class Relationship {
     Entity *rightHandEntity;
 
    public:
-    Relationship(RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity);
+    Relationship(const RelationshipType *relationshipType, Entity *leftHandEntity, Entity *rightHandEntity);
 
     virtual ~Relationship() = default;
 
-    RelationshipKey &getRelationshipKey();
+    auto getRelationshipKey() -> RelationshipKey &;
 
-    bool containsEntityOnLeftHand(Entity *entity);
+    auto containsEntityOnLeftHand(Entity *entity) const -> bool;
 
-    bool containsEntityOnRightHand(Entity *entity);
+    auto containsEntityOnRightHand(Entity *entity) const -> bool;
 
-    virtual RelationshipType &getRelationshipType() const = 0;
+    [[nodiscard]] virtual auto getRelationshipType() const
+        -> const RelationshipType & = 0;
 
-    Entity *getLeftHandEntity() const;
+    [[nodiscard]] auto getLeftHandEntity() const -> Entity *;
 
-    Entity *getRightHandEntity() const;
+    [[nodiscard]] auto getRightHandEntity() const -> Entity *;
 
-    bool equals(Relationship *otherRelationship);
+    auto equals(Relationship *otherRelationship) -> bool;
 };
 
 #endif  // SPA_RELATIONSHIP_H

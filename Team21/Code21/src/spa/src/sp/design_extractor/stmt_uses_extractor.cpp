@@ -10,7 +10,7 @@
 #include "util/instance_of.h"
 
 namespace design_extractor {
-void StmtUsesExtractor::UpdateParents(std::shared_ptr<ast::INode> node,
+void StmtUsesExtractor::UpdateParents(const std::shared_ptr<ast::INode>& node,
                                       int depth) {
   if (depth_ >= depth) {
     // delete all parents below current depth
@@ -32,7 +32,7 @@ void StmtUsesExtractor::UpdateParents(std::shared_ptr<ast::INode> node,
 }
 
 void StmtUsesExtractor::HandleVariableNode(
-    std::shared_ptr<ast::VariableNode> node, int depth) {
+    const std::shared_ptr<ast::VariableNode>& node, int depth) {
   UpdateParents(node, depth);
 
   // number of tree levels between variable and `*it`
@@ -51,18 +51,17 @@ void StmtUsesExtractor::HandleVariableNode(
         if (util::instance_of<ast::VariableNode>(assign->GetAssignment()) &&
             std::static_pointer_cast<ast::VariableNode>(assign->GetAssignment())
                     ->GetName() == node->GetName()) {
-          // TODO possible to optimize this with ptr equality check?
+          // TODO(zhongfu): possible to optimize this with ptr equality check?
           relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
               assign, node->GetName()));
         }
         // otherwise `node` is not the RHS, i.e. it's the LHS
         // and so this `node` isn't part of a `Uses` relationship
         break;
-      } else {
-        // definitely RHS
-        relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
-            assign, node->GetName()));
-      }
+      }  // definitely RHS
+      relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
+          assign, node->GetName()));
+
     } else if (util::instance_of<ast::ReadNode>(*it)) {
       // `node` is being modified here, not used
       break;
@@ -75,8 +74,8 @@ void StmtUsesExtractor::HandleVariableNode(
   }
 };
 
-std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>>
-StmtUsesExtractor::GetRelationships() {
+auto
+StmtUsesExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

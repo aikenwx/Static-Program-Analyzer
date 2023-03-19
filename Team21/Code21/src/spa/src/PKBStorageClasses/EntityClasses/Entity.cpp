@@ -4,52 +4,55 @@
 
 #include "Entity.h"
 
-EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){};
+EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){}
 
+// NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
 std::size_t EntityType::entityTypeKeyCounter = 0;
 
-std::size_t std::hash<EntityType>::operator()(const EntityType &entityType) const {
-    return entityType.getKey();
+auto std::hash<EntityType>::operator()(const EntityType &entityType) const
+    -> std::size_t {
+  return entityType.getKey();
 }
 
-EntityKey::EntityKey(EntityType *entityType, std::string *entityValue) : StorageKey(
-                                                                             entityType->getKey() ^ std::hash<std::string>()(*entityValue)) {
-    this->entityType = entityType;
-    this->entityValue = entityValue;
+EntityKey::EntityKey(const EntityType *entityType, std::string *entityValue)
+    : StorageKey(entityType->getKey() ^ std::hash<std::string>()(*entityValue)),
+      entityType(entityType),
+      entityValue(entityValue) {}
+
+EntityKey::EntityKey(const EntityType *entityType, int entityIntValue)
+    : StorageKey(entityType->getKey() ^
+                 std::hash<std::string>()(std::to_string(entityIntValue))),
+      entityType(entityType) {
+  this->entityValueStore = std::to_string(entityIntValue);
+  this->entityValue = &entityValueStore;
 }
 
-EntityKey::EntityKey(EntityType *entityType, int entityIntValue) : StorageKey(
-                                                                       entityType->getKey() ^ std::hash<std::string>()(std::to_string(entityIntValue))) {
-    this->entityType = entityType;
-    this->entityValueStore = std::to_string(entityIntValue);
-    this->entityValue = &entityValueStore;
+auto EntityKey::operator==(const EntityKey &entityKey) const -> bool {
+  return *this->entityType == *entityKey.entityType &&
+         *this->entityValue == *entityKey.entityValue;
 }
 
-bool EntityKey::operator==(const EntityKey &entityKey) const {
-    return *this->entityType == *entityKey.entityType &&
-           *this->entityValue == *entityKey.entityValue;
+auto std::hash<EntityKey>::operator()(const EntityKey &entityKey) const
+    -> std::size_t {
+  return entityKey.getKey();
 }
 
-std::size_t std::hash<EntityKey>::operator()(const EntityKey &entityKey) const {
-    return entityKey.getKey();
+auto Entity::getEntityValue() const -> std::string * {
+  return this->entityValue.get();
 }
 
-std::string *Entity::getEntityValue() const {
-    return this->entityValue.get();
+Entity::Entity(const EntityType *entityType,
+               const std::shared_ptr<std::string> &entityValue)
+    : entityKey(EntityKey(entityType, entityValue.get())) {
+  this->entityValue = std::shared_ptr<std::string>(entityValue);
 }
 
-Entity::Entity(EntityType *entityType, std::shared_ptr<std::string> entityValue) : entityKey(EntityKey(entityType, entityValue.get())) {
-    this->entityValue = std::shared_ptr<std::string>(entityValue);
+auto Entity::getEntityKey() -> EntityKey & { return this->entityKey; }
+
+auto Entity::equals(Entity *otherEntity) -> bool {
+  return this->entityKey == otherEntity->entityKey;
 }
 
-EntityKey &Entity::getEntityKey() {
-    return this->entityKey;
-}
-
-bool Entity::equals(Entity *otherEntity) {
-    return this->entityKey == otherEntity->entityKey;
-}
-
-bool EntityType::operator==(const EntityType &entityType) const {
-    return this->getKey() == entityType.getKey();
+auto EntityType::operator==(const EntityType &entityType) const -> bool {
+  return this->getKey() == entityType.getKey();
 }

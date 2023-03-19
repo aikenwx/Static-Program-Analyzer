@@ -5,14 +5,14 @@
 
 class IfStatement : public Statement {
    private:
-    static EntityType ifStatementType;
+    static const EntityType ifStatementType;
 
    public:
-    IfStatement(int statementNumber);
+    explicit IfStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

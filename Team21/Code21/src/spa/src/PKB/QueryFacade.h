@@ -32,7 +32,6 @@
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
-#include "QueryFacade.h"
 #include "sp/cfg/cfg.h"
 
 class QueryFacade {

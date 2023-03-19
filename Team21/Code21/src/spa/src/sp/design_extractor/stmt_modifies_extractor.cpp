@@ -9,19 +9,19 @@
 
 namespace design_extractor {
 void StmtModifiesExtractor::HandleAssignNode(
-    std::shared_ptr<ast::AssignNode> node, int depth) {
+    const std::shared_ptr<ast::AssignNode>& node, int depth) {
   relns_.push_back(rel::ModifiesStmtVarRelationship::CreateRelationship(
       node, node->GetVariable()->GetName()));
 };
 
-void StmtModifiesExtractor::HandleReadNode(std::shared_ptr<ast::ReadNode> node,
+void StmtModifiesExtractor::HandleReadNode(const std::shared_ptr<ast::ReadNode>& node,
                                            int depth) {
   relns_.push_back(rel::ModifiesStmtVarRelationship::CreateRelationship(
       node, node->GetVariable()->GetName()));
 };
 
-std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
-StmtModifiesExtractor::GetRelationships() {
+auto
+StmtModifiesExtractor::GetRelationships() const -> std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>> {
   return relns_;
 };
 }  // namespace design_extractor

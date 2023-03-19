@@ -6,6 +6,6 @@ class PlusNode : public BinaryOperationNode {
 public:
   using BinaryOperationNode::BinaryOperationNode;
 
-  std::string ToString() const override;
+  [[nodiscard]] auto ToString() const -> std::string override;
 };
 }

@@ -1,11 +1,13 @@
 #include "variable_node.h"
 
 namespace ast {
-std::string VariableNode::ToString() const { return "variable:" + name + "\n"; }
+auto VariableNode::ToString() const -> std::string {
+  return "variable:" + NamedNode::ToString();
+}
 
 void VariableNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+    const std::shared_ptr<INode>& currentNode,
+    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleVariableNode(
       std::static_pointer_cast<VariableNode>(currentNode), depth);
 }

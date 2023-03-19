@@ -1,5 +1,6 @@
 // add guards
 #include <catch2/catch_test_macros.hpp>
+#include <memory>
 
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -12,177 +13,142 @@
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/WhileStatement.h"
 
-using namespace std;
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("Entities can instantiate") {
-    PrintStatement *printStatement = new PrintStatement(2);
-    ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4);
-    CallStatement *callStatement = new CallStatement(5);
-    WhileStatement *whileStatement = new WhileStatement(6);
-    IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Constant *constant = new Constant(1);
-
-    delete printStatement;
-    delete readStatement;
-    delete assignStatement;
-    delete callStatement;
-    delete whileStatement;
-    delete ifStatement;
-    delete procedure;
-    delete variable;
-    delete constant;
+  auto printStatement = std::make_shared<PrintStatement>(1);
+  auto readStatement = std::make_shared<ReadStatement>(2);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  auto callStatement = std::make_shared<CallStatement>(4);
+  auto whileStatement = std::make_shared<WhileStatement>(5);
+  auto ifStatement = std::make_shared<IfStatement>(6);
+  auto procedure =
+      std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+  auto variable =
+      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+  auto constant = std::make_shared<Constant>(1);
 }
 
 TEST_CASE("Entities retrieve their stored values") {
-    PrintStatement *printStatement = new PrintStatement(2);
-    ReadStatement *readStatement = new ReadStatement(3);
-    AssignStatement *assignStatement = new AssignStatement(4);
-    CallStatement *callStatement = new CallStatement(5);
-    WhileStatement *whileStatement = new WhileStatement(6);
-    IfStatement *ifStatement = new IfStatement(7);
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Variable *variable = new Variable(new std::string("variable"));
-    Constant *constant = new Constant(1);
+  auto printStatement = std::make_shared<PrintStatement>(1);
+  auto readStatement = std::make_shared<ReadStatement>(2);
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  auto callStatement = std::make_shared<CallStatement>(4);
+  auto whileStatement = std::make_shared<WhileStatement>(5);
+  auto ifStatement = std::make_shared<IfStatement>(6);
+  auto procedure =
+      std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+  auto variable =
+      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+  auto constant = std::make_shared<Constant>(1);
 
-    REQUIRE(*printStatement->getEntityValue() == "2");
-    REQUIRE(*readStatement->getEntityValue() == "3");
-    REQUIRE(*assignStatement->getEntityValue() == "4");
-    REQUIRE(*callStatement->getEntityValue() == "5");
-    REQUIRE(*whileStatement->getEntityValue() == "6");
-    REQUIRE(*ifStatement->getEntityValue() == "7");
-    REQUIRE(*procedure->getEntityValue() == "procedure");
-    REQUIRE(*variable->getEntityValue() == "variable");
-    REQUIRE(*constant->getEntityValue() == "1");
+  REQUIRE(*printStatement->getEntityValue() == "1");
+  REQUIRE(*readStatement->getEntityValue() == "2");
 
-    delete printStatement;
-    delete readStatement;
-    delete assignStatement;
-    delete callStatement;
-    delete whileStatement;
-    delete ifStatement;
-    delete procedure;
-    delete variable;
-    delete constant;
+  REQUIRE(*assignStatement->getEntityValue() == "3");
+  REQUIRE(*callStatement->getEntityValue() == "4");
+  REQUIRE(*whileStatement->getEntityValue() == "5");
+  REQUIRE(*ifStatement->getEntityValue() == "6");
+  REQUIRE(*procedure->getEntityValue() == "procedure");
+  REQUIRE(*variable->getEntityValue() == "variable");
+  REQUIRE(*constant->getEntityValue() == "1");
 }
 
 TEST_CASE("Entities can be compared") {
-    PrintStatement *printStatement = new PrintStatement(2);
-    PrintStatement *printStatement2 = new PrintStatement(2);
-    PrintStatement *printStatement3 = new PrintStatement(3);
+  auto printStatement = std::make_shared<PrintStatement>(2);
+  auto printStatement2 = std::make_shared<PrintStatement>(2);
+  auto printStatement3 = std::make_shared<PrintStatement>(3);
 
-    ReadStatement *readStatement = new ReadStatement(3);
-    ReadStatement *readStatement2 = new ReadStatement(3);
-    ReadStatement *readStatement3 = new ReadStatement(4);
+  auto readStatement = std::make_shared<ReadStatement>(3);
+  auto readStatement2 = std::make_shared<ReadStatement>(3);
+  auto readStatement3 = std::make_shared<ReadStatement>(4);
 
-    AssignStatement *assignStatement = new AssignStatement(4);
-    AssignStatement *assignStatement2 = new AssignStatement(4);
-    AssignStatement *assignStatement3 = new AssignStatement(5);
+  auto assignStatement = std::make_shared<AssignStatement>(4);
+  auto assignStatement2 = std::make_shared<AssignStatement>(4);
+  auto assignStatement3 = std::make_shared<AssignStatement>(5);
 
-    CallStatement *callStatement = new CallStatement(5);
-    CallStatement *callStatement2 = new CallStatement(5);
-    CallStatement *callStatement3 = new CallStatement(6);
+  auto callStatement = std::make_shared<CallStatement>(5);
+  auto callStatement2 = std::make_shared<CallStatement>(5);
+  auto callStatement3 = std::make_shared<CallStatement>(6);
 
-    WhileStatement *whileStatement = new WhileStatement(6);
-    WhileStatement *whileStatement2 = new WhileStatement(6);
-    WhileStatement *whileStatement3 = new WhileStatement(7);
+  auto whileStatement = std::make_shared<WhileStatement>(6);
+  auto whileStatement2 = std::make_shared<WhileStatement>(6);
+  auto whileStatement3 = std::make_shared<WhileStatement>(7);
 
-    IfStatement *ifStatement = new IfStatement(7);
-    IfStatement *ifStatement2 = new IfStatement(7);
-    IfStatement *ifStatement3 = new IfStatement(8);
+  auto ifStatement = std::make_shared<IfStatement>(7);
+  auto ifStatement2 = std::make_shared<IfStatement>(7);
+  auto ifStatement3 = std::make_shared<IfStatement>(8);
 
-    Variable *variable = new Variable(new std::string("variable"));
-    Variable *variable2 = new Variable(new std::string("variable"));
-    Variable *variable3 = new Variable(new std::string("variable2"));
+  auto variable =
+      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+  auto variable2 =
+      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+  auto variable3 =
+      std::make_shared<Variable>(std::make_shared<std::string>("variable2"));
 
-    Procedure *procedure = new Procedure(new std::string("procedure"));
-    Procedure *procedure2 = new Procedure(new std::string("procedure"));
-    Procedure *procedure3 = new Procedure(new std::string("procedure2"));
+  auto procedure =
+      std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+  auto procedure2 =
+      std::make_shared<Procedure>(std::make_shared<std::string>("procedure"));
+  auto procedure3 =
+      std::make_shared<Procedure>(std::make_shared<std::string>("procedure2"));
 
-    Constant *constant = new Constant(1);
-    Constant *constant2 = new Constant(1);
-    Constant *constant3 = new Constant(2);
+  auto constant = std::make_shared<Constant>(1);
+  auto constant2 = std::make_shared<Constant>(1);
+  auto constant3 = std::make_shared<Constant>(2);
 
-    REQUIRE(printStatement->equals(printStatement));
-    REQUIRE(readStatement->equals(readStatement));
-    REQUIRE(assignStatement->equals(assignStatement));
-    REQUIRE(callStatement->equals(callStatement));
-    REQUIRE(whileStatement->equals(whileStatement));
-    REQUIRE(ifStatement->equals(ifStatement));
-    REQUIRE(procedure->equals(procedure));
-    REQUIRE(variable->equals(variable));
-    REQUIRE(constant->equals(constant));
-    printStatement->equals(printStatement2);
-    REQUIRE(printStatement->equals(printStatement2));
-    REQUIRE(readStatement->equals(readStatement2));
-    REQUIRE(assignStatement->equals(assignStatement2));
-    REQUIRE(callStatement->equals(callStatement2));
-    REQUIRE(whileStatement->equals(whileStatement2));
-    REQUIRE(ifStatement->equals(ifStatement2));
-    REQUIRE(procedure->equals(procedure2));
-    REQUIRE(variable->equals(variable2));
-    REQUIRE(constant->equals(constant2));
+  REQUIRE(printStatement->equals(printStatement.get()));
+  REQUIRE(readStatement->equals(readStatement.get()));
+  REQUIRE(assignStatement->equals(assignStatement.get()));
+  REQUIRE(callStatement->equals(callStatement.get()));
+  REQUIRE(whileStatement->equals(whileStatement.get()));
+  REQUIRE(ifStatement->equals(ifStatement.get()));
+  REQUIRE(procedure->equals(procedure.get()));
+  REQUIRE(variable->equals(variable.get()));
+  REQUIRE(constant->equals(constant.get()));
+  printStatement->equals(printStatement2.get());
+  REQUIRE(printStatement->equals(printStatement2.get()));
+  REQUIRE(readStatement->equals(readStatement2.get()));
+  REQUIRE(assignStatement->equals(assignStatement2.get()));
+  REQUIRE(callStatement->equals(callStatement2.get()));
+  REQUIRE(whileStatement->equals(whileStatement2.get()));
+  REQUIRE(ifStatement->equals(ifStatement2.get()));
+  REQUIRE(procedure->equals(procedure2.get()));
+  REQUIRE(variable->equals(variable2.get()));
+  REQUIRE(constant->equals(constant2.get()));
 
-    REQUIRE(!printStatement->equals(printStatement3));
-    REQUIRE(!readStatement->equals(readStatement3));
-    REQUIRE(!assignStatement->equals(assignStatement3));
-    REQUIRE(!callStatement->equals(callStatement3));
-    REQUIRE(!whileStatement->equals(whileStatement3));
-    REQUIRE(!ifStatement->equals(ifStatement3));
-    REQUIRE(!procedure->equals(procedure3));
-    REQUIRE(!variable->equals(variable3));
-    REQUIRE(!constant->equals(constant3));
+  REQUIRE(!printStatement->equals(printStatement3.get()));
+  REQUIRE(!readStatement->equals(readStatement3.get()));
+  REQUIRE(!assignStatement->equals(assignStatement3.get()));
+  REQUIRE(!callStatement->equals(callStatement3.get()));
+  REQUIRE(!whileStatement->equals(whileStatement3.get()));
+  REQUIRE(!ifStatement->equals(ifStatement3.get()));
+  REQUIRE(!procedure->equals(procedure3.get()));
+  REQUIRE(!variable->equals(variable3.get()));
+  REQUIRE(!constant->equals(constant3.get()));
 
-    REQUIRE(!printStatement->equals(readStatement));
-    REQUIRE(!assignStatement->equals(callStatement));
-    REQUIRE(!callStatement->equals(whileStatement));
-    REQUIRE(!whileStatement->equals(ifStatement));
-    REQUIRE(!ifStatement->equals(printStatement));
-    REQUIRE(!printStatement->equals(variable));
-    REQUIRE(!variable->equals(constant));
-    REQUIRE(!constant->equals(procedure));
-    REQUIRE(!procedure->equals(assignStatement));
-
-    delete printStatement;
-    delete readStatement;
-    delete assignStatement;
-    delete callStatement;
-    delete whileStatement;
-    delete ifStatement;
-    delete procedure;
-    delete variable;
-    delete constant;
-    delete printStatement2;
-    delete readStatement2;
-    delete assignStatement2;
-    delete callStatement2;
-    delete whileStatement2;
-    delete ifStatement2;
-    delete procedure2;
-    delete variable2;
-    delete constant2;
-    delete printStatement3;
-    delete readStatement3;
-    delete assignStatement3;
-    delete callStatement3;
-    delete whileStatement3;
-    delete ifStatement3;
-    delete procedure3;
-    delete variable3;
-    delete constant3;
+  REQUIRE(!printStatement->equals(readStatement.get()));
+  REQUIRE(!assignStatement->equals(callStatement.get()));
+  REQUIRE(!callStatement->equals(whileStatement.get()));
+  REQUIRE(!whileStatement->equals(ifStatement.get()));
+  REQUIRE(!ifStatement->equals(printStatement.get()));
+  REQUIRE(!printStatement->equals(variable.get()));
+  REQUIRE(!variable->equals(constant.get()));
+  REQUIRE(!constant->equals(procedure.get()));
+  REQUIRE(!procedure->equals(assignStatement.get()));
 }
 
 TEST_CASE("Assign Statement stores post-fix expression") {
-    AssignStatement *assignStatement = new AssignStatement(4);
-    assignStatement->setPostfixExpression(new std::string("xy+"));
-    REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
-    delete assignStatement;
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  assignStatement->setPostfixExpression(std::make_shared<std::string>("xy+"));
+  REQUIRE(*assignStatement->getPostFixExpression() == "xy+");
 }
 
-TEST_CASE("Assign Statement throws error if getting post-fix expression before setting") {
-    AssignStatement *assignStatement = new AssignStatement(4);
-    REQUIRE_THROWS(assignStatement->getPostFixExpression());
-    delete assignStatement;
+TEST_CASE(
+    "Assign Statement throws error if getting post-fix expression before "
+    "setting") {
+  auto assignStatement = std::make_shared<AssignStatement>(3);
+  REQUIRE_THROWS(assignStatement->getPostFixExpression());
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

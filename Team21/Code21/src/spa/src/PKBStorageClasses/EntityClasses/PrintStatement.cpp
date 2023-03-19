@@ -1,10 +1,14 @@
 #include "PrintStatement.h"
 
-PrintStatement::PrintStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
+PrintStatement::PrintStatement(int statementNumber) : Statement(&PrintStatement::getEntityTypeStatic(), statementNumber) {
 }
 
-EntityType PrintStatement::getEntityType() {
-    return EntityType::PRINT_STATEMENT;
+auto PrintStatement::getEntityTypeStatic() -> const EntityType & {
+  return PrintStatement::printStatementType;
 }
+
+auto PrintStatement::getEntityType() const -> const EntityType & {
+  return PrintStatement::getEntityTypeStatic();
+}
+
+const EntityType PrintStatement::printStatementType = EntityType();

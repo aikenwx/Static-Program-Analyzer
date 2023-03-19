@@ -4,27 +4,15 @@
 
 #include "FollowsRelationship.h"
 
-bool FollowsRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->followedStatement->equals(entity);
+const RelationshipType FollowsRelationship::relationshipType = RelationshipType();
+
+FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement *followerStatement) : Relationship(&FollowsRelationship::relationshipType, followedStatement, followerStatement) {
 }
 
-bool FollowsRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->followerStatement->equals(entity);
+auto FollowsRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return FollowsRelationship::relationshipType;
 }
 
-FollowsRelationship::FollowsRelationship(Statement *followedStatement, Statement *followerStatement) {
-    this->followedStatement = followedStatement;
-    this->followerStatement = followerStatement;
-}
-
-RelationshipType FollowsRelationship::getRelationshipType() {
-    return RelationshipType::FOLLOWS;
-}
-
-Entity* FollowsRelationship::getLeftHandEntity() {
-    return this->followedStatement;
-}
-
-Entity* FollowsRelationship::getRightHandEntity() {
-    return this->followerStatement;
+auto FollowsRelationship::getRelationshipType() const -> const RelationshipType & {
+  return FollowsRelationship::relationshipType;
 }

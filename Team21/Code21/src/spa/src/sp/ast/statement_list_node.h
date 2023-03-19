@@ -7,16 +7,17 @@
 namespace ast {
 class StatementListNode : public INode {
  public:
-  void AddStatement(std::shared_ptr<StatementNode> node);
+  void AddStatement(const std::shared_ptr<StatementNode>& node);
   // Format is a stack, i.e. statements are stored in reverse order
-  std::vector<std::shared_ptr<StatementNode>> GetStatements();
-  std::string ToString() const override;
-  int GetStartStatementNumber();
-  int GetEndStatementNumber();
+  [[nodiscard]] auto GetStatements() const
+      -> std::vector<std::shared_ptr<StatementNode>>;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  [[nodiscard]] auto GetStartStatementNumber() const -> int;
+  [[nodiscard]] auto GetEndStatementNumber() const -> int;
   void IncrementStatementNumbers(int value);
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
  private:

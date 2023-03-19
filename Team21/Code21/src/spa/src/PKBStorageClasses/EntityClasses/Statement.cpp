@@ -3,10 +3,25 @@
 //
 #include "Statement.h"
 
-std::string * Statement::getEntityValue() {
-    return this->statementNumberString.get();
-};
+Statement::Statement(const EntityType *entityType, int statementNumber)
+    : Entity(entityType,
+             std::make_shared<std::string>(std::to_string(statementNumber))),
+      statementNumber(statementNumber) {}
 
-const int Statement::getStatementNumber() {
-    return this->statementNumber;
+auto Statement::getStatementNumber() const -> int {
+  return this->statementNumber;
+}
+
+auto Statement::isStatement(Entity *entity) -> bool {
+  return dynamic_cast<Statement *>(entity) != nullptr;
+}
+
+auto Statement::getEntityTypeStatic() -> const EntityType & {
+  return Statement::statementType;
+}
+
+const EntityType Statement::statementType = EntityType();
+
+auto Statement::getEntityType() const -> const EntityType & {
+  return Statement::statementType;
 }

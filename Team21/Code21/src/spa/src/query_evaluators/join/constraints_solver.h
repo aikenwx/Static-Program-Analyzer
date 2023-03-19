@@ -1,10 +1,10 @@
 #pragma once
 
-#include "query_evaluators/synonym_table.h"
+#include "query_evaluators/clause_evaluator.h"
 
 namespace qps {
 class ConstraintsSolver {
  public:
-  static SynonymTable solve(const std::vector<SynonymTable> &evaluators);
+  static auto solve(const std::vector<SynonymTable> &evaluators) -> SynonymTable;
 };
 }

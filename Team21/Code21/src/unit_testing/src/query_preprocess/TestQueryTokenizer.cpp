@@ -117,3 +117,11 @@ TEST_CASE("Tokenizer: pattern + such that") {
 		"p", "such", "that", "Modifies", "(", "p", ",", "u", ")", "pattern", "a", "(", "\"", "y", "\"", ",", "_", ")" };
 	REQUIRE(tokens == correct_tokens);
 }
+
+TEST_CASE("Tokenizer: stmt#") {
+	qps::QueryTokenizer tokenizer("variable u, v; procedure p; assign a; Select a.stmt# such that Modifies(p,u) pattern a (\"y\",_)");
+	std::vector<std::string> tokens = tokenizer.tokenize();
+	std::vector<std::string> correct_tokens{ "variable", "u", ",", "v", ";", "procedure", "p", ";", "assign", "a", ";", "Select",
+		"a", ".", "stmt#", "such", "that", "Modifies", "(", "p", ",", "u", ")", "pattern", "a", "(", "\"", "y", "\"", ",", "_", ")"};
+	REQUIRE(tokens == correct_tokens);
+}

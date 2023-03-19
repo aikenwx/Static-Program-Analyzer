@@ -16,7 +16,11 @@ enum class Relationship {
   ModifiesS,
   ModifiesP,
   Calls,
-  CallsT
+  CallsT,
+  Next,
+  NextT,
+  Affects,
+  AffectsT
 };
 
 Relationship getRelationshipFromString(std::string reString);

@@ -1,20 +1,20 @@
 #pragma once
 
 #include "query_evaluators/clause_evaluator.h"
-
-#include "query/declaration.h"
+#include "query/query.h"
 
 namespace qps {
-
-class SelectEvaluator : public ClauseEvaluator {
+using FinalTable = RowTable<Synonym, std::string>;
+using FinalResult = std::variant<bool, FinalTable>;
+class SelectEvaluator {
  public:
-  explicit SelectEvaluator(Declaration declaration) : declaration_(std::move(declaration)) {}
-  ~SelectEvaluator() override = default;
+  SelectEvaluator(Result result, std::vector<Declaration> declarations)
+      : result_(std::move(result)), declarations_(std::move(declarations)) {}
 
-  ClauseResult Evaluate(QueryFacade &pkb) override;
+  auto Evaluate(QueryFacade &pkb, ClauseResult current_result) -> FinalResult;
  private:
-  Declaration declaration_;
-  ClauseResult ConstructResult(const std::vector<Entity *> &entities);
+  Result result_;
+  std::vector<Declaration> declarations_;
 };
 
-} // qps
+}  // namespace qps

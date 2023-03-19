@@ -1,7 +1,7 @@
 #include "i_node.h"
 
 namespace ast {
-std::ostream &operator<<(std::ostream &out, const INode &node) {
+auto operator<<(std::ostream &out, const INode &node) -> std::ostream & {
   out << node.ToString();
   return out;
 }

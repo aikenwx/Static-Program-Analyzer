@@ -10,19 +10,15 @@
 
 class ParentStarRelationship : public Relationship {
    private:
-    Statement* parentStatement;
-    Statement* childStatement;
+    static const RelationshipType relationshipType;
 
    public:
     ParentStarRelationship(Statement *parentStatement, Statement *childStatement);
-    bool containsEntityOnLeftHand(Entity *entity) override;
-    bool containsEntityOnRightHand(Entity *entity) override;
 
-    RelationshipType getRelationshipType() override;
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
-    Entity *getLeftHandEntity() override;
-
-    Entity *getRightHandEntity() override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> const RelationshipType & override;
 };
 
 #endif  // SPA_PARENTSTARRELATIONSHIP_H

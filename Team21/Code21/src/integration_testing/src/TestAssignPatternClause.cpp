@@ -161,9 +161,4 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
 
     }
   }
-
-  //To be added haha
-  SECTION("catching syntx errors in expression-spec") {
-
-  }
 }

@@ -8,18 +8,19 @@ class WhileNode : public ContainerStatementNode {
 public:
   WhileNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> body);
 
-  std::shared_ptr<INode> GetCondition();
-  std::shared_ptr<StatementListNode> GetBody();;
-  std::string ToString() const override;
-  int GetEndStatementNumber() override;
+  auto GetCondition() -> std::shared_ptr<INode>;
+  auto GetBody() -> std::shared_ptr<StatementListNode>;
+  ;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  auto GetEndStatementNumber() -> int override;
   void IncrementStatementNumber(int value) override;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
 private:
   std::shared_ptr<INode> condition;
   std::shared_ptr<StatementListNode> body;
 };
-}
+}  // namespace ast

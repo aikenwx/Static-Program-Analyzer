@@ -4,10 +4,15 @@
 #include "Statement.h"
 
 class PrintStatement : public Statement {
-   public:
-    PrintStatement(int statementNumber);
+   private:
+    static const EntityType printStatementType;
 
-    EntityType getEntityType() override;
+   public:
+    explicit PrintStatement(int statementNumber);
+
+    static auto getEntityTypeStatic() -> const EntityType &;
+
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

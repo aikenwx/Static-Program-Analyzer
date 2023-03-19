@@ -4,7 +4,7 @@ name: clang-tidy-review
 on: [pull_request]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -12,9 +12,10 @@ jobs:
 
     # Optionally generate compile_commands.json
 
-    - uses: ZedThree/clang-tidy-review@v0.10.0
+    - uses: zhongfu/clang-tidy-review@v0.10.1-zhongfu
       id: review
       with:
+        max_comments: 15
         config_file: Team21/Code21/.clang-tidy
         clang_tidy_version: 14
         lgtm_comment_body: ''

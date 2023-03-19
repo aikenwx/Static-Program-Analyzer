@@ -8,15 +8,15 @@ class IfNode : public ContainerStatementNode {
 public:
   IfNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els);
 
-  std::shared_ptr<INode> GetCondition();
-  std::shared_ptr<StatementListNode> GetThen();
-  std::shared_ptr<StatementListNode> GetElse();
-  std::string ToString() const override;
-  int GetEndStatementNumber() override;
+  auto GetCondition() -> std::shared_ptr<INode>;
+  auto GetThen() -> std::shared_ptr<StatementListNode>;
+  auto GetElse() -> std::shared_ptr<StatementListNode>;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  auto GetEndStatementNumber() -> int override;
   void IncrementStatementNumber(int value) override;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
+                     const std::shared_ptr<design_extractor::Extractor>& extractor,
                      int depth) override;
 
 private:
@@ -24,4 +24,4 @@ private:
   std::shared_ptr<StatementListNode> then;
   std::shared_ptr<StatementListNode> els;
 };
-}
+}  // namespace ast

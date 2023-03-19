@@ -28,8 +28,8 @@
 #include "sp/rel/uses_proc_var_relationship.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "sp/rel/var_relationship.h"
-#include "token/token.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/token/token.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 #include "util/interval_tree.h"
 
@@ -53,8 +53,8 @@ auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
   }
 
   // validate that all call statements call a procedure that exists
-  auto callValidator = std::make_shared<design_extractor::CallValidator>();
-  root->AcceptVisitor(root, callValidator, 0);
+  auto callValidator = design_extractor::CallValidator();
+  root->AcceptVisitor(callValidator, 0);
 
   return programNode;
 }
@@ -62,9 +62,9 @@ auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
 template <typename E, typename R>
 inline auto Visit(const std::shared_ptr<ast::ProgramNode>& programNode)
     -> std::vector<std::shared_ptr<R>> {
-  auto extractor = std::make_shared<E>();
-  programNode->AcceptVisitor(programNode, extractor, 0);
-  return extractor->GetRelationships();
+  auto extractor = E();
+  programNode->AcceptVisitor(extractor, 0);
+  return extractor.GetRelationships();
 }
 
 void PopulateAstEntities(

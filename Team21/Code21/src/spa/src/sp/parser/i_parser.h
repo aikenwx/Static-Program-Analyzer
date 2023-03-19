@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "sp/ast/ast.h"
-#include "token/token.h"
+#include "sp/token/token.h"
 
 namespace parser {
 class IParser {

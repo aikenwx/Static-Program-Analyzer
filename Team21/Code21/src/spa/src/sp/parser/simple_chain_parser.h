@@ -5,7 +5,7 @@
 #include "context.h"
 #include "subparser.h"
 #include "i_parser.h"
-#include "token/token.h"
+#include "sp/token/token.h"
 
 namespace parser {
 class SimpleChainParser : public IParser {

@@ -1,6 +1,6 @@
 #include "sp/ast/astlib.h"
 #include "name_subparser.h"
-#include "token/identifier_token.h"
+#include "sp/token/identifier_token.h"
 #include "util/instance_of.h"
 
 namespace parser {

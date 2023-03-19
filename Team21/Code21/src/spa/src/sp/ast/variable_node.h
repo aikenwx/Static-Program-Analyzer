@@ -8,8 +8,7 @@ public:
 
   [[nodiscard]] auto ToString() const -> std::string override;
 
-  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                     const std::shared_ptr<design_extractor::Extractor>& extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 };
-}  // namespace ast
+} // namespace ast

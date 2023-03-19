@@ -13,11 +13,10 @@ void StatementNode::IncrementStatementNumber(int value) {
   statementNumber += value;
 }
 
-void StatementNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
+void StatementNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                  int depth) {
   // default handling of statement nodes
-  extractor->HandleStatementNode(
-      std::static_pointer_cast<StatementNode>(currentNode), depth);
+  extractor.HandleStatementNode(
+      std::static_pointer_cast<StatementNode>(shared_from_this()), depth);
 }
-}  // namespace ast
+} // namespace ast

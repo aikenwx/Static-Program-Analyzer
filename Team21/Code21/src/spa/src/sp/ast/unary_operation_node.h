@@ -7,16 +7,15 @@
 namespace ast {
 class UnaryOperationNode : public INode {
 public:
- explicit UnaryOperationNode(std::shared_ptr<INode> operand);
+  explicit UnaryOperationNode(std::shared_ptr<INode> operand);
 
- [[nodiscard]] auto GetOperand() const -> std::shared_ptr<INode>;
- [[nodiscard]] auto ToString() const -> std::string override;
+  [[nodiscard]] auto GetOperand() const -> std::shared_ptr<INode>;
+  [[nodiscard]] auto ToString() const -> std::string override;
 
- void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                    const std::shared_ptr<design_extractor::Extractor>& extractor,
-                    int depth) override;
+  void AcceptVisitor(design_extractor::Extractor &extractor,
+                     int depth) override;
 
 private:
   std::shared_ptr<INode> operand;
 };
-}  // namespace ast
+} // namespace ast

@@ -1,11 +1,13 @@
+#include <algorithm>
 #include <string>
+#include <string_view>
 
 namespace util {
-bool is_integer(const std::string& str) {
-  if (str.length() == 0) return false;
-  for (const char& c : str) {
-    if (std::isdigit(c) == 0) return false;
+auto is_integer(std::string_view str) -> bool {
+  if (str.length() == 0) {
+    return false;
   }
-  return true;
+  return std::all_of(str.begin(), str.end(),
+                     [](char chr) { return std::isdigit(chr); });
 }
-}  // namespace util
+} // namespace util

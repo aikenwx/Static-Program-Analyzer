@@ -6,8 +6,7 @@ namespace ast {
 IfNode::IfNode(std::shared_ptr<INode> condition,
                std::shared_ptr<StatementListNode> then,
                std::shared_ptr<StatementListNode> els)
-    : condition(std::move(condition)),
-      then(std::move(then)),
+    : condition(std::move(condition)), then(std::move(then)),
       els(std::move(els)) {
   IncrementStatementNumber(1);
 }
@@ -33,17 +32,15 @@ void IfNode::IncrementStatementNumber(int value) {
   els->IncrementStatementNumbers(value);
 }
 
-void IfNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
-  extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
+void IfNode::AcceptVisitor(design_extractor::Extractor &extractor, int depth) {
+  extractor.HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
-  extractor->HandleConditionalNode(std::static_pointer_cast<ConditionalNode>(currentNode),
+  extractor.HandleConditionalNode(std::static_pointer_cast<ConditionalNode>(currentNode),
                                    depth);
-  extractor->HandleIfNode(std::static_pointer_cast<IfNode>(currentNode), depth);
+  extractor.HandleIfNode(std::static_pointer_cast<IfNode>(currentNode), depth);
 
-  condition->AcceptVisitor(condition, extractor, depth + 1);
-  then->AcceptVisitor(then, extractor, depth + 1);
-  els->AcceptVisitor(els, extractor, depth + 1);
+  condition->AcceptVisitor(extractor, depth + 1);
+  then->AcceptVisitor(extractor, depth + 1);
+  els->AcceptVisitor(extractor, depth + 1);
 }
-}  // namespace ast
+} // namespace ast

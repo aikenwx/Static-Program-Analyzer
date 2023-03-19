@@ -9,10 +9,10 @@ std::vector<::Relationship *> CallsStarEvaluator::CallPkb(QueryFacade &pkb, Enti
 }
 
 std::vector<EntityType> CallsStarEvaluator::GetLeftHandTypes(Ref &left_arg) {
-  return {EntityType::PROCEDURE};
+  return {Procedure::getEntityTypeStatic()};
 }
 
 std::vector<EntityType> CallsStarEvaluator::GetRightHandTypes(Ref &right_arg) {
-  return {EntityType::PROCEDURE};
+  return {Procedure::getEntityTypeStatic()};
 }
 } // qps

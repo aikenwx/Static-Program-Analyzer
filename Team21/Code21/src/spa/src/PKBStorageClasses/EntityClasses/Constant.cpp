@@ -1,18 +1,16 @@
 #include "Constant.h"
 
-Constant::Constant(int constantValue) {
-    this->constantValue = constantValue;
-    this->constantValueString = std::make_shared<std::string>(std::to_string(constantValue));
+Constant::Constant(int constantValue)
+    : Entity(&Constant::getEntityType(),
+             std::make_shared<std::string>(std::to_string(constantValue)))
+             {}
+
+auto Constant::getEntityType() const -> const EntityType & {
+  return Constant::entityType;
 }
 
-std::string* Constant::getEntityValue() {
-    return constantValueString.get();
+auto Constant::getEntityTypeStatic() -> const EntityType & {
+  return Constant::entityType;
 }
 
-EntityType Constant::getEntityType() {
-    return EntityType::CONSTANT;
-}
-
-int Constant::getConstantNumber() {
-    return this->constantValue;
-}
+const EntityType Constant::entityType = EntityType();

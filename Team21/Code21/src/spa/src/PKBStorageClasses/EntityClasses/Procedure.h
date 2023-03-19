@@ -9,19 +9,28 @@
 #include <string>
 
 #include "Entity.h"
+#include "sp/cfg/cfg.h"
 
 class Procedure : public Entity {
    private:
-    std::shared_ptr<std::string> procedureName;
+    static const EntityType procedureType;
+    size_t hash{};
 
    public:
-    Procedure(std::string* variableValue);
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    ~Procedure() = default;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 
-    std::string * getEntityValue() override;
+    explicit Procedure(const std::shared_ptr<std::string>& procedureName);
 
-    EntityType getEntityType() override;
+    ~Procedure() override = default;
+
+    auto operator==(const Procedure& procedure) const -> bool;
+};
+
+template <>
+struct std::hash<Procedure> {
+  auto operator()(const Procedure& procedure) const -> size_t;
 };
 
 #endif  // SPA_PROCEDURE_H

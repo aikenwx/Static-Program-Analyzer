@@ -7,16 +7,20 @@
 
 class AssignStatement : public Statement {
    private:
+    static const EntityType assignStatementType;
+
     std::shared_ptr<std::string> postFixExpression;
 
    public:
-    AssignStatement(int statementNumber);
+    explicit AssignStatement(int statementNumber);
 
-    void setPostfixExpression(std::string* postfixExpression);
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    EntityType getEntityType() override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 
-    std::string* getPostFixExpression();
+    void setPostfixExpression(std::shared_ptr<std::string> postfixExpression);
+
+    auto getPostFixExpression() -> std::string *;
 };
 
 #endif

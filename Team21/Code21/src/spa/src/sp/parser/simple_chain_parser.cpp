@@ -1,34 +1,36 @@
-#include <assert.h>
+#include "simple_chain_parser.h"
+
+#include <cassert>
+
 #include "exceptions/syntax_error.h"
 #include "subparsers.h"
-#include "token/and_token.h"
-#include "token/assign_token.h"
-#include "token/divide_token.h"
-#include "token/end_token.h"
-#include "token/equal_token.h"
-#include "token/greater_equal_token.h"
-#include "token/greater_than_token.h"
-#include "token/identifier_token.h"
-#include "token/integer_token.h"
-#include "token/left_brace_token.h"
-#include "token/left_paren_token.h"
-#include "token/less_equal_token.h"
-#include "token/less_than_token.h"
-#include "token/minus_token.h"
-#include "token/modulo_token.h"
-#include "token/multiply_token.h"
-#include "token/not_equal_token.h"
-#include "token/not_token.h"
-#include "token/or_token.h"
-#include "token/plus_token.h"
-#include "token/right_brace_token.h"
-#include "token/right_paren_token.h"
-#include "token/semicolon_token.h"
-#include "simple_chain_parser.h"
+#include "sp/token/and_token.h"
+#include "sp/token/assign_token.h"
+#include "sp/token/divide_token.h"
+#include "sp/token/end_token.h"
+#include "sp/token/equal_token.h"
+#include "sp/token/greater_equal_token.h"
+#include "sp/token/greater_than_token.h"
+#include "sp/token/identifier_token.h"
+#include "sp/token/integer_token.h"
+#include "sp/token/left_brace_token.h"
+#include "sp/token/left_paren_token.h"
+#include "sp/token/less_equal_token.h"
+#include "sp/token/less_than_token.h"
+#include "sp/token/minus_token.h"
+#include "sp/token/modulo_token.h"
+#include "sp/token/multiply_token.h"
+#include "sp/token/not_equal_token.h"
+#include "sp/token/not_token.h"
+#include "sp/token/or_token.h"
+#include "sp/token/plus_token.h"
+#include "sp/token/right_brace_token.h"
+#include "sp/token/right_paren_token.h"
+#include "sp/token/semicolon_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
-SimpleChainParser::SimpleChainParser() {
+SimpleChainParser::SimpleChainParser() noexcept {
   this->subparsers = std::make_shared<ProgramSubparser>();
   this->subparsers->SetNext(std::make_shared<ProcedureSubparser>())
     ->SetNext(std::make_shared<StatementListSubparser>())
@@ -48,7 +50,7 @@ SimpleChainParser::SimpleChainParser() {
     ->SetNext(std::make_shared<NameSubparser>());
 }
 
-std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input) {
+auto SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input) -> std::unique_ptr<ast::AST> {
   // Push end token to mark end of token list
   input.push_back(std::make_unique<token::EndToken>());
   auto lookahead = std::make_shared<std::vector<std::unique_ptr<token::Token>>::iterator>(input.begin());
@@ -57,18 +59,19 @@ std::unique_ptr<ast::AST> SimpleChainParser::Parse(std::vector<std::unique_ptr<t
   context->GetStatementCounter() = 0;
   for (*lookahead; *lookahead < input.end(); (*lookahead)++) {
     // Handle parsing logic
-    if (context->GetStack()->size() == 0) {
+    if (context->GetStack()->empty()) {
       Shift();
       continue;
     }
 
-    while (subparsers->Parse(context));
+    while (subparsers->Parse(context)) {}
 
     Shift();
   }
-  if (context->GetStack()->size() == 0) {
+  if (context->GetStack()->empty()) {
     throw exceptions::SyntaxError("Empty program");
-  } else if (context->GetStack()->size() != 1 || !util::instance_of<ast::ProgramNode>(context->GetStack()->front())) {
+  }
+  if (context->GetStack()->size() != 1 || !util::instance_of<ast::ProgramNode>(context->GetStack()->front())) {
     // Reject condition (guard clause)
   }
   std::unique_ptr<ast::AST> ast = std::make_unique<ast::AST>();
@@ -85,11 +88,11 @@ void SimpleChainParser::Shift() {
   * between tokenizer and parser. Since grammar is fixed, open-closed not as necessary.
   */
   if (util::instance_of<token::IdentifierToken>(**(context->GetLookahead()))) {
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
-    context->GetStack()->push_back(id);
+    std::shared_ptr<ast::IdentifierNode> ide = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
+    context->GetStack()->push_back(ide);
   } else if (util::instance_of<token::IntegerToken>(**(context->GetLookahead()))) {
-    std::shared_ptr<ast::ConstantNode> c = std::make_shared<ast::ConstantNode>(std::stoi((**(context->GetLookahead()))->GetValue()));
-    context->GetStack()->push_back(c);
+    std::shared_ptr<ast::ConstantNode> con = std::make_shared<ast::ConstantNode>(std::stoi((**(context->GetLookahead()))->GetValue()));
+    context->GetStack()->push_back(con);
   } else if (util::instance_of<token::AndToken>(**(context->GetLookahead()))) {
     std::shared_ptr<ast::SymbolNode> sym = std::make_shared<ast::SymbolNode>(ast::SymbolType::kAnd);
     context->GetStack()->push_back(sym);
@@ -155,9 +158,9 @@ void SimpleChainParser::Shift() {
     return;
   } else {
     // Default implementation but should not reach here
-    std::shared_ptr<ast::IdentifierNode> id = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
-    context->GetStack()->push_back(id);
-    assert(false);
+    std::shared_ptr<ast::IdentifierNode> ide = std::make_shared<ast::IdentifierNode>((**(context->GetLookahead()))->GetValue());
+    context->GetStack()->push_back(ide);
+    assert(false); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   }
 }
-}
+}  // namespace parser

@@ -1,0 +1,93 @@
+name: C++ CI
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Release, Debug]
+        toolchain: [msvc, clang, gcc]
+        std: [17]
+        include:
+          - toolchain: msvc
+            cc: cl
+            cxx: cl
+          - toolchain: gcc
+            cc: gcc
+            cxx: g++
+          - toolchain: clang
+            cc: clang
+            cxx: clang++
+        exclude:
+          # msvc isn't available on ubuntu/macos, duh
+          - platform: ubuntu-latest
+            toolchain: msvc
+          - platform: macos-latest
+            toolchain: msvc
+          # limit number of builds we do
+          # should be covered by ubuntu+gcc build
+          - platform: windows-latest
+            toolchain: gcc
+          - platform: windows-latest
+            toolchain: clang
+          - platform: macos-latest
+            toolchain: gcc
+          # include other_pkgs, cmake_configurations as required
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@main
+
+      - name: Set up repository
+        uses: actions/checkout@main
+        with:
+          ref: master
+
+      - name: Merge to master
+        run: git checkout --progress --force ${{ github.sha }}
+
+      - name: Prepare environment (Ubuntu)
+        if: matrix.platform == 'ubuntu-latest'
+        run: sudo apt-get install -y ninja-build ${{matrix.other_pkgs}}
+
+      - name: Prepare environment (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Prepare environment (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: brew install ninja ${{matrix.other_pkgs}}
+
+      - name: Configure build
+        working-directory: ${{github.workspace}}/Team21/Code21
+        env:
+          CC: ${{matrix.cc}}
+          CXX: ${{matrix.cxx}}
+          CXXFLAGS: ${{matrix.cxxflags}}
+        # Note: $GITHUB_WORKSPACE is distinct from ${{runner.workspace}}.
+        #       This is important
+        run: >
+          cmake -Bbuild -H${{github.workspace}}/Team21/Code21
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DCMAKE_CXX_STANDARD=${{matrix.std}}
+          ${{matrix.cmake_configurations}}
+          -G Ninja
+
+      - name: Build tests + project
+        working-directory: ${{github.workspace}}/Team21/Code21/build
+        run: ninja
+
+      - name: Run unit/integration tests
+        env:
+            CTEST_OUTPUT_ON_FAILURE: 1
+        working-directory: ${{github.workspace}}/Team21/Code21/build
+        # Hardcode 2 cores we know are there
+        run: ctest -C ${{matrix.build_type}} -j 2
+
+      - name: Run AutoTester tests (Linux)
+        if: runner.os == 'Linux'
+        working-directory: ${{ github.workspace }}
+        run: .github/run-autotester.sh

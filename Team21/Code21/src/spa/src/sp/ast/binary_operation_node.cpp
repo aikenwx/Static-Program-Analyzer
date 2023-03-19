@@ -1,25 +1,32 @@
 #include "binary_operation_node.h"
 
+#include <utility>
+
 namespace ast {
 BinaryOperationNode::BinaryOperationNode(std::shared_ptr<INode> left,
-                                         std::shared_ptr<INode> right) {
-  this->left = left;
-  this->right = right;
+                                         std::shared_ptr<INode> right)
+    : left_(std::move(left)), right_(std::move(right)) {}
+
+auto BinaryOperationNode::GetLeft() const -> std::shared_ptr<INode> {
+  return left_;
 }
 
-std::shared_ptr<INode> BinaryOperationNode::GetLeft() { return left; }
+auto BinaryOperationNode::GetRight() const -> std::shared_ptr<INode> {
+  return right_;
+}
 
-std::shared_ptr<INode> BinaryOperationNode::GetRight() { return right; }
+auto BinaryOperationNode::ToString() const -> std::string {
+  return "{\nleft:" + left_->ToString() + "right:" + right_->ToString() + "}\n";
+}
 
-void BinaryOperationNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
+void BinaryOperationNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                        int depth) {
   // nb: no HandleBinaryOperationNode() in Extractor
   // call HandleOtherNode() to let extractor update state
   // e.g. node parents
-  extractor->HandleOtherNode(currentNode, depth);
+  extractor.HandleOtherNode(shared_from_this(), depth);
 
-  left->AcceptVisitor(left, extractor, depth + 1);
-  right->AcceptVisitor(right, extractor, depth + 1);
+  left_->AcceptVisitor(extractor, depth + 1);
+  right_->AcceptVisitor(extractor, depth + 1);
 }
-}  // namespace ast
+} // namespace ast

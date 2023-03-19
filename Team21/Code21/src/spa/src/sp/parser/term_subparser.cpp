@@ -1,24 +1,24 @@
 #include "sp/ast/astlib.h"
 #include "term_subparser.h"
-#include "token/right_paren_token.h"
-#include "token/semicolon_token.h"
-#include "token/plus_token.h"
-#include "token/minus_token.h"
-#include "token/multiply_token.h"
-#include "token/divide_token.h"
-#include "token/modulo_token.h"
-#include "token/less_than_token.h"
-#include "token/greater_than_token.h"
-#include "token/equal_token.h"
-#include "token/less_equal_token.h"
-#include "token/greater_equal_token.h"
-#include "token/not_equal_token.h"
+#include "sp/token/right_paren_token.h"
+#include "sp/token/semicolon_token.h"
+#include "sp/token/plus_token.h"
+#include "sp/token/minus_token.h"
+#include "sp/token/multiply_token.h"
+#include "sp/token/divide_token.h"
+#include "sp/token/modulo_token.h"
+#include "sp/token/less_than_token.h"
+#include "sp/token/greater_than_token.h"
+#include "sp/token/equal_token.h"
+#include "sp/token/less_equal_token.h"
+#include "sp/token/greater_equal_token.h"
+#include "sp/token/not_equal_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
-bool TermSubparser::Parse(std::shared_ptr<Context> context) {
+auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightParenToken>()
     || context->IsLookaheadTypeOf<token::SemicolonToken>()
     || context->IsLookaheadTypeOf<token::PlusToken>()
@@ -32,57 +32,102 @@ bool TermSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
+    // term: term '*' factor
     if (stack->size() >= 3
-      && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kMultiply
-      && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      // T <- T * F
-      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack->back());
+      && util::instance_of<ast::FactorNode>(*iter)
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kMultiply
+      && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
+      // References factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::static_pointer_cast<ast::FactorNode>(stack->back());
+      // Pops factor node
       stack->pop_back();
+      // Pops times symbol node
       stack->pop_back();
-      std::shared_ptr<ast::TermNode> t1 = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // References term node
+      std::shared_ptr<ast::TermNode> ter1 =
+          std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
-      std::shared_ptr<ast::TimesNode> b = std::make_shared<ast::TimesNode>(t1->GetOperand(), f->GetOperand());
-      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
-      stack->push_back(t2);
+      // Creates times node
+      std::shared_ptr<ast::TimesNode> bin =
+          std::make_shared<ast::TimesNode>(ter1->GetOperand(), fac->GetOperand());
+      // Creates term node
+      std::shared_ptr<ast::TermNode> ter2 =
+          std::make_shared<ast::TermNode>(bin);
+      // Pushes term node to parse stack
+      stack->push_back(ter2);
       return true;
-    } else if (stack->size() >= 3
-      && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kDivide
-      && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      // T <- T / F
-      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack->back());
+    }
+    // term: term '/' factor
+    if (stack->size() >= 3
+      && util::instance_of<ast::FactorNode>(*iter)
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kDivide
+      && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
+      // References factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::static_pointer_cast<ast::FactorNode>(stack->back());
+      // Pops factor node
       stack->pop_back();
+      // Pops divides symbol node
       stack->pop_back();
-      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // References term node
+      std::shared_ptr<ast::TermNode> ter1 =
+          std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
-      std::shared_ptr<ast::DivideNode> b = std::make_shared<ast::DivideNode>(t->GetOperand(), f->GetOperand());
-      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
-      stack->push_back(t2);
+      // Creates divide node
+      std::shared_ptr<ast::DivideNode> bin =
+          std::make_shared<ast::DivideNode>(ter1->GetOperand(), fac->GetOperand());
+      // Creates term node
+      std::shared_ptr<ast::TermNode> ter2 =
+          std::make_shared<ast::TermNode>(bin);
+      // Pushes term node to parse stack
+      stack->push_back(ter2);
       return true;
-    } else if (stack->size() >= 3
-      && util::instance_of<ast::FactorNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kModulo
-      && util::instance_of<ast::TermNode>(*std::next(i, 2))) {
-      //T <- T % F
-      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack->back());
+    }
+    // term: term '%' factor
+    if (stack->size() >= 3
+      && util::instance_of<ast::FactorNode>(*iter)
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kModulo
+      && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
+      // References factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::static_pointer_cast<ast::FactorNode>(stack->back());
+      // Pops factor node
       stack->pop_back();
+      // Pops modulo symbol node
       stack->pop_back();
-      std::shared_ptr<ast::TermNode> t = std::static_pointer_cast<ast::TermNode>(stack->back());
+      // References term node
+      std::shared_ptr<ast::TermNode> ter1 =
+          std::static_pointer_cast<ast::TermNode>(stack->back());
+      // Pops term node
       stack->pop_back();
-      std::shared_ptr<ast::ModuloNode> b = std::make_shared<ast::ModuloNode>(t->GetOperand(), f->GetOperand());
-      std::shared_ptr<ast::TermNode> t2 = std::make_shared<ast::TermNode>(b);
-      stack->push_back(t2);
+      // Creates modulo node
+      std::shared_ptr<ast::ModuloNode> bin =
+          std::make_shared<ast::ModuloNode>(ter1->GetOperand(), fac->GetOperand());
+      // Creates term node
+      std::shared_ptr<ast::TermNode> ter2 =
+          std::make_shared<ast::TermNode>(bin);
+      // Pushes term node to parse stack
+      stack->push_back(ter2);
       return true;
-    } else if (util::instance_of<ast::FactorNode>(*i)) {
-      // T <- F
-      std::shared_ptr<ast::FactorNode> f = std::static_pointer_cast<ast::FactorNode>(stack->back());
+    }
+    // term: factor
+    if (util::instance_of<ast::FactorNode>(*iter)) {
+      // References factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::static_pointer_cast<ast::FactorNode>(stack->back());
+      // Pops factor node
       stack->pop_back();
-      std::shared_ptr<ast::TermNode> t = std::make_shared<ast::TermNode>(f->GetOperand());
-      stack->push_back(t);
+      // Creates term node
+      std::shared_ptr<ast::TermNode> ter =
+          std::make_shared<ast::TermNode>(fac->GetOperand());
+      // Pushes term node to parse stack
+      stack->push_back(ter);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

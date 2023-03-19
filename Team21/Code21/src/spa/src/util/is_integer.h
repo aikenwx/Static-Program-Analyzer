@@ -1,5 +1,5 @@
 #include <string>
 
 namespace util {
-bool is_integer(const std::string& str);
+auto is_integer(std::string_view str) -> bool;
 }

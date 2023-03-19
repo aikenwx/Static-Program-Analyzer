@@ -5,24 +5,21 @@
 #include "context.h"
 #include "subparser.h"
 #include "i_parser.h"
-#include "token/token.h"
+#include "sp/token/token.h"
 
 namespace parser {
 class SimpleChainParser : public IParser {
 public:
-  SimpleChainParser();
+  SimpleChainParser() noexcept;
 
-  std::unique_ptr<ast::AST> Parse(std::vector<std::unique_ptr<token::Token>> input) override;
+  auto Parse(std::vector<std::unique_ptr<token::Token>> input) -> std::unique_ptr<ast::AST> override;
 
 private:
-  int statementCounter;
+ int statementCounter{};
 
-  std::shared_ptr<Context> context;
-  std::shared_ptr<Subparser> subparsers;
+ std::shared_ptr<Context> context;
+ std::shared_ptr<Subparser> subparsers;
 
-  void Shift();
-  //bool Reduce();
-  //void Success();
-  //void Reject();
+ void Shift();
 };
-}
+}  // namespace parser

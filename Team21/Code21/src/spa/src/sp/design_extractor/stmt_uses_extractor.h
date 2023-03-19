@@ -28,67 +28,68 @@ class StmtUsesExtractor : public Extractor {
   // - Uses(assg, v) will always hold (if v is on RHS of assg)
  public:
   StmtUsesExtractor() = default;
-  void HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+  void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                         int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
   void HandleCallNode(
 
-      std::shared_ptr<ast::CallNode> node, int depth) override {
+      const std::shared_ptr<ast::CallNode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
   void HandleIfNode(
 
-      std::shared_ptr<ast::IfNode> node, int depth) override {
+      const std::shared_ptr<ast::IfNode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleWhileNode(std::shared_ptr<ast::WhileNode> node,
+  void HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                        int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleConstantNode(std::shared_ptr<ast::ConstantNode> node,
+  void HandleConstantNode(const std::shared_ptr<ast::ConstantNode>& node,
                           int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandlePrintNode(std::shared_ptr<ast::PrintNode> node,
+  void HandlePrintNode(const std::shared_ptr<ast::PrintNode>& node,
                        int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleProcedureNode(std::shared_ptr<ast::ProcedureNode> node,
+  void HandleProcedureNode(const std::shared_ptr<ast::ProcedureNode>& node,
                            int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleProgramNode(std::shared_ptr<ast::ProgramNode> node,
+  void HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node,
                          int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
   void HandleReadNode(
 
-      std::shared_ptr<ast::ReadNode> node, int depth) override {
+      const std::shared_ptr<ast::ReadNode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
   void HandleStatementListNode(
 
-      std::shared_ptr<ast::StatementListNode> node, int depth) override {
+      const std::shared_ptr<ast::StatementListNode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleStatementNode(std::shared_ptr<ast::StatementNode> node,
+  void HandleStatementNode(const std::shared_ptr<ast::StatementNode>& node,
                            int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleVariableNode(std::shared_ptr<ast::VariableNode> node,
+  void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
                           int depth) override;
-  void HandleOtherNode(std::shared_ptr<ast::INode> node, int depth) override {
+  void HandleOtherNode(const std::shared_ptr<ast::INode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
 
-  std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> GetRelationships();
+  [[nodiscard]] auto GetRelationships() const
+      -> std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>>;
 
  private:
   std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> relns_;
   std::vector<std::shared_ptr<ast::INode>> parents_;
   int depth_ = -1;
 
-  void UpdateParents(std::shared_ptr<ast::INode> node, int depth);
+  void UpdateParents(const std::shared_ptr<ast::INode>& node, int depth);
 };
 }  // namespace design_extractor

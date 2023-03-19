@@ -8,19 +8,19 @@
 namespace ast {
 class ProgramNode : public INode {
 public:
-  virtual ~ProgramNode() = default;
-  void AddProcedure(std::shared_ptr<ProcedureNode> procedure);
-  std::vector<std::shared_ptr<ProcedureNode>> GetProcedures() const;
-  std::string ToString() const override;
-  int GetTotalStatementCount();
-  bool ContainsProcedure(std::string const &procedureName);
-  std::shared_ptr<ProcedureNode> GetProcedure(std::string const &procedureName);
+  void AddProcedure(const std::shared_ptr<ProcedureNode> &procedure);
+  [[nodiscard]] auto GetProcedures() const
+      -> std::vector<std::shared_ptr<ProcedureNode>>;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  auto GetTotalStatementCount() -> int;
+  auto ContainsProcedure(std::string const &procedureName) -> bool;
+  auto GetProcedure(std::string const &procedureName)
+      -> std::shared_ptr<ProcedureNode>;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
 private:
-  std::vector<std::shared_ptr<ProcedureNode> > procedures;
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
 };
-}
+} // namespace ast

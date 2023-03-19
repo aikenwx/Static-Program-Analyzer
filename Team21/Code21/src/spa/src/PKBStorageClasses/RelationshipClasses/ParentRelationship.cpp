@@ -4,27 +4,15 @@
 
 #include "ParentRelationship.h"
 
-bool ParentRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->parentStatement->equals(entity);
+ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *childStatement) : Relationship(&ParentRelationship::relationshipType, parentStatement, childStatement) {
 }
 
-bool ParentRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->childStatement->equals(entity);
+const RelationshipType ParentRelationship::relationshipType = RelationshipType();
+
+auto ParentRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return ParentRelationship::relationshipType;
 }
 
-ParentRelationship::ParentRelationship(Statement *parentStatement, Statement *childStatement) {
-    this->childStatement = childStatement;
-    this->parentStatement = parentStatement;
-}
-
-RelationshipType ParentRelationship::getRelationshipType() {
-    return RelationshipType::PARENT;
-}
-
-Entity* ParentRelationship::getLeftHandEntity() {
-    return this->parentStatement;
-}
-
-Entity* ParentRelationship::getRightHandEntity() {
-    return this->childStatement;
+auto ParentRelationship::getRelationshipType() const -> const RelationshipType & {
+  return ParentRelationship::relationshipType;
 }

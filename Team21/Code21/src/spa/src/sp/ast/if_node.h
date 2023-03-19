@@ -1,22 +1,22 @@
 #pragma once
-#include "container_statement_node.h"
-#include "conditional_expression_node.h"
+#include "conditional_node.h"
 #include "statement_list_node.h"
 
 namespace ast {
-class IfNode : public ContainerStatementNode {
+class IfNode : public ConditionalNode {
 public:
-  IfNode(std::shared_ptr<INode> condition, std::shared_ptr<StatementListNode> then, std::shared_ptr<StatementListNode> els);
+  IfNode(std::shared_ptr<INode> condition,
+         std::shared_ptr<StatementListNode> then,
+         std::shared_ptr<StatementListNode> els);
 
-  std::shared_ptr<INode> GetCondition();
-  std::shared_ptr<StatementListNode> GetThen();
-  std::shared_ptr<StatementListNode> GetElse();
-  std::string ToString() const override;
-  int GetEndStatementNumber() override;
+  [[nodiscard]] auto GetCondition() const -> std::shared_ptr<INode> override;
+  [[nodiscard]] auto GetThen() const -> std::shared_ptr<StatementListNode>;
+  [[nodiscard]] auto GetElse() const -> std::shared_ptr<StatementListNode>;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  [[nodiscard]] auto GetEndStatementNumber() const -> int override;
   void IncrementStatementNumber(int value) override;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
 private:
@@ -24,4 +24,4 @@ private:
   std::shared_ptr<StatementListNode> then;
   std::shared_ptr<StatementListNode> els;
 };
-}
+} // namespace ast

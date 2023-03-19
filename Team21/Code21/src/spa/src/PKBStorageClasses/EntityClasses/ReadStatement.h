@@ -2,12 +2,16 @@
 #define SPA_READSTATEMENT_H
 
 #include "Statement.h"
-
 class ReadStatement : public Statement {
-   public:
-    ReadStatement(int statementNumber);
+   private:
+    static const EntityType readStatementType;
 
-    EntityType getEntityType() override;
+   public:
+    explicit ReadStatement(int statementNumber);
+
+    static auto getEntityTypeStatic() -> const EntityType &;
+
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

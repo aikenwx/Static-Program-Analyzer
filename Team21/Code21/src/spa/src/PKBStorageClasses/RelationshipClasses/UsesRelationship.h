@@ -5,29 +5,20 @@
 #ifndef SPA_USESRELATIONSHIP_H
 #define SPA_USESRELATIONSHIP_H
 
-
-#include "Relationship.h"
 #include "../EntityClasses/Variable.h"
+#include "Relationship.h"
 
 class UsesRelationship : public Relationship {
-private:
-    // Can be Statement or Procedure
-    Entity* user;
-    Variable* usedVariable;
+   private:
+    static const RelationshipType relationshipType;
 
-public:
+   public:
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
+
     UsesRelationship(Entity *user, Variable *usedVariable);
 
-    bool containsEntityOnLeftHand(Entity *entity) override;
-
-    bool containsEntityOnRightHand(Entity *entity) override;
-
-    RelationshipType getRelationshipType() override;
-
-    Entity* getLeftHandEntity() override;
-
-    Entity* getRightHandEntity() override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> const RelationshipType & override;
 };
 
-
-#endif //SPA_USESRELATIONSHIP_H
+#endif  // SPA_USESRELATIONSHIP_H

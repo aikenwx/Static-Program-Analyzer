@@ -6,6 +6,8 @@
 #include "PKB/PKB.h"
 #include "sp/sp.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace test_frontend {
 template <typename T, typename std::enable_if_t<std::is_base_of_v<Statement, T>,
                                                 bool> = true>
@@ -39,24 +41,24 @@ struct RelPair {
   std::pair<EntityType, std::string> leftEntity;
   std::pair<EntityType, std::string> rightEntity;
 
-  bool operator==(const RelPair& other) const {
+  auto operator==(const RelPair& other) const -> bool {
     return relType == other.relType && leftEntity == other.leftEntity &&
            rightEntity == other.rightEntity;
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const RelPair& rel) {
-    os << "RelPair{type=" << rel.relType << ", left=(" << rel.leftEntity.first
-       << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first
+  friend auto operator<<(std::ostream& ostream, const RelPair& rel) -> std::ostream& {
+    ostream << "RelPair{type=" << rel.relType.getKey() << ", left=(" << rel.leftEntity.first.getKey()
+       << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first.getKey()
        << ", " << rel.rightEntity.second << ")}";
-    return os;
+    return ostream;
   }
 
   struct Hasher {
-    std::size_t operator()(const RelPair& rel) const {
-      return std::hash<int>()(rel.relType) ^
-             (std::hash<int>()(rel.leftEntity.first) ^
+    auto operator()(const RelPair& rel) const -> std::size_t {
+      return std::hash<size_t>()(rel.relType.getKey()) ^
+             (std::hash<size_t>()(rel.leftEntity.first.getKey()) ^
               (std::hash<std::string>()(rel.leftEntity.second) ^
-               (std::hash<int>()(rel.rightEntity.first) ^
+               (std::hash<size_t>()(rel.rightEntity.first.getKey()) ^
                 std::hash<std::string>()(rel.rightEntity.second))));
     }
   };
@@ -114,29 +116,28 @@ SCENARIO("SP can process and store a simple program into PKB") {
     WHEN("The program is processed") {
       auto pkb = PKB();
 
-      auto sp = sp::SP();
-      sp.process(program, &pkb);
+      sp::SP::process(program, &pkb);
 
-      QueryFacade* qf = pkb.getQueryFacade();
+      QueryFacade* queryFacade = pkb.getQueryFacade();
       THEN(
           "The PKB should contain the correct information about assign "
           "statements") {
         std::vector<AssignStatement*> const* assigns =
-            qf->getAllAssignStatements();
+            queryFacade->getAllAssignStatements();
         RequireStmtNumsMatch(assigns, {1, 5, 7, 11});
       }
 
       THEN(
           "The PKB should contain the correct information about call "
           "statements") {
-        std::vector<CallStatement*> const* calls = qf->getAllCallStatements();
+        std::vector<CallStatement*> const* calls = queryFacade->getAllCallStatements();
         RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
       THEN(
           "The PKB should contain the correct information about if "
           "statements") {
-        std::vector<IfStatement*> const* ifs = qf->getAllIfStatements();
+        std::vector<IfStatement*> const* ifs = queryFacade->getAllIfStatements();
         RequireStmtNumsMatch(ifs, {8});
       }
 
@@ -144,7 +145,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about while "
           "statements") {
         std::vector<WhileStatement*> const* whiles =
-            qf->getAllWhileStatements();
+            queryFacade->getAllWhileStatements();
         RequireStmtNumsMatch(whiles, {});
       }
 
@@ -152,288 +153,288 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about print "
           "statements") {
         std::vector<PrintStatement*> const* prints =
-            qf->getAllPrintStatements();
+            queryFacade->getAllPrintStatements();
         RequireStmtNumsMatch(prints, {3, 12});
       }
 
       THEN(
           "The PKB should contain the correct information about read "
           "statements") {
-        std::vector<ReadStatement*> const* reads = qf->getAllReadStatements();
+        std::vector<ReadStatement*> const* reads = queryFacade->getAllReadStatements();
         RequireStmtNumsMatch(reads, {2});
       }
 
       THEN("The PKB should contain the correct information about procedures") {
-        std::vector<Procedure*> const* procs = qf->getAllProcedures();
+        std::vector<Procedure*> const* procs = queryFacade->getAllProcedures();
         RequireEntityValuesMatch(procs,
                                  {"main", "foo", "bar", "baz", "qux", "quux"});
       }
 
       THEN("The PKB should contain the correct information about variables") {
-        std::vector<Variable*> const* vars = qf->getAllVariables();
+        std::vector<Variable*> const* vars = queryFacade->getAllVariables();
         RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
-        std::vector<Constant*> const* consts = qf->getAllConstants();
+        std::vector<Constant*> const* consts = queryFacade->getAllConstants();
         RequireEntityValuesMatch(consts, {"1", "2", "4"});
       }
 
       THEN("The PKB should contain the correct information about statements") {
-        std::vector<Statement*> const* stmts = qf->getAllStatements();
+        std::vector<Statement*> const* stmts = queryFacade->getAllStatements();
         RequireStmtNumsMatch(stmts,
                              {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
       }
 
       THEN("The PKB should contain all Calls relationships") {
         std::vector<CallsRelationship*> const* callsRels =
-            qf->getAllCallsRelationships();
+            queryFacade->getAllCallsRelationships();
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "main"}}};
+            RelPair{CallsRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Procedure::getEntityTypeStatic(), "foo"}},
+            RelPair{CallsRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Procedure::getEntityTypeStatic(), "bar"}},
+            RelPair{CallsRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Procedure::getEntityTypeStatic(), "baz"}},
+            RelPair{CallsRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Procedure::getEntityTypeStatic(), "qux"}},
+            RelPair{CallsRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "main"}}};
 
         RequireRelationshipsMatch(callsRels, expectedRels);
       }
 
       THEN("The PKB should contain all Calls* relationships") {
         std::vector<CallsStarRelationship*> const* callsStarRels =
-            qf->getAllCallsStarRelationships();
+            queryFacade->getAllCallsStarRelationships();
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::PROCEDURE, "qux"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "main"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "foo"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "bar"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "baz"}},
-            RelPair{RelationshipType::CALLS_STAR,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::PROCEDURE, "qux"}}};
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Procedure::getEntityTypeStatic(), "foo"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Procedure::getEntityTypeStatic(), "bar"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Procedure::getEntityTypeStatic(), "baz"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Procedure::getEntityTypeStatic(), "qux"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Procedure::getEntityTypeStatic(), "bar"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Procedure::getEntityTypeStatic(), "baz"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Procedure::getEntityTypeStatic(), "qux"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Procedure::getEntityTypeStatic(), "baz"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Procedure::getEntityTypeStatic(), "qux"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "main"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "foo"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "bar"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "baz"}},
+            RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Procedure::getEntityTypeStatic(), "qux"}}};
 
         RequireRelationshipsMatch(callsStarRels, expectedRels);
       }
 
       THEN("The PKB should contain all proc-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
-            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::PROCEDURE, EntityType::VARIABLE);
+            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
+                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "y"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "baz"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "y"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "z"}}};
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "y"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "baz"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "y"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(modifiesRels, expectedRels);
       }
 
       THEN("The PKB should contain all stmt-var Modifies relationships") {
         std::vector<ModifiesRelationship*> const* modifiesRels =
-            qf->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::STATEMENT, EntityType::VARIABLE);
+            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
+                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::ASSIGN_STATEMENT, "1"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::READ_STATEMENT, "2"},
-                    {EntityType::VARIABLE, "y"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "4"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "4"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::ASSIGN_STATEMENT, "5"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "6"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::ASSIGN_STATEMENT, "7"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::IF_STATEMENT, "8"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "9"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::ASSIGN_STATEMENT, "11"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "y"}},
-            RelPair{RelationshipType::MODIFIES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "z"}}};
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {AssignStatement::getEntityTypeStatic(), "1"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {ReadStatement::getEntityTypeStatic(), "2"},
+                    {Variable::getEntityTypeStatic(), "y"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "4"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "4"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {AssignStatement::getEntityTypeStatic(), "5"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "6"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {AssignStatement::getEntityTypeStatic(), "7"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {IfStatement::getEntityTypeStatic(), "8"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "9"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {AssignStatement::getEntityTypeStatic(), "11"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "y"}},
+            RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(modifiesRels, expectedRels);
       }
 
       THEN("The PKB should contain all proc-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
-            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::PROCEDURE, EntityType::VARIABLE);
+            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
+                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "main"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "foo"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "bar"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "qux"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PROCEDURE, "quux"},
-                    {EntityType::VARIABLE, "z"}}};
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "main"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "foo"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "bar"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "qux"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {Procedure::getEntityTypeStatic(), "quux"},
+                    {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(usesRels, expectedRels);
       }
 
       THEN("The PKB should contain all stmt-var Uses relationships") {
         std::vector<UsesRelationship*> const* usesRels =
-            qf->getUsesRelationshipsByLeftAndRightEntityTypes(
-                EntityType::STATEMENT, EntityType::VARIABLE);
+            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
+                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
-            RelPair{RelationshipType::USES,
-                    {EntityType::PRINT_STATEMENT, "3"},
-                    {EntityType::VARIABLE, "z"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "4"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "4"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "6"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "6"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::IF_STATEMENT, "8"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::IF_STATEMENT, "8"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "10"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::PRINT_STATEMENT, "12"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "w"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "x"}},
-            RelPair{RelationshipType::USES,
-                    {EntityType::CALL_STATEMENT, "13"},
-                    {EntityType::VARIABLE, "z"}}};
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {PrintStatement::getEntityTypeStatic(), "3"},
+                    {Variable::getEntityTypeStatic(), "z"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "4"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "4"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "6"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "6"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {IfStatement::getEntityTypeStatic(), "8"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {IfStatement::getEntityTypeStatic(), "8"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "10"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {PrintStatement::getEntityTypeStatic(), "12"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "w"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "x"}},
+            RelPair{UsesRelationship::getRelationshipTypeStatic(),
+                    {CallStatement::getEntityTypeStatic(), "13"},
+                    {Variable::getEntityTypeStatic(), "z"}}};
 
         RequireRelationshipsMatch(usesRels, expectedRels);
       }
@@ -441,3 +442,5 @@ SCENARIO("SP can process and store a simple program into PKB") {
   }
 }
 }  // namespace test_frontend
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

@@ -1,15 +1,17 @@
 #include "relational_expression_node.h"
 
-namespace ast {
-RelationalExpressionNode::RelationalExpressionNode(std::shared_ptr<INode> operand) {
-  this->operand = operand;
-}
+#include <utility>
 
-std::shared_ptr<INode> RelationalExpressionNode::GetOperand() {
+namespace ast {
+RelationalExpressionNode::RelationalExpressionNode(
+    std::shared_ptr<INode> operand)
+    : operand(std::move(operand)) {}
+
+auto RelationalExpressionNode::GetOperand() -> std::shared_ptr<INode> {
   return operand;
 }
 
-std::string RelationalExpressionNode::ToString() const {
+auto RelationalExpressionNode::ToString() const -> std::string {
   return "rel_expression:" + operand->ToString() + "\n";
 }
-}
+}  // namespace ast

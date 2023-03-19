@@ -26,20 +26,6 @@ namespace qps {
 //    12.     x = x * y + z;
 //}
 
-TEST_CASE("TEST") {
-  std::string program = R"(procedure main {
-  x = z;
-})";
-
-  auto pkb = PKB();
-
-  sp::SP::process(program, &pkb);
-  std::list<std::string> result;
-  std::string query = R"(assign a; Select a such that Uses(1, "z") pattern a("x", "z"))";
-  QPS::evaluate(query, result, *pkb.getQueryFacade());
-
-}
-
 TEST_CASE("Next Clauses") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::ASSIGN] = {"1", "2", "4", "6", "8", "9", "10", "11", "12"};
@@ -64,15 +50,6 @@ TEST_CASE("Next Clauses") {
   seven->AddChild(nine);
   eight->AddChild(ten);
   nine->AddChild(ten);
-
-//  three->AddParent(one);
-//  four->AddParent(three);
-//  seven->AddParent(three);
-//  three->AddParent(four);
-//  eight->AddParent(seven);
-//  nine->AddParent(seven);
-//  ten->AddParent(eight);
-//  ten->AddParent(nine);
 
   cfg->InsertBlock(one);
   cfg->InsertBlock(three);

@@ -18,7 +18,9 @@ auto SimpleTokenizer::tokenize(std::string_view program)
   auto factory = token_factory::SimpleTokenFactory();
   std::vector<std::unique_ptr<token::Token>> tokens;
 
-  const auto *iter = program.cbegin();
+  // MSVC can't infer `const auto* iter` from const_it for some reason
+  // NOLINTNEXTLINE(readability-qualified-auto)
+  auto iter = program.cbegin();
   std::vector<char> buffer;
   bool isValidSymbolPrefix = false;
   vec_sz_t lastValidSymbolLen = -1;

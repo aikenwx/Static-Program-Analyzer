@@ -2,23 +2,23 @@
 #include "query/query_exceptions.h"
 
 namespace qps {
-std::vector<Product> AssignEvaluator::CallPkb(QueryFacade &pkb) {
+auto AssignEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
   std::vector<ModifiesRelationship *> modifies_relationships;
-  Ref ref1 = clause_.getArg1();
+  Ref ref1 = getClause().getArg1();
 
-  auto all_assignment_variable_pairs =
+  auto *all_assignment_variable_pairs =
       pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(AssignStatement::getEntityTypeStatic(),
                                                             Variable::getEntityTypeStatic());
   for (const auto &row : *all_assignment_variable_pairs) {
     if (std::holds_alternative<QuotedIdentifier>(ref1)
         && *row->getRightHandEntity()->getEntityValue() != std::get<QuotedIdentifier>(ref1).getQuotedId()) {
       continue;
-    } else {
-      modifies_relationships.push_back(row);
     }
+      modifies_relationships.push_back(row);
+
   }
 
-  ExpressionSpec expr = clause_.getArg2();
+  ExpressionSpec expr = getClause().getArg2();
   if (std::holds_alternative<Expression>(expr)) {
     Expression express = std::get<Expression>(expr);
     std::string expr = express.getExpression();
@@ -28,18 +28,18 @@ std::vector<Product> AssignEvaluator::CallPkb(QueryFacade &pkb) {
 
   std::vector<Product> res;
   for (const auto &row : modifies_relationships) {
-    Product p = Product(row);
-    res.push_back(p);
+    auto product = Product(row);
+    res.push_back(product);
   }
   return res;
 }
 
-std::vector<ModifiesRelationship *> AssignEvaluator::checkExpressionContained(std::vector<ModifiesRelationship *> assignment_modifies,
-                                                                              std::string postfix,
-                                                                              bool is_partial) {
+auto AssignEvaluator::checkExpressionContained(const std::vector<ModifiesRelationship *> &pkb_res,
+                                                                              const std::string &postfix,
+                                                                              bool is_partial) -> std::vector<ModifiesRelationship *> {
   std::vector<ModifiesRelationship *> filtered_relationships;
-  for (auto relationship : assignment_modifies) {
-    auto assignment_stmt = dynamic_cast<AssignStatement *>(relationship->getLeftHandEntity());
+  for (auto *relationship : pkb_res) {
+    auto *assignment_stmt = dynamic_cast<AssignStatement *>(relationship->getLeftHandEntity());
     auto post_fix_espression = *assignment_stmt->getPostFixExpression();
     bool expression_contained =
         (is_partial && post_fix_espression.find(postfix) != std::string::npos) || (postfix == post_fix_espression);
@@ -50,4 +50,4 @@ std::vector<ModifiesRelationship *> AssignEvaluator::checkExpressionContained(st
   return filtered_relationships;
 
 }
-} // qps
+}  // namespace qps

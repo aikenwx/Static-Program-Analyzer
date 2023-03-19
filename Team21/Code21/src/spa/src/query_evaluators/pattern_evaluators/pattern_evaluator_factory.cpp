@@ -7,15 +7,15 @@
 #include "query/query_exceptions.h"
 
 namespace qps {
-std::unique_ptr<PatternEvaluator> PatternEvaluatorFactory::Create(PatternClause &clause,
-                                                                  std::vector<Declaration> &decl_lst) {
+auto PatternEvaluatorFactory::Create(PatternClause &clause,
+                                      std::vector<Declaration> &decl_lst) -> std::unique_ptr<PatternEvaluator> {
   auto syn = clause.getStmtSynonym();
-  DesignEntity d = Declaration::findDeclarationWithSynonym(decl_lst, syn).value().getDesignEntity();
-  switch (d) {
+  DesignEntity des = Declaration::findDeclarationWithSynonym(decl_lst, syn).value().getDesignEntity();
+  switch (des) {
     case DesignEntity::ASSIGN:return std::make_unique<AssignEvaluator>(clause, decl_lst);
     case DesignEntity::WHILE:return std::make_unique<WhileEvaluator>(clause, decl_lst);
     case DesignEntity::IF:return std::make_unique<IfEvaluator>(clause, decl_lst);
-    default:throw QueryException(ErrorType::Syntactic, "Syntactic error. Invalid type for pattern synonym");
+    default:throw QueryException(ErrorType::Semantic, "Semantic error. Invalid type for pattern synonym");
   }
 }
-} // qps
+}  // namespace qps

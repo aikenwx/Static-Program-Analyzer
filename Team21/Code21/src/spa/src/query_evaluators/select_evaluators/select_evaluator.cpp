@@ -42,8 +42,8 @@ class SelectVisitor {
       for (auto &syn : syns_) {
         auto *val = final_syn_table.GetCell(row_idx, syn);
         if (attr_refs_idx < attr_refs_.size() && attr_refs_[attr_refs_idx].synonym == syn) {
-          row.push_back(EvaluateAttrRef(val,
-                                        attr_refs_[attr_refs_idx].attrName, pkb_));
+          row.push_back(AttributeReferenceEvaluator::EvaluateAttrRef(val,
+                                                                     attr_refs_[attr_refs_idx].attrName, pkb_));
           attr_refs_idx++;
         } else {
           row.push_back(*val->getEntityValue());

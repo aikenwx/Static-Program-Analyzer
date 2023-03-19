@@ -10,7 +10,6 @@
 namespace tokenizer {
 class SimpleTokenizer : public Tokenizer {
  public:
-  std::vector<std::unique_ptr<token::Token>> tokenize(const std::string& program) override;
-  SimpleTokenizer();
+  auto tokenize(std::string_view program) -> std::vector<std::unique_ptr<token::Token>> override;
 };
 }  // namespace tokenizer

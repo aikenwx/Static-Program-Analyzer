@@ -260,6 +260,6 @@ Select <i, v> such that Next(i, s) pattern i(v, _, _)
 5000
 52 - TUPLE relationship(synonym, synonym) ifPattern(wildcard, wildcard, wildcard)
 if i; while w;
-Select tuple such that Next(i, w) pattern i(_, _, _)
+Select <i,w> such that Next(i, w) pattern i(_, _, _)
 15 16
 5000

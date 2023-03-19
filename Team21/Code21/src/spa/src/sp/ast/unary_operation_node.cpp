@@ -14,14 +14,13 @@ auto UnaryOperationNode::ToString() const -> std::string {
   return "{\n" + operand->ToString() + "}\n";
 }
 
-void UnaryOperationNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
+void UnaryOperationNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                       int depth) {
   // nb: extractor doesn't have a HandleUnaryOperationNode method
   // call HandleOtherNode() to let extractor update state
   // e.g. node parents
-  extractor->HandleOtherNode(currentNode, depth);
+  extractor.HandleOtherNode(shared_from_this(), depth);
 
-  operand->AcceptVisitor(operand, extractor, depth + 1);
+  operand->AcceptVisitor(extractor, depth + 1);
 }
-}  // namespace ast
+} // namespace ast

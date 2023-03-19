@@ -1,6 +1,6 @@
 #include "sp/ast/astlib.h"
 #include "statement_list_subparser.h"
-#include "token/right_brace_token.h"
+#include "sp/token/right_brace_token.h"
 #include "util/instance_of.h"
 
 namespace parser {

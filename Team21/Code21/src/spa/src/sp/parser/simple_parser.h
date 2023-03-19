@@ -5,7 +5,7 @@
 
 #include "sp/ast/i_node.h"
 #include "i_parser.h"
-#include "token/token.h"
+#include "sp/token/token.h"
 
 namespace parser {
 class SimpleParser : public IParser {

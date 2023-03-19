@@ -8,17 +8,17 @@
 namespace ast {
 class BinaryOperationNode : public INode {
 public:
-  BinaryOperationNode(std::shared_ptr<INode> left, std::shared_ptr<INode> right);
+  BinaryOperationNode(std::shared_ptr<INode> left,
+                      std::shared_ptr<INode> right);
 
   [[nodiscard]] auto GetLeft() const -> std::shared_ptr<INode>;
   [[nodiscard]] auto GetRight() const -> std::shared_ptr<INode>;
   [[nodiscard]] auto ToString() const -> std::string override;
-  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                     const std::shared_ptr<design_extractor::Extractor>& extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
- private:
+private:
   std::shared_ptr<INode> left_;
   std::shared_ptr<INode> right_;
 };
-}  // namespace ast
+} // namespace ast

@@ -5,7 +5,7 @@
 
 namespace ast {
 void StatementListNode::AddStatement(
-    const std::shared_ptr<StatementNode>& node) {
+    const std::shared_ptr<StatementNode> &node) {
   if (statements.empty()) {
     if (util::instance_of<ContainerStatementNode>(node)) {
       endStatementNumber =
@@ -56,14 +56,13 @@ auto StatementListNode::ToString() const -> std::string {
   return str;
 }
 
-void StatementListNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
-  extractor->HandleStatementListNode(
-      std::static_pointer_cast<StatementListNode>(currentNode), depth);
+void StatementListNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                      int depth) {
+  extractor.HandleStatementListNode(
+      std::static_pointer_cast<StatementListNode>(shared_from_this()), depth);
 
   for (auto i = statements.rbegin(); i < statements.rend(); i++) {
-    (*i)->AcceptVisitor(*i, extractor, depth + 1);
+    (*i)->AcceptVisitor(extractor, depth + 1);
   }
 }
-}  // namespace ast
+} // namespace ast

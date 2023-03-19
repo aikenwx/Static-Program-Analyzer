@@ -119,6 +119,12 @@ class ReachableEntityFinder {
   }
 
  private:
+  const std::vector<Entity *> &sources_;
+  BlockIterator iterator_;
+  DestPredicate include_dest_;
+  ProcessRow process_row_;
+  QueryFacade &pkb_;
+  
   void ReachableEntities(Entity *entity, cfg::CFG &cfg) {
     int src = GetStmtNo(entity);
     auto opt_block = cfg.GetBlockAt(src);
@@ -163,12 +169,6 @@ class ReachableEntityFinder {
       }
     }
   }
-
-  const std::vector<Entity *> &sources_;
-  BlockIterator iterator_;
-  DestPredicate include_dest_;
-  ProcessRow process_row_;
-  QueryFacade &pkb_;
 };
 
 template<typename BlockIterator>

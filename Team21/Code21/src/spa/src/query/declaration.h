@@ -13,36 +13,36 @@ namespace qps {
 class Declaration {
 
 	private:
-		const DesignEntity design_entity;
-		const Synonym synonym;
+		DesignEntity design_entity;
+		Synonym synonym;
 
 	public:
-		DesignEntity getDesignEntity();
-		Synonym getSynonym();
+		auto getDesignEntity() -> DesignEntity;
+		auto getSynonym() -> Synonym;
 		Declaration(DesignEntity design_entity_, Synonym synonym_);
 
-		bool operator==(const Declaration& declaration2) const {
+		auto operator==(const Declaration& declaration2) const -> bool {
 			return design_entity == declaration2.design_entity && synonym == declaration2.synonym;
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, Declaration const& declaration) {
-			os << getStringFromDE(declaration.design_entity) << " " << declaration.synonym;
-			return os;
+		friend auto operator<<(std::ostream& ostream, Declaration const& declaration) -> std::ostream& {
+          ostream << getStringFromDE(declaration.design_entity) << " " << declaration.synonym;
+          return ostream;
 		}
 
 
-		static std::optional<Declaration> findDeclarationWithSynonym(std::vector<Declaration>& decl_list, Synonym& synonym) {
+		static auto findDeclarationWithSynonym(std::vector<Declaration>& decl_list, Synonym& synonym) -> std::optional<Declaration> {
 			std::string synonym_ = synonym.getSynonym();
 			return findDeclarationWithString(decl_list, synonym_);
 		}
 
-		static std::optional<Declaration> findDeclarationWithString(std::vector<Declaration>& decl_list, std::string& syn_string) {
-			for (int i = 0; i < decl_list.size(); i++) {
-				if (decl_list[i].getSynonym().getSynonym() == syn_string) {
-					return std::make_optional<Declaration>(decl_list[i]);
+		static auto findDeclarationWithString(std::vector<Declaration>& decl_list, std::string& syn_string) -> std::optional<Declaration> {
+			for (auto & idx : decl_list) {
+				if (idx.getSynonym().getSynonym() == syn_string) {
+					return std::make_optional<Declaration>(idx);
 				}
 			}
 			return std::nullopt;
 		}
 };
-}
+}  // namespace qps

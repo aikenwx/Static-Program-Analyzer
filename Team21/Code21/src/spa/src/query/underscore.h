@@ -9,14 +9,13 @@ namespace qps {
 
     public:
 
-        bool operator==(const Underscore& us) const {
+        auto operator==([[maybe_unused]] const Underscore& underscore) const -> bool {
             return true;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, Underscore const& us) {
-            os << "_";
-            return os;
+        friend auto operator<<(std::ostream& ostream, [[maybe_unused]] Underscore const& underscore) -> std::ostream& {
+          ostream << "_";
+          return ostream;
         }
     };
-}
-
+}  // namespace qps

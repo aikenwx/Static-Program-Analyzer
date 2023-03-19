@@ -1,0 +1,37 @@
+procedure program1 {
+    read count;
+    x = 0;
+    y = 1+2;
+    z = 1*2+4*5;
+    print x;
+
+    if(count != 0) then {
+      count = 1;
+    } else {
+      count = 2;
+    }
+
+    while(count < 10) {
+       count = 11;
+    }
+
+    while (x != 1000) {
+        x = x+y%20;
+    z = z/6-x*2;
+        if (z == 2000) then {
+            read a;
+            print z;
+    while (y > 20) {
+                print y;
+                x = x * 2;
+    }
+  } else {
+  print x;
+  a = x + 1;
+  y = 2;
+  }
+    }
+    read i;
+    y=x-1;
+    i=x-1;
+}

@@ -6,7 +6,7 @@
 
 namespace qps {
 
-std::map<Relationship, std::string> relationshipStringMap{{
+const std::map<Relationship, std::string> relationshipStringMap{{
                                                               {Relationship::Follows, "Follows"},
                                                               {Relationship::FollowsT, "Follows*"},
                                                               {Relationship::Parent, "Parent"},
@@ -25,7 +25,7 @@ std::map<Relationship, std::string> relationshipStringMap{{
                                                               {Relationship::AffectsT, "Affects*"}
                                                           }};
 
-std::map<std::string, Relationship> relationshipMap{{
+const std::map<std::string, Relationship> relationshipMap{{
                                                         {"Follows", Relationship::Follows},
                                                         {"Follows*", Relationship::FollowsT},
                                                         {"Parent", Relationship::Parent},
@@ -44,7 +44,7 @@ std::map<std::string, Relationship> relationshipMap{{
                                                         {"Affects*", Relationship::AffectsT}
                                                     }};
 
-Relationship getRelationshipFromString(std::string reString) {
+auto getRelationshipFromString(const std::string& reString) -> Relationship {
   try {
     return relationshipMap.at(reString);
   }
@@ -52,9 +52,8 @@ Relationship getRelationshipFromString(std::string reString) {
     throw QueryException(ErrorType::Syntactic, "Invalid Relationship" + reString);
   }
 }
-std::string getStringFromRelationship(Relationship relationship) {
+auto getStringFromRelationship(Relationship relationship) -> std::string {
   return relationshipStringMap.at(relationship);
 }
 
-}
-
+}  // namespace qps

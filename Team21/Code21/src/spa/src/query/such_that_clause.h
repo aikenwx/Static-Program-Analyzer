@@ -22,7 +22,7 @@ class SuchThatClause {
 			}
 			//Handle with synonym case first
 			if (std::holds_alternative<Synonym>(arg1)) {
-				auto synonym = std::get_if<Synonym>(&arg1);
+				auto *synonym = std::get_if<Synonym>(&arg1);
 				auto declaration = Declaration::findDeclarationWithSynonym(declarations, *synonym);
 				if (declaration->getDesignEntity() == DesignEntity::PROCEDURE) {
 					relationship = (relationship == Relationship::Uses)
@@ -41,19 +41,19 @@ class SuchThatClause {
 		}
 
 	public:
-		Relationship getRelationship();
-		Ref getArg1();
-		Ref getArg2();
+		auto getRelationship() -> Relationship;
+		auto getArg1() -> Ref;
+		auto getArg2() -> Ref;
 		SuchThatClause(Relationship relationship_, Ref arg1_, Ref arg2_, std::vector<Declaration>& declarations);
 
-		bool operator==(const SuchThatClause& clause) const {
+		auto operator==(const SuchThatClause& clause) const -> bool {
 			return relationship == clause.relationship && arg1 == clause.arg1 &&
 				arg2 == clause.arg2;
 		}
-		friend std::ostream& operator<<(std::ostream& os, SuchThatClause const& clause) {
+		friend auto operator<<(std::ostream& os, SuchThatClause const& clause) -> std::ostream& {
 			os << getStringFromRelationship(clause.relationship);
 			return os;
 		}
 
 };
-}
+}  // namespace qps

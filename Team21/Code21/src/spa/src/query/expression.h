@@ -11,18 +11,17 @@ class Expression {
 
 	public:
 		Expression(bool isPartial_, std::string expression_);
-		bool isExpressionPartial();
-		std::string getExpression();
+		[[nodiscard]] auto isExpressionPartial() const -> bool;
+		auto getExpression() -> std::string;
 
-		bool operator==(const Expression& expr) const {
+		auto operator==(const Expression& expr) const -> bool {
 			return isPartial == expr.isPartial && expression == expr.expression;
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, Expression& expr) {
-			os << expr.expression;
-			return os;
+		friend auto operator<<(std::ostream& ostream, Expression& expr) -> std::ostream& {
+            ostream << expr.expression;
+			return ostream;
 		}
 
 };
-}
-
+}  // namespace qps

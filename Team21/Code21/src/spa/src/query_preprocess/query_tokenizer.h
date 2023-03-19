@@ -12,14 +12,14 @@ class QueryTokenizer {
 		std::string currentString; //Current String for QueryTokenizer
 		std::vector<std::string> tokens;
 
-		char peek();
-		char next();
-		bool isEnd();
+		auto peek() -> char;
+		auto next() -> char;
+		auto isEnd() -> bool;
 		void readPhrase();
 		void readNumber();
 
 	public:
-		QueryTokenizer(std::string source);
-		std::vector<std::string> tokenize();
+		explicit QueryTokenizer(std::string source);
+		auto tokenize() -> std::vector<std::string>;
 };
-}
+}  // namespace qps

@@ -3,16 +3,17 @@
 
 #include <cctype>
 #include <set>
+#include <utility>
 
 namespace qps {
 
 const std::set<std::string> special_relationship = {"Follows", "Parent", "Calls", "Next"};
-std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
+const std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
 
 QueryTokenizer::QueryTokenizer(std::string source)
-    : queryString{source}, currentIndex{0} {}
+    : queryString{std::move(std::move(std::move(source)))}, currentIndex{0} {}
 
-char QueryTokenizer::peek() {
+auto QueryTokenizer::peek() -> char {
   char nextChar{};
   if (currentIndex < queryString.length()) {
     nextChar = queryString[currentIndex];
@@ -21,20 +22,20 @@ char QueryTokenizer::peek() {
   }
   return nextChar;
 }
-char QueryTokenizer::next() {
+auto QueryTokenizer::next() -> char {
   char nextChar{peek()};
   currentIndex++;
   return nextChar;
 }
-bool QueryTokenizer::isEnd() {
+auto QueryTokenizer::isEnd() -> bool {
   return currentIndex == queryString.length();
 }
 void QueryTokenizer::readPhrase() {
-  while (isalnum(peek())) {
+  while (isalnum(peek()) != 0) {
     currentString += next();
   }
   //Deals with special relationship with extra single token *
-  if (special_relationship.count(currentString) && peek() == '*') {
+  if ((special_relationship.count(currentString) != 0U) && peek() == '*') {
     currentString += next();
   }
   //Deals with special attrName: stmt#
@@ -43,35 +44,35 @@ void QueryTokenizer::readPhrase() {
   }
 }
 void QueryTokenizer::readNumber() {
-  while (isdigit(peek())) {
+  while (isdigit(peek()) != 0) {
     currentString += next();
   }
 }
 
-std::vector<std::string> QueryTokenizer::tokenize() {
+auto QueryTokenizer::tokenize() -> std::vector<std::string> {
   while (currentIndex < queryString.length()) {
     if (peek() == EOF) {
       break;
-    } else if (isalpha(peek())) {
+    } if (isalpha(peek()) != 0) {
       readPhrase();
       tokens.push_back(currentString);
-    } else if (isdigit(peek())) {
+    } else if (isdigit(peek()) != 0) {
       readNumber();
       tokens.push_back(currentString);
     } else if (peek() == '"') {
       next();
-      tokens.push_back("\"");
+      tokens.emplace_back("\"");
       while (peek() != '"' && !isEnd()) {
         currentString += next();
       }
       tokens.push_back(currentString);
       if (peek() == '"') {
         next();
-        tokens.push_back("\"");
+        tokens.emplace_back("\"");
       }
-    } else if (isspace(peek())) {
+    } else if (isspace(peek()) != 0) {
       next();
-    } else if (single_tokens.count(peek())) {
+    } else if (single_tokens.count(peek()) != 0U) {
       currentString += next();
       tokens.push_back(currentString);
     } else {
@@ -81,4 +82,4 @@ std::vector<std::string> QueryTokenizer::tokenize() {
   }
   return tokens;
 }
-}
+}  // namespace qps

@@ -11,29 +11,29 @@ class Synonym {
   std::string synonym;
 
  public:
-  Synonym(std::string syn);
-  std::string getSynonym() const;
-  static bool isValidSynonym(std::string syn);
+  explicit Synonym(const std::string& syn);
+  [[nodiscard]] auto getSynonym() const -> std::string;
+  static auto isValidSynonym(const std::string& syn) -> bool;
 
-  bool operator==(const Synonym &anotherSyn) const {
+  auto operator==(const Synonym &anotherSyn) const -> bool {
     return synonym == anotherSyn.synonym;
   }
 
-  bool operator<(const Synonym &anotherSyn) const {
+  auto operator<(const Synonym &anotherSyn) const -> bool {
     return synonym < anotherSyn.synonym;
   }
 
-  friend std::ostream &operator<<(std::ostream &os, Synonym const &syn) {
-    os << syn.synonym;
-    return os;
+  friend auto operator<<(std::ostream &ostream, Synonym const &syn) -> std::ostream & {
+    ostream << syn.synonym;
+    return ostream;
   }
 };
-}
+}  // namespace qps
 
 namespace std {
 template<>
 struct hash<qps::Synonym> {
-  size_t operator()(const qps::Synonym &syn) const {
+  auto operator()(const qps::Synonym &syn) const -> size_t {
     return hash<std::string>{}(syn.getSynonym());
   }
 };

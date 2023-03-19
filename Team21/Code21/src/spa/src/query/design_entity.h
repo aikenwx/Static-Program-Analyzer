@@ -19,7 +19,7 @@ enum class DesignEntity {
 
 };
 
-DesignEntity getDesignEntityFromString(std::string deString);
-std::string getStringFromDE(DesignEntity designEntity);
+auto getDesignEntityFromString(const std::string& deString) -> DesignEntity;
+auto getStringFromDE(DesignEntity designEntity) -> std::string;
 
-}
+}  // namespace qps

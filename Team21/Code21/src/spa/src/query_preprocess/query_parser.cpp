@@ -3,31 +3,32 @@
 #include <stack>
 #include <cctype>
 #include <algorithm>
+#include <utility>
 
 namespace qps {
 
 QueryParser::QueryParser(std::vector<std::string> tokens_)
-    : tokens{tokens_}, currentIndex{0}, selectClause{Boolean()} {}
+    : tokens{std::move(std::move(std::move(tokens_)))}, currentIndex{0}, selectClause{Boolean()} {}
 
-std::string QueryParser::peek() {
+auto QueryParser::peek() -> std::string {
   if (currentIndex < tokens.size()) {
     return tokens[currentIndex];
   }
   return "";
 }
 
-std::string QueryParser::next() {
+auto QueryParser::next() -> std::string {
   std::string currentToken{peek()};
   currentIndex++;
   return currentToken;
 }
-bool QueryParser::isEnd() {
-  return (peek() == "");
+auto QueryParser::isEnd() -> bool {
+  return (peek().empty());
 }
 
-bool QueryParser::isTokenValidInteger(std::string str) {
-  for (int i = 0; i < str.length(); i++) {
-    if (!std::isdigit(str[i])) {
+auto QueryParser::isTokenValidInteger(std::string str) -> bool {
+  for (char digit : str) {
+    if (std::isdigit(digit) == 0) {
       return false;
     }
   }
@@ -37,37 +38,36 @@ bool QueryParser::isTokenValidInteger(std::string str) {
   return str.length() != 0;
 }
 
-bool QueryParser::isSameToken(std::string str) {
+auto QueryParser::isSameToken(const std::string& str) -> bool {
   return (peek() == str);
 }
 
-bool QueryParser::assertNextToken(std::string str) {
+auto QueryParser::assertNextToken(const std::string& str) -> bool {
   if (isSameToken(str)) {
     return true;
   }
   throw QueryException(ErrorType::Syntactic, "Syntactic error. Invalid Query Syntax. Expect (" + str + ") got (" + peek() + ")");
 }
 
-Ref QueryParser::parseRef() {
+auto QueryParser::parseRef() -> Ref {
   if (isSameToken("\"")) {
     next();
-    std::string id = next();
+    std::string iden = next();
     assertNextToken("\"");
     next();
-    return QuotedIdentifier(id);
-  } else if (Synonym::isValidSynonym(peek())) {
+    return QuotedIdentifier(iden);
+  } if (Synonym::isValidSynonym(peek())) {
     return Synonym(next());
-  } else if (isSameToken("_")) {
+  } if (isSameToken("_")) {
     next();
     return Underscore();
-  } else if (isTokenValidInteger(peek())) {
+  } if (isTokenValidInteger(peek())) {
     return std::stoi(next());
-  } else {
-    throw QueryException(ErrorType::Syntactic, "Invalid representation for Ref: (" + peek() + ")");
-  }
+  }     throw QueryException(ErrorType::Syntactic, "Invalid representation for Ref: (" + peek() + ")");
+
 }
 
-ExpressionSpec QueryParser::parseExpressionSpec() {
+auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
   bool isPartial{};
   std::string expression{};
 
@@ -97,61 +97,63 @@ ExpressionSpec QueryParser::parseExpressionSpec() {
   return Expression(isPartial, expression);
 }
 
-std::string QueryParser::validateExpressionHelper(std::string s) {
-  s.erase(std::remove_if(s.begin(), s.end(), isspace), s.end());
-  int i = 0;
-  int last = s.length() - 1;
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-function-cognitive-complexity"
+auto QueryParser::validateExpressionHelper(std::string str) -> std::string {
+  str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
+  int idx = 0;
+  auto last = str.length() - 1;
   int openBracketCount = 0;
   int closeBracketCount = 0;
-  while (i < s.length()) {
-    int next = i + 1;
-    int prev = i - 1;
+  while (idx < str.length()) {
+    int next = idx + 1;
+    int prev = idx - 1;
     //check alphanumeric
-    if (isalpha(s[i])) {
-      i++;
-      while (i < s.length() && isalnum(s[i])) {
-        i++;
+    if (isalpha(str[idx]) != 0) {
+      idx++;
+      while (idx < str.length() && (isalnum(str[idx]) != 0)) {
+        idx++;
       }
     }
     //check for number
-    else if (isdigit(s[i])) {
-      i++;
-      prev = i - 1;
-      if (s[prev] == '0') {
-        if (i < s.length() && isdigit(s[i])) {
+    else if (isdigit(str[idx]) != 0) {
+      idx++;
+      prev = idx - 1;
+      if (str[prev] == '0') {
+        if (idx < str.length() && (isdigit(str[idx]) != 0)) {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. Expression spec contains leading zero");
         }
       }
-      while (i < s.length() && isdigit(s[i])) {
-        i++;
+      while (idx < str.length() && (isdigit(str[idx]) != 0)) {
+        idx++;
       }
-      if (i <= last && isalpha(s[i])) {
+      if (idx <= last && (isalpha(str[idx]) != 0)) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Integer has a letter in it");
       }
     }
     //check for '('
-    else if (s[i] == '(' && i < last) {
-      if (i > 0) {
-        if (operatorHelper(s[prev]) < 0 && s[prev] != '(') {
+    else if (str[idx] == '(' && idx < last) {
+      if (idx > 0) {
+        if (operatorHelper(str[prev]) < 0 && str[prev] != '(') {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is preceded by neither an operator or (");
         }
       }
-      if (!isalnum(s[next]) && s[next] != '(') {
+      if ((isalnum(str[next]) == 0) && str[next] != '(') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is followed by neither an alphanumeric char or (");
       }
       openBracketCount += 1;
-      i++;
+      idx++;
     }
     //check for ')'
-    else if (s[i] == ')') {
-      if (i == 0) {
+    else if (str[idx] == ')') {
+      if (idx == 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ) cannot be first char");
       }
-      else if (!isalnum(s[prev]) && s[prev] != ')') {
+      if ((isalnum(str[prev]) == 0) && str[prev] != ')') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is preceded by neither an alphanumeric char or )");
       }
-      if (i != last) {
-        if (operatorHelper(s[next]) < 0 && s[next] != ')') {
+      if (idx != last) {
+        if (operatorHelper(str[next]) < 0 && str[next] != ')') {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is followed by neither an operator or )");
         }
       }
@@ -159,17 +161,17 @@ std::string QueryParser::validateExpressionHelper(std::string s) {
       if (closeBracketCount > openBracketCount) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is not supposed to be allowed without a opening bracket");
       }
-      i++;
+      idx++;
     }
     //check for operators
-    else if (operatorHelper(s[i]) >= 0 && i < last) {
-      if (i == 0) {
+    else if (operatorHelper(str[idx]) >= 0 && idx < last) {
+      if (idx == 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Operator cannot be first char");
       }
-      if (operatorHelper(s[next]) >= 0) {
+      if (operatorHelper(str[next]) >= 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. operator cannot be followed by operator");
       }
-      i++;
+      idx++;
     }
     else {
       throw QueryException(ErrorType::Syntactic,
@@ -179,41 +181,40 @@ std::string QueryParser::validateExpressionHelper(std::string s) {
   if (openBracketCount != closeBracketCount) {
     throw QueryException(ErrorType::Syntactic, "Syntactic error. Closing brackets are insufficient");
   }
-  return s;
+  return str;
 }
+#pragma clang diagnostic pop
 
-Element QueryParser::parseElement() {
+auto QueryParser::parseElement() -> Element {
   Synonym synonym = Synonym(next());
   if (isSameToken(".")) {
     next();
     AttrName attrName = getAttrNameFromString(next());
     return AttrRef(synonym, attrName);
-  } else {
-    return synonym;
-  }
+  }     return synonym;
+
 }
 
-WithRef QueryParser::parseWithRef() {
+auto QueryParser::parseWithRef() -> WithRef {
   if (isSameToken("\"")) {
     next();
-    std::string id = next();
+    std::string iden = next();
     assertNextToken("\"");
     next();
-    return WithRef(QuotedIdentifier(id));
-  } else if (isTokenValidInteger(peek())) {
+    return WithRef(QuotedIdentifier(iden));
+  } if (isTokenValidInteger(peek())) {
     return WithRef(std::stoi(next()));
-  } else if (Synonym::isValidSynonym(peek())) {
+  } if (Synonym::isValidSynonym(peek())) {
     Synonym synonym = Synonym(next());
     assertNextToken(".");
     next();
     AttrName attrName = getAttrNameFromString(next());
     return WithRef(AttrRef(synonym, attrName));
-  } else {
-    throw QueryException(ErrorType::Syntactic, "Invalid representation for WithRef: (" + peek() + ")");
-  }
+  }     throw QueryException(ErrorType::Syntactic, "Invalid representation for WithRef: (" + peek() + ")");
+
 }
 
-std::vector<Element> QueryParser::parseTupleSelect() {
+auto QueryParser::parseTupleSelect() -> std::vector<Element> {
   std::vector<Element> tuple{};
   if (isSameToken("<")) {
     next();
@@ -241,12 +242,12 @@ void QueryParser::parseSuchThat() {
   assertNextToken(")");
   next();
 
-  suchThatClause.push_back(SuchThatClause(relationship, arg1, arg2, declarations));
+  suchThatClause.emplace_back(relationship, arg1, arg2, declarations);
 }
 
 void QueryParser::parsePattern() {
   Synonym synonym{Synonym(next())};
-  if (Declaration::findDeclarationWithSynonym(declarations, synonym).has_value() == false) {
+  if (!Declaration::findDeclarationWithSynonym(declarations, synonym).has_value()) {
     throw QueryException(ErrorType::Semantic,
       "Semantic error. There is missing declaration in pattern clause for synonym " + synonym.getSynonym());
   }
@@ -268,7 +269,7 @@ void QueryParser::parsePattern() {
   assertNextToken(")");
   next();
 
-  patternClause.push_back(PatternClause(synonym, arg1, arg2));
+  patternClause.emplace_back(synonym, arg1, arg2);
 }
 
 void QueryParser::parseWith() {
@@ -277,10 +278,10 @@ void QueryParser::parseWith() {
   next();
   WithRef ref2{parseWithRef()};
 
-  withClause.push_back(WithClause(ref1, ref2));
+  withClause.emplace_back(ref1, ref2);
 }
 
-bool QueryParser::parseDeclaration() {
+auto QueryParser::parseDeclaration() -> bool {
   try {
     getDesignEntityFromString(peek());
   } catch (QueryException &e) {
@@ -289,16 +290,16 @@ bool QueryParser::parseDeclaration() {
   DesignEntity design_entity{getDesignEntityFromString(next())};
   std::vector<Synonym> synonym_list;
 
-  synonym_list.push_back(Synonym(next()));
+  synonym_list.emplace_back(next());
 
   while (!isSameToken(";")) {
     assertNextToken(",");
     next();
-    synonym_list.push_back(Synonym(next()));
+    synonym_list.emplace_back(next());
   }
   next();
-  for (Synonym synonym : synonym_list) {
-    declarations.push_back(Declaration(design_entity, synonym));
+  for (const Synonym& synonym : synonym_list) {
+    declarations.emplace_back(design_entity, synonym);
   }
   return true;
 }
@@ -320,7 +321,7 @@ void QueryParser::parseSelectClause() {
   }
 }
 
-bool QueryParser::parseSuchThatClause() {
+auto QueryParser::parseSuchThatClause() -> bool {
   if (!isSameToken("such")) {
     return false;
   }
@@ -336,7 +337,7 @@ bool QueryParser::parseSuchThatClause() {
   return true;
 }
 
-bool QueryParser::parsePatternClause() {
+auto QueryParser::parsePatternClause() -> bool {
   if (!isSameToken("pattern")) {
     return false;
   }
@@ -350,7 +351,7 @@ bool QueryParser::parsePatternClause() {
   return true;
 }
 
-bool QueryParser::parseWithClause() {
+auto QueryParser::parseWithClause() -> bool {
   if (!isSameToken("with")) {
     return false;
   }
@@ -364,7 +365,7 @@ bool QueryParser::parseWithClause() {
   return true;
 }
 
-Query QueryParser::parse() {
+auto QueryParser::parse() -> Query {
   while (!isEnd()) {
     if (!parseDeclaration()) {
       break;
@@ -374,20 +375,19 @@ Query QueryParser::parse() {
   while (!isEnd()) {
     if (parseSuchThatClause()) {
       continue;
-    } else if (parsePatternClause()) {
+    } if (parsePatternClause()) {
       continue;
-    } else if (parseWithClause()) {
+    } if (parseWithClause()) {
       continue;
-    } else {
-      throw QueryException(ErrorType::Syntactic, "Invalid clause, not such-that or pattern");
-    }
+    }       throw QueryException(ErrorType::Syntactic, "Invalid clause, not such-that or pattern");
+
   }
-  return Query(declarations, suchThatClause, patternClause, withClause, selectClause);
+  return {declarations, suchThatClause, patternClause, withClause, selectClause};
 }
 
 //helper to tell precedence of operators
-int QueryParser::operatorHelper(char a) {
-  switch (a) {
+auto QueryParser::operatorHelper(char character) -> int {
+  switch (character) {
   case '%':
   case '*':
   case '/':return 1;
@@ -397,56 +397,56 @@ int QueryParser::operatorHelper(char a) {
   }
 }
 
-std::string QueryParser::makePostfix(std::string s) {
+auto QueryParser::makePostfix(std::string str) -> std::string {
   std::stack<char> stck;
   std::string postfixed;
-  int i = 0;
-  int last = s.length() - 1;
-  while (i < s.length()) {
+  int idx = 0;
+  auto last = str.length() - 1;
+  while (idx < str.length()) {
     //check for alphanumeric
-    if (isalpha(s[i])) {
+    if (isalpha(str[idx]) != 0) {
       postfixed += "\"";
-      postfixed += s[i];
-      i++;
-      while (i < s.length() && isalnum(s[i])) {
-        postfixed += s[i];
-        i++;
+      postfixed += str[idx];
+      idx++;
+      while (idx < str.length() && (isalnum(str[idx]) != 0)) {
+        postfixed += str[idx];
+        idx++;
       }
       postfixed += "\"";
     }
     //check for number
-    else if (isdigit(s[i])) {
+    else if (isdigit(str[idx]) != 0) {
       postfixed += "\"";
-      postfixed += s[i];
-      i++;
-      while (i < s.length() && isdigit(s[i])) {
-        postfixed += s[i];
-        i++;
+      postfixed += str[idx];
+      idx++;
+      while (idx < str.length() && (isdigit(str[idx]) != 0)) {
+        postfixed += str[idx];
+        idx++;
       }
       postfixed += "\"";
     }
     //check for '('
-    else if (s[i] == '(') {
-      stck.push(s[i]);
-      i++;
+    else if (str[idx] == '(') {
+      stck.push(str[idx]);
+      idx++;
     }
     //check for ')'
-    else if (s[i] == ')') {
+    else if (str[idx] == ')') {
       while (stck.top() != '(') {
         postfixed += stck.top();
         stck.pop();
       }
       stck.pop();
-      i++;
+      idx++;
     }
     //check for operators
-    else if (operatorHelper(s[i]) >= 0 && i < last) {
-      while (!stck.empty() && (operatorHelper(s[i]) <= operatorHelper(stck.top()))) {
+    else if (operatorHelper(str[idx]) >= 0 && idx < last) {
+      while (!stck.empty() && (operatorHelper(str[idx]) <= operatorHelper(stck.top()))) {
         postfixed += stck.top();
         stck.pop();
       }
-      stck.push(s[i]);
-      i++;
+      stck.push(str[idx]);
+      idx++;
     }
   }
   while (!stck.empty()) {
@@ -455,4 +455,4 @@ std::string QueryParser::makePostfix(std::string s) {
   }
   return postfixed;
 }
-}
+}  // namespace qps

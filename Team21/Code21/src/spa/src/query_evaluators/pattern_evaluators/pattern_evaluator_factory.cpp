@@ -2,8 +2,6 @@
 #include "assign_evaluator.h"
 #include "if_evaluator.h"
 #include "while_evaluator.h"
-#include "./query/declaration.h"
-
 #include "query/query_exceptions.h"
 
 namespace qps {

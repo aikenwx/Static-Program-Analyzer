@@ -61,12 +61,14 @@ std::vector<std::string> QueryTokenizer::tokenize() {
     } else if (peek() == '"') {
       next();
       tokens.push_back("\"");
-      while (peek() != '"') {
+      while (peek() != '"' && !isEnd()) {
         currentString += next();
       }
       tokens.push_back(currentString);
-      next();
-      tokens.push_back("\"");
+      if (peek() == '"') {
+        next();
+        tokens.push_back("\"");
+      }
     } else if (isspace(peek())) {
       next();
     } else if (single_tokens.count(peek())) {

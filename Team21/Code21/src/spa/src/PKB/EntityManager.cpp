@@ -4,56 +4,59 @@
 
 #include "EntityManager.h"
 
-#include <stdexcept>
-
 EntityManager::EntityManager() {
-    this->entityTypeToEntityStore = std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity *>>>();
-    this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();
+  this->entityTypeToEntityStore =
+      std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity *>>>();
+  this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();
 }
 
-void EntityManager::storeEntity(Entity *entity) {
-    auto sharedEntity = std::shared_ptr<Entity>(entity);
-    if (entityStore.find(entity->getEntityKey()) != entityStore.end()) {
-        return;
-    }
-    this->entityStore.insert(std::make_pair(entity->getEntityKey(), sharedEntity));
+void EntityManager::storeEntity(const std::shared_ptr<Entity> &entity) {
+  if (!this->entityStore.try_emplace(entity->getEntityKey(), entity).second) {
+    // early return if entity already exists
+    return;
+  }
 
-    if (Statement::isStatement(entity)) {
-        EntityKey statementKey = EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
-        this->entityStore.insert(std::make_pair(statementKey, sharedEntity));
-    }
+  if (Statement::isStatement(entity.get())) {
+    EntityKey statementKey =
+        EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
+    this->entityStore.try_emplace(statementKey, entity);
+  }
 
-    this->storeInEntityTypeStore(entity);
+  this->storeInEntityTypeStore(entity.get());
 }
 
-Entity *EntityManager::getEntity(EntityKey &key) {
-    if (entityStore.find(key) != entityStore.end()) {
-        return this->entityStore.at(key).get();
-    }
+auto EntityManager::getEntity(EntityKey &key) -> Entity * {
+  if (entityStore.find(key) != entityStore.end()) {
+    return this->entityStore.at(key).get();
+  }
 
-    return nullptr;
+  return nullptr;
 }
 
 void EntityManager::storeInEntityTypeStore(Entity *entity) {
-    EntityType &entityType = entity->getEntityType();
+  const EntityType &entityType = entity->getEntityType();
 
-    initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
+  initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
 
-    this->entityTypeToEntityStore.at(entity->getEntityType())->push_back(entity);
+  this->entityTypeToEntityStore.at(entity->getEntityType())->push_back(entity);
 
-    if (Statement::isStatement(entity)) {
-        initialiseVectorForEntityTypeStoreIfIndexNotExist(Statement::getEntityTypeStatic());
-        this->entityTypeToEntityStore.at(Statement::getEntityTypeStatic())->push_back(entity);
-    }
+  if (Statement::isStatement(entity)) {
+    initialiseVectorForEntityTypeStoreIfIndexNotExist(
+        Statement::getEntityTypeStatic());
+    this->entityTypeToEntityStore.at(Statement::getEntityTypeStatic())
+        ->push_back(entity);
+  }
 }
 
-std::vector<Entity *> *EntityManager::getEntitiesByType(EntityType &entityType) {
-    this->initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
-    return this->entityTypeToEntityStore.at(entityType).get();
+auto EntityManager::getEntitiesByType(const EntityType &entityType)
+    -> std::vector<Entity *> * {
+  this->initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
+  return this->entityTypeToEntityStore.at(entityType).get();
 }
 
-void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(EntityType &entityType) {
-    if (this->entityTypeToEntityStore.find(entityType) == this->entityTypeToEntityStore.end()) {
-        this->entityTypeToEntityStore.insert({entityType, std::make_shared<std::vector<Entity *>>()});
-    }
+void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(
+    const EntityType &entityType) {
+  // below line only inserts if the key doesn't already exist
+  this->entityTypeToEntityStore.try_emplace(
+      entityType, std::make_shared<std::vector<Entity *>>());
 }

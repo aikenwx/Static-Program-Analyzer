@@ -16,12 +16,12 @@ class StmtModifiesExtractor : public Extractor {
   // - Modifies(assg, v) will always hold (if v is on LHS of assg)
  public:
   StmtModifiesExtractor() = default;
-  void HandleAssignNode(std::shared_ptr<ast::AssignNode> node,
+  void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                         int depth) override;
-  void HandleReadNode(std::shared_ptr<ast::ReadNode> node, int depth) override;
+  void HandleReadNode(const std::shared_ptr<ast::ReadNode>& node, int depth) override;
 
-  std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>
-  GetRelationships();
+  [[nodiscard]] auto GetRelationships() const
+      -> std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>>;
 
  private:
   std::vector<std::shared_ptr<rel::ModifiesStmtVarRelationship>> relns_;

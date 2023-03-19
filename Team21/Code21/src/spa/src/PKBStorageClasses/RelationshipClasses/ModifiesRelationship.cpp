@@ -12,12 +12,12 @@ ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedV
     }
 }
 
-RelationshipType &ModifiesRelationship::getRelationshipType() const {
-    return ModifiesRelationship::getRelationshipTypeStatic();
+auto ModifiesRelationship::getRelationshipType() const -> const RelationshipType & {
+  return ModifiesRelationship::getRelationshipTypeStatic();
 }
 
-RelationshipType ModifiesRelationship::relationshipType = RelationshipType();
+const RelationshipType ModifiesRelationship::relationshipType = RelationshipType();
 
-RelationshipType &ModifiesRelationship::getRelationshipTypeStatic() {
-    return ModifiesRelationship::relationshipType;
+auto ModifiesRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return ModifiesRelationship::relationshipType;
 }

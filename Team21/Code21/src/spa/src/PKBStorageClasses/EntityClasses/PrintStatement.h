@@ -5,14 +5,14 @@
 
 class PrintStatement : public Statement {
    private:
-    static EntityType printStatementType;
+    static const EntityType printStatementType;
 
    public:
-    PrintStatement(int statementNumber);
+    explicit PrintStatement(int statementNumber);
 
-    static EntityType &getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    EntityType &getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

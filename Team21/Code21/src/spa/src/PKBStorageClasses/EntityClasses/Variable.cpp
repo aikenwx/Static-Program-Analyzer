@@ -4,15 +4,15 @@
 
 #include "Variable.h"
 
-EntityType &Variable::getEntityTypeStatic() {
+auto Variable::getEntityTypeStatic() -> const EntityType & {
     return Variable::variableType;
 }
 
-EntityType Variable::variableType = EntityType();
+const EntityType Variable::variableType = EntityType();
 
-Variable::Variable(std::string *variableValue) : Entity(&Variable::getEntityTypeStatic(), std::shared_ptr<std::string>(variableValue)) {
+Variable::Variable(const std::shared_ptr<std::string>& variableValue) : Entity(&Variable::getEntityTypeStatic(), variableValue) {
 }
 
-EntityType &Variable::getEntityType() const {
+auto Variable::getEntityType() const -> const EntityType & {
     return Variable::getEntityTypeStatic();
 }

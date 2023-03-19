@@ -1,13 +1,14 @@
 #include "call_validator.h"
 
-#include <assert.h>
+#include <cassert>
+
+#include "exceptions/semantic_error.h"
 #include "sp/ast/call_node.h"
 #include "sp/ast/program_node.h"
-#include "exceptions/semantic_error.h"
 
 namespace design_extractor {
-void CallValidator::HandleCallNode(std::shared_ptr<ast::CallNode> node, int depth) {
-  assert(this->program);
+void CallValidator::HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth) {
+  assert(this->program); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   if (!(node->GetProcedure())) {
     if (program->ContainsProcedure(node->GetProcedureName())) {
       node->SetProcedure(program->GetProcedure(node->GetProcedureName()));
@@ -17,7 +18,7 @@ void CallValidator::HandleCallNode(std::shared_ptr<ast::CallNode> node, int dept
     }
   }
 }
-void CallValidator::HandleProgramNode(std::shared_ptr<ast::ProgramNode> node, int depth) {
+void CallValidator::HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node, int depth) {
   this->program = node;
 }
-}
+}  // namespace design_extractor

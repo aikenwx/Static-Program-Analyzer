@@ -4,14 +4,14 @@
 #include "Statement.h"
 class ReadStatement : public Statement {
    private:
-    static EntityType readStatementType;
+    static const EntityType readStatementType;
 
    public:
-    ReadStatement(int statementNumber);
+    explicit ReadStatement(int statementNumber);
 
-    static EntityType& getEntityTypeStatic();
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    EntityType& getEntityType() const override;
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

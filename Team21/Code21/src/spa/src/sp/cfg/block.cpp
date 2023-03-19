@@ -1,36 +1,37 @@
 #include "block.h"
 
 namespace cfg {
-Block::Block(int start, int end) {
-  start_ = start;
-  end_ = end;
-}
+auto Block::start() const -> int { return start_; }
 
-int Block::start() {
-  return start_;
-}
+auto Block::end() const -> int { return end_; }
 
-int Block::end() {
-  return end_;
-}
-
-bool Block::IsInBlock(int stmtNo) {
+auto Block::IsInBlock(int stmtNo) const -> bool {
   return stmtNo >= start_ && stmtNo <= end_;
 }
 
-std::vector<std::shared_ptr<Block>> Block::parents() {
+auto Block::parents() const -> std::vector<std::weak_ptr<Block>> {
   return parents_;
 }
 
-std::vector<std::shared_ptr<Block>> Block::children() {
+auto Block::children() const -> std::vector<std::weak_ptr<Block>> {
   return children_;
 }
 
-void Block::AddParent(std::shared_ptr<Block> parent) {
+void Block::AddParent(const std::shared_ptr<Block>& parent) {
+  AddParentOnly(parent);
+  parent->AddChildOnly(shared_from_this());
+}
+
+void Block::AddChild(const std::shared_ptr<Block>& child) {
+  AddChildOnly(child);
+  child->AddParentOnly(shared_from_this());
+}
+
+void Block::AddParentOnly(const std::shared_ptr<Block>& parent) {
   parents_.push_back(parent);
 }
 
-void Block::AddChild(std::shared_ptr<Block> child) {
+void Block::AddChildOnly(const std::shared_ptr<Block>& child) {
   children_.push_back(child);
 }
-}
+} // namespace cfg

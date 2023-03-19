@@ -1,7 +1,8 @@
 #include "and_node.h"
+#include "sp/ast/binary_operation_node.h"
 
 namespace ast {
-std::string AndNode::ToString() const {
-  return "and:\n{\nleft:" + left->ToString() + "right:" + right->ToString() + "}\n";
+auto AndNode::ToString() const -> std::string {
+  return "and:\n" + BinaryOperationNode::ToString();
 }
 }

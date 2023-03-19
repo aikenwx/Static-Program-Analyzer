@@ -17,7 +17,7 @@ private:
     CFGManager() = default;
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
-    cfg::CFG* getCFG();
+    auto getCFG() -> cfg::CFG*;
 };
 
 

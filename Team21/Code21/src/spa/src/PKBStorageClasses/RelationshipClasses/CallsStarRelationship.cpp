@@ -4,15 +4,15 @@
 
 #include "CallsStarRelationship.h"
 
-RelationshipType CallsStarRelationship::relationshipType = RelationshipType();
+const RelationshipType CallsStarRelationship::relationshipType = RelationshipType();
 
-RelationshipType &CallsStarRelationship::getRelationshipTypeStatic() {
-    return CallsStarRelationship::relationshipType;
+auto CallsStarRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return CallsStarRelationship::relationshipType;
 }
 
 CallsStarRelationship::CallsStarRelationship(Procedure *caller, Procedure *callee) : Relationship(&CallsStarRelationship::relationshipType, caller, callee) {
 }
 
-RelationshipType &CallsStarRelationship::getRelationshipType() const {
-    return CallsStarRelationship::getRelationshipTypeStatic();
+auto CallsStarRelationship::getRelationshipType() const -> const RelationshipType & {
+  return CallsStarRelationship::getRelationshipTypeStatic();
 }

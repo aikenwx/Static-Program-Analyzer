@@ -73,9 +73,6 @@ auto AssignExpToPostfixExp(const std::shared_ptr<ast::INode>& node) -> std::stri
   while (!postfixExpStack.empty()) {
     pfeStream << postfixExpStack.front();
     postfixExpStack.pop();
-    if (!postfixExpStack.empty()) {
-      pfeStream << " ";
-    }
   }
 
   return pfeStream.str();

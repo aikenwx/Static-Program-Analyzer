@@ -23,7 +23,6 @@ auto ExtractAssignExp(
   return extractor.GetRelationships();
 }
 
-
 SCENARIO("Assign exp extractor can extract single-element assign exp") {
   GIVEN("A single-const assign exp") {
     std::string source = "a = 1;";
@@ -67,7 +66,7 @@ SCENARIO("Assign exp extractor can extract single-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" +)");
+        REQUIRE(rel->postfixExp() == R"("b""c"+)");
       }
     }
   }
@@ -82,7 +81,7 @@ SCENARIO("Assign exp extractor can extract single-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" -)");
+        REQUIRE(rel->postfixExp() == R"("b""c"-)");
       }
     }
   }
@@ -97,7 +96,7 @@ SCENARIO("Assign exp extractor can extract single-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" *)");
+        REQUIRE(rel->postfixExp() == R"("b""c"*)");
       }
     }
   }
@@ -112,7 +111,7 @@ SCENARIO("Assign exp extractor can extract single-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" /)");
+        REQUIRE(rel->postfixExp() == R"("b""c"/)");
       }
     }
   }
@@ -127,7 +126,7 @@ SCENARIO("Assign exp extractor can extract single-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" %)");
+        REQUIRE(rel->postfixExp() == R"("b""c"%)");
       }
     }
   }
@@ -144,7 +143,7 @@ SCENARIO("Assign exp extractor can extract multi-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" + "d" - "e" +)");
+        REQUIRE(rel->postfixExp() == R"("b""c"+"d"-"e"+)");
       }
     }
   }
@@ -159,7 +158,7 @@ SCENARIO("Assign exp extractor can extract multi-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("b" "c" * "d" / "e" *)");
+        REQUIRE(rel->postfixExp() == R"("b""c"*"d"/"e"*)");
       }
     }
   }
@@ -174,7 +173,7 @@ SCENARIO("Assign exp extractor can extract multi-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("a" "b" * "c" "d" * +)");
+        REQUIRE(rel->postfixExp() == R"("a""b"*"c""d"*+)");
       }
     }
   }
@@ -189,7 +188,7 @@ SCENARIO("Assign exp extractor can extract multi-operation assign exp") {
         REQUIRE(relns.size() == 1);
         auto rel = relns.front();
         REQUIRE(rel->varName() == "a");
-        REQUIRE(rel->postfixExp() == R"("a" "b" "c" * + "d" +)");
+        REQUIRE(rel->postfixExp() == R"("a""b""c"*+"d"+)");
       }
     }
   }

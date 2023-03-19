@@ -16,7 +16,7 @@ Select <a> such that Calls(_, "danh") pattern a("x", _"y + 2"_)
 4 - relationship(literal, synonym)  and assign(wildcard, wildcard)
 while w; if i; stmt s1, s2; assign a; procedure p;
 Select p such that Calls("nguyen", p) pattern a(_,_)
-a d
+a, d
 5000
 5 - relationship(synonym, synonym) and assign(wildcard, sub_expr)
 while w; if i; stmt s1, s2; assign a; procedure p1, p2;
@@ -30,7 +30,7 @@ duc 8, nguyen 8, a 8, d 8
 5000
 7 - relationship(literal, wildcard) and assign(synonym, wildcard)
 while w; if i; stmt s1, s2; assign a; variable v;
-Select v such that Calls("d", _) and pattern a(v,_)
+Select v such that Calls("d", _) pattern a(v,_)
 
 5000
 8 - relationship(synonym, wildcard) and assign(synonym, sub_expr)
@@ -41,7 +41,7 @@ FALSE
 9 - relationship(wildcard, wildcard) and assign(synonym, expr)
 while w; if i; stmt s1, s2; call c; assign a; variable v;
 Select <c, v> such that Calls(_, _) pattern a(v,"6*z")
-13 y, 15 y, 19 y
+13 y, 15 y, 19 y, 30 y, 36 y, 37 y
 5000
 10 - relationship(literal, literal) and while(literal)
 while w;

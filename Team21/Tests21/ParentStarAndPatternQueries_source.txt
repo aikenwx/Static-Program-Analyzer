@@ -28,7 +28,7 @@ procedure duc {
 	x = 1;
 	y = 6 * z; }
       i = i + 1; }
-    x = x + 1;
+    x = x + i;
     z = x + z; }
   else {
     y = 1; }

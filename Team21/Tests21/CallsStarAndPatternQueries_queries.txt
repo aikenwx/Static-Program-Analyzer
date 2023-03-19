@@ -30,7 +30,7 @@ duc 8, nguyen 8, a 8, d 8, e 8, f 8
 5000
 7 - relationship(literal, wildcard) and assign(synonym, wildcard)
 while w; if i; stmt s1, s2; assign a; variable v;
-Select v such that Calls*("d", _) and pattern a(v,_)
+Select v such that Calls*("d", _) pattern a(v,_)
 x, z, i, y, a, b
 5000
 8 - relationship(synonym, wildcard) and assign(synonym, sub_expr)
@@ -61,7 +61,7 @@ z, y, i
 13 - relationship(literal, synonym) and while(literal)
 while w; if i; stmt s1, s2; assign a; procedure p;
 Select <w, p> such that Calls*("danh", p) pattern w("y",_)
-9 duc, 9 nguyen, 9 a, 9 d, 9 f
+9 duc, 9 nguyen, 9 a, 9 d, 9 e, 9 f
 5000
 14 - relationship(synonym, synonym) and while(wildcard)
 while w; if i; stmt s1, s2; procedure p1, p2;

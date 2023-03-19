@@ -91,7 +91,7 @@ Select <c, v> such that Parent*(_, _) pattern w(v,_)
 19 - relationship(literal, literal) and if(literal)
 while w; if i; stmt s;
 Select BOOLEAN such that Parent*(5, 10) pattern i("y",_,_)
-FALSE
+TRUE
 5000
 20 - relationship(synonym, literal) and if(wildcard)
 while w; if i; stmt s1, s2;
@@ -131,6 +131,6 @@ Select s1 such that Parent*(s1, _) pattern i(_,_,_)
 27 - relationship(wildcard, wildcard) and if(synonym)
 while w; if i; stmt s1, s2; call c; variable v;
 Select v such that Parent*(_, _) pattern i(v,_,_)
-i, x
+i, x, y
 5000
 

@@ -1,130 +1,225 @@
-1 - relationship(literal, literal) assignPattern(literal, fullexpression)
+1 - ELEM relationship(literal, literal) assignPattern(literal, fullexpression)
 assign a;
 Select a such that Follows(2, 3) pattern a("x", "x * 2")
 19
 5000
-2 - relationship(literal, literal) assignPattern(literal, subexpression)
+2 - ELEM relationship(literal, literal) assignPattern(literal, subexpression)
 assign a;
 Select a such that Follows(4, 5) pattern a("x", _"2"_)
 19
 5000
-3 - relationship(literal, literal) assignPattern(literal, wildcard)
+3 - ELEM relationship(literal, literal) assignPattern(literal, wildcard)
 assign a;
 Select a such that Follows(18, 19) pattern a("x", _)
 2, 12, 19
 5000
-4 - relationship(literal, literal) assignPattern(synonym, fullexpression)
+4 - ELEM relationship(literal, literal) assignPattern(synonym, fullexpression)
 assign a; variable v;
 Select a such that Follows(9, 11) pattern a(v, "2")
 8, 22
 5000
-5 - relationship(literal, literal) assignPattern(synonym, subexpression)
+5 - ELEM relationship(literal, literal) assignPattern(synonym, subexpression)
 assign a; variable v;
 Select a such that Follows(13, 14) pattern a(v, _"y % 20"_)
 12
 5000
-6 - relationship(literal, literal) assignPattern(synonym, wildcard)
+6 - ELEM relationship(literal, literal) assignPattern(synonym, wildcard)
 assign a; variable v;
 Select a such that Follows(11, 23) pattern a(v, _)
 2, 3, 4, 7, 8, 10, 12, 13, 19, 21, 22, 24, 25
 5000
-7 - relationship(literal, literal) assignPattern(wildcard, fullexpression)
+7 - ELEM relationship(literal, literal) assignPattern(wildcard, fullexpression)
 assign a;
 Select a such that Follows(16, 17) pattern a(_, "2")
 8, 22
 5000
-8 - relationship(literal, literal) assignPattern(wildcard, subexpression)
+8 - ELEM relationship(literal, literal) assignPattern(wildcard, subexpression)
 assign a;
 Select a such that Follows(9, 11) pattern a(_, _"1"_)
 3, 4, 7, 21, 24, 25
 5000
-9 - relationship(literal, literal) assignPattern(wildcard, wildcard)
+9 - ELEM relationship(literal, literal) assignPattern(wildcard, wildcard)
 assign a;
 Select a such that Follows(22, 23) pattern a(_, _)
 none
 5000
-10 - relationship(literal, literal) whilePattern(synonym, wildcard)
+10 - ELEM relationship(literal, literal) whilePattern(literal, wildcard)
+while w; variable v;
+Select w such that Follows(15, 16) pattern w("x", _)
+11
+5000
+11 - ELEM relationship(literal, literal) whilePattern(synonym, wildcard)
 while w; variable v;
 Select w such that Follows(15, 16) pattern w(v, _)
 9, 11, 17
 5000
-11 - relationship(literal, literal) whilePattern(wildcard, wildcard)
+12 - ELEM relationship(literal, literal) whilePattern(wildcard, wildcard)
 while w;
 Select w such that Follows(6, 9) pattern w(_, _)
 9, 11, 17
 5000
-12 - relationship(literal, literal) ifPattern(synonym, wildcard, wildcard)
+13 - ELEM relationship(literal, literal) ifPattern(literal, wildcard, wildcard)
 if i; variable v;
-Select a such that Follows(18, 19) pattern i(v, _, _)
+Select i such that Follows(17, 19) pattern i("z", _, _)
+none
+5000
+14 - ELEM relationship(literal, literal) ifPattern(synonym, wildcard, wildcard)
+if i; variable v;
+Select i such that Follows(18, 19) pattern i(v, _, _)
 6, 14
 5000
-13 - relationship(literal, literal) ifPattern(wildcard, wildcard, wildcard)
+15 - ELEM relationship(literal, literal) ifPattern(wildcard, wildcard, wildcard)
 if i;
-Select a such that Follows(6, 9) pattern i(_, _, _)
+Select i such that Follows(6, 9) pattern i(_, _, _)
 6, 14
 5000
-14 - relationship(literal, synonym) assignPattern(literal, fullexpression)
+16 - ELEM relationship(literal, synonym) assignPattern(literal, fullexpression)
 assign a;
 Select a such that Follows(2, a) pattern a("x", "0")
 none
 5000
-15 - relationship(literal, synonym) assignPattern(literal, subexpression)
+17 - ELEM relationship(literal, synonym) assignPattern(literal, subexpression)
 assign a;
 Select a such that Follows(2, a) pattern a("y", _"1"_)
 3
 5000
-16 - relationship(literal, synonym) assignPattern(literal, wildcard)
+18 - ELEM relationship(literal, synonym) assignPattern(literal, wildcard)
 assign a;
 Select a such that Follows(18, a) pattern a("x", _)
 19
 5000
-17 - relationship(literal, synonym) assignPattern(synonym, fullexpression)
+19 - ELEM relationship(literal, synonym) assignPattern(synonym, fullexpression)
 assign a; variable v;
 Select a such that Follows(12, a) pattern a(v, "z / 6 - x * 2")
 13
 5000
-18 - relationship(literal, synonym) assignPattern(synonym, subexpression)
+20 - ELEM relationship(literal, synonym) assignPattern(synonym, subexpression)
 assign a; variable v;
 Select a such that Follows(18, a) pattern a(v, _"x * 2"_)
 19
 5000
-19 - relationship(literal, synonym) assignPattern(synonym, wildcard)
+21 - ELEM relationship(literal, synonym) assignPattern(synonym, wildcard)
 assign a; variable v;
 Select a such that Follows(20, a) pattern a(v, _)
 21
 5000
-20 - relationship(literal, synonym) assignPattern(wildcard, fullexpression)
+22 - ELEM relationship(literal, synonym) assignPattern(wildcard, fullexpression)
 assign a;
 Select a such that Follows(21, a) pattern a(_, "2")
 22
 5000
-21 - relationship(literal, synonym) assignPattern(wildcard, subexpression)
+23 - ELEM relationship(literal, synonym) assignPattern(wildcard, subexpression)
 assign a;
 Select a such that Follows(2, a) pattern a(_, _"1"_)
 3
 5000
-22 - relationship(literal, synonym) assignPattern(wildcard, wildcard)
+24 - ELEM relationship(literal, synonym) assignPattern(wildcard, wildcard)
 assign a;
 Select a such that Follows(11, a) pattern a(_, _)
 none
 5000
-23 - relationship(literal, synonym) whilePattern(synonym, wildcard)
+25 - ELEM relationship(literal, synonym) whilePattern(literal, wildcard)
+while w; variable v;
+Select w such that Follows(15, w) pattern w("y", _)
+none
+5000
+26 - ELEM relationship(literal, synonym) whilePattern(synonym, wildcard)
 while w; variable v;
 Select w such that Follows(16, w) pattern w(v, _)
 17
 5000
-24 - relationship(literal, synonym) whilePattern(wildcard, wildcard)
+27 - ELEM relationship(literal, synonym) whilePattern(wildcard, wildcard)
 while w;
 Select w such that Follows(9, w) pattern w(_, _)
 11
 5000
-25 - relationship(literal, synonym) ifPattern(synonym, wildcard, wildcard)
+28 - ELEM relationship(literal, synonym) ifPattern(literal, wildcard, wildcard)
+if i; variable v;
+Select i such that Follows(5, i) pattern i("count", _, _)
+6
+5000
+29 - ELEM relationship(literal, synonym) ifPattern(synonym, wildcard, wildcard)
 if i; variable v;
 Select i such that Follows(13, i) pattern i(v, _, _)
 14
 5000
-26 - relationship(literal, synonym) ifPattern(wildcard, wildcard, wildcard)
+30 - ELEM relationship(literal, synonym) ifPattern(wildcard, wildcard, wildcard)
 if i;
 Select i such that Follows(4, i) pattern i(_, _, _)
 none
+5000
+31 - TUPLE relationship(synonym, literal) assignPattern(literal, fullexpression)
+assign a; stmt s;
+Select <a, s> such that Follows(s, 17) pattern a("x", "x + y % 20")
+12 16
+5000
+32 - TUPLE relationship(synonym, literal) assignPattern(literal, subexpression)
+assign a; stmt s;
+Select <a, s> such that Follows(s, 9) pattern a("x", _"x"_)
+12 6, 19 6
+5000
+33 - TUPLE relationship(synonym, literal) assignPattern(literal, wildcard)
+assign a; stmt s;
+Select <a, s> such that Follows(s, 19) pattern a("z", _)
+4 18, 13 18
+5000
+34 - TUPLE relationship(synonym, literal) assignPattern(synonym, fullexpression)
+assign a; stmt s; variable v;
+Select <v, s> such that Follows(s, 13) pattern a(v, "x - 1")
+y 12, i 12
+5000
+35 - BOOLEAN relationship(synonym, literal) assignPattern(synonym, subexpression)
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows(s, 5) pattern a(v, _"300"_)
+FALSE
+5000
+36 - TUPLE relationship(synonym, literal) assignPattern(synonym, wildcard)
+assign a; stmt s; variable v;
+Select <a, s> such that Follows(s, 7) pattern a(v, _)
+none
+5000
+37 - TUPLE relationship(synonym, literal) assignPattern(wildcard, fullexpression)
+assign a; stmt s;
+Select <a, s> such that Follows(s, 16) pattern a(_, "3 + 4")
+none
+5000
+38 - TUPLE relationship(synonym, literal) assignPattern(wildcard, subexpression)
+assign a; stmt s;
+Select <s, a> such that Follows(s, 22) pattern a(_, _"x"_)
+21 12, 21 13, 21 19, 21 21, 21 24, 21 25
+5000
+39 - ELEM relationship(synonym, literal) assignPattern(wildcard, wildcard)
+assign a; stmt s;
+Select a such that Follows(s, 8) pattern a(_, _)
+none
+5000
+40 - TUPLE relationship(synonym, literal) whilePattern(literal, wildcard)
+while w; stmt s; 
+Select <w> such that Follows(s, 13) pattern w("count", _)
+9
+5000
+41 - TUPLE relationship(synonym, literal) whilePattern(synonym, wildcard)
+while w; stmt s; variable v;
+Select <w, v, s> such that Follows(s, 25) pattern w(v, _)
+9 count 24, 11 x 24, 17 y 24
+5000
+42 - BOOLEAN relationship(synonym, literal) whilePattern(wildcard, wildcard)
+while w; stmt s;
+Select BOOLEAN such that Follows(s, 12) pattern w(_, _)
+FALSE
+5000
+43 - ELEM relationship(synonym, literal) ifPattern(literal, wildcard, wildcard)
+if i; stmt s;
+Select i such that Follows(s, 17) pattern i("z", _, _)
+14
+5000
+44 - TUPLE relationship(synonym, literal) ifPattern(synonym, wildcard, wildcard)
+if i; stmt s; variable v;
+Select <s, v> such that Follows(s, 19) pattern i(v, _, _)
+18 count, 18 z
+5000
+45 - ELEM relationship(synonym, literal) ifPattern(wildcard, wildcard, wildcard)
+if i; stmt s;
+Select i such that Follows(s, 19) pattern i(_, _, _)
+6, 14
 5000

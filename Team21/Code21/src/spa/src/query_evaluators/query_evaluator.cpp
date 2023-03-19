@@ -1,4 +1,11 @@
 #include "query_evaluator.h"
+#include "select_evaluators/select_evaluator.h"
+#include "query_evaluators/such_that_evaluators/such_that_evaluator_factory.h"
+#include "pattern_evaluators/pattern_evaluator_factory.h"
+#include "with_evaluators/with_evaluator_factory.h"
+#include "join/constraints_solver.h"
+#include "tables/table_helpers.h"
+#include "string_helpers.h"
 
 namespace qps {
 QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)) {}
@@ -59,10 +66,13 @@ void QueryEvaluator::EvaluateQuery(QueryFacade &pkb, std::list<std::string> &res
   if (std::holds_alternative<bool>(final_result)) {
     results.emplace_back(to_string(std::get<bool>(final_result)));
   } else {
+    std::unordered_set<std::string> seen;
     auto final_table = std::get<FinalTable>(final_result);
     for (const auto &row : final_table.GetRows()) {
-      results.emplace_back(Join(row, " "));
+      auto result = Join(row, " ");
+      seen.insert(result);
     }
+    results.insert(results.end(), seen.begin(), seen.end());
   }
 }
 }  // namespace qps

@@ -5,26 +5,30 @@
 #include <unordered_set>
 
 template<typename Table>
-typename Table::Header CombinedKeys(const Table &table1, const Table &table2) {
+auto CombinedKeys(const Table &table1, const Table &table2) -> typename Table::Header {
   auto all_keys = table1.GetHeader();
   for (const auto &key : table2.GetHeader()) {
-    if (table1.HasKey(key)) continue;
+    if (table1.HasKey(key)) {
+      continue;
+    }
     all_keys.push_back(key);
   }
   return all_keys;
 }
 
 template<typename Table>
-typename Table::Header CommonKeys(const Table &table1, const Table &table2) {
+auto CommonKeys(const Table &table1, const Table &table2) -> typename Table::Header {
   typename Table::Header common_keys;
   for (const auto &key : table2.GetHeader()) {
-    if (table1.HasKey(key)) common_keys.push_back(key);
+    if (table1.HasKey(key)) {
+      common_keys.push_back(key);
+    }
   }
   return common_keys;
 }
 
 template<typename Table>
-typename Table::Row ExtractRow(const Table &table, size_t row_idx, const typename Table::Header &header) {
+auto ExtractRow(const Table &table, size_t row_idx, const typename Table::Header &header) -> typename Table::Row {
   typename Table::Row row;
   row.reserve(header.size());
   for (const auto &key : header) {
@@ -40,12 +44,11 @@ void Extract(const Table &table, const Container &container, TransformFunc func)
 }
 
 template<typename Table>
-std::unordered_set<typename Table::Value> ExtractCol(const Table &table,
-                                                     const typename Table::Key &key) {
+auto ExtractCol(const Table &table,
+                const typename Table::Key &key) -> std::unordered_set<typename Table::Value> {
   std::unordered_set<typename Table::Value> col_vals;
   for (size_t row_idx = 0; row_idx < table.ResultSize(); ++row_idx) {
     col_vals.insert(table.GetCell(row_idx, key));
   }
   return col_vals;
 }
-

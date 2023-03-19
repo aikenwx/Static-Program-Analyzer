@@ -1,6 +1,7 @@
 #include "with_quote_attr_evaluator.h"
-#include <unordered_set>
 #include <vector>
+
+#include "query_evaluators/pkb_helpers.h"
 
 namespace qps {
 auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
@@ -23,7 +24,7 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal.synonym);
 
-  EntityType entType = ClauseEvaluator::DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
   auto *pkb_res = pkb.getEntity(entType, quoteVal.getQuotedId());
 

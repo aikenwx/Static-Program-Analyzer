@@ -6,7 +6,7 @@
 
 namespace qps {
 
-std::set<std::string> special_relationship = {"Follows", "Parent", "Calls"};
+const std::set<std::string> special_relationship = {"Follows", "Parent", "Calls", "Next"};
 std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
 
 QueryTokenizer::QueryTokenizer(std::string source)

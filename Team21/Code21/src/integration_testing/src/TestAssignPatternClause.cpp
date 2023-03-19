@@ -12,6 +12,8 @@
 //    04      cenY = 2*count+1+2*cenX -> "2""count"*"1"+"2""cenX"*+
 //    05      cenZ = 1%2+(4+2) -> "1""2"%"4""2"++
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("QPS can work with different combinations of assign pattern") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::VARIABLE] = {"count", "cenX", "cenY", "cenZ"};
@@ -162,3 +164,5 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
     }
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

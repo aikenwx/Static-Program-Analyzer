@@ -1,6 +1,7 @@
 #include "with_int_attr_evaluator.h"
-#include <unordered_set>
 #include <vector>
+
+#include "query_evaluators/pkb_helpers.h"
 
 namespace qps {
 auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
@@ -23,7 +24,7 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal.synonym);
 
-  EntityType entType = ClauseEvaluator::DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
   auto *pkb_res = pkb.getEntity(entType, numberVal);
 

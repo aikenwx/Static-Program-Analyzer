@@ -3,13 +3,13 @@
 #include "memory"
 
 #include "query/such_that_clause.h"
-#include "such_that_evaluator.h"
+#include "query_evaluators/such_that_evaluators/relationship_evaluators/relationship_evaluator.h"
 
 namespace qps {
 
 class SuchThatEvaluatorFactory {
  public:
-  static std::unique_ptr<SuchThatEvaluator> Create(SuchThatClause &clause, std::vector<Declaration> &decl_lst);
+  static auto Create(SuchThatClause &clause, std::vector<Declaration> &decl_lst) -> std::unique_ptr<SuchThatEvaluator>;
 };
 
 } // qps

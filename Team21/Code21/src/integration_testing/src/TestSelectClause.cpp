@@ -28,6 +28,8 @@
 //    16      print flag
 //}
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("QPS can work with only select clause") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::VARIABLE] = {"count", "cenX", "cenY", "flag", "cenX", "cenY", "x", "y", "z"};
@@ -99,4 +101,4 @@ TEST_CASE("QPS can work with only select clause") {
   }
 }
 
-
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

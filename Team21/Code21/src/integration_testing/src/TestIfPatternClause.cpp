@@ -24,6 +24,8 @@
 //    13        print(3);
 //            }
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("QPS can work with different combinations of if pattern") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::VARIABLE] = {"count", "cenX", "cenY", "cenZ"};
@@ -86,3 +88,5 @@ TEST_CASE("QPS can work with different combinations of if pattern") {
     REQUIRE(qps_test::RunQuery("if i, q; variable v; Select q pattern i(\"cenY\", _, _)", *pkb_querier) == expected);
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

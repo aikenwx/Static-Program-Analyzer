@@ -6,13 +6,7 @@
 #include "query/query.h"
 #include "PKB/QueryFacade.h"
 #include "clause_evaluator.h"
-#include "select_evaluators/select_evaluator.h"
-#include "such_that_evaluators/such_that_evaluator_factory.h"
-#include "pattern_evaluators/pattern_evaluator_factory.h"
-#include "with_evaluators/with_evaluator_factory.h"
-#include "join/constraints_solver.h"
-#include "tables/table_helpers.h"
-#include "string_helpers.h"
+#include "query_evaluators/select_evaluators/select_evaluator.h"
 
 namespace qps {
 

@@ -21,6 +21,7 @@
 
 
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("Multi clause queries work") {
   qps_test::PopulatePKBHelper::Data data;
@@ -153,3 +154,5 @@ TEST_CASE("Multi clause queries work") {
         *pkb_querier) == empty);
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

@@ -1,0 +1,10 @@
+1 - BOOLEAN assignPattern but with no assign statement at all
+assign a;
+Select BOOLEAN pattern a(_,_)
+FALSE
+5000
+2 - BOOLEAN such that with no assign statement at all
+stmt s, s1;
+Select BOOLEAN such that Follows(s, s1)
+FALSE
+5000

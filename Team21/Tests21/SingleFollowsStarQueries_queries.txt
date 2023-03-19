@@ -1,0 +1,45 @@
+1 - ELEM relationship(literal, literal)
+constant c;
+Select c such that Follows*(1, 17)
+1, 5, 10
+5000
+2 - BOOLEAN relationship(synonym, literal)
+while w;
+Select BOOLEAN such that Follows*(w, 10)
+TRUE
+5000
+3 - BOOLEAN relationship(wildcard, literal)
+
+Select BOOLEAN such that Follows*(_, 16)
+FALSE
+5000
+4 - TUPLE relationship(literal, synonym)
+assign a; read r;
+Select <a, r> such that Follows*(1, a)
+4 1, 4 2, 4 13, 4 23, 4 24, 4 26, 5 1, 5 2, 5 13, 5 23, 5 24, 5 26, 6 1, 6 2, 6 13, 6 23, 6 24, 6 26
+5000
+5 - TUPLE relationship(synonym, synonym)
+assign a; while w;
+Select <a, w> such that Follows*(a, w)
+4 7, 5 7, 6 7
+5000
+6 - TUPLE relationship(wildcard, literal)
+call c;
+Select <c> such that Follows*(_, 25)
+none
+5000
+7 - TUPLE relationship(literal, wildcard)
+while w;
+Select <w> such that Follows*(13, _)
+7, 12
+5000
+8 - TUPLE relationship(synonym, wildcard)
+read r;
+Select <r> such that Follows*(r, _)
+1, 2, 13, 23
+5000
+9 - TUPLE relationship(wildcard, wildcard)
+call c;
+Select <c> such that Follows*(_, _)
+17
+5000

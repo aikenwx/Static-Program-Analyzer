@@ -16,9 +16,9 @@
 #include "util/instance_of.h"
 
 namespace parser {
-bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
+auto FactorSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightParenToken>()
     || context->IsLookaheadTypeOf<token::SemicolonToken>()
     || context->IsLookaheadTypeOf<token::PlusToken>()
@@ -32,34 +32,56 @@ bool FactorSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    if (util::instance_of<ast::VariableNode>(*i)) {
-      // F <- V
-      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
+    // factor: var_name
+    if (util::instance_of<ast::VariableNode>(*iter)) {
+      // References variable node
+      std::shared_ptr<ast::VariableNode> var =
+          std::static_pointer_cast<ast::VariableNode>(stack->back());
+      // Pops variable node
       stack->pop_back();
-      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(v);
-      stack->push_back(f);
+      // Creates factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::make_shared<ast::FactorNode>(var);
+      // Pushes factor node to parse stack
+      stack->push_back(fac);
       return true;
-    } else if (util::instance_of<ast::ConstantNode>(*i)) {
-      // F <- C
-      std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
+    }
+    // factor: const_value
+    if (util::instance_of<ast::ConstantNode>(*iter)) {
+      // References constant node
+      std::shared_ptr<ast::ConstantNode> con =
+          std::static_pointer_cast<ast::ConstantNode>(stack->back());
+      // Pops constant node
       stack->pop_back();
-      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(c);
-      stack->push_back(f);
+      // Creates factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::make_shared<ast::FactorNode>(con);
+      // Pushes factor node to parse stack
+      stack->push_back(fac);
       return true;
-    } else if (stack->size() >= 3
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ExpressionNode>(*std::next(i, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 2)))->GetType() == ast::SymbolType::kLeftParen) {
-      // F <- ( E )
+    }
+    // factor: '(' expr ')'
+    if (stack->size() >= 3
+      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightParen
+      && util::instance_of<ast::ExpressionNode>(*std::next(iter, 1))
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftParen) {
+      // Pops right paren symbol node
       stack->pop_back();
-      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      // References expression node
+      std::shared_ptr<ast::ExpressionNode> exp =
+          std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      // Pops expression node
       stack->pop_back();
+      // Pops left paren symbol node
       stack->pop_back();
-      std::shared_ptr<ast::FactorNode> f = std::make_shared<ast::FactorNode>(e->GetOperand());
-      stack->push_back(f);
+      // Creates factor node
+      std::shared_ptr<ast::FactorNode> fac =
+          std::make_shared<ast::FactorNode>(exp->GetOperand());
+      // Pushes factor node to parse stack
+      stack->push_back(fac);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

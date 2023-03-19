@@ -82,6 +82,12 @@ class QueryFacade {
     auto getIfStatementsUsingVariableInCondition(std::string variableName)
         -> std::unordered_set<IfStatement*>*;
 
+    auto getVariablesInWhileStatementCondition(int statementNumber)
+        -> std::unordered_set<Variable*>*;
+
+    auto getVariablesInIfStatementCondition(int statementNumber)
+        -> std::unordered_set<Variable*>*;
+
     auto getStatementModifiesVariableRelationship(int statementNumber,
                                                   std::string variableName)
         -> ModifiesRelationship*;

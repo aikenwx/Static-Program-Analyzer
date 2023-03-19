@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_set>
 
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
 #include "exceptions/parser_error.h"
 #include "exceptions/semantic_error.h"
 #include "exceptions/syntax_error.h"
@@ -12,6 +13,8 @@
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/call_validator.h"
+#include "sp/design_extractor/cond_var_extractor.h"
+#include "sp/design_extractor/cfg_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -440,6 +443,25 @@ void PopulateAssignPostfixExpr(
   }
 }
 
+void PopulateCondVarRels(
+    const std::unordered_map<int, std::unordered_set<std::string>>
+        &ifCondVarRels,
+    const std::unordered_map<int, std::unordered_set<std::string>>
+        &whileCondVarRels,
+    PopulateFacade *popFacade) {
+  for (const auto &[stmtNum, varNames] : ifCondVarRels) {
+    for (const auto &varName : varNames) {
+      popFacade->storeIfStatementConditionVariable(stmtNum, varName);
+    }
+  }
+
+  for (const auto &[stmtNum, varNames] : whileCondVarRels) {
+    for (const auto &varName : varNames) {
+      popFacade->storeWhileStatementConditionVariable(stmtNum, varName);
+    }
+  }
+}
+
 auto SP::process(const std::string& program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
@@ -478,6 +500,20 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
   auto assignExpRelationships =
       Visit<design_extractor::AssignExpExtractor, rel::AssignExpRelationship>(
           programNode);
+
+  // process AST to get CFG
+  auto cfgExtractor = design_extractor::CFGExtractor();
+  programNode->AcceptVisitor(cfgExtractor, 0);
+  auto cfg = cfgExtractor.cfg();
+
+  // process AST to get vars used in if/while cond expr
+  auto condVarExtractor = design_extractor::CondVarExtractor<ast::IfNode>();
+  programNode->AcceptVisitor(condVarExtractor, 0);
+  auto ifCondVarRels = condVarExtractor.condVars();
+
+  condVarExtractor = design_extractor::CondVarExtractor<ast::WhileNode>();
+  programNode->AcceptVisitor(condVarExtractor, 0);
+  auto whileCondVarRels = condVarExtractor.condVars();
 
   // postprocess relationships
 
@@ -541,6 +577,12 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
 
   // store assign postfix exps into PKB
   PopulateAssignPostfixExpr(assignExpRelationships, popFacade);
+
+  // store CFG into PKB
+  popFacade->storeCFG(cfg);
+
+  // store cond var rels into PKB
+  PopulateCondVarRels(ifCondVarRels, whileCondVarRels, popFacade);
 
   return true;
 }

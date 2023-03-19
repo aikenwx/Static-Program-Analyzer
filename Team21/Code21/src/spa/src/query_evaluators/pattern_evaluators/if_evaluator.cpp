@@ -1,5 +1,7 @@
 #include <unordered_set>
 
+#include "PKBStorageClasses/EntityClasses/Variable.h"
+#include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "if_evaluator.h"
 #include "query/query_exceptions.h"
 #include "query_evaluators/pattern_evaluators/pattern_evaluator.h"
@@ -21,8 +23,14 @@ auto IfEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
         pkb.getUsesRelationshipsByLeftAndRightEntityTypes(IfStatement::getEntityTypeStatic(),
                                                           Variable::getEntityTypeStatic());
     for (const auto &row : *all_if_variable_pairs) {
-      auto product = Product(row);
-      if_products.push_back(product);
+      auto* rel = dynamic_cast<Relationship*>(row);
+      int left = stoi(*rel->getLeftHandEntity()->getEntityValue());
+      std::unordered_set<Variable *>* varSet = pkb.getVariablesInIfStatementCondition(left);
+      auto* var = dynamic_cast<Variable*>(row->getRightHandEntity());
+      if (varSet->find(var) != varSet->end()) {
+        auto product = Product(row);
+        if_products.push_back(product);
+      }
     }
   }
   return if_products;

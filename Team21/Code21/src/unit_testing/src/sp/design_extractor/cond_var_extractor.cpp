@@ -32,14 +32,6 @@ SCENARIO("CondVarExtractor extracts nothing from conditional nodes with no "
     WHEN("Extracting variables") {
       auto varMap = ExtractCondVars<ast::IfNode>(source);
 
-      for (const auto &[key, value] : varMap) {
-        std::cout << key << ": ";
-        for (const auto &var : value) {
-          std::cout << var << " ";
-        }
-        std::cout << std::endl;
-      }
-
       THEN("The variables should be empty") { REQUIRE(varMap.empty()); }
 
       THEN("The variables should be empty") { REQUIRE(varMap.empty()); }

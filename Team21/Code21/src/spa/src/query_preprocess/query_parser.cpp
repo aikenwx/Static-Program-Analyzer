@@ -182,7 +182,6 @@ auto QueryParser::validateExpressionHelper(std::string str) -> std::string {
   }
   return str;
 }
-#pragma clang diagnostic pop
 
 auto QueryParser::parseElement() -> Element {
   Synonym synonym = Synonym(next());

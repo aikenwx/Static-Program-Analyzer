@@ -27,7 +27,7 @@ auto IfEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
       int left = stoi(*rel->getLeftHandEntity()->getEntityValue());
       std::unordered_set<Variable *>* varSet = pkb.getVariablesInIfStatementCondition(left);
       auto* var = dynamic_cast<Variable*>(row->getRightHandEntity());
-      if (*varSet->find(var) != nullptr) {
+      if (varSet->find(var) != varSet->end()) {
         auto product = Product(row);
         if_products.push_back(product);
       }

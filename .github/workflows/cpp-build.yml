@@ -21,19 +21,14 @@ jobs:
             cc: clang
             cxx: clang++
           - platform: ubuntu-latest
-            toolchain: [clang, gcc]
-          - platform: macos-latest
-            toolchain: [clang]
-          - platform: windows-latest
-            toolchain: [msvc]
-          # include other_pkgs, cmake_configurations as required
-        exclude:
+            toolchain: clang
           - platform: ubuntu-latest
-            toolchain: msvc
-          - platform: windows-latest
             toolchain: gcc
           - platform: macos-latest
+            toolchain: clang
+          - platform: windows-latest
             toolchain: msvc
+          # include other_pkgs, cmake_configurations as required
     runs-on: ${{ matrix.platform }}
 
     steps:

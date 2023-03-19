@@ -1,6 +1,5 @@
 #include "select_evaluator.h"
 #include "query_evaluators/join/constraints_solver.h"
-#include "attr_ref_eval.h"
 
 namespace qps {
 
@@ -41,7 +40,7 @@ class SelectVisitor {
       for (auto &syn : syns_) {
         auto *val = final_syn_table.GetCell(row_idx, syn);
         if (attr_refs_idx < attr_refs_.size() && attr_refs_[attr_refs_idx].synonym == syn) {
-          row.push_back(EvaluateAttrRef(val,
+          row.push_back(AttributeReferenceEvaluator::EvaluateAttrRef(val,
                                         attr_refs_[attr_refs_idx].attrName, pkb_));
           attr_refs_idx++;
         } else {

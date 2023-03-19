@@ -1,10 +1,4 @@
 #include "query_evaluator.h"
-#include "select_evaluators/select_evaluator.h"
-#include "such_that_evaluators/such_that_evaluator_factory.h"
-#include "pattern_evaluators/pattern_evaluator_factory.h"
-#include "join/constraints_solver.h"
-#include "tables/table_helpers.h"
-#include "string_helpers.h"
 
 namespace qps {
 QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)) {}
@@ -16,6 +10,9 @@ void QueryEvaluator::CreateClauseEvaluators() {
   }
   for (auto &clause : query_.getPatternClause()) {
     clause_evaluators_.push_back(PatternEvaluatorFactory::Create(clause, declarations));
+  }
+  for (auto &clause : query_.getWithClause()) {
+    clause_evaluators_.push_back(WithEvaluatorFactory::Create(clause, declarations));
   }
 }
 

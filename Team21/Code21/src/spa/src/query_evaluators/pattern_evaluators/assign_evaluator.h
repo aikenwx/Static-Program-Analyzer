@@ -10,12 +10,12 @@ class AssignEvaluator : public PatternEvaluator {
  public:
   AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
       : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-  std::vector<Product> CallPkb(QueryFacade &pkb) override;
+  auto CallPkb(QueryFacade &pkb) -> std::vector<Product> override;
 
 private:
-  std::vector<ModifiesRelationship *> checkExpressionContained(std::vector<ModifiesRelationship *> pkb_res,
-                                                               std::string postfix,
-                                                               bool is_partial);
+  static auto checkExpressionContained(const std::vector<ModifiesRelationship *> &pkb_res,
+                                                               const std::string &postfix,
+                                                               bool is_partial) -> std::vector<ModifiesRelationship *>;
 };
 
-} // qps
+}  // namespace qps

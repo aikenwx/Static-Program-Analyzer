@@ -11,19 +11,21 @@ namespace qps {
 
 class PatternEvaluator : public ClauseEvaluator {
  public:
-  PatternClause clause_;
   PatternEvaluator(PatternClause clause, std::vector<Declaration> declarations);
 
-  ClauseResult Evaluate(QueryFacade &pkb) override;
+  auto getClause() -> PatternClause;
 
-  virtual std::vector<Product> CallPkb(QueryFacade &pkb) = 0;
+  auto Evaluate(QueryFacade &pkb) -> ClauseResult override;
+
+  virtual auto CallPkb(QueryFacade &pkb) -> std::vector<Product> = 0;
 
  private:
+  PatternClause clause_;
 
-  ClauseResult ConstructResult(const std::vector<Product> &);
+  auto ConstructResult(const std::vector<Product> &) -> ClauseResult;
 
   std::vector<Declaration> declarations_;
 
 };
 
-} // qps
+}  // namespace qps

@@ -97,8 +97,7 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
   return Expression(isPartial, expression);
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-function-cognitive-complexity"
+// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 auto QueryParser::validateExpressionHelper(std::string str) -> std::string {
   str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
   int idx = 0;

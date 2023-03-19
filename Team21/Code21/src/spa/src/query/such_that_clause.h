@@ -50,9 +50,9 @@ class SuchThatClause {
 			return relationship == clause.relationship && arg1 == clause.arg1 &&
 				arg2 == clause.arg2;
 		}
-		friend auto operator<<(std::ostream& os, SuchThatClause const& clause) -> std::ostream& {
-			os << getStringFromRelationship(clause.relationship);
-			return os;
+		friend auto operator<<(std::ostream& osstream, SuchThatClause const& clause) -> std::ostream& {
+            osstream << getStringFromRelationship(clause.relationship);
+			return osstream;
 		}
 
 };

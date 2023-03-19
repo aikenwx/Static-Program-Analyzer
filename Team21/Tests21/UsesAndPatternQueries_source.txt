@@ -1,0 +1,51 @@
+procedure main {
+  x = z + 1;
+  y = z + 1;
+  z = z + 1;
+  a = z + 1;
+
+  print hello;
+
+  if (x > 1) then {
+    call procX;
+    while (1 == 1) {
+      while (x > y) {
+        a = z + 1;
+        print x;
+        read y;
+      } 
+      if (g == 1) then {
+        read f;
+      } else {
+        print h;
+      }
+    }
+  } else {
+    read x;
+    call procX;
+  }
+}
+
+procedure procX {
+  x = 1;
+  y = 2;
+  z = 3;
+  a = 4;
+
+  print bye;
+
+  while (x < 10) {
+    read g;
+    if (y > 1) then {
+      print y;
+    } else {
+      if (z > 1) then {
+        print z;
+      } else {
+        while (h < 10) {
+          x = x + 1;
+        }
+      }
+    }
+  }
+}

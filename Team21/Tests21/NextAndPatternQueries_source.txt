@@ -1,0 +1,51 @@
+procedure main {
+  while (x + y < f - 5) {
+    if (x > 5) then {
+      call f;
+    }
+    else {                   
+      call g;
+    }
+    x = y + 5;
+  }
+
+  if (1 == 1) then {
+    print z;
+  } else {                   
+    print x;
+  }
+}
+
+procedure f {
+  if (x > 5) then {
+    call g;
+  }
+  else {
+    read x;
+  }
+}
+
+procedure g {
+  print z;
+  z = z + 1;
+  print x;
+
+  if (x + y > 5) then {
+    while (z < 5) {
+      read x;
+      print x;
+    }
+  } else {
+    if (x + y > 5 + x) then {
+      x = x + 1 + y;
+    } else {
+      y = y + 1;
+      z = z + 1; 
+      x = y + 1;
+    }
+  }
+
+  while (x + y < 1) {
+    read x;
+  }
+}

@@ -1,0 +1,41 @@
+procedure main {
+  read x;
+  read y;
+  print x;
+  z = x + y + 1;
+  x = z + 1;
+  y = x + 1;
+
+  while (x < 10) {
+    print x;
+    x = x + 1;
+  }
+
+  if (x < 10) then {
+    print x;
+    while (1 == 1) {
+      read x;
+      print x;
+    }
+    a = 1;
+  } else {
+    print y;
+  }
+  call funcY;
+}
+
+procedure funcY {
+  print y;
+  
+  a = x + 1;
+  b = a + 1;
+
+  if (a * b < x / 5) then {
+    print a;
+    read x;
+    read y;
+  } else {
+    print b;
+  }
+  read x;
+}

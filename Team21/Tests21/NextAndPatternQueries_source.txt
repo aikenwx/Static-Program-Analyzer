@@ -10,15 +10,15 @@ procedure main {
   }
 
   if (1 == 1) then {
-    print 1;
+    print z;
   } else {                   
-    print 2;
+    print x;
   }
 }
 
 procedure f {
   if (x > 5) {
-    call f;
+    call g;
   }
   else {
     read x;

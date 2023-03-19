@@ -5,7 +5,7 @@
 namespace ast {
 // Handles procedures like a stack LIFO
 void ProgramNode::AddProcedure(
-    const std::shared_ptr<ProcedureNode>& procedure) {
+    const std::shared_ptr<ProcedureNode> &procedure) {
   procedures.push_back(procedure);
 }
 
@@ -27,7 +27,7 @@ auto ProgramNode::GetTotalStatementCount() -> int {
   return procedures.front()->GetEndStatementNumber();
 }
 
-auto ProgramNode::ContainsProcedure(const std::string& procedureName) -> bool {
+auto ProgramNode::ContainsProcedure(const std::string &procedureName) -> bool {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
@@ -36,7 +36,7 @@ auto ProgramNode::ContainsProcedure(const std::string& procedureName) -> bool {
   return false;
 }
 
-auto ProgramNode::GetProcedure(const std::string& procedureName)
+auto ProgramNode::GetProcedure(const std::string &procedureName)
     -> std::shared_ptr<ProcedureNode> {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
@@ -44,17 +44,18 @@ auto ProgramNode::GetProcedure(const std::string& procedureName)
     }
   }
 
-  throw exceptions::ParserError("Procedure for " + procedureName + " not found while trying to validate procedure");
+  throw exceptions::ParserError(
+      "Procedure for " + procedureName +
+      " not found while trying to validate procedure");
 }
 
-void ProgramNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
-  extractor->HandleProgramNode(
-      std::static_pointer_cast<ProgramNode>(currentNode), depth);
+void ProgramNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                int depth) {
+  extractor.HandleProgramNode(
+      std::static_pointer_cast<ProgramNode>(shared_from_this()), depth);
 
   for (auto i = procedures.begin(); i < procedures.end(); i++) {
-    (*i)->AcceptVisitor(*i, extractor, depth + 1);
+    (*i)->AcceptVisitor(extractor, depth + 1);
   }
 }
-}  // namespace ast
+} // namespace ast

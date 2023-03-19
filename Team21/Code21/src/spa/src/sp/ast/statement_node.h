@@ -3,17 +3,16 @@
 
 namespace ast {
 class StatementNode : public INode {
- public:
+public:
   [[nodiscard]] auto GetStatementNumber() const -> int;
   void SetStatementNumber(int statementNumber);
   virtual void IncrementStatementNumber(int value);
   [[nodiscard]] auto ToString() const -> std::string override = 0;
 
-  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                     const std::shared_ptr<design_extractor::Extractor>& extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
- private:
+private:
   int statementNumber;
 };
-}  // namespace ast
+} // namespace ast

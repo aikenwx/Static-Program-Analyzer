@@ -3,7 +3,7 @@
 #include "exceptions/parser_error.h"
 
 namespace ast {
-CallNode::CallNode(const std::shared_ptr<NameNode>& name) {
+CallNode::CallNode(const std::shared_ptr<NameNode> &name) {
   this->name_ = name->GetName();
 }
 
@@ -14,7 +14,7 @@ auto CallNode::GetProcedure() -> std::shared_ptr<ProcedureNode> {
   return procedure;
 }
 
-void CallNode::SetProcedure(const std::shared_ptr<ProcedureNode>& procedure) {
+void CallNode::SetProcedure(const std::shared_ptr<ProcedureNode> &procedure) {
   this->procedure_ = std::weak_ptr<ProcedureNode>(procedure);
 }
 
@@ -22,12 +22,12 @@ auto CallNode::ToString() const -> std::string {
   return "call:\n{\n" + name_ + "}\n";
 }
 
-void CallNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
-  extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
-                                 depth);
-  extractor->HandleCallNode(std::static_pointer_cast<CallNode>(currentNode),
-                            depth);
+void CallNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                             int depth) {
+  auto currentNode = shared_from_this();
+  extractor.HandleStatementNode(
+      std::static_pointer_cast<StatementNode>(currentNode), depth);
+  extractor.HandleCallNode(std::static_pointer_cast<CallNode>(currentNode),
+                           depth);
 }
-}  // namespace ast
+} // namespace ast

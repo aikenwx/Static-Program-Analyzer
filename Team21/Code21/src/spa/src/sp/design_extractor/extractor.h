@@ -7,6 +7,7 @@ namespace ast {
 class INode;
 class AssignNode;
 class CallNode;
+class ConditionalNode;
 class IfNode;
 class WhileNode;
 class ConstantNode;
@@ -22,12 +23,19 @@ class VariableNode;
 namespace design_extractor {
 class Extractor {
  public:
+  Extractor() = default;
+  Extractor(const Extractor&) = delete;
+  Extractor(Extractor&&) = delete;
+  auto operator=(const Extractor&) -> Extractor& = delete;
+  auto operator=(Extractor&&) -> Extractor& = delete;
   virtual ~Extractor() = default;
 
   // default implementations included for convenience
   virtual void HandleAssignNode(const std::shared_ptr<ast::AssignNode>& node,
                                 int depth){};
   virtual void HandleCallNode(const std::shared_ptr<ast::CallNode>& node, int depth){};
+  virtual void HandleConditionalNode(const std::shared_ptr<ast::ConditionalNode>& node,
+                                     int depth){};
   virtual void HandleIfNode(const std::shared_ptr<ast::IfNode>& node, int depth){};
   virtual void HandleWhileNode(const std::shared_ptr<ast::WhileNode>& node,
                                int depth){};

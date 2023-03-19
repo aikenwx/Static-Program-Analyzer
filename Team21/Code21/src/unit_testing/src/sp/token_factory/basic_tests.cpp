@@ -2,7 +2,7 @@
 #include <catch2/matchers/catch_matchers_exception.hpp>
 
 #include "exceptions/syntax_error.h"
-#include "token_factory/simple_token_factory.h"
+#include "sp/token_factory/simple_token_factory.h"
 
 namespace test_token_factory {
 using Catch::Matchers::Message;

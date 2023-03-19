@@ -1,5 +1,7 @@
 #include "while_node.h"
+#include "sp/ast/conditional_node.h"
 
+#include <memory>
 #include <utility>
 
 namespace ast {
@@ -33,6 +35,8 @@ void WhileNode::AcceptVisitor(
     const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementNode(
       std::static_pointer_cast<StatementNode>(currentNode), depth);
+  extractor->HandleConditionalNode(
+      std::static_pointer_cast<ConditionalNode>(currentNode), depth);
   extractor->HandleWhileNode(std::static_pointer_cast<WhileNode>(currentNode),
                              depth);
 

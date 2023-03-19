@@ -38,6 +38,8 @@ void IfNode::AcceptVisitor(
     const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
   extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
+  extractor->HandleConditionalNode(std::static_pointer_cast<ConditionalNode>(currentNode),
+                                   depth);
   extractor->HandleIfNode(std::static_pointer_cast<IfNode>(currentNode), depth);
 
   condition->AcceptVisitor(condition, extractor, depth + 1);

@@ -6,15 +6,13 @@
 #include "util/is_identifier.h"
 
 namespace token {
-const std::unique_ptr<Token> IdentifierToken::CreateToken(
-    std::string str) {
+auto IdentifierToken::CreateToken(std::string_view str)
+    -> std::unique_ptr<Token> {
   if (!util::is_identifier(str)) { // checks for zero-length str
     throw exceptions::SyntaxError("Invalid identifier");
   }
   return std::unique_ptr<IdentifierToken>(new IdentifierToken(str));;
 }
 
-IdentifierToken::IdentifierToken(std::string value) { this->value = value; }
-
-const std::string IdentifierToken::GetValue() { return this->value; }
+auto IdentifierToken::GetValue() const -> std::string { return this->value; }
 }  // namespace token

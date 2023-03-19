@@ -1,16 +1,14 @@
 #include "left_paren_token.h"
 
-#include <assert.h>
-
+#include <cassert>
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> LeftParenToken::CreateToken(std::string str) {
+auto LeftParenToken::CreateToken(std::string_view str)
+    -> std::unique_ptr<Token> {
   assert(str == "("); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<LeftParenToken>(new LeftParenToken());
 };
 
-LeftParenToken::LeftParenToken(){};
-
-const std::string LeftParenToken::GetValue() { return "("; };
+auto LeftParenToken::GetValue() const -> std::string { return "("; };
 }  // namespace token

@@ -7,11 +7,11 @@
 namespace token {
 class LeftBraceToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::LEFT_BRACE; }
-  const std::string GetValue() override;
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::LEFT_BRACE; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
 
  private:
-  LeftBraceToken();
+  LeftBraceToken() = default;
 };
 }  // namespace token

@@ -7,12 +7,12 @@
 namespace token {
 class IntegerToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::INTEGER; }
-  const std::string GetValue() override;
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::INTEGER; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
 
  private:
-  IntegerToken(std::string value);
+  explicit IntegerToken(std::string_view value) : value(value) {};
   std::string value;
 };
 }  // namespace token

@@ -7,11 +7,11 @@
 namespace token {
 class MinusToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::MINUS; }
-  const std::string GetValue() override;
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::MINUS; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
 
  private:
-  MinusToken();
+  MinusToken() = default;
 };
 }  // namespace token

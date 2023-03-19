@@ -1,16 +1,14 @@
 #include "less_than_token.h"
 
-#include <assert.h>
-
+#include <cassert>
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> LessThanToken::CreateToken(std::string str) {
+auto LessThanToken::CreateToken(std::string_view str)
+    -> std::unique_ptr<Token> {
   assert(str == "<"); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<LessThanToken>(new LessThanToken());
 };
 
-LessThanToken::LessThanToken(){};
-
-const std::string LessThanToken::GetValue() { return "<"; };
+auto LessThanToken::GetValue() const -> std::string { return "<"; };
 }  // namespace token

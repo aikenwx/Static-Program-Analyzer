@@ -9,7 +9,7 @@
 namespace token_factory {
 class SimpleTokenFactory : public TokenFactory {
  public:
-  std::unique_ptr<token::Token> CreateToken(std::string value) override;
+  std::unique_ptr<token::Token> CreateToken(std::string_view value) override;
   bool isWhitespace(const char& c) override;
   bool isSymbolPrefixChar(const char& c) override;
   CheckSymbolResult checkSymbol(const std::string& value) override;

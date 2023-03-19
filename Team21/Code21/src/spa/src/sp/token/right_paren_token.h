@@ -7,11 +7,11 @@
 namespace token {
 class RightParenToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::RIGHT_PAREN; }
-  const std::string GetValue() override;
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::RIGHT_PAREN; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
 
  private:
-  RightParenToken();
+  RightParenToken() = default;
 };
 }  // namespace token

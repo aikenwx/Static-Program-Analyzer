@@ -1,16 +1,14 @@
 #include "assign_token.h"
 
-#include <assert.h>
-
+#include <cassert>
 #include <string>
 
 namespace token {
-const std::unique_ptr<Token> AssignToken::CreateToken(std::string str) {
+auto AssignToken::CreateToken(std::string_view str)
+    -> std::unique_ptr<Token> {
   assert(str == "="); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<AssignToken>(new AssignToken());
 };
 
-AssignToken::AssignToken(){};
-
-const std::string AssignToken::GetValue() { return "="; };
+auto AssignToken::GetValue() const -> std::string { return "="; };
 }  // namespace token

@@ -1,15 +1,14 @@
-#include <assert.h>
-#include <string>
-
 #include "greater_equal_token.h"
 
+#include <cassert>
+#include <string>
+
 namespace token {
-const std::unique_ptr<Token> GreaterEqualToken::CreateToken(std::string str) {
+auto GreaterEqualToken::CreateToken(std::string_view str)
+    -> std::unique_ptr<Token> {
   assert(str == ">="); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   return std::unique_ptr<GreaterEqualToken>(new GreaterEqualToken());
 };
 
-GreaterEqualToken::GreaterEqualToken(){};
-
-const std::string GreaterEqualToken::GetValue() { return ">="; };
+auto GreaterEqualToken::GetValue() const -> std::string { return ">="; };
 }  // namespace token

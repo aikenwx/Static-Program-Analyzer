@@ -7,11 +7,11 @@
 namespace token {
 class PlusToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::PLUS; }
-  const std::string GetValue() override;
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::PLUS; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
 
  private:
-  PlusToken();
+  PlusToken() = default;
 };
 }  // namespace token

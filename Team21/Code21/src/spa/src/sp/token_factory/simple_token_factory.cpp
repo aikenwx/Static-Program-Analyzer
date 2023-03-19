@@ -32,7 +32,7 @@
 #include "util/is_integer.h"
 
 namespace token_factory {
-std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string value) {
+std::unique_ptr<token::Token> SimpleTokenFactory::CreateToken(std::string_view value) {
   if (value == "{") {
     return token::LeftBraceToken::CreateToken(value);
   } else if (value == "}") {

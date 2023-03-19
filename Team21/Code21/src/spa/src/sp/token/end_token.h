@@ -10,9 +10,9 @@ namespace token {
  */
 class EndToken : public Token {
  public:
-  static const std::unique_ptr<Token> CreateToken(std::string);
-  const TokenType GetType() override { return TokenType::END; }
-  const std::string GetValue() override;
-  EndToken();
+  static auto CreateToken(std::string_view) -> std::unique_ptr<Token>;
+  [[nodiscard]] auto GetType() const -> TokenType override { return TokenType::END; }
+  [[nodiscard]] auto GetValue() const -> std::string override;
+  EndToken() = default;
 };
 }  // namespace token

@@ -28,8 +28,8 @@ auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       stack->pop_back();
       // Creates greater node
       std::shared_ptr<ast::GreaterNode> bin =
-          std::make_shared<ast::GreaterNode>(fin2->GetOperand(),
-                                             fin1->GetOperand());
+          std::make_shared<ast::GreaterNode>(fac2->GetOperand(),
+                                             fac1->GetOperand());
       // Creates relational expression node
       std::shared_ptr<ast::RelationalExpressionNode> exp =
           std::make_shared<ast::RelationalExpressionNode>(bin);

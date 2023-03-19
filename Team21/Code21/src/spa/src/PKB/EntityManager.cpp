@@ -50,7 +50,10 @@ void EntityManager::storeInEntityTypeStore(Entity *entity) {
 
 auto EntityManager::getEntitiesByType(const EntityType &entityType)
     -> std::vector<Entity *> * {
-  this->initialiseVectorForEntityTypeStoreIfIndexNotExist(entityType);
+  if (this->entityTypeToEntityStore.find(entityType) ==
+      this->entityTypeToEntityStore.end()) {
+    return &this->emptyEntityVector;
+  }
   return this->entityTypeToEntityStore.at(entityType).get();
 }
 

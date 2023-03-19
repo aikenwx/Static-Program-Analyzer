@@ -8,7 +8,7 @@ const std::vector<EntityType>
     RelationshipEvaluator::CONTAINER_TYPES =
     {WhileStatement::getEntityTypeStatic(), IfStatement::getEntityTypeStatic()};
 
-ClauseResult RelationshipEvaluator::Evaluate(QueryFacade &pkb) {
+auto RelationshipEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
   std::vector<::Relationship *> filtered_relationships;
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
@@ -17,7 +17,7 @@ ClauseResult RelationshipEvaluator::Evaluate(QueryFacade &pkb) {
   for (auto left : left_hand) {
     for (auto right : right_hand) {
       auto res = CallPkb(pkb, left, right);
-      for (auto relationship : res) {
+      for (auto *relationship : res) {
         if (!Filter(*relationship)) {
           filtered_relationships.push_back(relationship);
         }
@@ -27,7 +27,7 @@ ClauseResult RelationshipEvaluator::Evaluate(QueryFacade &pkb) {
   return qps::RelationshipEvaluator::ConstructResult(filtered_relationships);
 }
 
-ClauseResult RelationshipEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) {
+auto RelationshipEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) -> ClauseResult {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   std::vector<Synonym> syns;
@@ -46,21 +46,25 @@ ClauseResult RelationshipEvaluator::ConstructResult(const std::vector<::Relation
     return false;
   }
 
-  if (!left_syn && !right_syn) return !relationships.empty();
+  if (!left_syn && !right_syn) {
+    return !relationships.empty();
+  }
 
   SynonymTable result(syns);
-  for (auto relation : relationships) {
+  for (auto *relation : relationships) {
     SynonymTable::Row row;
-    if (left_syn) row.push_back(relation->getLeftHandEntity());
-    if (right_syn) row.push_back(relation->getRightHandEntity());
+    if (left_syn) {
+      row.push_back(relation->getLeftHandEntity());
+    }
+    if (right_syn) {
+      row.push_back(relation->getRightHandEntity());
+    }
     result.AddRow(std::move(row));
   }
   return result;
 }
 
-// TODO: refactor.
-// This function has a lot of repetition.
-bool RelationshipEvaluator::Filter(::Relationship &relationship) {
+auto RelationshipEvaluator::Filter(::Relationship &relationship) -> bool {
   Ref ref1 = clause_.getArg1();
   Ref ref2 = clause_.getArg2();
   if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref1)) {
@@ -88,7 +92,7 @@ bool RelationshipEvaluator::Filter(::Relationship &relationship) {
   }
   return false;
 }
-std::vector<EntityType> RelationshipEvaluator::ResolveLeftTypes(Ref &left_arg) {
+auto RelationshipEvaluator::ResolveLeftTypes(Ref &left_arg) -> std::vector<EntityType> {
   if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
     return {GetEntityType(*syn, declarations_)};
   }
@@ -96,10 +100,10 @@ std::vector<EntityType> RelationshipEvaluator::ResolveLeftTypes(Ref &left_arg) {
 
 }
 
-std::vector<EntityType> RelationshipEvaluator::ResolveRightTypes(Ref &right_arg) {
+auto RelationshipEvaluator::ResolveRightTypes(Ref &right_arg) -> std::vector<EntityType> {
   if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
     return {GetEntityType(*syn, declarations_)};
   }
   return GetRightHandTypes(right_arg);
 }
-} // qps
+}  // namespace qps

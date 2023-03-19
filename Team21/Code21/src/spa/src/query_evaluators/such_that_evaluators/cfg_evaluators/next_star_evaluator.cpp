@@ -61,6 +61,7 @@ class NextStarVisitor {
                                                               pkb_);
       return SynonymTable{{src, dest}, std::move(rows)};
     }
+    // NOLINTNEXTLINE(readability-suspicious-call-argument)
     auto rows = FindReachableEntities<ReverseBlockIterator>(*dest_entities,
                                                             dest_entity_type,
                                                             src_entity_type,

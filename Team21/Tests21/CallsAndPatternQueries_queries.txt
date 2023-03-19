@@ -105,7 +105,7 @@ Select <s1, s2> such that Calls(_, "danh") pattern i(v,_,_)
 5000
 22 - relationship(literal, synonym) and if(literal)
 while w; if i; stmt s1, s2; assign a; procedure p;
-Select <p, a> such that Calls("danh", p) pattern i("x",_,_)
+Select <p, i> such that Calls("danh", p) pattern i("x",_,_)
 duc 16, duc 20, nguyen 16, nguyen 20
 5000
 23 - relationship(synonym, synonym) and if(wildcard)
@@ -130,6 +130,6 @@ danh, duc, nguyen, a
 5000
 27 - relationship(wildcard, wildcard) and if(synonym)
 while w; if i; stmt s1, s2; call c; variable v; procedure p;
-Select v such that Calls(_, _) pattern i(v,_,_)
+Select p such that Calls(_, _) pattern i(v,_,_)
 danh, duc, nguyen, a, d
 5000

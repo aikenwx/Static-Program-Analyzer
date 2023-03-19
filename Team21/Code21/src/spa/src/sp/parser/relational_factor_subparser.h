@@ -8,7 +8,7 @@ public:
   auto Parse(std::shared_ptr<Context> context) -> bool override;
 
 private:
-  auto static ParsePrimaryCase(const std::shared_ptr<Context> &context) -> bool;
-  auto static ParseSecondaryCase(const std::shared_ptr<Context> &context) -> bool;
+  static auto ParsePrimaryCase(const std::shared_ptr<Context> &context) -> bool;
+  static auto ParseSecondaryCase(const std::shared_ptr<Context> &context) -> bool;
 };
 }  // namespace parser

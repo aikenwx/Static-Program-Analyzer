@@ -3,6 +3,7 @@
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
+#include "sp/sp.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -25,7 +26,19 @@ namespace qps {
 //    12.     x = x * y + z;
 //}
 
+TEST_CASE("TEST") {
+  std::string program = R"(procedure main {
+  x = z;
+})";
 
+  auto pkb = PKB();
+
+  sp::SP::process(program, &pkb);
+  std::list<std::string> result;
+  std::string query = R"(assign a; Select a such that Uses(1, "z") pattern a("x", "z"))";
+  QPS::evaluate(query, result, *pkb.getQueryFacade());
+
+}
 
 TEST_CASE("Next Clauses") {
   qps_test::PopulatePKBHelper::Data data;
@@ -52,14 +65,14 @@ TEST_CASE("Next Clauses") {
   eight->AddChild(ten);
   nine->AddChild(ten);
 
-  three->AddParent(one);
-  four->AddParent(three);
-  seven->AddParent(three);
-  three->AddParent(four);
-  eight->AddParent(seven);
-  nine->AddParent(seven);
-  ten->AddParent(eight);
-  ten->AddParent(nine);
+//  three->AddParent(one);
+//  four->AddParent(three);
+//  seven->AddParent(three);
+//  three->AddParent(four);
+//  eight->AddParent(seven);
+//  nine->AddParent(seven);
+//  ten->AddParent(eight);
+//  ten->AddParent(nine);
 
   cfg->InsertBlock(one);
   cfg->InsertBlock(three);

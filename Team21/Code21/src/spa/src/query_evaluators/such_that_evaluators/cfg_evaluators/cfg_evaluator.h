@@ -40,10 +40,6 @@ struct ForwardBlockIterator {
   static auto BlockEnd(std::shared_ptr<cfg::Block> &block) -> int {
     return block->end();
   }
-
-  static auto GoingForward(int curr_stmt, int next_stmt) -> bool {
-    return next_stmt > curr_stmt;
-  }
 };
 
 struct ReverseBlockIterator {
@@ -62,10 +58,6 @@ struct ReverseBlockIterator {
   static auto BlockEnd(std::shared_ptr<cfg::Block> &block) -> int {
     return block->start();
   }
-  static auto GoingForward(int curr_stmt, int next_stmt) -> bool {
-    return next_stmt < curr_stmt;
-  }
-
 };
 
 template<typename BlockIterator>
@@ -120,19 +112,6 @@ auto GetEntitiesFromBlock(int src_stmt,
   return entities;
 }
 
-template<typename BlockIterator>
-auto IsWhileChild(std::shared_ptr<cfg::Block> &block,
-                  std::shared_ptr<cfg::Block> &parent,
-                  BlockIterator iterator) -> bool {
-  for (auto &nei : iterator.GetNei(block)) {
-    if (!iterator.GoingForward(iterator.BlockEnd(block), iterator.BlockStart(nei))
-        && iterator.BlockStart(nei) == iterator.BlockStart(parent)) {
-      return true;
-    }
-  }
-  return false;
-}
-
 template<typename DestPredicate, typename BlockIterator, typename ProcessRow>
 class ReachableEntityFinder {
  public:
@@ -143,72 +122,56 @@ class ReachableEntityFinder {
   void operator()() {
     auto &cfg = *pkb_.getCFG();
     for (const auto &source : sources_) {
-      int stmt = GetStmtNo(source);
-      auto opt_start = cfg.GetBlockAt(stmt);
-      if (!opt_start) {
-        continue;
-      }
-      auto start_block = opt_start.value();
-      for (auto &nei : iterator_.GetNei(start_block)) {
-        reachable_from(nei);
-        for (auto &dest : block_cache[iterator_.BlockStart(nei)]) {
-          process_row_(source, dest);
-        }
-      }
-      if (stmt != iterator_.BlockEnd(start_block)) {
-        for (auto &dest : GetEntitiesFromBlock(iterator_.NextStmt(stmt), start_block,
-                                               iterator_, include_dest_, pkb_)) {
-          process_row_(source, dest);
-        }
-      }
+      ReachableEntities(source, cfg);
     }
   }
 
  private:
-  std::function<void(std::shared_ptr<cfg::Block> &block)> reachable_from = [&](std::shared_ptr<cfg::Block> &block) {
-    if (block_cache.find(iterator_.BlockStart(block)) != block_cache.end()) {
+  void ReachableEntities(Entity *entity, cfg::CFG &cfg) {
+    int src = GetStmtNo(entity);
+    auto opt_block = cfg.GetBlockAt(src);
+    if (!opt_block) {
       return;
     }
-    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator_.BlockStart(block), block,
-                                                                    iterator_, include_dest_, pkb_);
-    for (auto &nei : iterator_.GetNei(block)) {
-      if (IsWhileChild(nei, block, iterator_)) {
-        auto statement = GetStatement(iterator_.BlockStart(block), pkb_);
-        if (include_dest_(statement)) {
-          entities_reachable.push_back(statement);
+    auto start_block = opt_block.value();
+    std::queue<std::shared_ptr<cfg::Block>> bfs_frontier;
+    std::unordered_set<int> blocks_seen;
+
+    for (auto nei : iterator_.GetNei(start_block)) {
+      blocks_seen.insert(iterator_.BlockStart(nei));
+      bfs_frontier.push(std::move(nei));
+    }
+
+    while (!bfs_frontier.empty()) {
+      auto curr_block = bfs_frontier.front();
+      bfs_frontier.pop();
+      GetEntitiesFromBlock(entity, iterator_.BlockStart(curr_block), curr_block);
+      for (auto nei : iterator_.GetNei(curr_block)) {
+        auto nei_start = iterator_.BlockStart(nei);
+        if (blocks_seen.find(nei_start) != blocks_seen.end()) {
+          continue;
         }
-        get_while_child_entities(nei);
-        auto iter = while_child_cache.find(iterator_.BlockStart(nei));
-        entities_reachable.insert(entities_reachable.end(), iter->second.begin(), iter->second.end());
-        continue;
+        blocks_seen.insert(nei_start);
+        bfs_frontier.push(std::move(nei));
       }
-      reachable_from(nei);
-      auto iter = block_cache.find(iterator_.BlockStart(nei));
-      entities_reachable.insert(entities_reachable.begin(), iter->second.begin(), iter->second.end());
     }
-    block_cache[iterator_.BlockStart(block)] = std::move(entities_reachable);
-  };
 
-  std::function<void(std::shared_ptr<cfg::Block> &block)>
-      get_while_child_entities = [&](std::shared_ptr<cfg::Block> &block) {
-    if (while_child_cache.find(iterator_.BlockStart(block)) != while_child_cache.end()) {
-      return;
+    if (blocks_seen.find(iterator_.BlockStart(start_block)) == blocks_seen.end()) {
+      GetEntitiesFromBlock(entity, iterator_.NextStmt(src), start_block);
     }
-    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator_.BlockStart(block), block,
-                                                                    iterator_, include_dest_, pkb_);
-    for (auto &nei : iterator_.GetNei(block)) {
-      if (!iterator_.GoingForward(iterator_.BlockEnd(block), iterator_.BlockStart(nei))) {
-        continue;
+  }
+  void GetEntitiesFromBlock(Entity *src, int start, std::shared_ptr<cfg::Block> &block) {
+    std::vector<Entity *> entities;
+    int end = iterator_.NextStmt(iterator_.BlockEnd(block));
+    for (int stmt = start; stmt != end; stmt = iterator_.NextStmt(stmt)) {
+      auto *entity = GetStatement(stmt, pkb_);
+      if (include_dest_(entity)) {
+        entities.push_back(entity);
+        process_row_(src, entity);
       }
-      reachable_from(nei);
-      auto iter = block_cache.find(iterator_.BlockStart(nei));
-      entities_reachable.insert(entities_reachable.begin(), iter->second.begin(), iter->second.end());
     }
-    while_child_cache[iterator_.BlockStart(block)] = std::move(entities_reachable);
-  };
+  }
 
-  std::unordered_map<int, std::vector<Entity *>> block_cache;
-  std::unordered_map<int, std::vector<Entity *>> while_child_cache;
   const std::vector<Entity *> &sources_;
   BlockIterator iterator_;
   DestPredicate include_dest_;

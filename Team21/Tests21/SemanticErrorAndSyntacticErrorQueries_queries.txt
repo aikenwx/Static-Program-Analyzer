@@ -181,7 +181,7 @@ SyntaxError
 36 - Such That Clause: Invalid synonym type in Next
 procedure p; while w;
 Select <w, p> such that Next*(p, _)
-SyntaxError
+SemanticError
 5000
 37 - Pattern Clause: Invalid Ref for while pattern 1st argument
 while a; variable v;

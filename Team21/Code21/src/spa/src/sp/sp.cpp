@@ -28,8 +28,8 @@
 #include "sp/rel/uses_proc_var_relationship.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "sp/rel/var_relationship.h"
-#include "token/token.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/token/token.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 #include "util/interval_tree.h"
 

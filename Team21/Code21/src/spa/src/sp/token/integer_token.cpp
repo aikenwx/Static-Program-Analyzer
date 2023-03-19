@@ -4,8 +4,8 @@
 
 #include <string>
 
-#include "../exceptions/syntax_error.h"
-#include "../util/is_integer.h"
+#include "exceptions/syntax_error.h"
+#include "util/is_integer.h"
 #include "integer_token.h"
 
 namespace token {

@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "../exceptions/syntax_error.h"
-#include "../token_factory/simple_token_factory.h"
+#include "exceptions/syntax_error.h"
+#include "sp/token_factory/simple_token_factory.h"
 
 namespace tokenizer {
 std::vector<std::unique_ptr<token::Token>> SimpleTokenizer::tokenize(

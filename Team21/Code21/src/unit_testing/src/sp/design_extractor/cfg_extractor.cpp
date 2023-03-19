@@ -6,7 +6,7 @@
 
 #include "sp/ast/program_node.h"
 #include "sp/parser/simple_chain_parser.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

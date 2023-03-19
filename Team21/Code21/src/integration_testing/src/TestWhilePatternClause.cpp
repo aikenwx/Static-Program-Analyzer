@@ -21,6 +21,8 @@
 //    10      while (count > 1) {
 //            }
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 TEST_CASE("QPS can work with different combinations of while pattern") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::VARIABLE] = { "count", "cenX", "cenY", "cenZ" };
@@ -83,3 +85,5 @@ TEST_CASE("QPS can work with different combinations of while pattern") {
     REQUIRE(qps_test::RunQuery("while w, q; variable v; Select q pattern w(\"cenY\", _)", *pkb_querier) == expected);
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

@@ -11,27 +11,48 @@
 
 #include "../PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "../PKBStorageClasses/EntityClasses/IfStatement.h"
+#include "../PKBStorageClasses/EntityClasses/Variable.h"
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
 class PatternManager {
-   private:
-    std::unordered_map<std::string, std::shared_ptr<std::unordered_set<WhileStatement*>>> usedConditionVariableToWhileStatementStore;
-    std::unordered_map<std::string, std::shared_ptr<std::unordered_set<IfStatement*>>> usedConditionVariableToIfStatementStore;
+ private:
+  std::unordered_map<std::string,
+                     std::shared_ptr<std::unordered_set<WhileStatement*>>>
+      usedConditionVariableToWhileStatementStore;
 
-   public:
-    PatternManager() = default;
-    static void storeAssignStatementPostfixExpression(
-        AssignStatement* assignStatement, std::shared_ptr<std::string> postfixExpression);
+  std::unordered_map<std::string,
+                     std::shared_ptr<std::unordered_set<IfStatement*>>>
+      usedConditionVariableToIfStatementStore;
 
-    void storeWhileStatementConditionVariable(WhileStatement* whileStatement, std::string* conditionVariable);
+  std::unordered_map<int, std::shared_ptr<std::unordered_set<Variable*>>>
+      whileStatementToUsedConditionVariablesStore;
 
-    void storeIfStatementConditionVariable(IfStatement* ifStatement, std::string* conditionVariable);
+  std::unordered_map<int, std::shared_ptr<std::unordered_set<Variable*>>>
+      ifStatementToUsedConditionVariablesStore;
 
-    auto getWhileStatementsByConditionVariable(std::string* conditionVariable)
-        -> std::unordered_set<WhileStatement*>*;
+ public:
+  PatternManager() = default;
+  static void storeAssignStatementPostfixExpression(
+      AssignStatement* assignStatement,
+      std::shared_ptr<std::string> postfixExpression);
 
-    auto getIfStatementsByConditionVariable(std::string* conditionVariable)
-        -> std::unordered_set<IfStatement*>*;
+  void storeWhileStatementConditionVariable(WhileStatement* whileStatement,
+                                            Variable* conditionVariable);
+
+  void storeIfStatementConditionVariable(IfStatement* ifStatement,
+                                         Variable* conditionVariable);
+
+  auto getWhileStatementsByConditionVariable(std::string* conditionVariable)
+      -> std::unordered_set<WhileStatement*>*;
+
+  auto getIfStatementsByConditionVariable(std::string* conditionVariable)
+      -> std::unordered_set<IfStatement*>*;
+
+  auto getVariablesUsedInWhileStatementCondition(int whileStatementNumber)
+      -> std::unordered_set<Variable*>*;
+
+  auto getVariablesUsedInIfStatementCondition(int ifStatementNumber)
+      -> std::unordered_set<Variable*>*;
 };
 
 #endif  // SPA_PATTERNMANAGER_H

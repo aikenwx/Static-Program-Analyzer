@@ -1,6 +1,7 @@
 #include "select_evaluator.h"
 #include "query_evaluators/join/constraints_solver.h"
 #include "attr_ref_eval.h"
+#include "query_evaluators/pkb_helpers.h"
 
 namespace qps {
 
@@ -41,8 +42,8 @@ class SelectVisitor {
       for (auto &syn : syns_) {
         auto *val = final_syn_table.GetCell(row_idx, syn);
         if (attr_refs_idx < attr_refs_.size() && attr_refs_[attr_refs_idx].synonym == syn) {
-          row.push_back(EvaluateAttrRef(val,
-                                        attr_refs_[attr_refs_idx].attrName, pkb_));
+          row.push_back(AttributeReferenceEvaluator::EvaluateAttrRef(val,
+                                                                     attr_refs_[attr_refs_idx].attrName, pkb_));
           attr_refs_idx++;
         } else {
           row.push_back(*val->getEntityValue());
@@ -85,7 +86,7 @@ class SelectVisitor {
     if (!design_entity) {
       return;
     }
-    auto entity_type = ClauseEvaluator::DesignEntityToEntityType(design_entity->getDesignEntity());
+    auto entity_type = DesignEntityToEntityType(design_entity->getDesignEntity());
     auto *entities = pkb_.getEntitiesByType(entity_type);
     std::vector<std::vector<Entity *>> rows;
     rows.reserve(entities->size());

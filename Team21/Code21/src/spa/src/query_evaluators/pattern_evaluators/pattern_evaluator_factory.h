@@ -9,7 +9,7 @@ namespace qps {
 
 	class PatternEvaluatorFactory {
 	public:
-		static std::unique_ptr<PatternEvaluator> Create(PatternClause& clause, std::vector<Declaration>& decl_lst);
+		static auto Create(PatternClause& clause, std::vector<Declaration>& decl_lst) -> std::unique_ptr<PatternEvaluator>;
 	};
 
-} // qps
+} // namespace qps

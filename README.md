@@ -4,7 +4,7 @@
 
 | Item         | Version                                                  |
 |--------------|----------------------------------------------------------|
-| OS           | Microsoft Windows 10 x64                                 | 
+| OS           | Microsoft Windows 10 x64                                 |
 | Toolchain    | Microsoft Visual Studio Enterprise 2022 Version 17.4.4   |
 | C++ Standard | C++17                                                    |
 

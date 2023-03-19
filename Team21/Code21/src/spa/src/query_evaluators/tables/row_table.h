@@ -34,6 +34,15 @@ class RowTable {
     }
   }
 
+  [[maybe_unused]]
+  RowTable(Key key, Row col)
+      : header_({key}) {
+    header_idx_[key] = 0;
+    for (auto &val : col) {
+      rows_.push_back({std::move(val)});
+    }
+  }
+
   auto GetHeader() const -> const Header & {
     return header_;
   }

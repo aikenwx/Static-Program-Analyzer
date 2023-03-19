@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-special-member-functions"
 #pragma once
 
 #include <variant>
@@ -15,10 +17,8 @@ using ClauseResult = std::variant<bool, SynonymTable>;
 
 class ClauseEvaluator {
  public:
-
-  static EntityType DesignEntityToEntityType(DesignEntity entity);
   virtual ~ClauseEvaluator() = default;
-  virtual ClauseResult Evaluate(QueryFacade &pkb) = 0;
+  virtual auto Evaluate(QueryFacade &pkb) -> ClauseResult = 0;
 };
 
-} // qps
+}  // namespace qps

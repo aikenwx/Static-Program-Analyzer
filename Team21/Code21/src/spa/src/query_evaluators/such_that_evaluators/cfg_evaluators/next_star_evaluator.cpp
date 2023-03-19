@@ -56,16 +56,23 @@ class NextStarVisitor {
     auto *dest_entities = pkb_.getEntitiesByType(dest_entity_type);
     if (src_entities->size() < dest_entities->size()) {
       auto rows = FindReachableEntities<ForwardBlockIterator>(*src_entities,
-                                                              src_entity_type,
                                                               dest_entity_type,
                                                               pkb_);
       return SynonymTable{{src, dest}, std::move(rows)};
     }
     // NOLINTNEXTLINE(readability-suspicious-call-argument)
     auto rows = FindReachableEntities<ReverseBlockIterator>(*dest_entities,
-                                                            dest_entity_type,
                                                             src_entity_type,
                                                             pkb_);
+    if(src == dest) {
+      std::vector<std::vector<Entity*>> filtered_rows;
+      for(auto& pair: rows) {
+        if(pair[0] == pair[1]) {
+          filtered_rows.push_back(std::move(pair));
+        }
+      }
+      rows = std::move(filtered_rows);
+    }
     return SynonymTable{{dest, src}, std::move(rows)};
 
   }

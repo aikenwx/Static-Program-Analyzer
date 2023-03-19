@@ -233,7 +233,6 @@ auto FindReachableEntities(int src, EntityType dest, QueryFacade &pkb) -> std::v
 
 template<typename BlockIterator>
 auto FindReachableEntities(const std::vector<Entity *> src,
-                           EntityType src_type,
                            EntityType dest_type,
                            QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
   std::vector<std::vector<Entity *>> relationships;

@@ -9,7 +9,7 @@ jobs:
         platform: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
         std: [17]
-        toolchain: [msvc, gcc, clang]
+        toolchain: []
         include:
           - toolchain: msvc
             cxx: cl
@@ -17,6 +17,12 @@ jobs:
             cxx: g++
           - toolchain: clang
             cxx: clang++
+          - platform: ubuntu-latest
+            toolchain: [clang, gcc]
+          - platform: macos-latest
+            toolchain: [clang]
+          - platform: windows-latest
+            toolchain: [msvc]
           # include other_pkgs, cmake_configurations as required
         exclude:
           - platform: ubuntu-latest

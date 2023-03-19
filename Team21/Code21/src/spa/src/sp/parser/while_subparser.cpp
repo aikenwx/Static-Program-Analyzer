@@ -3,6 +3,7 @@
 #include "util/instance_of.h"
 
 namespace parser {
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
@@ -45,4 +46,5 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   }
   return Subparser::Parse(context);
 }
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }  // namespace parser

@@ -4,6 +4,7 @@
 #include "util/instance_of.h"
 
 namespace parser {
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     -> bool {
   auto stack = context->GetStack();
@@ -178,4 +179,5 @@ auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
   }
   return Subparser::Parse(context);
 }
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }  // namespace parser

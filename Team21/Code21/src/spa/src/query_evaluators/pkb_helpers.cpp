@@ -1,7 +1,3 @@
-//
-// Created by Dhruv Shah on 18/3/23.
-//
-
 #include "pkb_helpers.h"
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
@@ -60,4 +56,4 @@ auto MatchesEntityType(Entity *entity, EntityType type) -> bool {
   return entity->getEntityType() == type;
 }
 
-} // qps
+}  // namespace qps

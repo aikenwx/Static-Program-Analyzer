@@ -9,7 +9,7 @@ namespace qps {
 
 class SuchThatEvaluatorFactory {
  public:
-  static std::unique_ptr<SuchThatEvaluator> Create(SuchThatClause &clause, std::vector<Declaration> &decl_lst);
+  static auto Create(SuchThatClause &clause, std::vector<Declaration> &decl_lst) -> std::unique_ptr<SuchThatEvaluator>;
 };
 
 } // qps

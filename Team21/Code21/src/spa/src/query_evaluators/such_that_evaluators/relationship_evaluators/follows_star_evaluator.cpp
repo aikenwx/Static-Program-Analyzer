@@ -1,18 +1,18 @@
 #include "follows_star_evaluator.h"
 
 namespace qps {
-	std::vector<::Relationship*> FollowsStarEvaluator::CallPkb(QueryFacade& pkb, EntityType left, EntityType right) {
+	auto FollowsStarEvaluator::CallPkb(QueryFacade& pkb, EntityType left, EntityType right) -> std::vector<::Relationship*> {
 		std::vector<::Relationship*> res;
-		auto pkb_res = pkb.getFollowsStarRelationshipsByLeftAndRightEntityTypes(left, right);
+		auto *pkb_res = pkb.getFollowsStarRelationshipsByLeftAndRightEntityTypes(left, right);
 		res.assign(pkb_res->begin(), pkb_res->end());
 		return res;
 	}
 
-	std::vector<EntityType> FollowsStarEvaluator::GetLeftHandTypes(Ref& left_arg) {
+	auto FollowsStarEvaluator::GetLeftHandTypes(Ref& left_arg) -> std::vector<EntityType> {
 		return { Statement::getEntityTypeStatic() };
 	}
 
-	std::vector<EntityType> FollowsStarEvaluator::GetRightHandTypes(Ref& right_arg) {
+	auto FollowsStarEvaluator::GetRightHandTypes(Ref& right_arg) -> std::vector<EntityType> {
 		return { Statement::getEntityTypeStatic() };
 	}
-} // qps
+}  // namespace qps

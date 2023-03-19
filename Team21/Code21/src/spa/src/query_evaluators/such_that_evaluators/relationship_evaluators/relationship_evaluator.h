@@ -15,17 +15,17 @@ class RelationshipEvaluator : public SuchThatEvaluator {
   RelationshipEvaluator(SuchThatClause clause, std::vector<Declaration> declarations) :
       SuchThatEvaluator(std::move(clause), std::move(declarations)) {}
 
-  ClauseResult Evaluate(QueryFacade &pkb) override;
+  auto Evaluate(QueryFacade &pkb) -> ClauseResult override;
 
-  virtual std::vector<::Relationship *> CallPkb(QueryFacade &pkb, EntityType left, EntityType right) = 0;
-  virtual std::vector<EntityType> GetLeftHandTypes(Ref &left_arg) = 0;
-  virtual std::vector<EntityType> GetRightHandTypes(Ref &right_arg) = 0;
+  virtual auto CallPkb(QueryFacade &pkb, EntityType left, EntityType right) -> std::vector<::Relationship *> = 0;
+  virtual auto GetLeftHandTypes(Ref &left_arg) -> std::vector<EntityType> = 0;
+  virtual auto GetRightHandTypes(Ref &right_arg) -> std::vector<EntityType> = 0;
 
  private:
-  bool Filter(::Relationship &relationship);
-  std::vector<EntityType> ResolveLeftTypes(Ref &left_arg);
-  std::vector<EntityType> ResolveRightTypes(Ref &right_arg);
-  ClauseResult ConstructResult(const std::vector<::Relationship *> &);
+  auto Filter(::Relationship &relationship) -> bool;
+  auto ResolveLeftTypes(Ref &left_arg) -> std::vector<EntityType>;
+  auto ResolveRightTypes(Ref &right_arg) -> std::vector<EntityType>;
+  auto ConstructResult(const std::vector<::Relationship *> &) -> ClauseResult;
 };
 
-} // qps
+}  // namespace qps

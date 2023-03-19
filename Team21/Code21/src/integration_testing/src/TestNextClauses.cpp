@@ -4,6 +4,8 @@
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
 namespace qps {
 //procedure Second {
 //    1.      x = 0;
@@ -153,3 +155,5 @@ TEST_CASE("Next Clauses") {
   }
 }
 }  // namespace qps
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

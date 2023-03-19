@@ -18,13 +18,19 @@ class Cfg_Evaluator : public SuchThatEvaluator {
 
 };
 
+template<typename T>
+auto ConvertToSharedPtrs(std::vector<std::weak_ptr<T>> weak_ptrs) -> std::vector<std::shared_ptr<T>> {
+  std::vector<std::shared_ptr<cfg::Block>> shared_ptrs(weak_ptrs.begin(), weak_ptrs.end());
+  return shared_ptrs;
+}
+
 struct ForwardBlockIterator {
   static auto NextStmt(int stmt_no) -> int {
     return stmt_no + 1;
   }
 
   static auto GetNei(std::shared_ptr<cfg::Block> &block) -> std::vector<std::shared_ptr<cfg::Block>> {
-    return block->children();
+    return ConvertToSharedPtrs(block->children());
   }
 
   static auto BlockStart(std::shared_ptr<cfg::Block> &block) -> int {
@@ -46,7 +52,7 @@ struct ReverseBlockIterator {
   }
 
   static auto GetNei(std::shared_ptr<cfg::Block> &block) -> std::vector<std::shared_ptr<cfg::Block>> {
-    return block->parents();
+    return ConvertToSharedPtrs(block->parents());
   }
 
   static auto BlockStart(std::shared_ptr<cfg::Block> &block) -> int {
@@ -128,79 +134,87 @@ auto IsWhileChild(std::shared_ptr<cfg::Block> &block,
 }
 
 template<typename DestPredicate, typename BlockIterator, typename ProcessRow>
-void FindReachableEntities(const std::vector<Entity *> &sources,
-                           BlockIterator iterator,
-                           DestPredicate include_dest,
-                           ProcessRow process_row,
-                           QueryFacade &pkb) {
-  std::unordered_map<int, std::vector<Entity *>> block_cache;
-  std::unordered_map<int, std::vector<Entity *>> while_child_cache;
-  std::function<void(std::shared_ptr<cfg::Block> &block)> reachable_from;
-  std::function<void(std::shared_ptr<cfg::Block> &block)> get_while_child_entities;
+class ReachableEntityFinder {
+ public:
+  ReachableEntityFinder(const std::vector<Entity *> &sources, BlockIterator iterator,
+                        DestPredicate include_dest, ProcessRow process_row, QueryFacade &pkb)
+      : sources_(sources), iterator_(iterator), include_dest_(include_dest), process_row_(process_row), pkb_(pkb) {}
 
-  reachable_from = [&](std::shared_ptr<cfg::Block> &block) {
-    if (block_cache.find(iterator.BlockStart(block)) != block_cache.end()) {
+  void operator()() {
+    auto &cfg = *pkb_.getCFG();
+    for (const auto &source : sources_) {
+      int stmt = GetStmtNo(source);
+      auto opt_start = cfg.GetBlockAt(stmt);
+      if (!opt_start) {
+        continue;
+      }
+      auto start_block = opt_start.value();
+      for (auto &nei : iterator_.GetNei(start_block)) {
+        reachable_from(nei);
+        for (auto &dest : block_cache[iterator_.BlockStart(nei)]) {
+          process_row_(source, dest);
+        }
+      }
+      if (stmt != iterator_.BlockEnd(start_block)) {
+        for (auto &dest : GetEntitiesFromBlock(iterator_.NextStmt(stmt), start_block,
+                                               iterator_, include_dest_, pkb_)) {
+          process_row_(source, dest);
+        }
+      }
+    }
+  }
+
+ private:
+  std::function<void(std::shared_ptr<cfg::Block> &block)> reachable_from = [&](std::shared_ptr<cfg::Block> &block) {
+    if (block_cache.find(iterator_.BlockStart(block)) != block_cache.end()) {
       return;
     }
-    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator.BlockStart(block), block,
-                                                                    iterator, include_dest, pkb);
-    for (auto &nei : iterator.GetNei(block)) {
-      if (IsWhileChild(nei, block, iterator)) {
-        auto statement = GetStatement(iterator.BlockStart(block), pkb);
-        if (include_dest(statement)) {
+    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator_.BlockStart(block), block,
+                                                                    iterator_, include_dest_, pkb_);
+    for (auto &nei : iterator_.GetNei(block)) {
+      if (IsWhileChild(nei, block, iterator_)) {
+        auto statement = GetStatement(iterator_.BlockStart(block), pkb_);
+        if (include_dest_(statement)) {
           entities_reachable.push_back(statement);
         }
         get_while_child_entities(nei);
-        auto iter = while_child_cache.find(iterator.BlockStart(nei));
+        auto iter = while_child_cache.find(iterator_.BlockStart(nei));
         entities_reachable.insert(entities_reachable.end(), iter->second.begin(), iter->second.end());
         continue;
       }
       reachable_from(nei);
-      auto iter = block_cache.find(iterator.BlockStart(nei));
+      auto iter = block_cache.find(iterator_.BlockStart(nei));
       entities_reachable.insert(entities_reachable.begin(), iter->second.begin(), iter->second.end());
     }
-    block_cache[iterator.BlockStart(block)] = std::move(entities_reachable);
+    block_cache[iterator_.BlockStart(block)] = std::move(entities_reachable);
   };
 
-  get_while_child_entities = [&](std::shared_ptr<cfg::Block> &block) {
-    if (while_child_cache.find(iterator.BlockStart(block)) != while_child_cache.end()) {
+  std::function<void(std::shared_ptr<cfg::Block> &block)>
+      get_while_child_entities = [&](std::shared_ptr<cfg::Block> &block) {
+    if (while_child_cache.find(iterator_.BlockStart(block)) != while_child_cache.end()) {
       return;
     }
-    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator.BlockStart(block), block,
-                                                                    iterator, include_dest, pkb);
-    for (auto &nei : iterator.GetNei(block)) {
-      if (!iterator.GoingForward(iterator.BlockEnd(block), iterator.BlockStart(nei))) {
+    std::vector<Entity *> entities_reachable = GetEntitiesFromBlock(iterator_.BlockStart(block), block,
+                                                                    iterator_, include_dest_, pkb_);
+    for (auto &nei : iterator_.GetNei(block)) {
+      if (!iterator_.GoingForward(iterator_.BlockEnd(block), iterator_.BlockStart(nei))) {
         continue;
       }
       reachable_from(nei);
-      auto iter = block_cache.find(iterator.BlockStart(nei));
+      auto iter = block_cache.find(iterator_.BlockStart(nei));
       entities_reachable.insert(entities_reachable.begin(), iter->second.begin(), iter->second.end());
     }
-    while_child_cache[iterator.BlockStart(block)] = std::move(entities_reachable);
+    while_child_cache[iterator_.BlockStart(block)] = std::move(entities_reachable);
   };
 
-  auto &cfg = *pkb.getCFG();
-  for (const auto &source : sources) {
-    int stmt = GetStmtNo(source);
-    auto opt_start = cfg.GetBlockAt(stmt);
-    if (!opt_start) {
-      continue;
-    }
-    auto start_block = opt_start.value();
-    for (auto &nei : iterator.GetNei(start_block)) {
-      reachable_from(nei);
-      for (auto &dest : block_cache[iterator.BlockStart(nei)]) {
-        process_row(source, dest);
-      }
-    }
-    if (stmt != iterator.BlockEnd(start_block)) {
-      for (auto &dest : GetEntitiesFromBlock(iterator.NextStmt(stmt), start_block,
-                                             iterator, include_dest, pkb)) {
-        process_row(source, dest);
-      }
-    }
-  }
-}
+  std::unordered_map<int, std::vector<Entity *>> block_cache;
+  std::unordered_map<int, std::vector<Entity *>> while_child_cache;
+  const std::vector<Entity *> &sources_;
+  BlockIterator iterator_;
+  DestPredicate include_dest_;
+  ProcessRow process_row_;
+  QueryFacade &pkb_;
+};
 
 template<typename BlockIterator>
 auto FindReachableEntities(int src, EntityType dest, QueryFacade &pkb) -> std::vector<Entity *> {
@@ -209,11 +223,11 @@ auto FindReachableEntities(int src, EntityType dest, QueryFacade &pkb) -> std::v
     return {};
   }
   std::vector<Entity *> dest_entities;
-  FindReachableEntities({entity},
+  ReachableEntityFinder({entity},
                         BlockIterator{},
                         [&](Entity *entity) { return MatchesEntityType(entity, dest); },
                         [&](Entity *src, Entity *dst) { dest_entities.push_back(dst); },
-                        pkb);
+                        pkb)();
   return dest_entities;
 }
 
@@ -223,11 +237,11 @@ auto FindReachableEntities(const std::vector<Entity *> src,
                            EntityType dest_type,
                            QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
   std::vector<std::vector<Entity *>> relationships;
-  FindReachableEntities(src,
+  ReachableEntityFinder(src,
                         BlockIterator{},
                         [&](Entity *entity) { return MatchesEntityType(entity, dest_type); },
                         [&](Entity *src, Entity *dst) { relationships.push_back({src, dst}); },
-                        pkb);
+                        pkb)();
   return relationships;
 }
 
@@ -238,11 +252,11 @@ auto Reachable(int src, int dest, QueryFacade &pkb) -> bool {
   if (entity == nullptr) {
     return found;
   }
-  FindReachableEntities({entity},
+  ReachableEntityFinder({entity},
                         BlockIterator{},
                         [dest](Entity *entity) { return GetStmtNo(entity) == dest; },
                         [&](Entity *src, Entity *dst) { found = true; },
-                        pkb);
+                        pkb)();
   return found;
 }
 

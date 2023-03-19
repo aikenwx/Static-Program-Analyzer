@@ -1,19 +1,19 @@
 #include "follows_evaluator.h"
 
 namespace qps {
-std::vector<::Relationship *> FollowsEvaluator::CallPkb(QueryFacade &pkb, EntityType left, EntityType right) {
+auto FollowsEvaluator::CallPkb(QueryFacade &pkb, EntityType left, EntityType right) -> std::vector<::Relationship *> {
   std::vector<::Relationship *> res;
-  auto pkb_res = pkb.getFollowsRelationshipsByLeftAndRightEntityTypes(left, right);
+  auto *pkb_res = pkb.getFollowsRelationshipsByLeftAndRightEntityTypes(left, right);
   res.assign(pkb_res->begin(), pkb_res->end());
   return res;
 }
 
-std::vector<EntityType> FollowsEvaluator::GetLeftHandTypes(Ref &left_arg) {
+auto FollowsEvaluator::GetLeftHandTypes(Ref &left_arg) -> std::vector<EntityType> {
   return {Statement::getEntityTypeStatic()};
 }
 
-std::vector<EntityType> FollowsEvaluator::GetRightHandTypes(Ref &right_arg) {
+auto FollowsEvaluator::GetRightHandTypes(Ref &right_arg) -> std::vector<EntityType> {
   return {Statement::getEntityTypeStatic()};
 }
 
-} // qps
+}  // namespace qps

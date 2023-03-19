@@ -710,7 +710,7 @@ TEST_CASE("Can retrieve relationship by literal values") {
     relationshipManager->storeRelationship(relationship9);
     relationshipManager->storeRelationship(relationship10);
     relationshipManager->storeRelationship(relationship11);
-    
+
     auto relationshipKey1 = RelationshipKey(&relationship->getRelationshipType(), &relationship->getLeftHandEntity()->getEntityKey(),
                                             &relationship->getRightHandEntity()->getEntityKey());
 

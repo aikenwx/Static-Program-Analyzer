@@ -13,8 +13,8 @@
 #include "query/query_exceptions.h"
 
 namespace qps {
-std::unique_ptr<SuchThatEvaluator> SuchThatEvaluatorFactory::Create(SuchThatClause &clause,
-                                                                    std::vector<Declaration> &decl_lst) {
+auto SuchThatEvaluatorFactory::Create(SuchThatClause &clause,
+                                      std::vector<Declaration> &decl_lst) -> std::unique_ptr<SuchThatEvaluator> {
   switch (clause.getRelationship()) {
     case Relationship::Parent:return std::make_unique<ParentEvaluator>(clause, decl_lst);
     case Relationship::ParentT:return std::make_unique<ParentStarEvaluator>(clause, decl_lst);
@@ -33,4 +33,4 @@ std::unique_ptr<SuchThatEvaluator> SuchThatEvaluatorFactory::Create(SuchThatClau
     default:throw std::invalid_argument("Clause type not supported yet");
   }
 }
-} // qps
+}  // namespace qps

@@ -1,19 +1,19 @@
 #include "calls_evaluator.h"
 
 namespace qps {
-std::vector<::Relationship *> CallsEvaluator::CallPkb(QueryFacade &pkb, EntityType left, EntityType right) {
+auto CallsEvaluator::CallPkb(QueryFacade &pkb, EntityType left, EntityType right) -> std::vector<::Relationship *> {
   std::vector<::Relationship *> res;
-  auto pkb_res = pkb.getAllCallsRelationships();
+  auto *pkb_res = pkb.getAllCallsRelationships();
   res.assign(pkb_res->begin(), pkb_res->end());
   return res;
 }
 
-std::vector<EntityType> CallsEvaluator::GetLeftHandTypes(Ref &left_arg) {
+auto CallsEvaluator::GetLeftHandTypes(Ref &left_arg) -> std::vector<EntityType> {
   return {Procedure::getEntityTypeStatic()};
 }
 
-std::vector<EntityType> CallsEvaluator::GetRightHandTypes(Ref &right_arg) {
+auto CallsEvaluator::GetRightHandTypes(Ref &right_arg) -> std::vector<EntityType> {
   return {Procedure::getEntityTypeStatic()};
 }
 
-} // qps
+}  // namespace qps

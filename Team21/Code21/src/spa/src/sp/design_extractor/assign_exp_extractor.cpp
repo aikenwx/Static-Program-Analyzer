@@ -1,6 +1,7 @@
 #include "assign_exp_extractor.h"
 
-#include <stack>
+#include <queue>
+#include <sstream>
 
 #include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
@@ -29,8 +30,8 @@ auto BinExpExprNodeToOperator(
 }
 
 auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
-    -> std::stack<std::string> {
-  std::stack<std::string> postfixExpStack;
+    -> std::queue<std::string> {
+  std::queue<std::string> postfixExpStack;
 
   if (util::instance_of<ast::ConstantNode>(node)) {
     std::shared_ptr<ast::ConstantNode> constantNode =
@@ -44,17 +45,17 @@ auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
   } else if (util::instance_of<ast::BinaryOperationNode>(node)) {
     std::shared_ptr<ast::BinaryOperationNode> binaryOperationNode =
         std::static_pointer_cast<ast::BinaryOperationNode>(node);
-    std::stack<std::string> leftExpStack =
+    std::queue<std::string> leftExpStack =
         AssignExpToPostfixExpStack(binaryOperationNode->GetLeft());
-    std::stack<std::string> rightExpStack =
+    std::queue<std::string> rightExpStack =
         AssignExpToPostfixExpStack(binaryOperationNode->GetRight());
 
     while (!leftExpStack.empty()) {
-      postfixExpStack.push(leftExpStack.top());
+      postfixExpStack.push(leftExpStack.front());
       leftExpStack.pop();
     }
     while (!rightExpStack.empty()) {
-      postfixExpStack.push(rightExpStack.top());
+      postfixExpStack.push(rightExpStack.front());
       rightExpStack.pop();
     }
 
@@ -64,15 +65,17 @@ auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
 }
 
 auto AssignExpToPostfixExp(const std::shared_ptr<ast::INode>& node) -> std::string {
-  std::stack<std::string> postfixExpStack = AssignExpToPostfixExpStack(node);
+  std::queue<std::string> postfixExpStack = AssignExpToPostfixExpStack(node);
   std::string postfixExp;
 
+  std::ostringstream pfeStream;
+
   while (!postfixExpStack.empty()) {
-    postfixExp += (postfixExpStack.top() + " ");
+    pfeStream << postfixExpStack.front();
     postfixExpStack.pop();
   }
 
-  return postfixExp;
+  return pfeStream.str();
 }
 
 void AssignExpExtractor::HandleAssignNode(

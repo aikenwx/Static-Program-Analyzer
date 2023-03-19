@@ -96,7 +96,11 @@ auto CFGExtractor::CFGHandleWhileStatement(
 
   auto bodyBlocks = CFGHandleStatementList({condBlock}, node->GetBody());
 
-  return bodyBlocks;
+  for (const auto& bodyBlock : bodyBlocks) {
+    bodyBlock->AddChild(condBlock);
+  }
+
+  return {condBlock};
 }
 
 auto CFGExtractor::cfg() const -> std::shared_ptr<cfg::CFG> { return cfg_; }

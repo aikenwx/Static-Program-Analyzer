@@ -20,14 +20,14 @@ auto AssignNode::ToString() const -> std::string {
 }
 
 void AssignNode::AcceptVisitor(
-    const std::shared_ptr<INode>& currentNode,
-    const std::shared_ptr<design_extractor::Extractor>& extractor, int depth) {
-  extractor->HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
+    design_extractor::Extractor &extractor, int depth) {
+      auto currentNode = shared_from_this();
+  extractor.HandleStatementNode(std::static_pointer_cast<StatementNode>(currentNode),
                                  depth);
-  extractor->HandleAssignNode(std::static_pointer_cast<AssignNode>(currentNode),
+  extractor.HandleAssignNode(std::static_pointer_cast<AssignNode>(currentNode),
                               depth);
 
-  var->AcceptVisitor(var, extractor, depth + 1);
-  assignment->AcceptVisitor(assignment, extractor, depth + 1);
+  var->AcceptVisitor(extractor, depth + 1);
+  assignment->AcceptVisitor(extractor, depth + 1);
 }
 }  // namespace ast

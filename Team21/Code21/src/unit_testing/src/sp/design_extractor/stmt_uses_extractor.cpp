@@ -8,20 +8,17 @@
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 namespace test_design_extractor {
-SCENARIO(
-    "Uses extractor should be able to handle single-level assign node "
-    "appropriately") {
+SCENARIO("Uses extractor should be able to handle single-level assign node "
+         "appropriately") {
   GIVEN("Assign node") {
-    std::shared_ptr<ast::AssignNode> assignNode =
-        std::make_shared<ast::AssignNode>(
-            std::make_shared<ast::VariableNode>("a"),
-            std::make_shared<ast::ExpressionNode>(
-                std::make_shared<ast::VariableNode>("b")));
+    auto assignNode = std::make_shared<ast::AssignNode>(
+        std::make_shared<ast::VariableNode>("a"),
+        std::make_shared<ast::ExpressionNode>(
+            std::make_shared<ast::VariableNode>("b")));
     assignNode->SetStatementNumber(15);
 
     WHEN("Variable node from LHS of assign node is handled") {
-      design_extractor::StmtUsesExtractor extractor =
-          design_extractor::StmtUsesExtractor();
+      auto extractor = design_extractor::StmtUsesExtractor();
 
       extractor.HandleAssignNode(assignNode, 0);
 
@@ -33,14 +30,13 @@ SCENARIO(
     };
 
     WHEN("Variable node from RHS of assign node is handled") {
-      std::shared_ptr<design_extractor::StmtUsesExtractor> extractor =
-          std::make_shared<design_extractor::StmtUsesExtractor>();
+      auto extractor = design_extractor::StmtUsesExtractor();
 
       // we can use AcceptVisitor here because LHS isn't gonna hit on that
-      assignNode->AcceptVisitor(assignNode, extractor, 0);
+      assignNode->AcceptVisitor(extractor, 0);
 
       std::vector<std::shared_ptr<rel::UsesStmtVarRelationship>> relns =
-          extractor->GetRelationships();
+          extractor.GetRelationships();
 
       THEN("Uses relationship should be created") {
         REQUIRE(relns.size() == 1);
@@ -59,6 +55,6 @@ SCENARIO(
     }
   };
 }
-}  // namespace test_design_extractor
+} // namespace test_design_extractor
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

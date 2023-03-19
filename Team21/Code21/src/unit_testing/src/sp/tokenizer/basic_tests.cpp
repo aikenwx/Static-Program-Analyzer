@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "common.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 
 namespace tokenizer {
 std::vector<std::string> expectedTokenStrings{

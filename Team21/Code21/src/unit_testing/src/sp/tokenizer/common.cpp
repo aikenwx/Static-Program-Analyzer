@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "token/token.h"
+#include "sp/token/token.h"
 
 namespace tokenizer {
 bool verifyTokenizerOutput(

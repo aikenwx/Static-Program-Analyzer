@@ -4,15 +4,15 @@
 namespace ast {
 class ConstantNode : public INode {
 public:
- explicit ConstantNode(int value);
+  explicit ConstantNode(int value);
 
- [[nodiscard]] auto GetValue() const -> int;
- [[nodiscard]] auto ToString() const -> std::string override;
+  [[nodiscard]] auto GetValue() const -> int;
+  [[nodiscard]] auto ToString() const -> std::string override;
 
- void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                    const std::shared_ptr<design_extractor::Extractor>& extractor,
-                    int depth) override;
+  void AcceptVisitor(design_extractor::Extractor &extractor,
+                     int depth) override;
+
 private:
   int value;
 };
-}  // namespace ast
+} // namespace ast

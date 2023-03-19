@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_set>
 
+#include "PKBStorageClasses/EntityClasses/IfStatement.h"
 #include "exceptions/parser_error.h"
 #include "exceptions/semantic_error.h"
 #include "exceptions/syntax_error.h"
@@ -12,6 +13,8 @@
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/call_validator.h"
+#include "sp/design_extractor/cond_var_extractor.h"
+#include "sp/design_extractor/cfg_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -28,8 +31,8 @@
 #include "sp/rel/uses_proc_var_relationship.h"
 #include "sp/rel/uses_stmt_var_relationship.h"
 #include "sp/rel/var_relationship.h"
-#include "token/token.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/token/token.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 #include "util/interval_tree.h"
 
@@ -53,8 +56,8 @@ auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
   }
 
   // validate that all call statements call a procedure that exists
-  auto callValidator = std::make_shared<design_extractor::CallValidator>();
-  root->AcceptVisitor(root, callValidator, 0);
+  auto callValidator = design_extractor::CallValidator();
+  root->AcceptVisitor(callValidator, 0);
 
   return programNode;
 }
@@ -62,9 +65,9 @@ auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
 template <typename E, typename R>
 inline auto Visit(const std::shared_ptr<ast::ProgramNode>& programNode)
     -> std::vector<std::shared_ptr<R>> {
-  auto extractor = std::make_shared<E>();
-  programNode->AcceptVisitor(programNode, extractor, 0);
-  return extractor->GetRelationships();
+  auto extractor = E();
+  programNode->AcceptVisitor(extractor, 0);
+  return extractor.GetRelationships();
 }
 
 void PopulateAstEntities(
@@ -75,7 +78,10 @@ void PopulateAstEntities(
       std::shared_ptr<rel::CallStmtRelationship> callStmtRel =
           std::static_pointer_cast<rel::CallStmtRelationship>(rel);
 
-      popFacade->storeCallStatement(callStmtRel->statementNumber());
+      int stmtNum = callStmtRel->statementNumber();
+      std::string procName = callStmtRel->procedureName();
+      popFacade->storeCallStatement(stmtNum);
+      popFacade->storeCallStatementProcedureName(stmtNum, procName);
     } else if (rel->relationshipType() == rel::RelationshipType::PROC) {
       std::shared_ptr<rel::ProcRelationship> procRel =
           std::static_pointer_cast<rel::ProcRelationship>(rel);
@@ -440,6 +446,25 @@ void PopulateAssignPostfixExpr(
   }
 }
 
+void PopulateCondVarRels(
+    const std::unordered_map<int, std::unordered_set<std::string>>
+        &ifCondVarRels,
+    const std::unordered_map<int, std::unordered_set<std::string>>
+        &whileCondVarRels,
+    PopulateFacade *popFacade) {
+  for (const auto &[stmtNum, varNames] : ifCondVarRels) {
+    for (const auto &varName : varNames) {
+      popFacade->storeIfStatementConditionVariable(stmtNum, varName);
+    }
+  }
+
+  for (const auto &[stmtNum, varNames] : whileCondVarRels) {
+    for (const auto &varName : varNames) {
+      popFacade->storeWhileStatementConditionVariable(stmtNum, varName);
+    }
+  }
+}
+
 auto SP::process(const std::string& program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
@@ -478,6 +503,20 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
   auto assignExpRelationships =
       Visit<design_extractor::AssignExpExtractor, rel::AssignExpRelationship>(
           programNode);
+
+  // process AST to get CFG
+  auto cfgExtractor = design_extractor::CFGExtractor();
+  programNode->AcceptVisitor(cfgExtractor, 0);
+  auto cfg = cfgExtractor.cfg();
+
+  // process AST to get vars used in if/while cond expr
+  auto ifCondVarExtractor = design_extractor::CondVarExtractor<ast::IfNode>();
+  programNode->AcceptVisitor(ifCondVarExtractor, 0);
+  auto ifCondVarRels = ifCondVarExtractor.condVars();
+
+  auto whileCondVarExtractor = design_extractor::CondVarExtractor<ast::WhileNode>();
+  programNode->AcceptVisitor(whileCondVarExtractor, 0);
+  auto whileCondVarRels = whileCondVarExtractor.condVars();
 
   // postprocess relationships
 
@@ -541,6 +580,12 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
 
   // store assign postfix exps into PKB
   PopulateAssignPostfixExpr(assignExpRelationships, popFacade);
+
+  // store CFG into PKB
+  popFacade->storeCFG(cfg);
+
+  // store cond var rels into PKB
+  PopulateCondVarRels(ifCondVarRels, whileCondVarRels, popFacade);
 
   return true;
 }

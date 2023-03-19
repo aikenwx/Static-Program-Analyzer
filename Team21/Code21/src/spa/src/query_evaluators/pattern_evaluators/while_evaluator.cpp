@@ -24,7 +24,7 @@ auto WhileEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
       int left = stoi(*rel->getLeftHandEntity()->getEntityValue());
       std::unordered_set<Variable *>* varSet = pkb.getVariablesInWhileStatementCondition(left);
       auto* var = dynamic_cast<Variable*>(row->getRightHandEntity());
-      if (*varSet->find(var) != nullptr) {
+      if (varSet->find(var) != varSet->end()) {
         auto product = Product(row);
         while_products.push_back(product);
       }

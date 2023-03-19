@@ -12,6 +12,17 @@
 namespace parser {
 auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
     -> bool {
+  if (ParsePrimaryCase(context)) {
+    return true;
+  }
+  if (ParseSecondaryCase(context)) {
+    return true;
+  }
+  return Subparser::Parse(context);
+}
+
+auto RelationalFactorSubparser::ParsePrimaryCase(const std::shared_ptr<Context> &context)
+    -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   // Default parsing case (LHS of relational expression)
@@ -64,17 +75,26 @@ auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
       return true;
     }
   }
+  return false;
+}
+
+auto RelationalFactorSubparser::ParseSecondaryCase(const std::shared_ptr<Context> &context)
+  -> bool {
+  auto stack = context->GetStack();
+  auto iter = stack->rbegin();
   // Secondary parsing case (RHS of relational expression)
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
-    // rel_factor: expr
-    if (stack->size() >= 2
-      && util::instance_of<ast::ExpressionNode>(*iter)
-      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
+    // Checks validity of conditions for rel_factor to be parsed
+    bool is_valid = util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
         || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
         || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
         || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
         || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual;
+    // rel_factor: expr
+    if (stack->size() >= 2
+      && util::instance_of<ast::ExpressionNode>(*iter)
+      && is_valid) {
       // References expression node
       std::shared_ptr<ast::ExpressionNode> exp =
           std::static_pointer_cast<ast::ExpressionNode>(stack->back());
@@ -90,12 +110,7 @@ auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
     // rel_factor: var_name
     if (stack->size() >= 2
       && util::instance_of<ast::VariableNode>(*iter)
-      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+      && is_valid) {
       // References variable node
       std::shared_ptr<ast::VariableNode> var =
           std::static_pointer_cast<ast::VariableNode>(stack->back());
@@ -111,12 +126,7 @@ auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
     // rel_factor: const_value
     if (stack->size() >= 2
       && util::instance_of<ast::ConstantNode>(*iter)
-      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+      && is_valid) {
       // References constant node
       std::shared_ptr<ast::ConstantNode> con =
           std::static_pointer_cast<ast::ConstantNode>(stack->back());
@@ -130,6 +140,6 @@ auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
       return true;
     }
   }
-  return Subparser::Parse(context);
+  return false;
 }
 }  // namespace parser

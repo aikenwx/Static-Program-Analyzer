@@ -12,7 +12,14 @@
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 namespace test_design_extractor {
-auto ProgramStringToProgramNode(const std::string& program)
+auto ExtractCFG(const std::shared_ptr<ast::ProgramNode> &programNode)
+    -> std::shared_ptr<cfg::CFG> {
+  auto extractor = design_extractor::CFGExtractor();
+  programNode->AcceptVisitor(extractor, 0);
+  return extractor.cfg();
+}
+
+auto ProgramStringToProgramNode(const std::string &program)
     -> std::shared_ptr<ast::ProgramNode> {
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);
@@ -21,7 +28,9 @@ auto ProgramStringToProgramNode(const std::string& program)
   auto ast = parser.Parse(std::move(tokens));
   std::shared_ptr<ast::INode> root = ast->GetRoot();
 
-  assert(util::instance_of<ast::ProgramNode>(root)); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+  assert(util::instance_of<ast::ProgramNode>(
+      root));
 
   return std::static_pointer_cast<ast::ProgramNode>(root);
 }
@@ -41,17 +50,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 1 block") {
         REQUIRE(cfg->Size() == 1);
       }
 
-      THEN(
-          "The same block is returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The same block is returned with GetBlockAt() for any valid "
+           "statement number") {
         auto block = cfg->GetBlockAt(1);
         REQUIRE(block.has_value());
         REQUIRE(cfg->GetBlockAt(2) == block);
@@ -112,17 +118,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 3 blocks") {
         REQUIRE(cfg->Size() == 3);
       }
 
-      THEN(
-          "The correct blocks are returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The correct blocks are returned with GetBlockAt() for any valid "
+           "statement number") {
         auto block = cfg->GetBlockAt(1);
         REQUIRE(block.has_value());
         REQUIRE(cfg->GetBlockAt(2) == block);
@@ -208,10 +211,9 @@ SCENARIO(
   }
 }
 
-SCENARIO(
-    "CFGExtractor can handle procedures containing only one container "
-    "statement",
-    "[sp][sp/design_extractor][sp/design_extractor/cfg_extractor]") {
+SCENARIO("CFGExtractor can handle procedures containing only one container "
+         "statement",
+         "[sp][sp/design_extractor][sp/design_extractor/cfg_extractor]") {
   GIVEN("A simple program with one procedure") {
     std::string program = R"(
       procedure main {
@@ -231,17 +233,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 3 blocks") {
         REQUIRE(cfg->Size() == 3);
       }
 
-      THEN(
-          "The correct blocks are returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The correct blocks are returned with GetBlockAt() for any valid "
+           "statement number") {
         auto condBlock = cfg->GetBlockAt(1);
         REQUIRE(condBlock.has_value());
 
@@ -327,17 +326,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 5 blocks") {
         REQUIRE(cfg->Size() == 5);
       }
 
-      THEN(
-          "The correct blocks are returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The correct blocks are returned with GetBlockAt() for any valid "
+           "statement number") {
         // for dupe check
         std::unordered_set<std::shared_ptr<cfg::Block>> blocks;
 
@@ -450,17 +446,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 4 blocks") {
         REQUIRE(cfg->Size() == 4);
       }
 
-      THEN(
-          "The correct blocks are returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The correct blocks are returned with GetBlockAt() for any valid "
+           "statement number") {
         // for dupe check
         std::unordered_set<std::shared_ptr<cfg::Block>> blocks;
 
@@ -540,10 +533,9 @@ SCENARIO(
   }
 }
 
-SCENARIO(
-    "CFGExtractor can handle procedures containing nested container "
-    "statements",
-    "[sp][sp/design_extractor][sp/design_extractor/cfg_extractor]") {
+SCENARIO("CFGExtractor can handle procedures containing nested container "
+         "statements",
+         "[sp][sp/design_extractor][sp/design_extractor/cfg_extractor]") {
   GIVEN("A program with one procedure") {
     std::string program = R"(
         procedure main {
@@ -567,17 +559,14 @@ SCENARIO(
     auto programNode = ProgramStringToProgramNode(program);
 
     WHEN("The CFGExtractor is run on the program") {
-      auto extractor = std::make_shared<design_extractor::CFGExtractor>();
-      programNode->AcceptVisitor(programNode, extractor, 0);
-      auto cfg = extractor->cfg();
+      auto cfg = ExtractCFG(programNode);
 
       THEN("The CFGExtractor should have extracted a CFG with 7 blocks") {
         REQUIRE(cfg->Size() == 7);
       }
 
-      THEN(
-          "The correct blocks are returned with GetBlockAt() for any valid "
-          "statement number") {
+      THEN("The correct blocks are returned with GetBlockAt() for any valid "
+           "statement number") {
         // for dupe check
         std::unordered_set<std::shared_ptr<cfg::Block>> blocks;
 
@@ -630,9 +619,8 @@ SCENARIO(
       auto elseBlock1 = cfg->GetBlockAt(9).value();
       auto stmtBlock1 = cfg->GetBlockAt(11).value();
 
-      THEN(
-          "The blocks should have the correct start and end statement "
-          "numbers") {
+      THEN("The blocks should have the correct start and end statement "
+           "numbers") {
         REQUIRE(condBlock1->start() == 1);
         REQUIRE(condBlock1->end() == 1);
 
@@ -705,6 +693,6 @@ SCENARIO(
     }
   }
 }
-}  // namespace test_design_extractor
+} // namespace test_design_extractor
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

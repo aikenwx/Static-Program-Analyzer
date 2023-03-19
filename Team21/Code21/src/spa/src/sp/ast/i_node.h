@@ -6,8 +6,8 @@
 #include "../design_extractor/extractor.h"
 
 namespace ast {
-class INode {
- public:
+class INode : public std::enable_shared_from_this<INode> {
+public:
   INode() = default;
   virtual ~INode() = default;
   INode(const INode &) = delete;
@@ -23,8 +23,8 @@ class INode {
   /*
     Method for accepting visitors
   */
-  virtual void AcceptVisitor(
-      const std::shared_ptr<INode>& currentNode,
-      const std::shared_ptr<design_extractor::Extractor>& extractor, int depth){};
+  virtual void AcceptVisitor(design_extractor::Extractor &extractor, int depth){
+      // default no-op implementation
+  };
 };
-}  // namespace ast
+} // namespace ast

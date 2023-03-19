@@ -17,11 +17,10 @@ public:
   auto GetProcedure(std::string const &procedureName)
       -> std::shared_ptr<ProcedureNode>;
 
-  void AcceptVisitor(const std::shared_ptr<INode>& currentNode,
-                     const std::shared_ptr<design_extractor::Extractor>& extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
 private:
-  std::vector<std::shared_ptr<ProcedureNode> > procedures;
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
 };
-}  // namespace ast
+} // namespace ast

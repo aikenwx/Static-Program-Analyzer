@@ -60,7 +60,7 @@ Select <i, v> such that Next*(8, 8) pattern i(v, _, _)
 5000
 13 - BOOLEAN relationship(literal, literal) ifPattern(wildcard, wildcard, wildcard)
 if i;
-Select Boolean such that Next*(18, 15) pattern i(_, _, _)
+Select BOOLEAN such that Next*(18, 15) pattern i(_, _, _)
 FALSE
 5000
 14 - TUPLE relationship(literal, synonym) assignPattern(literal, literal)
@@ -106,7 +106,7 @@ Select <a> such that Next*(14, a) pattern a(_, _"(1)"_)
 22 - TUPLE relationship(literal, synonym) assignPattern(wildcard, wildcard)
 assign a; constant c;
 Select <a, c> such that Next*(21, a) pattern a(_, _)
-22 1, 22 5, 23 1, 23 5, 24 1, 24 5, 25 1, 25 5
+22 1, 22 5, 23 1, 23 5, 24 1, 24 5, 25 1, 25 5, 22 10, 23 10, 24 10, 25 10
 5000
 23 - TUPLE relationship(literal, synonym) whilePattern(synonym, wildcard)
 while w; variable v;
@@ -155,7 +155,7 @@ Select <a, v, s> such that Next*(s, 11) pattern a(v, _"(y + 5)"_)
 5000
 32 - TUPLE relationship(synonym, literal) assignPattern(synonym, wildcard)
 assign a; variable v; read r;
-Select <a.stmt#, v.varName, r.procName> such that Next*(a, 4) pattern a(v, _)
+Select <a.stmt#, v.varName, r.varName> such that Next*(a, 4) pattern a(v, _)
 5 x f, 5 x g
 5000
 33 - TUPLE relationship(synonym, literal) assignPattern(wildcard, literal)
@@ -201,7 +201,7 @@ Select <a, c> such that Next*(a, c) pattern a("x", "((((y)))) + (5) + (x)")
 41 - TUPLE relationship(synonym, synonym) assignPattern(literal, subexpression)
 assign a; stmt s;
 Select <a, s.stmt#> such that Next*(a, s) pattern a("x", _"y"_)
-5 1, 5 2, 5 3, 5 4, 5 5, 5 6, 5 7, 5 8, 25 26, 25 27
+5 1, 5 2, 5 3, 5 4, 5 5, 5 6, 5 7, 5 8, 25 26, 25 27, 22 26, 22 27
 5000
 42 - TUPLE relationship(synonym, synonym) assignPattern(literal, wildcard)
 assign a; print p;
@@ -220,7 +220,7 @@ Select a such that Next*(a, a1) pattern a(v, _"(y + 5)"_)
 5000
 45 - TUPLE relationship(synonym, synonym) assignPattern(synonym, wildcard)
 assign a; variable v; read r;
-Select <a.stmt#, v.varName, r.procName> such that Next*(r, a) pattern a(v, _)
+Select <a.stmt#, v.varName, r.varName> such that Next*(r, a) pattern a(v, _)
 none
 5000
 46 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, literal)
@@ -244,8 +244,8 @@ Select <w, v.varName> such that Next*(w, w) pattern w(v, _)
 1 x, 1 y, 1 f, 16 z, 26 x, 26 y
 5000
 50 - TUPLE relationship(synonym, synonym) whilePattern(wildcard, wildcard)
-while w, w1
-Select <w, w1.stmt#> such that Next*(w, w) pattern w(_, _)
+while w, w1;
+Select <w, w1.stmt#> such that Next*(w, w1) pattern w(_, _)
 1 1, 16 16, 16 26, 26 26
 5000
 51 - TUPLE relationship(synonym, synonym) ifPattern(synonym, wildcard, wildcard)

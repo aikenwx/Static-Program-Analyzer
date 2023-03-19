@@ -11,19 +11,24 @@ namespace parser {
 
 class Context {
 public:
-  Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead);
+  Context() = default;
+  Context(const Context &) = delete;
+  Context(Context &&) = delete;
+  auto operator=(const Context &) -> Context & = delete;
+  auto operator=(Context &&) -> Context & = delete;
+  virtual ~Context() = default;
+  explicit Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead);
   template<typename T>
-  bool IsLookaheadTypeOf() {
+  auto IsLookaheadTypeOf() -> bool {
     return util::instance_of<T>(**lookahead);
   }
-  std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> GetStack();
-  int &GetStatementCounter();
-  std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> GetLookahead();
-
+  auto GetStack() -> std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>>;
+  auto GetStatementCounter() -> int &;
+  auto GetLookahead() -> std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator>;
 
 private:
   std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead;
   std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> stack;
-  int statementCounter;
+  int statementCounter{};
 };
-}
+}  // namespace parser

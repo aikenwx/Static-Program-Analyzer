@@ -5,15 +5,16 @@ Subparser::Subparser() {
   this->next = nullptr;
 }
 
-std::shared_ptr<ISubparser> Subparser::SetNext(std::shared_ptr<ISubparser> next) {
+auto Subparser::SetNext(std::shared_ptr<ISubparser> next)
+    -> std::shared_ptr<ISubparser> {
   this->next = next;
   return next;
 }
 
-bool Subparser::Parse(std::shared_ptr<Context> context) {
+auto Subparser::Parse(std::shared_ptr<Context> context) -> bool {
   if (this->next) {
     return this->next->Parse(context);
   }
   return false;
 }
-}
+}  // namespace parser

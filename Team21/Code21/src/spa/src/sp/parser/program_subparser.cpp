@@ -4,43 +4,47 @@
 #include "util/instance_of.h"
 
 namespace parser {
-bool ProgramSubparser::Parse(std::shared_ptr<Context> context) {
+auto ProgramSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::EndToken>()) {
     // program: procedure+ (adds a procedure to a program)
     if (stack->size() >= 2
-      && util::instance_of<ast::ProgramNode>(*i)
-      && util::instance_of<ast::ProcedureNode>(*std::next(i, 1))) {
+      && util::instance_of<ast::ProgramNode>(*iter)
+      && util::instance_of<ast::ProcedureNode>(*std::next(iter, 1))) {
       // References program node
-      std::shared_ptr<ast::ProgramNode> pr = std::static_pointer_cast<ast::ProgramNode>(stack->back());
+      std::shared_ptr<ast::ProgramNode> prg =
+          std::static_pointer_cast<ast::ProgramNode>(stack->back());
       // Pops program node
       stack->pop_back();
       // References procedure node
-      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack->back());
+      std::shared_ptr<ast::ProcedureNode> pro =
+          std::static_pointer_cast<ast::ProcedureNode>(stack->back());
       // Pops procedure node
       stack->pop_back();
       // Adds procedure to program node
-      pr->AddProcedure(p);
+      prg->AddProcedure(pro);
       // Pushes program node to parse stack
-      stack->push_back(pr);
+      stack->push_back(prg);
       return true;
     }
     // program: procedure+ (creates a one procedure program)
-    if (util::instance_of<ast::ProcedureNode>(*i)) {
+    if (util::instance_of<ast::ProcedureNode>(*iter)) {
       // References procedure node
-      std::shared_ptr<ast::ProcedureNode> p = std::static_pointer_cast<ast::ProcedureNode>(stack->back());
+      std::shared_ptr<ast::ProcedureNode> pro =
+          std::static_pointer_cast<ast::ProcedureNode>(stack->back());
       // Pops procedure node
       stack->pop_back();
       // Creates program node
-      std::shared_ptr<ast::ProgramNode> pr = std::make_shared<ast::ProgramNode>();
+      std::shared_ptr<ast::ProgramNode> prg =
+          std::make_shared<ast::ProgramNode>();
       // Adds procedure to program node
-      pr->AddProcedure(p);
+      prg->AddProcedure(pro);
       // Pushes program node to parse stack
-      stack->push_back(pr);
+      stack->push_back(prg);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

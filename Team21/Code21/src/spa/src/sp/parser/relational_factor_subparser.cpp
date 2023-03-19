@@ -10,9 +10,10 @@
 #include "util/instance_of.h"
 
 namespace parser {
-bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
+auto RelationalFactorSubparser::Parse(std::shared_ptr<Context> context)
+    -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   // Default parsing case (LHS of relational expression)
   if (context->IsLookaheadTypeOf<token::LessThanToken>()
     || context->IsLookaheadTypeOf<token::GreaterThanToken>()
@@ -21,39 +22,45 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
     // rel_factor: expr
-    if (util::instance_of<ast::ExpressionNode>(*i)) {
+    if (util::instance_of<ast::ExpressionNode>(*iter)) {
       // References expression node
-      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      std::shared_ptr<ast::ExpressionNode> exp =
+          std::static_pointer_cast<ast::ExpressionNode>(stack->back());
       // Pops expression node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(e->GetOperand());
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(exp->GetOperand());
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
     // rel_factor: var_name
-    if (util::instance_of<ast::VariableNode>(*i)) {
+    if (util::instance_of<ast::VariableNode>(*iter)) {
       // References variable node
-      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
+      std::shared_ptr<ast::VariableNode> var =
+          std::static_pointer_cast<ast::VariableNode>(stack->back());
       // Pops variable node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(v);
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(var);
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
     // rel_factor: const_value
-    if (util::instance_of<ast::ConstantNode>(*i)) {
+    if (util::instance_of<ast::ConstantNode>(*iter)) {
       // References constant node
-      std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
+      std::shared_ptr<ast::ConstantNode> con =
+          std::static_pointer_cast<ast::ConstantNode>(stack->back());
       // Pops constant node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(c);
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(con);
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
   }
@@ -61,62 +68,68 @@ bool RelationalFactorSubparser::Parse(std::shared_ptr<Context> context) {
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
     // rel_factor: expr
     if (stack->size() >= 2
-      && util::instance_of<ast::ExpressionNode>(*i)
-      && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreater
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesserEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+      && util::instance_of<ast::ExpressionNode>(*iter)
+      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
       // References expression node
-      std::shared_ptr<ast::ExpressionNode> e = std::static_pointer_cast<ast::ExpressionNode>(stack->back());
+      std::shared_ptr<ast::ExpressionNode> exp =
+          std::static_pointer_cast<ast::ExpressionNode>(stack->back());
       // Pops expression node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(e->GetOperand());
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(exp->GetOperand());
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
     // rel_factor: var_name
     if (stack->size() >= 2
-      && util::instance_of<ast::VariableNode>(*i)
-      && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreater
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesserEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+      && util::instance_of<ast::VariableNode>(*iter)
+      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
       // References variable node
-      std::shared_ptr<ast::VariableNode> v = std::static_pointer_cast<ast::VariableNode>(stack->back());
+      std::shared_ptr<ast::VariableNode> var =
+          std::static_pointer_cast<ast::VariableNode>(stack->back());
       // Pops variable node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(v);
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(var);
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
     // rel_factor: const_value
     if (stack->size() >= 2
-      && util::instance_of<ast::ConstantNode>(*i)
-      && (util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesser
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreater
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kLesserEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kGreaterEqual
-        || util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
+      && util::instance_of<ast::ConstantNode>(*iter)
+      && (util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesser
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreater
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kLesserEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kGreaterEqual
+        || util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kNotEqual)) {
       // References constant node
-      std::shared_ptr<ast::ConstantNode> c = std::static_pointer_cast<ast::ConstantNode>(stack->back());
+      std::shared_ptr<ast::ConstantNode> con =
+          std::static_pointer_cast<ast::ConstantNode>(stack->back());
       // Pop constant node
       stack->pop_back();
       // Creates relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> f = std::make_shared<ast::RelationalFactorNode>(c);
+      std::shared_ptr<ast::RelationalFactorNode> fac =
+          std::make_shared<ast::RelationalFactorNode>(con);
       // Pushes relational factor node to parse stack
-      stack->push_back(f);
+      stack->push_back(fac);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

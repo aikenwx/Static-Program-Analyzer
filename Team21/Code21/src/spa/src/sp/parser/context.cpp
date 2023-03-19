@@ -1,20 +1,21 @@
 #include "context.h"
 
+#include <utility>
+
 namespace parser {
-Context::Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead) {
+Context::Context(std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> lookahead) : lookahead(std::move(lookahead)) {
   this->stack = std::make_shared<std::vector<std::shared_ptr<ast::INode>>>();
-  this->lookahead = lookahead;
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> Context::GetStack() {
+auto Context::GetStack() -> std::shared_ptr<std::vector<std::shared_ptr<ast::INode>>> {
   return stack;
 }
 
-int &Context::GetStatementCounter() {
+auto Context::GetStatementCounter() -> int & {
   return statementCounter;
 }
 
-std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> Context::GetLookahead() {
+auto Context::GetLookahead() -> std::shared_ptr<std::vector<std::unique_ptr<token::Token>>::iterator> {
   return lookahead;
 }
-}
+}  // namespace parser

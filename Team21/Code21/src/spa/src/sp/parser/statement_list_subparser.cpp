@@ -4,84 +4,92 @@
 #include "util/instance_of.h"
 
 namespace parser {
-bool StatementListSubparser::Parse(std::shared_ptr<Context> context) {
+auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
-  auto i = stack->rbegin();
+  auto iter = stack->rbegin();
   if (context->IsLookaheadTypeOf<token::RightBraceToken>()) {
     // stmtLst: stmt+ (adds container statement to statement list)
     if (stack->size() >= 2
-      && util::instance_of<ast::StatementListNode>(*i)
-      && util::instance_of<ast::ContainerStatementNode>(*std::next(i, 1))) {
+      && util::instance_of<ast::StatementListNode>(*iter)
+      && util::instance_of<ast::ContainerStatementNode>(*std::next(iter, 1))) {
       // References statement list node
-      std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack->back());
+      std::shared_ptr<ast::StatementListNode> lis =
+          std::static_pointer_cast<ast::StatementListNode>(stack->back());
       // Pops statement list node
       stack->pop_back();
       // References (container) statement node
-      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
+      std::shared_ptr<ast::StatementNode> sta =
+          std::static_pointer_cast<ast::StatementNode>(stack->back());
       // Pops (container) statement node
       stack->pop_back();
       // Adds (container) statement to statement list node
-      sl->AddStatement(s);
+      lis->AddStatement(sta);
       // Pushes statement list node to parse stack
-      stack->push_back(sl);
+      stack->push_back(lis);
       return true;
     }
     // stmtLst: stmt+ (creates a one container statement statement list)
-    if (util::instance_of<ast::ContainerStatementNode>(*i)) {
+    if (util::instance_of<ast::ContainerStatementNode>(*iter)) {
       // References (container) statement node
-      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
+      std::shared_ptr<ast::StatementNode> sta =
+          std::static_pointer_cast<ast::StatementNode>(stack->back());
       // Pops (container) statement node
       stack->pop_back();
       // Creates statement list node
-      std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
+      std::shared_ptr<ast::StatementListNode> lis =
+          std::make_shared<ast::StatementListNode>();
       // Adds (container) statement to statement list node
-      sl->AddStatement(s);
+      lis->AddStatement(sta);
       // Pushes statement list node to parse stack
-      stack->push_back(sl);
+      stack->push_back(lis);
       return true;
     }
     // stmtLst: stmt+ (adds statement to statement list)
     if (stack->size() >= 3
-      && util::instance_of<ast::StatementListNode>(*i)
-      && util::instance_of<ast::SymbolNode>(*std::next(i, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(i, 1)))->GetType() == ast::SymbolType::kSemicolon
-      && util::instance_of<ast::StatementNode>(*std::next(i, 2))) {
+      && util::instance_of<ast::StatementListNode>(*iter)
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::StatementNode>(*std::next(iter, 2))) {
       // References statement list node
-      std::shared_ptr<ast::StatementListNode> sl = std::static_pointer_cast<ast::StatementListNode>(stack->back());
+      std::shared_ptr<ast::StatementListNode> lis =
+          std::static_pointer_cast<ast::StatementListNode>(stack->back());
       // Pops statement list node
       stack->pop_back();
       // Pops semicolon symbol node
       stack->pop_back();
       // References statement node
-      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
-      s->SetStatementNumber(sl->GetStartStatementNumber() - 1);
+      std::shared_ptr<ast::StatementNode> sta =
+          std::static_pointer_cast<ast::StatementNode>(stack->back());
+      sta->SetStatementNumber(sl->GetStartStatementNumber() - 1);
       // Pops statement node
       stack->pop_back();
       // Adds statement to statement list node
-      sl->AddStatement(s);
+      lis->AddStatement(sta);
       // Pushes statement list node to parse stack
-      stack->push_back(sl);
+      stack->push_back(lis);
       return true;
     }
     // stmtLst: stmt+ (creates a one statement statement list)
     if (stack->size() >= 2
-      && util::instance_of<ast::SymbolNode>(*i) && (std::static_pointer_cast<ast::SymbolNode>(*i))->GetType() == ast::SymbolType::kSemicolon
-      && util::instance_of<ast::StatementNode>(*std::next(i, 1))) {
+      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kSemicolon
+      && util::instance_of<ast::StatementNode>(*std::next(iter, 1))) {
       // Pops semicolon symbol node
       stack->pop_back();
       // References statement node
-      std::shared_ptr<ast::StatementNode> s = std::static_pointer_cast<ast::StatementNode>(stack->back());
-      s->SetStatementNumber(context->GetStatementCounter());
+      std::shared_ptr<ast::StatementNode> sta =
+          std::static_pointer_cast<ast::StatementNode>(stack->back());
+      sta->SetStatementNumber(context->GetStatementCounter());
       // Pops statement node
       stack->pop_back();
       // Creates statement list node
-      std::shared_ptr<ast::StatementListNode> sl = std::make_shared<ast::StatementListNode>();
+      std::shared_ptr<ast::StatementListNode> lis =
+          std::make_shared<ast::StatementListNode>();
       // Adds statement to statement list node
-      sl->AddStatement(s);
+      lis->AddStatement(sta);
       // Pushes statement list node to parse stack
-      stack->push_back(sl);
+      stack->push_back(lis);
       return true;
     }
   }
   return Subparser::Parse(context);
 }
-}
+}  // namespace parser

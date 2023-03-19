@@ -3,15 +3,16 @@
 #include "query/query_exceptions.h"
 
 #include "QueryValidator.h"
+#include "query/relationship.h"
 
 namespace qps {
 
 	class SemanticValidator : public QueryValidator {
 	public:
-		SemanticValidator(Query query);
+		explicit SemanticValidator(Query& query);
 
 		//checks query by calling all the other check functions
-		bool validateQuery();
+		auto validateQuery() -> bool override;
 
 		//checks for no duplicate declarations
 		void checkForDuplicateDeclarations();
@@ -19,10 +20,8 @@ namespace qps {
 		//checks that all synonyms in clauses are from declarations
 		void checkIfSynonymContainedInDeclaration();
 
-		void checkSynonymDeclareHelper(Ref r, std::vector<Declaration> declr, std::string missing);
-
-		//check that the pattern clause has a syn-assign that is a pattern declaration
-		void checkPatternClauseSynAssign();
+		//check that the pattern clause has a synonym with valid design entity
+		void checkPatternClauseSynonym();
 
 		//checks that no wild card as first argument for modifies and uses
 		void checkNoWildCardFirstArgModifiesUses();
@@ -30,9 +29,26 @@ namespace qps {
 		//checks that synonyms declared in such that clause for relationships(e.g. parent) have the correct design entity types for that relation
 		void checkRelationSynonymMatchDesignEntity();
 
-		void checkSynonymStatementHelper(DesignEntity d, std::string relStr);
-
 		//checks that pattern first arg is variable if it is synonym
 		void checkPatternSynonymMatchDesignEntity();
+
+		//checks that with clause contain comparison of same type of attribute
+		void checkWithClauseSameAttributeCompare();
+
+		//checks that attrRef have valid attrName
+		void checkAttrRefValidAttrName();
+
+	private:
+		static void checkSynonymDeclareHelper(Ref reff, std::vector<Declaration>& declr, const std::string &missing);
+
+		static void checkElementSynonymDeclareHelper(Element ele, std::vector<Declaration>& declr);
+
+		static void checkWithRefSynonymDeclareHelper(WithRef reff, std::vector<Declaration>& declr);
+
+		static void checkSynonymStatementHelper(DesignEntity des, const std::string &relStr);
+
+		static void checkSecondSynonymHelper(DesignEntity des, const std::string &relStr, Relationship rel);
+
+		static void checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr);
 	};
-}
+}  // namespace qps

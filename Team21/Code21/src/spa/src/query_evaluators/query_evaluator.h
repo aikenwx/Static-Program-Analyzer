@@ -1,28 +1,27 @@
 #pragma once
 
-#include "unordered_set"
+#include <unordered_set>
+#include <list>
 
 #include "query/query.h"
 #include "PKB/QueryFacade.h"
 #include "clause_evaluator.h"
+#include "query_evaluators/select_evaluators/select_evaluator.h"
 
 namespace qps {
 
 class QueryEvaluator {
  public:
-  QueryEvaluator(Query query);
+  explicit QueryEvaluator(Query query);
 
-  std::unordered_set<std::string> EvaluateQuery(QueryFacade &pkb);
+  void EvaluateQuery(QueryFacade &pkb, std::list<std::string> &results);
 
  private:
   Query query_;
-  bool early_return_ = false;
   std::vector<std::unique_ptr<ClauseEvaluator>> clause_evaluators_;
-  std::unique_ptr<ClauseEvaluator> select_evalautor_;
-  std::vector<SynonymTable> tables_;
-  void CreateEvaluators();
-  void EvaluateClauses(QueryFacade &pkb);
-  std::unordered_set<std::string> EvaluateSelect(QueryFacade &pkb);
+  void CreateClauseEvaluators();
+  auto EvaluateClauses(QueryFacade &pkb) -> ClauseResult;
+  auto EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result) -> FinalResult;
 
 };
-} // qps
+}  // namespace qps

@@ -6,15 +6,26 @@ namespace qps {
 
 	class QueryValidator {
 	private:
-		Query query_;
+		Query& query_;
 
 	public:
-		QueryValidator(Query query_) :query_(query_) {}
 
-		virtual bool validateQuery() = 0;
+		explicit QueryValidator(Query& query_) :query_(query_) {}
 
-		Query getQuery() {
+		virtual ~QueryValidator() = default;
+
+		QueryValidator(const QueryValidator&) = default;
+
+		auto operator=(const QueryValidator&) -> QueryValidator& = delete;
+
+		QueryValidator(QueryValidator&&) = default;
+
+		auto operator=(QueryValidator&&) -> QueryValidator& = delete;
+
+		virtual auto validateQuery() -> bool = 0;
+
+		[[nodiscard]] auto getQuery() const -> Query& {
 			return query_;
 		}
 	};
-}
+}  // namespace qps

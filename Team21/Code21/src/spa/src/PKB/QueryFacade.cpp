@@ -444,6 +444,18 @@ auto QueryFacade::getIfStatementsUsingVariableInCondition(
       &variableName);
 }
 
+auto QueryFacade::getVariablesInWhileStatementCondition(int statementNumber)
+    -> std::unordered_set<Variable *> * {
+  return this->patternManager->getVariablesUsedInWhileStatementCondition(
+      statementNumber);
+}
+
+auto QueryFacade::getVariablesInIfStatementCondition(int statementNumber)
+    -> std::unordered_set<Variable *> * {
+  return this->patternManager->getVariablesUsedInIfStatementCondition(
+      statementNumber);
+}
+
 auto QueryFacade::getEntity(EntityType entityType, int entityValue)
     -> Entity * {
   EntityKey entityKey = EntityKey(&entityType, entityValue);

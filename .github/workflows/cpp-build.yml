@@ -9,7 +9,7 @@ jobs:
         platform: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
         std: [17]
-        toolchain: []
+        toolchain: [msvc, clang, gcc]
         include:
           - toolchain: msvc
             cc: cl
@@ -20,14 +20,20 @@ jobs:
           - toolchain: clang
             cc: clang
             cxx: clang++
+        exclude:
+          # msvc isn't available on ubuntu/macos, duh
           - platform: ubuntu-latest
-            toolchain: clang
-          - platform: ubuntu-latest
-            toolchain: gcc
-          - platform: macos-latest
-            toolchain: clang
-          - platform: windows-latest
             toolchain: msvc
+          - platform: macos-latest
+            toolchain: msvc
+          # limit number of builds we do
+          # should be covered by ubuntu+gcc build
+          - platform: windows-latest
+            toolchain: gcc
+          - platform: windows-latest
+            toolchain: clang
+          - platform: macos-latest
+            toolchain: gcc
           # include other_pkgs, cmake_configurations as required
     runs-on: ${{ matrix.platform }}
 

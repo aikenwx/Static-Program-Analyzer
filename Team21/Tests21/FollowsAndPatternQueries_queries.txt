@@ -223,3 +223,78 @@ if i; stmt s;
 Select i such that Follows(s, 19) pattern i(_, _, _)
 6, 14
 5000
+46 - TUPLE relationship(synonym, synonym) assignPattern(literal, literal)
+assign a; stmt s, z;
+Select <s, a> such that Follows(s, z) pattern a("x", "0")
+1 2, 2 2, 3 2, 4 2, 5 2, 6 2, 9 2, 11 2, 12 2, 13 2, 15 2, 16 2, 18 2, 20 2, 21 2, 23 2, 24 2
+5000
+47 - TUPLE relationship(synonym, synonym) assignPattern(literal, subexpression)
+assign a; stmt s, z;
+Select <a> such that Follows(s, z) pattern a("y", _"2"_)
+3, 22
+5000
+48 - TUPLE relationship(synonym, synonym) assignPattern(literal, wildcard)
+assign a; stmt s;
+Select <s> such that Follows(s, a) pattern a("z", _)
+3, 12
+5000
+49 - ELEM relationship(synonym, synonym) assignPattern(synonym, literal)
+assign a; stmt s; variable v;
+Select s such that Follows(a, s) pattern a(v, "z / 6 - x * 2")
+14
+5000
+50 - ELEM relationship(synonym, synonym) assignPattern(synonym, subexpression)
+assign a; stmt s; variable v;
+Select v such that Follows(a, s) pattern a(v, _"x"_)
+x, y, z, a
+5000
+51 - TUPLE relationship(synonym, synonym) assignPattern(synonym, wildcard)
+assign a, a1; variable v;
+Select <v, a1> such that Follows(a, a1) pattern a(v, _)
+x 3, y 4, x 13, a 22, y 25
+5000
+52 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, literal)
+assign a; if i; stmt s;
+Select <i, a> such that Follows(s, i) pattern a(_, "x + 1")
+6 21, 14 21
+5000
+53 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, subexpression)
+assign a, a1; stmt s;
+Select <s, a1> such that Follows(a1, s) pattern a(_, "i")
+none
+5000
+54 - BOOLEAN relationship(synonym, synonym) assignPattern(wildcard, wildcard)
+assign a; stmt s;
+Select BOOLEAN such that Follows(a, s) pattern a(_, _)
+TRUE
+5000
+55 - TUPLE relationship(synonym, synonym) whilePattern(literal, wildcard)
+while w; stmt s;
+Select <s> such that Follows(w, s) pattern w("x", _)
+23
+5000
+56 - TUPLE relationship(synonym, synonym) whilePattern(synonym, wildcard)
+while w, w1; if i; variable v;
+Select <v, w> such that Follows(i, w) pattern w1(v, _)
+count 9, x 9, y 9
+5000
+57 - TUPLE relationship(synonym, synonym) whilePattern(wildcard, wildcard)
+while w, w1; stmt s;
+Select <w1, s> such that Follows(w, s) pattern w1(_, _)
+9 11, 9 23, 11 11, 11 23, 17 11, 17 23
+5000
+58 - ELEM relationship(synonym, synonym) ifPattern(literal, wildcard, wildcard)
+if i; stmt s;
+Select s such that Follows(s, i) pattern i("count", _, _)
+5
+5000
+59 - TUPLE relationship(synonym, synonym) ifPattern(synonym, wildcard, wildcard)
+if i; assign a; variable v;
+Select <v, a> such that Follows(a, i) pattern i(v, _, _)
+z 13
+5000
+60 - ELEM relationship(synonym, synonym) ifPattern(wildcard, wildcard, wildcard)
+if i; stmt s;
+Select s such that Follows(i, s) pattern i(_, _, _)
+9
+5000

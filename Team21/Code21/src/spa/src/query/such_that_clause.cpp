@@ -20,7 +20,7 @@ namespace qps {
 
 	SuchThatClause::SuchThatClause(Relationship relationship_, Ref arg1_, Ref arg2_,
 		std::vector<Declaration>& declarations)
-		: relationship{ relationship_ }, arg1{std::move( arg1_ ))}, arg2{std::move(std::move( arg2_ )} {
+		: relationship{ relationship_ }, arg1{std::move( arg1_ )}, arg2{std::move( arg2_ )} {
 		handleModifiesUses(declarations);
 	}
 }  // namespace qps

@@ -6,7 +6,7 @@
 
 namespace qps {
 
-std::map<DesignEntity, std::string> designEntityStringMap{ {
+const std::map<DesignEntity, std::string> designEntityStringMap{ {
 	{DesignEntity::STMT, "stmt"},
 	{DesignEntity::READ, "read"},
 	{DesignEntity::PRINT, "print"},
@@ -19,7 +19,7 @@ std::map<DesignEntity, std::string> designEntityStringMap{ {
 	{DesignEntity::PROCEDURE, "procedure"},
 } };
 
-std::map<std::string, DesignEntity> designEntityMap{ {
+const std::map<std::string, DesignEntity> designEntityMap{ {
 	{"stmt", DesignEntity::STMT},
 	{"read", DesignEntity::READ},
 	{"print", DesignEntity::PRINT},
@@ -32,7 +32,7 @@ std::map<std::string, DesignEntity> designEntityMap{ {
 	{"procedure", DesignEntity::PROCEDURE},
 } };
 
-DesignEntity getDesignEntityFromString(std::string deString) {
+auto getDesignEntityFromString(const std::string& deString) -> DesignEntity {
 	try {
 		return designEntityMap.at(deString);
 	}
@@ -41,8 +41,8 @@ DesignEntity getDesignEntityFromString(std::string deString) {
 	}
 }
 
-std::string getStringFromDE(DesignEntity designEntity) {
+auto getStringFromDE(DesignEntity designEntity) -> std::string {
 	return designEntityStringMap.at(designEntity);
 }
 
-}
+}  // namespace qps

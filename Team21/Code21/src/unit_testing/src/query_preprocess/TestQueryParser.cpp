@@ -441,6 +441,6 @@ TEST_CASE("Parser: full-use") {
 	REQUIRE(withClause[1] == WithClause(WithRef(AttrRef(Synonym("c"), AttrName::Value)), WithRef(AttrRef(Synonym("a"), AttrName::StmtNo))));
 	REQUIRE(withClause[2] == WithClause(WithRef(AttrRef(Synonym("v"), AttrName::VarName)), WithRef(WithRef(QuotedIdentifier("x")))));
 }
-}
+}  // namespace qps
 
 

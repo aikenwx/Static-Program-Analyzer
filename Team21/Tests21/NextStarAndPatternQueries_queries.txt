@@ -1,55 +1,260 @@
-Someone hero pls volunteer
-Im just listing all the possible test cases, feel free to choose any of them if you find them meaningful for our SPA,
-Also do vary the return tuples for select clause
-1 - relationship(literal, literal) assignPattern(literal, literal)
-2 - relationship(literal, literal) assignPattern(literal, subexpression)
-3 - relationship(literal, literal) assignPattern(literal, wildcard)
-4 - relationship(literal, literal) assignPattern(synonym, literal)
-5 - relationship(literal, literal) assignPattern(synonym, subexpression)
-6 - relationship(literal, literal) assignPattern(synonym, wildcard)
-7 - relationship(literal, literal) assignPattern(wildcard, literal)
-8 - relationship(literal, literal) assignPattern(wildcard, subexpression)
-9 - relationship(literal, literal) assignPattern(wildcard, wildcard)
-10 - relationship(literal, literal) whilePattern(synonym, wildcard)
-11 - relationship(literal, literal) whilePattern(wildcard, wildcard)
-12 - relationship(literal, literal) ifPattern(synonym, wildcard, wildcard)
-13 - relationship(literal, literal) ifPattern(wildcard, wildcard, wildcard)
-14 - relationship(literal, synonym) assignPattern(literal, literal)
-15 - relationship(literal, synonym) assignPattern(literal, subexpression)
-16 - relationship(literal, synonym) assignPattern(literal, wildcard)
-17 - relationship(literal, synonym) assignPattern(synonym, literal)
-18 - relationship(literal, synonym) assignPattern(synonym, subexpression)
-19 - relationship(literal, synonym) assignPattern(synonym, wildcard)
-20 - relationship(literal, synonym) assignPattern(wildcard, literal)
-21 - relationship(literal, synonym) assignPattern(wildcard, subexpression)
-22 - relationship(literal, synonym) assignPattern(wildcard, wildcard)
-23 - relationship(literal, synonym) whilePattern(synonym, wildcard)
-24 - relationship(literal, synonym) whilePattern(wildcard, wildcard)
-25 - relationship(literal, synonym) ifPattern(synonym, wildcard, wildcard)
-26 - relationship(literal, synonym) ifPattern(wildcard, wildcard, wildcard)
-27 - relationship(synonym, literal) assignPattern(literal, literal)
-28 - relationship(synonym, literal) assignPattern(literal, subexpression)
-29 - relationship(synonym, literal) assignPattern(literal, wildcard)
-30 - relationship(synonym, literal) assignPattern(synonym, literal)
-31 - relationship(synonym, literal) assignPattern(synonym, subexpression)
-32 - relationship(synonym, literal) assignPattern(synonym, wildcard)
-33 - relationship(synonym, literal) assignPattern(wildcard, literal)
-34 - relationship(synonym, literal) assignPattern(wildcard, subexpression)
-35 - relationship(synonym, literal) assignPattern(wildcard, wildcard)
-36 - relationship(synonym, literal) whilePattern(synonym, wildcard)
-37 - relationship(synonym, literal) whilePattern(wildcard, wildcard)
-38 - relationship(synonym, literal) ifPattern(synonym, wildcard, wildcard)
-39 - relationship(synonym, literal) ifPattern(wildcard, wildcard, wildcard)
-40 - relationship(synonym, synonym) assignPattern(literal, literal)
-41 - relationship(synonym, synonym) assignPattern(literal, subexpression)
-42 - relationship(synonym, synonym) assignPattern(literal, wildcard)
-43 - relationship(synonym, synonym) assignPattern(synonym, literal)
-44 - relationship(synonym, synonym) assignPattern(synonym, subexpression)
-45 - relationship(synonym, synonym) assignPattern(synonym, wildcard)
-46 - relationship(synonym, synonym) assignPattern(wildcard, literal)
-47 - relationship(synonym, synonym) assignPattern(wildcard, subexpression)
-48 - relationship(synonym, synonym) assignPattern(wildcard, wildcard)
-49 - relationship(synonym, synonym) whilePattern(synonym, wildcard)
-50 - relationship(synonym, synonym) whilePattern(wildcard, wildcard)
-51 - relationship(synonym, synonym) ifPattern(synonym, wildcard, wildcard)
-52 - relationship(synonym, synonym) ifPattern(wildcard, wildcard, wildcard)
+1 - TUPLE relationship(literal, literal) assignPattern(literal, literal)
+assign a;
+Select <a> such that Next*(1, 1) pattern a("x", "(y) + 1")
+25
+5000
+2 - TUPLE relationship(literal, literal) assignPattern(literal, subexpression)
+assign a;
+Select <a> such that Next*(6, 2) pattern a("x", _"(y) + (((5)))"_)
+5
+5000
+3 - ELEM relationship(literal, literal) assignPattern(literal, wildcard)
+assign a;
+Select a such that Next*(7, 4) pattern a("x", _)
+5, 22, 25
+5000
+4 - TUPLE relationship(literal, literal) assignPattern(synonym, literal)
+assign a; variable v;
+Select <a, v> such that Next*(8, 5) pattern a(v, "y + 1")
+23 y, 25 x
+5000
+5 - TUPLE relationship(literal, literal) assignPattern(synonym, subexpression)
+assign a; variable v;
+Select <a, v> such that Next*(12, 22) pattern a(v, _"(y) + (1)"_)
+23 y, 25 x
+5000
+6 - TUPLE relationship(literal, literal) assignPattern(synonym, wildcard)
+assign a; variable v;
+Select <a, v> such that Next*(4, 3) pattern a(v, _)
+5 x, 13 z, 22 x, 23 y, 24 z, 25 x
+5000
+7 - BOOLEAN relationship(literal, literal) assignPattern(wildcard, literal)
+assign a;
+Select BOOLEAN such that Next*(3, 2) pattern a(_, "(x) + (1) + (y)")
+TRUE
+5000
+8 - TUPLE relationship(literal, literal) assignPattern(wildcard, subexpression)
+assign a;
+Select <a> such that Next*(12, 27) pattern a(_, _"(1)"_)
+13, 22, 23, 24, 25
+5000
+9 - TUPLE relationship(literal, literal) assignPattern(wildcard, wildcard)
+assign a;
+Select <a> such that Next*(15, 27) pattern a(_, _)
+5, 13, 22, 23, 24, 25
+5000
+10 - TUPLE relationship(literal, literal) whilePattern(synonym, wildcard)
+while w; variable v;
+Select <w, v> such that Next*(12, 27) pattern w(v, _)
+1 x, 1 y, 1 f, 16 z, 26 x, 26 y
+5000
+11 - TUPLE relationship(literal, literal) whilePattern(wildcard, wildcard)
+while w;
+Select <w> such that Next*(22, 23) pattern w(_, _)
+none
+5000
+12 - TUPLE relationship(literal, literal) ifPattern(synonym, wildcard, wildcard)
+if i; variable v;
+Select <i, v> such that Next*(8, 8) pattern i(v, _, _)
+2 x, 9 x, 15 x, 15 y, 21 x, 21 y
+5000
+13 - BOOLEAN relationship(literal, literal) ifPattern(wildcard, wildcard, wildcard)
+if i;
+Select BOOLEAN such that Next*(18, 15) pattern i(_, _, _)
+FALSE
+5000
+14 - TUPLE relationship(literal, synonym) assignPattern(literal, literal)
+assign a; call c;
+Select <a, c> such that Next*(7, a) pattern a("x", "y + (5) + (x)")
+5 3, 5 4, 5 10
+5000
+15 - TUPLE relationship(literal, synonym) assignPattern(literal, subexpression)
+assign a;
+Select <a> such that Next*(15, a) pattern a("x", _"y"_)
+22, 25
+5000
+16 - TUPLE relationship(literal, synonym) assignPattern(literal, wildcard)
+assign a;
+Select <a> such that Next*(16, a) pattern a("x", _)
+none
+5000
+17 - TUPLE relationship(literal, synonym) assignPattern(synonym, literal)
+assign a; variable v;
+Select <a, v> such that Next*(8, a) pattern a(v, "(z + 1)")
+none
+5000
+18 - BOOLEAN relationship(literal, synonym) assignPattern(synonym, subexpression)
+assign a; variable v;
+Select BOOLEAN such that Next*(8, a) pattern a(v, _"(y + 5)"_)
+TRUE
+5000
+19 - TUPLE relationship(literal, synonym) assignPattern(synonym, wildcard)
+assign a; variable v;
+Select <a, v> such that Next*(12, a) pattern a(v, _)
+13 z, 22 x, 23 y, 24 z, 25 x
+5000
+20 - TUPLE relationship(literal, synonym) assignPattern(wildcard, literal)
+assign a;
+Select <a> such that Next*(9, a) pattern a(_, "y + 1")
+none
+5000
+21 - TUPLE relationship(literal, synonym) assignPattern(wildcard, subexpression)
+assign a;
+Select <a> such that Next*(14, a) pattern a(_, _"(1)"_)
+22, 23, 24, 25
+5000
+22 - TUPLE relationship(literal, synonym) assignPattern(wildcard, wildcard)
+assign a; constant c;
+Select <a, c> such that Next*(21, a) pattern a(_, _)
+22 1, 22 5, 23 1, 23 5, 24 1, 24 5, 25 1, 25 5, 22 10, 23 10, 24 10, 25 10
+5000
+23 - TUPLE relationship(literal, synonym) whilePattern(synonym, wildcard)
+while w; variable v;
+Select <w, v> such that Next*(18, w) pattern w(v, _)
+16 z, 26 x, 26 y
+5000
+24 - TUPLE relationship(literal, synonym) whilePattern(wildcard, wildcard)
+while w;
+Select <w> such that Next*(22, w) pattern w(_, _)
+26
+5000
+25 - TUPLE relationship(literal, synonym) ifPattern(synonym, wildcard, wildcard)
+if i; variable v;
+Select <i, v> such that Next*(8, i) pattern i(v, _, _)
+2 x
+5000
+26 - BOOLEAN relationship(literal, synonym) ifPattern(wildcard, wildcard, wildcard)
+if i;
+Select BOOLEAN such that Next*(18, i) pattern i(_, _, _)
+FALSE
+5000
+27 - TUPLE relationship(synonym, literal) assignPattern(literal, literal)
+assign a; call c;
+Select <a, c> such that Next*(a, 1) pattern a("x", "((((y)))) + (5) + (x)")
+5 3, 5 4, 5 10
+5000
+28 - ELEM relationship(synonym, literal) assignPattern(literal, subexpression)
+assign a;
+Select a such that Next*(a, 26) pattern a("x", _"y"_)
+22, 25
+5000
+29 - TUPLE relationship(synonym, literal) assignPattern(literal, wildcard)
+assign a;
+Select <a> such that Next*(a, 5) pattern a("x", _)
+5
+5000
+30 - TUPLE relationship(synonym, literal) assignPattern(synonym, literal)
+assign a; variable v;
+Select <a, v> such that Next*(a, 25) pattern a(v, "(z + 1)")
+13 z, 24 z
+5000
+31 - TUPLE relationship(synonym, literal) assignPattern(synonym, subexpression)
+assign a; variable v; stmt s;
+Select <a, v, s> such that Next*(s, 11) pattern a(v, _"(y + 5)"_)
+5 x 9
+5000
+32 - TUPLE relationship(synonym, literal) assignPattern(synonym, wildcard)
+assign a; variable v; call c;
+Select <a.stmt#, v.varName, c.procName> such that Next*(a, 4) pattern a(v, _)
+5 x f, 5 x g
+5000
+33 - TUPLE relationship(synonym, literal) assignPattern(wildcard, literal)
+assign a; print p;
+Select <a, p.varName> such that Next*(a, 7) pattern a(_, "y + 5 + ((((x))))")
+5 x, 5 z
+5000
+34 - TUPLE relationship(synonym, literal) assignPattern(wildcard, subexpression)
+assign a;
+Select <a> such that Next*(a, 15) pattern a(_, _"(1)"_)
+13
+5000
+35 - TUPLE relationship(synonym, literal) assignPattern(wildcard, wildcard)
+assign a;
+Select <a.stmt#> such that Next*(a, 24) pattern a(_, _)
+13, 23
+5000
+36 - TUPLE relationship(synonym, literal) whilePattern(synonym, wildcard)
+while w; variable v;
+Select <w, v.varName> such that Next*(w, 26) pattern w(v, _)
+16 z, 26 x, 26 y
+5000
+37 - TUPLE relationship(synonym, literal) whilePattern(wildcard, wildcard)
+while w;
+Select <w.stmt#> such that Next*(w, 26) pattern w(_, _)
+16, 26
+5000
+38 - BOOLEAN relationship(synonym, literal) ifPattern(synonym, wildcard, wildcard)
+if i; variable v;
+Select BOOLEAN such that Next*(i, 2) pattern i(v, _, _)
+TRUE
+5000
+39 - TUPLE relationship(synonym, literal) ifPattern(wildcard, wildcard, wildcard)
+if i;
+Select <i.stmt#> such that Next*(i, 11) pattern i(_, _, _)
+9
+5000
+40 - TUPLE relationship(synonym, synonym) assignPattern(literal, literal)
+assign a; call c;
+Select <a, c> such that Next*(a, c) pattern a("x", "((((y)))) + (5) + (x)")
+5 3, 5 4
+5000
+41 - TUPLE relationship(synonym, synonym) assignPattern(literal, subexpression)
+assign a; stmt s;
+Select <a, s.stmt#> such that Next*(a, s) pattern a("x", _"y"_)
+5 1, 5 2, 5 3, 5 4, 5 5, 5 6, 5 7, 5 8, 25 26, 25 27, 22 26, 22 27
+5000
+42 - TUPLE relationship(synonym, synonym) assignPattern(literal, wildcard)
+assign a; print p;
+Select <p.varName, a> such that Next*(p, a) pattern a("x", _)
+x 5, z 5, z 22, z 25, x 22, x 25
+5000
+43 - TUPLE relationship(synonym, synonym) assignPattern(synonym, literal)
+assign a; read r; variable v;
+Select <a, r.stmt#, v> such that Next*(a, r) pattern a(v, "(z + 1)")
+13 17 z, 13 27 z, 24 27 z
+5000
+44 - ELEM relationship(synonym, synonym) assignPattern(synonym, subexpression)
+assign a, a1; variable v;
+Select a such that Next*(a, a1) pattern a(v, _"(y + 5)"_)
+5
+5000
+45 - TUPLE relationship(synonym, synonym) assignPattern(synonym, wildcard)
+assign a; variable v; read r;
+Select <a.stmt#, v.varName, r.varName> such that Next*(r, a) pattern a(v, _)
+none
+5000
+46 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, literal)
+assign a; print p;
+Select <a, p.varName> such that Next*(a, p) pattern a(_, "z + 1")
+13 x
+5000
+47 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, subexpression)
+assign a; while w;
+Select <a, w.stmt#> such that Next*(a, w) pattern a(_, _"(z)"_)
+13 16, 13 19, 13 26, 24 26
+5000
+48 - TUPLE relationship(synonym, synonym) assignPattern(wildcard, wildcard)
+assign a; if i;
+Select <a.stmt#, i.stmt#> such that Next*(a, i) pattern a(_, _)
+5 2, 5 6, 13 15, 13 21
+5000
+49 - TUPLE relationship(synonym, synonym) whilePattern(synonym, wildcard)
+while w; variable v;
+Select <w, v.varName> such that Next*(w, w) pattern w(v, _)
+1 x, 1 y, 1 f, 16 z, 26 x, 26 y
+5000
+50 - TUPLE relationship(synonym, synonym) whilePattern(wildcard, wildcard)
+while w, w1;
+Select <w, w1.stmt#> such that Next*(w, w1) pattern w(_, _)
+1 1, 16 16, 16 19, 16 26, 26 26
+5000
+51 - TUPLE relationship(synonym, synonym) ifPattern(synonym, wildcard, wildcard)
+if i; variable v; while w;
+Select <i, v, w> such that Next*(w, i) pattern i(v, _, _)
+2 x 1
+5000
+52 - TUPLE relationship(synonym, synonym) ifPattern(wildcard, wildcard, wildcard)
+if i; variable v; while w;
+Select <i, v, w> such that Next*(i, w) pattern i(_, _, _)
+21 x 26,15 f 26,2 f 1,15 y 26,15 y 19,15 x 16,15 x 19,2 y 1,15 x 26,21 y 26,15 f 16,15 z 26,15 z 16,21 z 26,15 z 19,2 x 1,15 f 19,2 z 1,21 f 26,15 y 16
+5000

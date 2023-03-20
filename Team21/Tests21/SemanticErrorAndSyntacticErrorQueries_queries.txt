@@ -1,5 +1,3 @@
-Danh add any test cases that you think are missing here and applicable for milestone 2
-
 1 - relationship(literal, literal) pattern(literal, int)
 assign a;
 Select a such that Follows*(1, 4) pattern a("a", 2)
@@ -55,10 +53,10 @@ assign a; variable v;
 Select v such that Parent(11, "x") pattern a(v, _)
 SyntaxError
 5000
-12 - relationship(literal, synonym) nonAssignPattern(wildcard, subexpression)
-assign a; while w;
-Select a such that Follows*(1, a) pattern w(_, _"x"_)
-SyntaxError
+12 - relationship(literal, synonym) nonPattern(wildcard, subexpression)
+assign a; call c;
+Select a such that Follows*(1, a) pattern c(_, _"x"_)
+SemanticError
 5000
 13 - Modifies*(synonym, literal) pattern(literal, wildcard)
 assign a;
@@ -125,8 +123,133 @@ assign a; while w;
 Select x such that Follows*(a, w) pattern a(_, "4")
 SemanticError
 5000
-25 - - Synonym used not declared
+25 - Synonym used not declared 2
 assign a; while w;
 Select x such that Follows*(a, w) pattern a(_, "4")
+SemanticError
+5000
+26 - Declaration: Incorrect design entity in declaration
+asssign a; while w;
+Select a such that Follows*(a, w) pattern a(_, "4")
+SyntaxError
+5000
+27 - Declaration: invalid indent for synonym
+assign a; while w#;
+Select a such that Follows*(a, w) pattern a(_, "4")
+SyntaxError
+5000
+28 - Declaration: invalid indent for synonym 2
+assign a; while 2w;
+Select a such that Follows*(a, w) pattern a(_, "4")
+SyntaxError
+5000
+29 - Select Clause: BOOLEAN but with trailing comma
+assign a; while w;
+Select BOOLEAN, such that Follows*(a, w) pattern a(_, "4")
+SyntaxError
+5000
+30 - Select Clause: Undeclared synonym in tuple
+assign a; while w;
+Select <BOOLEAN, a> such that Follows*(a, w) pattern a(_, "4")
+SemanticError
+5000
+31 - Select Clause: Invalid attributeName in tuple
+assign a; while w;
+Select <w.stmt, a> such that Follows*(a, w) pattern a(_, "4")
+SyntaxError
+5000
+32 - Select Clause: Invalid attributeName with synonym in tuple
+assign a; while w;
+Select <w.value, a> such that Follows*(a, w) pattern a(_, "4")
+SemanticError
+5000
+33 - Such That Clause: Invalid Ref type in Calls
+assign a; while w;
+Select <w, a> such that Calls(9, _)
+SyntaxError
+5000
+34 - Such That Clause: Invalid synonym type in Calls
+assign a; while w;
+Select <w, a> such that Calls(a, _)
+SemanticError
+5000
+35 - Such That Clause: Invalid Ref type in Next
+assign a; while w;
+Select <w, a> such that Next("a", _)
+SyntaxError
+5000
+36 - Such That Clause: Invalid synonym type in Next
+procedure p; while w;
+Select <w, p> such that Next*(p, _)
+SemanticError
+5000
+37 - Pattern Clause: Invalid Ref for while pattern 1st argument
+while a; variable v;
+Select a pattern a(9, _)
+SyntaxError
+5000
+38 - Pattern Clause: Invalid Ref for if pattern 1st argument
+if i; variable v;
+Select i pattern i(9, _, _)
+SyntaxError
+5000
+39 - Pattern Clause: Invalid Ref for if pattern 2nd argument
+if i; variable v;
+Select i pattern i("x", v, _)
+SyntaxError
+5000
+40 - Pattern Clause: Invalid Ref for if pattern 3rd argument
+if i; variable v;
+Select i pattern i("x", _, v)
+SyntaxError
+5000
+41 - Pattern Clause: Invalid Ref for while pattern 2nd argument
+while a; variable v;
+Select a pattern a("x", v)
+SyntaxError
+5000
+42 - Pattern Clause: Invalid Expression for assign pattern
+assign a; variable v;
+Select a pattern a("x", "z % (x + y * 2)/()")
+SyntaxError
+5000
+43 - Pattern Clause: Invalid Expression for assign pattern 2
+assign a; variable v;
+Select a pattern a("x", "z % (x + y * 2)/")
+SyntaxError
+5000
+44 - Pattern Clause: Invalid Expression for assign pattern 3
+assign a; variable v;
+Select a pattern a("x", "z % (x + y * 2)(x + z)")
+SyntaxError
+5000
+45 - Pattern Clause: Undeclared stmt synonym for pattern
+variable v;
+Select v pattern i(v, _, _)
+SemanticError
+5000
+46 - Pattern Clause: Undeclared 1st argument synonym for pattern
+if i; variable v1;
+Select i pattern i(v, _, _)
+SemanticError
+5000
+47 - With Clause: Undeclared synonym
+while a1; variable v; constant c;
+Select a1 with a.stmt# = c.value
+SemanticError
+5000
+48 - With Clause: Invalid attributeName
+while a; variable v; constant c;
+Select a with a.stmt = c.value
+SyntaxError
+5000
+49 - With Clause: Invalid attributeName for synonym
+while a; variable v; constant c;
+Select a with a.stmt# = c.procName
+SemanticError
+5000
+50 - With Clause: Invalid attribute Comparison
+while a; variable v; procedure p;
+Select a with a.stmt# = p.procName
 SemanticError
 5000

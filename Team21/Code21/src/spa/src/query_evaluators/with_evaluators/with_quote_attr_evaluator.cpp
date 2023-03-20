@@ -13,26 +13,26 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
   WithRef ref1 = getClause().getRef1();
   WithRef ref2 = getClause().getRef2();
 
-  AttrRef atrVal = std::get<AttrRef>(ref1.ref);
-  QuotedIdentifier quoteVal = std::get<QuotedIdentifier>(ref2.ref);
+  auto* atrVal = std::get_if<AttrRef>(&ref1.ref);
+  auto* quoteVal = std::get_if<QuotedIdentifier>(&ref2.ref);
 
   // Swap if ref1 is not an AttrRef since it will be an QuotedIdentifier, vice versa
-  if (std::get_if<int>(&ref1.ref) != nullptr) {
-    atrVal = std::get<AttrRef>(ref2.ref);
-    quoteVal = std::get<QuotedIdentifier>(ref1.ref);
+  if (atrVal == nullptr) {
+    atrVal = std::get_if<AttrRef>(&ref2.ref);
+    quoteVal = std::get_if<QuotedIdentifier>(&ref1.ref);
   }
 
-  auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal.synonym);
+  auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal->synonym);
 
   EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
-  auto *pkb_res = pkb.getEntity(entType, quoteVal.getQuotedId());
-
-  if (pkb_res != nullptr) {
-    firstResult.push_back(pkb_res);
-    equalResult.push_back(firstResult);
-    return equalResult;
+  auto* entities = pkb.getEntitiesByType(entType);
+  for(auto& entity: *entities) {
+    if(AttributeReferenceEvaluator::EvaluateAttrRef(entity, atrVal->attrName, pkb) == quoteVal->getQuotedId()) {
+      firstResult.push_back(entity);
+    }
   }
+  equalResult.push_back(firstResult);
 
   return equalResult;
 }

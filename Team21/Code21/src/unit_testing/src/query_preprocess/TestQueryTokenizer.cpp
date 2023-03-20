@@ -3,7 +3,6 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "query_preprocess/query_tokenizer.h"
-#include "query_preprocess/query_parser.h"
 
 TEST_CASE("Tokenizer: One Declaration, one synonym") {
 	qps::QueryTokenizer tokenizer("variable v; Select v");
@@ -127,7 +126,7 @@ TEST_CASE("Tokenizer: stmt#") {
 }
 
 TEST_CASE("Tokenizer: missing ending double quote") {
-	qps::QueryTokenizer tokenizer("Select <a>  pattern a(\"x\", _\"y_)");
+	qps::QueryTokenizer tokenizer(R"(Select <a>  pattern a("x", _"y_))");
 	std::vector<std::string> tokens = tokenizer.tokenize();
 	std::vector<std::string> correct_tokens{ "Select", "<", "a", ">", "pattern", "a", "(", "\"", "x", "\"", ",", "_", "\"", "y_)" };
 	REQUIRE(tokens == correct_tokens);

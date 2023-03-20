@@ -25,12 +25,11 @@ class Query {
 	public:
 		Query(std::vector<Declaration> declarations_, std::vector<SuchThatClause> suchThatClause_,
 			std::vector<PatternClause> patternClause_, std::vector<WithClause> withClause_, Result selectClause_);
-		Query(Result selectClause_);
-		std::vector<Declaration> getDeclarations();
-		std::vector<SuchThatClause> getSuchThatClause();
-		std::vector<PatternClause> getPatternClause();
-		std::vector<WithClause> getWithClause();
-		Result getSelectClause();
+		explicit Query(Result selectClause_);
+		auto getDeclarations() -> std::vector<Declaration>;
+		auto getSuchThatClause() -> std::vector<SuchThatClause>;
+		auto getPatternClause() -> std::vector<PatternClause>;
+		auto getWithClause() -> std::vector<WithClause>;
+		auto getSelectClause() -> Result;
 };
-}
-
+}  // namespace qps

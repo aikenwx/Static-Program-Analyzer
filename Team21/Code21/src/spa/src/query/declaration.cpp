@@ -1,18 +1,17 @@
 #include "query/declaration.h"
 
-#include <vector>
-#include <optional>
+#include <utility>
 
 namespace qps {
 
 	Declaration::Declaration(DesignEntity design_entity_, Synonym synonym_)
-		: design_entity{ design_entity_ }, synonym{ synonym_ } {}
+		: design_entity{ design_entity_ }, synonym{std::move( std::move(synonym_) )} {}
 
-	DesignEntity Declaration::getDesignEntity() {
+	auto Declaration::getDesignEntity() -> DesignEntity {
 		return design_entity;
 	}
 
-	Synonym Declaration::getSynonym() {
+	auto Declaration::getSynonym() -> Synonym {
 		return synonym;
 	}
-}
+}  // namespace qps

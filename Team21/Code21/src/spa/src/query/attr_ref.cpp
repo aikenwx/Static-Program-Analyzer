@@ -1,22 +1,25 @@
+#include <utility>
+
+
 #include "query/attr_ref.h"
 
 namespace qps {
 
-	std::map<std::string, AttrName> attrNameMap = {
+	const std::map<std::string, AttrName> attrNameMap = {
 		{"procName", AttrName::ProcName},
 		{"varName", AttrName::VarName},
 		{"value", AttrName::Value},
 		{"stmt#", AttrName::StmtNo},
 	};
 
-	std::map<AttrName, AttrType> attrTypeMap = {
+	const std::map<AttrName, AttrType> attrTypeMap = {
 		{AttrName::ProcName, AttrType::NAME},
 		{AttrName::VarName, AttrType::NAME},
 		{AttrName::Value, AttrType::INTEGER},
 		{AttrName::StmtNo, AttrType::INTEGER},
 	};
 
-	std::map<DesignEntity, std::set<AttrName>> validAttrNameMap = {
+	const std::map<DesignEntity, std::set<AttrName>> validAttrNameMap = {
 		{DesignEntity::STMT, {AttrName::StmtNo}},
 		{DesignEntity::READ, {AttrName::StmtNo, AttrName::VarName}},
 		{DesignEntity::PRINT, {AttrName::StmtNo, AttrName::VarName}},
@@ -29,11 +32,11 @@ namespace qps {
 		{DesignEntity::PROCEDURE, {AttrName::ProcName}},
 	};
 
-	AttrType getAttrType(AttrName attrName) {
+	auto getAttrType(AttrName attrName) -> AttrType {
 		return attrTypeMap.at(attrName);
 	}
 
-	AttrName getAttrNameFromString(std::string str) {
+	auto getAttrNameFromString(const std::string& str) -> AttrName {
 		try {
 			return attrNameMap.at(str);
 		}
@@ -42,12 +45,12 @@ namespace qps {
 		}
 	}
 
-	std::set<AttrName> getValidAttrNameSet(Declaration declaration) {
-		DesignEntity de = declaration.getDesignEntity();
-		return validAttrNameMap.at(de);
+	auto getValidAttrNameSet(Declaration declaration) -> std::set<AttrName> {
+		DesignEntity entity = declaration.getDesignEntity();
+		return validAttrNameMap.at(entity);
 	}
 
 	AttrRef::AttrRef(Synonym synonym_, AttrName attrName_)
-		: synonym{ synonym_ }, attrName{ attrName_ } {}
+		: synonym{std::move( synonym_ )}, attrName{ attrName_ } {}
 
-}
+}  // namespace qps

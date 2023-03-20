@@ -14,10 +14,10 @@ namespace qps {
 			WithRefType ref;
 			AttrType attrType;
 
-			WithRef(WithRefType ref_);
+			explicit WithRef(WithRefType ref_);
 
-			bool operator==(const WithRef& other) const {
+			auto operator==(const WithRef& other) const -> bool {
 				return ref == other.ref && attrType == other.attrType;
 			}
 	};
-}
+}  // namespace qps

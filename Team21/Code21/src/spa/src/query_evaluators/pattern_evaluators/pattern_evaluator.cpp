@@ -1,7 +1,6 @@
 #include "pattern_evaluator.h"
 #include "query/ref.h"
 #include "query/query_exceptions.h"
-#include "query_evaluators/pattern_evaluators/pattern_evaluator.h"
 
 namespace qps {
 

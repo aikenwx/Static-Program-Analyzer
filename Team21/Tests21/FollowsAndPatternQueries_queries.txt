@@ -194,7 +194,7 @@ Select a such that Follows(s, 8) pattern a(_, _)
 none
 5000
 40 - TUPLE relationship(synonym, literal) whilePattern(literal, wildcard)
-while w; stmt s; 
+while w; stmt s;
 Select <w> such that Follows(s, 13) pattern w("count", _)
 9
 5000

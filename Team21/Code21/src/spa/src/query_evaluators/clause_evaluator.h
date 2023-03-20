@@ -1,20 +1,24 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-special-member-functions"
 #pragma once
 
 #include <variant>
 
-#include "synonym_table.h"
+#include "tables/row_table.h"
+#include "query/synonym.h"
 #include "query/design_entity.h"
 #include "PKB/QueryFacade.h"
+#include "PKBStorageClasses/EntityClasses/Entity.h"
 
 namespace qps {
 
+using SynonymTable = RowTable<Synonym, Entity *>;
+using ClauseResult = std::variant<bool, SynonymTable>;
+
 class ClauseEvaluator {
  public:
-  using ClauseResult = std::variant<bool, SynonymTable>;
-
-  static EntityType DesignEntityToEntityType(DesignEntity entity);
   virtual ~ClauseEvaluator() = default;
-  virtual ClauseResult Evaluate(QueryFacade &pkb) = 0;
+  virtual auto Evaluate(QueryFacade &pkb) -> ClauseResult = 0;
 };
 
-} // qps
+}  // namespace qps

@@ -5,18 +5,18 @@
 
 namespace qps {
 
-    bool QuotedIdentifier::isValidId(std::string id) {
-        return std::regex_match(id, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"));
+    auto QuotedIdentifier::isValidId(const std::string& iden) -> bool {
+        return std::regex_match(iden, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"));
     }
 
-    QuotedIdentifier::QuotedIdentifier(std::string id_) : id{ id_ } {
+    QuotedIdentifier::QuotedIdentifier(const std::string& id_) : id{ id_ } {
         if (!QuotedIdentifier::isValidId(id_)) {
             throw QueryException(ErrorType::Syntactic, "Invalid quoted identifier: " + id_);
         }
     }
 
-    std::string QuotedIdentifier::getQuotedId() {
+    auto QuotedIdentifier::getQuotedId() -> std::string {
         return id;
     }
 
-}
+}  // namespace qps

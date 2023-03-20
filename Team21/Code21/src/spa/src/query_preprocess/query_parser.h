@@ -14,30 +14,41 @@ class QueryParser {
 		std::vector<Declaration> declarations;
 		std::vector<SuchThatClause> suchThatClause;
 		std::vector<PatternClause> patternClause;
-		std::vector<Declaration> selectClause;
+		std::vector<WithClause> withClause;
+		Result selectClause;
 		int currentIndex;
 		std::vector<std::string> tokens;
 
-		std::string peek();
-		std::string prev();
-		std::string next();
-		bool isEnd();
+		auto peek() -> std::string;
+		auto next() -> std::string;
+		auto isEnd() -> bool;
 
-		bool isTokenValidInteger(std::string str);
-		bool isSameToken(std::string str);
-		bool assertNextToken(std::string str);
+		static auto isTokenValidInteger(std::string str) -> bool;
+		auto isSameToken(const std::string& str) -> bool;
+		auto assertNextToken(const std::string& str) -> bool;
 
-		Ref parseRef();
-		ExpressionSpec parseExpression();
+		auto parseRef() -> Ref;
+		auto parseExpressionSpec() -> ExpressionSpec;
+		static auto validateExpressionHelper(std::string str) -> std::string;
+		auto parseElement() -> Element;
+		auto parseWithRef() -> WithRef;
+		auto parseTupleSelect() -> std::vector<Element>;
 
-		bool parseDeclaration();
-		bool parseSuchThatClause();
-		bool parsePatternClause();
+		void parseSuchThat();
+		void parsePattern();
+		void parseWith();
+
+		auto parseDeclaration() -> bool;
 		void parseSelectClause();
+		auto parseSuchThatClause() -> bool;
+		auto parsePatternClause() -> bool;
+		auto parseWithClause() -> bool;
+
+		static auto operatorHelper(char character) -> int;
+		static auto makePostfix(std::string str) -> std::string;
 
 	public:
-		QueryParser(std::vector<std::string> tokens_);
-		Query parse();
+		explicit QueryParser(std::vector<std::string> tokens_);
+		auto parse() -> Query;
 };
-}
-
+}  // namespace qps

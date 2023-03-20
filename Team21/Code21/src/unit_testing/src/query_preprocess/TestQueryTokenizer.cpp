@@ -3,7 +3,6 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "query_preprocess/query_tokenizer.h"
-#include "query_preprocess/query_parser.h"
 
 TEST_CASE("Tokenizer: One Declaration, one synonym") {
 	qps::QueryTokenizer tokenizer("variable v; Select v");
@@ -115,5 +114,20 @@ TEST_CASE("Tokenizer: pattern + such that") {
 	std::vector<std::string> tokens = tokenizer.tokenize();
 	std::vector<std::string> correct_tokens{ "variable", "u", ",", "v", ";", "procedure", "p", ";", "assign", "a", ";", "Select",
 		"p", "such", "that", "Modifies", "(", "p", ",", "u", ")", "pattern", "a", "(", "\"", "y", "\"", ",", "_", ")" };
+	REQUIRE(tokens == correct_tokens);
+}
+
+TEST_CASE("Tokenizer: stmt#") {
+	qps::QueryTokenizer tokenizer("variable u, v; procedure p; assign a; Select a.stmt# such that Modifies(p,u) pattern a (\"y\",_)");
+	std::vector<std::string> tokens = tokenizer.tokenize();
+	std::vector<std::string> correct_tokens{ "variable", "u", ",", "v", ";", "procedure", "p", ";", "assign", "a", ";", "Select",
+		"a", ".", "stmt#", "such", "that", "Modifies", "(", "p", ",", "u", ")", "pattern", "a", "(", "\"", "y", "\"", ",", "_", ")"};
+	REQUIRE(tokens == correct_tokens);
+}
+
+TEST_CASE("Tokenizer: missing ending double quote") {
+	qps::QueryTokenizer tokenizer(R"(Select <a>  pattern a("x", _"y_))");
+	std::vector<std::string> tokens = tokenizer.tokenize();
+	std::vector<std::string> correct_tokens{ "Select", "<", "a", ">", "pattern", "a", "(", "\"", "x", "\"", ",", "_", "\"", "y_)" };
 	REQUIRE(tokens == correct_tokens);
 }

@@ -12,15 +12,14 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     QueryTokenizer tokenizer(query_str);
     QueryParser parser(tokenizer.tokenize());
     Query query(parser.parse());
+
     SemanticValidator validatorSemantic(query);
     SyntacticValidator validatorSyntactic(query);
-    QueryEvaluator evaluator(query);
-
     validatorSyntactic.validateQuery();
     validatorSemantic.validateQuery();
-    for (const auto &str : evaluator.EvaluateQuery(pkb)) {
-      results.push_back(str);
-    }
+
+    QueryEvaluator evaluator(std::move(query));
+    evaluator.EvaluateQuery(pkb, results);
   } catch (qps::QueryException &e) {
     if (e.getType() == ErrorType::Syntactic) {
       results.emplace_back("SyntaxError");
@@ -30,4 +29,4 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     return;
   }
 }
-} // qps
+}  // namespace qps

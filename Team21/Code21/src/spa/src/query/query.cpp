@@ -1,26 +1,29 @@
+#include <utility>
+
 #include "query/query.h"
 
 namespace qps {
 
 	Query::Query(std::vector<Declaration> declarations_, std::vector<SuchThatClause> suchThatClause_,
-		std::vector<PatternClause> patternClause_, Declaration selectClause_)
-		: declarations{ declarations_ }, suchThatClause{suchThatClause_},
-		patternClause{ patternClause_ }, selectClause{ selectClause_ } {}
+		std::vector<PatternClause> patternClause_, std::vector<WithClause> withClause_, Result selectClause_)
+		: declarations{std::move( declarations_ )}, suchThatClause{std::move(suchThatClause_)},
+		patternClause{std::move( patternClause_ )}, withClause{std::move( withClause_ )}, selectClause{std::move( selectClause_ )} {}
 
-	Query::Query(Declaration selectClause_) : selectClause{ selectClause_ } {
+	Query::Query(Result selectClause_) : selectClause{ std::move(selectClause_) } {}
 
-	}
-
-	std::vector<Declaration> Query::getDeclarations() {
+	auto Query::getDeclarations() -> std::vector<Declaration> {
 		return declarations;
 	}
-	std::vector<SuchThatClause> Query::getSuchThatClause() {
+	auto Query::getSuchThatClause() -> std::vector<SuchThatClause> {
 		return suchThatClause;
 	}
-	std::vector<PatternClause> Query::getPatternClause() {
+	auto Query::getPatternClause() -> std::vector<PatternClause> {
 		return patternClause;
 	}
-	Declaration Query::getSelectClause() {
+	auto Query::getWithClause() -> std::vector<WithClause> {
+		return withClause;
+	}
+	auto Query::getSelectClause() -> Result {
 		return selectClause;
 	}
-}
+}  // namespace qps

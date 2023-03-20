@@ -3,7 +3,6 @@
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
-#include "sp/sp.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 

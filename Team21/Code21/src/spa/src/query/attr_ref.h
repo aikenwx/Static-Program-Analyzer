@@ -2,7 +2,6 @@
 
 #include "query/synonym.h"
 #include "query/declaration.h"
-#include "query/synonym.h"
 #include "query/query_exceptions.h"
 
 
@@ -25,9 +24,9 @@ enum class AttrType {
 	INTEGER,
 };
 
-AttrType getAttrType(AttrName attrName);
-AttrName getAttrNameFromString(std::string str);
-std::set<AttrName> getValidAttrNameSet(Declaration declaration);
+auto getAttrType(AttrName attrName) -> AttrType;
+auto getAttrNameFromString(const std::string& str) -> AttrName;
+auto getValidAttrNameSet(Declaration declaration) -> std::set<AttrName>;
 
 class AttrRef {
 	public:
@@ -36,8 +35,8 @@ class AttrRef {
 
 		AttrRef(Synonym synonym_, AttrName attrName_);
 
-		bool operator==(const AttrRef& other) const {
+		auto operator==(const AttrRef& other) const -> bool {
 			return synonym == other.synonym && attrName == other.attrName;
 		}
 };
-}
+}  // namespace qps

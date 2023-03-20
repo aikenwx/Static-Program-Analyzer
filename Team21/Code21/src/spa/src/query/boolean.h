@@ -9,13 +9,13 @@ namespace qps {
 
   public:
 
-    bool operator==(const Boolean& us) const {
+    auto operator==([[maybe_unused]] const Boolean& other) const -> bool {
       return true;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, Boolean const& b) {
-      os << "BOOLEAN";
-      return os;
+    friend auto operator<<(std::ostream& ostream, [[maybe_unused]] Boolean const& boolean) -> std::ostream& {
+      ostream << "BOOLEAN";
+      return ostream;
     }
   };
-}
+}  // namespace qps

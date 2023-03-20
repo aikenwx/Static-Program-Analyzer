@@ -14,4 +14,4 @@ namespace qps {
 			attrType = getAttrType(attrRef.attrName);
 		}
 	}
-}
+}  // namespace qps

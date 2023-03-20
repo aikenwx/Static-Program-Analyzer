@@ -38,7 +38,7 @@ procedure nguyen {
   if (y==10) then {
     z = x + 10; }
   else {
-    y = z + y; } 
+    y = z + y; }
   read z;
   read nguyen;
   nguyen = nguyen + 19;

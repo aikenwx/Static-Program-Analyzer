@@ -3,7 +3,6 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "query_preprocess/query_tokenizer.h"
-#include "query_preprocess/query_parser.h"
 
 TEST_CASE("Tokenizer: One Declaration, one synonym") {
 	qps::QueryTokenizer tokenizer("variable v; Select v");

@@ -19,7 +19,7 @@ procedure danh {
 procedure duc {
   if (x<0) then {
     while (i>0) {
-      x = z * 4 +  y;
+      x = z * 4 + y;
       call nguyen;
       if (x <= 15) then {
 	x = y * z;
@@ -28,16 +28,36 @@ procedure duc {
 	x = 1;
 	y = 6 * z; }
       i = i + 1; }
-    x = x + i;
+    x = x + 1;
     z = x + z; }
   else {
     y = 1; }
   z = z + i; }
 
 procedure nguyen {
+  call a;
   if (y==10) then {
     z = x + 10; }
   else {
     y = z + y; }
   a = 4;
-  b = a + 5; }
+  b = a + 5;
+  call d; }
+
+procedure a {
+  call d;
+  call e;
+  a = 5; }
+
+procedure d {
+  a = 10;
+  b = b / 4;
+  call f; }
+
+procedure e {
+  x = 10;
+  y = x + 6; }
+
+procedure f {
+  y =  15;
+  z = y * 6; }

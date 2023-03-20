@@ -28,16 +28,26 @@ procedure duc {
 	x = 1;
 	y = 6 * z; }
       i = i + 1; }
-    x = x + i;
+    x = x + 1;
     z = x + z; }
   else {
     y = 1; }
   z = z + i; }
 
 procedure nguyen {
+  call a;
   if (y==10) then {
     z = x + 10; }
   else {
     y = z + y; }
   a = 4;
-  b = a + 5; }
+  b = a + 5;
+  call d; }
+
+procedure a {
+  call d;
+  a = 5; }
+
+procedure d {
+  a = 10;
+  b = a / 4; }

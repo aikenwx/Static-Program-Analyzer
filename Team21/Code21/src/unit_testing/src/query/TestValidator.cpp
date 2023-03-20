@@ -1,6 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <catch2/matchers/catch_matchers_exception.hpp>
 #include "query_validation/SemanticValidator.h"
 #include "query_validation/SyntacticValidator.h"
 #include "QueryHelper.h"

@@ -14,12 +14,12 @@ namespace qps {
 
 	public:
 		WithClause(WithRef ref1_, WithRef ref2_);
-		WithRef getRef1();
-		WithRef getRef2();
+		auto getRef1() -> WithRef;
+		auto getRef2() -> WithRef;
 
-		bool operator==(const WithClause& clause) const {
+		auto operator==(const WithClause& clause) const -> bool {
 			return ref1 == clause.ref1 && ref2 == clause.ref2;
 		}
 	};
 
-}
+}  // namespace qps

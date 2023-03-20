@@ -1,0 +1,33 @@
+procedure foo {
+    x = 3;
+    if (a == 3) then {
+        x = 2;
+    } else {
+        if (x > 1) then {
+            call bar;
+        } else {
+            x = 10;
+            call bar;
+        }
+    }
+}
+
+procedure bar {
+    while (b < a) {
+        read orwell;
+        x = 1 + 2;
+        if (n > j) then {
+            while (john == 2) {
+                while (cena != 1) {
+                    a = 3 + 2;
+                }
+            }
+        } else {
+            if (x >= 3) then {
+                w = l;
+            } else {
+                l = w;
+            }
+        }
+    }
+}

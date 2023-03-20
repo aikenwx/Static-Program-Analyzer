@@ -10,19 +10,18 @@ namespace qps {
         std::string id;
 
     public:
-        QuotedIdentifier(std::string id_);
-        std::string getQuotedId();
+        explicit QuotedIdentifier(const std::string& id_);
+        auto getQuotedId() -> std::string;
 
-        static bool isValidId(std::string id);
+        static auto isValidId(const std::string& iden) -> bool;
 
-        bool operator==(QuotedIdentifier const& quote_id2) const {
+        auto operator==(QuotedIdentifier const& quote_id2) const -> bool {
             return id == quote_id2.id;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, QuotedIdentifier const& quote_id) {
-            os << quote_id.id;
-            return os;
+        friend auto operator<<(std::ostream& osstream, QuotedIdentifier const& quote_id) -> std::ostream& {
+            osstream << quote_id.id;
+            return osstream;
         }
     };
-}
-
+}  // namespace qps

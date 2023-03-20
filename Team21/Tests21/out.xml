@@ -1,0 +1,176 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>autotester</name><parsing_time_taken>11.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="integer with(literal, literal)">1</id><querystr><![CDATA[call c; Select c with 4 = 5]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>4.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" With="1" CondNum="2" RelNum="0" comment="integer with(attrRef, literal)">2</id><querystr><![CDATA[call c; Select BOOLEAN with c.stmt# = 16]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>4.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="integer with(literal, attrRef)">3</id><querystr><![CDATA[constant c; Select c with c.value = 100]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>12.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="integer with(attrRef, attrRef)">4</id><querystr><![CDATA[constant c; call ca; Select <c, ca.procName> with c.value = ca.stmt#]]></querystr>
+<stuans>19 nguyen,15 nguyen</stuans>
+<correct>15 nguyen,19 nguyen</correct>
+<time_taken>4.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="name with(literal, literal)">5</id><querystr><![CDATA[while w; if i; stmt s1, s2; Select w with "abc2" = "abc23"]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>4.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="name with(attrRef, literal)">6</id><querystr><![CDATA[call c; Select c with c.procName = "nguyen"]]></querystr>
+<stuans>19,15</stuans>
+<correct>15,19</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="name with(literal, attrRef)">7</id><querystr><![CDATA[read r; Select r with "z" = r.varName]]></querystr>
+<stuans>33</stuans>
+<correct>33</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" With="1" CondNum="2" RelNum="0" comment="name with(attrRef, attrRef)">8</id><querystr><![CDATA[print pr; procedure p; Select <p, pr.stmt#> with p.procName = pr.varName]]></querystr>
+<stuans>nguyen 36</stuans>
+<correct>nguyen 36</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="integer with(literal, literal) + such that">9</id><querystr><![CDATA[call c; Select c with 4 = 4 such that Parent*(5, 11)]]></querystr>
+<stuans>19,13,15</stuans>
+<correct>13,15,19</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Followsstar="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="integer with(attrRef, literal) + such that">10</id><querystr><![CDATA[call c; Select BOOLEAN with c.stmt# = 15 such that Follows*(30, 35)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="integer with(literal, attrRef) + such that">11</id><querystr><![CDATA[constant c; Select c with c.value = 10 such that Uses("nguyen", "x")]]></querystr>
+<stuans>10</stuans>
+<correct>10</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="integer with(attrRef, attrRef) + such that">12</id><querystr><![CDATA[constant c; call ca; if i; Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i)]]></querystr>
+<stuans>19 nguyen</stuans>
+<correct>19 nguyen</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="name with(literal, literal) + such that Next*(10, 12)">13</id><querystr><![CDATA[while w; if i; stmt s1, s2; Select BOOLEAN with "abc2" = "abc2" such that Next*(10, 12)]]></querystr>
+<stuans>TRUE</stuans>
+<correct>TRUE</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="name with(attrRef, literal) + such that">14</id><querystr><![CDATA[call c; Select c with c.procName = "nguyen" such that Follows*(5, c)]]></querystr>
+<stuans>15</stuans>
+<correct>15</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" SuchThat="1" With="1" CondNum="4" RelNum="1" comment="name with(literal, attrRef) + such that">15</id><querystr><![CDATA[read r; Select r with "nguyen" = r.varName such that Calls("danh", "nguyen")]]></querystr>
+<stuans>34</stuans>
+<correct>34</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="name with(attrRef, attrRef) + such that">16</id><querystr><![CDATA[print pr; procedure p; Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(p,_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="integer with(literal, literal) + such that + pattern">17</id><querystr><![CDATA[call c; while w; Select w with 4 = 4 such that Parent*(w, 11) pattern w("z",_)]]></querystr>
+<stuans>5</stuans>
+<correct>5</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" Pattern="1" SuchThat="1" With="1" CondNum="5" RelNum="1" comment="integer with(attrRef, literal) + such that + pattern">18</id><querystr><![CDATA[call c; assign a; Select <a, c> with c.stmt# = 15 such that Follows*(30, 35) pattern a("x","z * 4 +  y")]]></querystr>
+<stuans>18 15</stuans>
+<correct>18 15</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="integer with(literal, attrRef) + such that + pattern">19</id><querystr><![CDATA[constant c; if i; Select <c, i> with c.value = 10 such that Uses("nguyen", "x") pattern i(_,_,_)]]></querystr>
+<stuans>10 30,10 16,10 20,10 7</stuans>
+<correct>10 7,10 16,10 20,10 30</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="integer with(attrRef, attrRef) + such that + pattern">20</id><querystr><![CDATA[constant c; call ca; if i; Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i) pattern i("i",_,_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="name with(literal, literal) + such that + pattern">21</id><querystr><![CDATA[while w; if i; stmt s1, s2; Select BOOLEAN with "abc2" = "abc2" such that Next*(10, 12) pattern w("x",_)]]></querystr>
+<stuans>FALSE</stuans>
+<correct>FALSE</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="name with(attrRef, literal) + such that + pattern">22</id><querystr><![CDATA[call c; while w; Select c with c.procName = "nguyen" such that Follows*(w, c) pattern w("z",_)]]></querystr>
+<stuans>15</stuans>
+<correct>15</correct>
+<time_taken>2.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Calls="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="name with(literal, attrRef) + such that + pattern">23</id><querystr><![CDATA[read r; assign a; Select r with "nguyen" = r.varName such that Calls("danh", "nguyen") pattern a("i", _"z"_)]]></querystr>
+<stuans>34</stuans>
+<correct>34</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Callsstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" With="1" CondNum="6" RelNum="1" comment="name with(attrRef, attrRef) + such that + pattern">24</id><querystr><![CDATA[print pr; procedure p; assign a; Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(_,p) pattern a("z","z + 1")]]></querystr>
+<stuans>nguyen 36</stuans>
+<correct>nguyen 36</correct>
+<time_taken>3.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

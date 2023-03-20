@@ -41,5 +41,5 @@ procedure nguyen {
     y = z + y; } 
   read z;
   read nguyen;
-  nguyen = nguyen + z;
+  nguyen = nguyen + 19;
   print nguyen; }

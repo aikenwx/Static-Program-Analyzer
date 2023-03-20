@@ -10,11 +10,11 @@ FALSE
 5000
 3 - integer with(literal, attrRef)
 constant c;
-Select c with c = 100
+Select c with c.value = 100
 
 5000
 4 - integer with(attrRef, attrRef)
-constant c, call ca;
+constant c; call ca;
 Select <c, ca.procName> with c.value = ca.stmt#
 15 nguyen, 19 nguyen
 5000
@@ -34,7 +34,7 @@ Select r with "z" = r.varName
 33
 5000
 8 - name with(attrRef, attrRef)
-print pr; procedure p
+print pr; procedure p;
 Select <p, pr.stmt#> with p.procName = pr.varName
 nguyen 36
 5000
@@ -50,11 +50,11 @@ TRUE
 5000
 11 - integer with(literal, attrRef) + such that
 constant c;
-Select c with c = 10 such that Uses(nguyen, "x")
+Select c with c.value = 10 such that Uses("nguyen", "x")
 10
 5000
 12 - integer with(attrRef, attrRef) + such that
-constant c, call ca; if i
+constant c; call ca; if i;
 Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i)
 19 nguyen
 5000
@@ -71,7 +71,7 @@ Select c with c.procName = "nguyen" such that Follows*(5, c)
 15 - name with(literal, attrRef) + such that
 read r;
 Select r with "nguyen" = r.varName such that Calls("danh", "nguyen")
-33
+34
 5000
 16 - name with(attrRef, attrRef) + such that
 print pr; procedure p;
@@ -85,16 +85,16 @@ Select w with 4 = 4 such that Parent*(w, 11) pattern w("z",_)
 5000
 18 - integer with(attrRef, literal) + such that + pattern
 call c; assign a;
-Select <a, c> with c.stmt# = 15 such that Follows*(30, 35) pattern a("x","z * 4 +  y");
+Select <a, c> with c.stmt# = 15 such that Follows*(30, 35) pattern a("x","z * 4 +  y")
 18 15
 5000
 19 - integer with(literal, attrRef) + such that + pattern
 constant c; if i;
-Select <c, i> with c = 10 such that Uses(nguyen, "x") pattern i(_,_,_)
-10 7, 10 16, 10 20
+Select <c, i> with c.value = 10 such that Uses("nguyen", "x") pattern i(_,_,_)
+10 7, 10 16, 10 20, 10 30
 5000
 20 - integer with(attrRef, attrRef) + such that + pattern
-constant c, call ca; if i;
+constant c; call ca; if i;
 Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i) pattern i("i",_,_)
 
 5000
@@ -111,12 +111,12 @@ Select c with c.procName = "nguyen" such that Follows*(w, c) pattern w("z",_)
 23 - name with(literal, attrRef) + such that + pattern
 read r; assign a;
 Select r with "nguyen" = r.varName such that Calls("danh", "nguyen") pattern a("i", _"z"_)
-33
+34
 5000
 24 - name with(attrRef, attrRef) + such that + pattern
-print pr; procedure p; 
+print pr; procedure p; assign a;
 Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(_,p) pattern a("z","z + 1")
-
+nguyen 36
 5000
 
 

@@ -51,6 +51,6 @@ namespace qps {
 	}
 
 	AttrRef::AttrRef(Synonym synonym_, AttrName attrName_)
-		: synonym{std::move(std::move( synonym_ ))}, attrName{ attrName_ } {}
+		: synonym{std::move( synonym_ )}, attrName{ attrName_ } {}
 
 }  // namespace qps

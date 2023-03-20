@@ -6,7 +6,7 @@ namespace qps {
 
 	Query::Query(std::vector<Declaration> declarations_, std::vector<SuchThatClause> suchThatClause_,
 		std::vector<PatternClause> patternClause_, std::vector<WithClause> withClause_, Result selectClause_)
-		: declarations{std::move( declarations_ )}, suchThatClause{std::move(std::move(suchThatClause_))},
+		: declarations{std::move( declarations_ )}, suchThatClause{std::move(suchThatClause_)},
 		patternClause{std::move( patternClause_ )}, withClause{std::move( withClause_ )}, selectClause{std::move( selectClause_ )} {}
 
 	Query::Query(Result selectClause_) : selectClause{ std::move(selectClause_) } {}

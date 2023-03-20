@@ -11,7 +11,7 @@ const std::set<std::string> special_relationship = {"Follows", "Parent", "Calls"
 const std::set<char> single_tokens{'(', ')', '*', ',', ';', '.', '_', '<', '>', '='};
 
 QueryTokenizer::QueryTokenizer(std::string source)
-    : queryString{std::move(std::move(std::move(source)))}, currentIndex{0} {}
+    : queryString{std::move(source)}, currentIndex{0} {}
 
 auto QueryTokenizer::peek() -> char {
   char nextChar{};

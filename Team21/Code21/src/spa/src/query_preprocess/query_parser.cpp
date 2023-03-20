@@ -8,7 +8,7 @@
 namespace qps {
 
 QueryParser::QueryParser(std::vector<std::string> tokens_)
-    : tokens{std::move(std::move(std::move(tokens_)))}, currentIndex{0}, selectClause{Boolean()} {}
+    : tokens{std::move(tokens_)}, currentIndex{0}, selectClause{Boolean()} {}
 
 auto QueryParser::peek() -> std::string {
   if (currentIndex < tokens.size()) {

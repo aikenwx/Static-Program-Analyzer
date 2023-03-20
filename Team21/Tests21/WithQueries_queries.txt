@@ -1,0 +1,124 @@
+1 - integer with(literal, literal)
+call c;
+Select c with 4 = 5
+
+5000
+2 - integer with(attrRef, literal)
+call c;
+Select BOOLEAN with c.stmt# = 16
+FALSE
+5000
+3 - integer with(literal, attrRef)
+constant c;
+Select c with c = 100
+
+5000
+4 - integer with(attrRef, attrRef)
+constant c, call ca;
+Select <c, ca.procName> with c.value = ca.stmt#
+15 nguyen, 19 nguyen
+5000
+5 - name with(literal, literal)
+while w; if i; stmt s1, s2;
+Select w with "abc2" = "abc23"
+
+5000
+6 - name with(attrRef, literal)
+call c;
+Select c with c.procName = "nguyen"
+15, 19
+5000
+7 - name with(literal, attrRef)
+read r;
+Select r with "z" = r.varName
+33
+5000
+8 - name with(attrRef, attrRef)
+print pr; procedure p
+Select <p, pr.stmt#> with p.procName = pr.varName
+nguyen 36
+5000
+9 - integer with(literal, literal) + such that
+call c;
+Select c with 4 = 4 such that Parent*(5, 11)
+13, 15, 19
+5000
+10 - integer with(attrRef, literal) + such that
+call c;
+Select BOOLEAN with c.stmt# = 15 such that Follows*(30, 35)
+TRUE
+5000
+11 - integer with(literal, attrRef) + such that
+constant c;
+Select c with c = 10 such that Uses(nguyen, "x")
+10
+5000
+12 - integer with(attrRef, attrRef) + such that
+constant c, call ca; if i
+Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i)
+19 nguyen
+5000
+13 - name with(literal, literal) + such that Next*(10, 12)
+while w; if i; stmt s1, s2;
+Select BOOLEAN with "abc2" = "abc2" such that Next*(10, 12)
+TRUE
+5000
+14 - name with(attrRef, literal) + such that
+call c;
+Select c with c.procName = "nguyen" such that Follows*(5, c)
+15
+5000
+15 - name with(literal, attrRef) + such that
+read r;
+Select r with "nguyen" = r.varName such that Calls("danh", "nguyen")
+33
+5000
+16 - name with(attrRef, attrRef) + such that
+print pr; procedure p;
+Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(p,_)
+
+5000
+17 - integer with(literal, literal) + such that + pattern
+call c; while w;
+Select w with 4 = 4 such that Parent*(w, 11) pattern w("z",_)
+5
+5000
+18 - integer with(attrRef, literal) + such that + pattern
+call c; assign a;
+Select <a, c> with c.stmt# = 15 such that Follows*(30, 35) pattern a("x","z * 4 +  y");
+18 15
+5000
+19 - integer with(literal, attrRef) + such that + pattern
+constant c; if i;
+Select <c, i> with c = 10 such that Uses(nguyen, "x") pattern i(_,_,_)
+10 7, 10 16, 10 20
+5000
+20 - integer with(attrRef, attrRef) + such that + pattern
+constant c, call ca; if i;
+Select <c, ca.procName> with c.value = ca.stmt# such that Follows(ca, i) pattern i("i",_,_)
+
+5000
+21 - name with(literal, literal) + such that + pattern
+while w; if i; stmt s1, s2;
+Select BOOLEAN with "abc2" = "abc2" such that Next*(10, 12) pattern w("x",_)
+FALSE
+5000
+22 - name with(attrRef, literal) + such that + pattern
+call c; while w;
+Select c with c.procName = "nguyen" such that Follows*(w, c) pattern w("z",_)
+15
+5000
+23 - name with(literal, attrRef) + such that + pattern
+read r; assign a;
+Select r with "nguyen" = r.varName such that Calls("danh", "nguyen") pattern a("i", _"z"_)
+33
+5000
+24 - name with(attrRef, attrRef) + such that + pattern
+print pr; procedure p; 
+Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(_,p) pattern a("z","z + 1")
+
+5000
+
+
+
+

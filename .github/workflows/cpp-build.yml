@@ -91,3 +91,10 @@ jobs:
         if: runner.os == 'Linux'
         working-directory: ${{ github.workspace }}
         run: .github/run-autotester.sh
+
+      - name: Upload AutoTester test outputs (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v3
+        with:
+          name: autotester-outputs
+          path: /tmp/autotester_test_outputs/

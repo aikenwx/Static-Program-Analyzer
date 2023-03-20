@@ -3,6 +3,7 @@
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
+#include "sp/sp.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -25,6 +26,43 @@ namespace qps {
 //    12.     x = x * y + z;
 //}
 
+TEST_CASE("SP can process a simple program") {
+  std::string program = R"(procedure main {
+	read x;
+	print y;
+	z = x + y + 0;
+	if (z > 10) then {
+		call procedure;
+	} else {
+		call a;
+	}
+}
+procedure a {
+	print a;
+}
+
+
+
+
+procedure y {
+	read procedure;
+	print y;
+}
+
+procedure procedure {
+	call a;
+	while (a < 10) {
+	a = a + 2;
+	}
+})";
+
+  auto pkb = PKB();
+
+  sp::SP::process(program, &pkb);
+  std::string query = "call c; Select c with \"a\" = c.procName";
+  std::list<std::string> results;
+  QPS::evaluate(query, results, *pkb.getQueryFacade());
+}
 TEST_CASE("Next Clauses") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::ASSIGN] = {"1", "2", "4", "6", "8", "9", "10", "11", "12"};

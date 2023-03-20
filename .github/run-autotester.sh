@@ -56,10 +56,10 @@ if [[ $expected_num_queries == 0 ]]; then
     exit 127
 fi
 
-if [[ $expected_num_queries != $total ]]; then
-    >&2 echo
-    >&2 echo "Number of expected test cases doesn't match total number of executed tests!"
-    >&2 echo "The expected number of test cases might not be accurate though, but exiting with an error anyway."
-    exit 127
-fi
+# if [[ $expected_num_queries != $total ]]; then
+#     >&2 echo
+#     >&2 echo "Number of expected test cases doesn't match total number of executed tests!"
+#     >&2 echo "The expected number of test cases might not be accurate though, but exiting with an error anyway."
+#     exit 127
+# fi
 

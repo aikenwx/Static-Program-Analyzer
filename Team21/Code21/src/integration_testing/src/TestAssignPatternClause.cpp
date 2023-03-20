@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
@@ -12,6 +11,8 @@
 //    03      cenX = 2*4+5*6  -> "2""4"*"5""6"*+
 //    04      cenY = 2*count+1+2*cenX -> "2""count"*"1"+"2""cenX"*+
 //    05      cenZ = 1%2+(4+2) -> "1""2"%"4""2"++
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("QPS can work with different combinations of assign pattern") {
   qps_test::PopulatePKBHelper::Data data;
@@ -162,9 +163,6 @@ TEST_CASE("QPS can work with different combinations of assign pattern") {
 
     }
   }
-
-  //To be added haha
-  SECTION("catching syntx errors in expression-spec") {
-
-  }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

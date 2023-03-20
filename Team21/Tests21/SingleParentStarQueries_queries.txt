@@ -1,0 +1,50 @@
+1 - relationship(literal, literal)
+while w; if i; stmt s;
+Select BOOLEAN such that Parent*(5, 10) and Parent*(17, 26)
+FALSE
+5000
+2 - relationship(synonym, literal)
+while w; if i; stmt s1, s2;
+Select <s1, s2> such that Parent*(s1, 9) and Parent*(s2, 20)
+5 16, 7 16, 5 17, 7 17
+5000
+3 - relationship(wildcard, literal)
+while w; if i; stmt s1, s2;
+Select <s1, s2> such that Parent*(_, 9) and Parent*(_, 16)
+
+5000
+4 - relationship(literal, synonym)
+while w; if i; stmt s1, s2; assign a;
+Select <i, a> such that Parent*(5, i) and Parent*(16, a)
+7 18, 7 21, 7 22, 7 23, 7 24, 7 25, 7 26, 7 27, 7 28
+5000
+5 - relationship(synonym, synonym)
+while w; if i; stmt s1, s2;
+Select w such that Parent*(w, i)
+5, 17
+5000
+6 - relationship(wildcard, synonym)
+while w; if i; stmt s1, s2;
+Select <i, w> such that Parent*(_, i) and Parent*(_, w)
+7 9, 7 17, 20 9, 20 17
+5000
+7 - relationship(literal, wildcard)
+while w; if i; stmt s1, s2;
+Select i such that Parent*(9, _) and Parent*(17, _)
+7, 16, 20, 30
+5000
+8 - relationship(synonym, wildcard)
+while w; if i; stmt s1, s2;
+Select BOOLEAN such that Parent*(s1, _) and Parent*(i, _)
+TRUE
+5000
+9 - relationship(wildcard, wildcard)
+while w; if i; stmt s1, s2; call c;
+Select c such that Parent*(_, _)
+13, 15, 19
+5000
+
+
+
+
+

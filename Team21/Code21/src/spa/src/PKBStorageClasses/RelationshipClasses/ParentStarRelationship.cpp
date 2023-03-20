@@ -4,27 +4,15 @@
 
 #include "ParentStarRelationship.h"
 
-bool ParentStarRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->parentStatement->equals(entity);
+ParentStarRelationship::ParentStarRelationship(Statement *parentStatement, Statement *childStatement) : Relationship(&ParentStarRelationship::relationshipType, parentStatement, childStatement) {
 }
 
-bool ParentStarRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->childStatement->equals(entity);
+const RelationshipType ParentStarRelationship::relationshipType = RelationshipType();
+
+auto ParentStarRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }
 
-ParentStarRelationship::ParentStarRelationship(Statement *parentStatement, Statement *childStatement) {
-    this->childStatement = childStatement;
-    this->parentStatement = parentStatement;
-}
-
-RelationshipType ParentStarRelationship::getRelationshipType() {
-    return RelationshipType::PARENT_STAR;
-}
-
-Entity* ParentStarRelationship::getLeftHandEntity() {
-    return this->parentStatement;
-}
-
-Entity* ParentStarRelationship::getRightHandEntity() {
-    return this->childStatement;
+auto ParentStarRelationship::getRelationshipType() const -> const RelationshipType & {
+  return ParentStarRelationship::relationshipType;
 }

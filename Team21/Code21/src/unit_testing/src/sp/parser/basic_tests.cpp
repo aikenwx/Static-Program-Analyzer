@@ -1,15 +1,17 @@
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 #include <iostream>
 #include <string>
 
-#include "catch.hpp"
 #include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
-#include "sp/parser/simple_parser.h"
 #include "sp/parser/simple_chain_parser.h"
-#include "tokenizer/simple_tokenizer.h"
+#include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 
 namespace parser {
+using Catch::Matchers::Message;
+
 tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
 SimpleChainParser parser = SimpleChainParser();
 
@@ -39,7 +41,7 @@ TEST_CASE("Parser throws a SyntaxError with an empty program",
   "[Parser]") {
   std::string program = "";
   REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
-    Catch::Message("Syntax error: Empty program"));
+    Message("Syntax error: Empty program"));
 };
 
 TEST_CASE(

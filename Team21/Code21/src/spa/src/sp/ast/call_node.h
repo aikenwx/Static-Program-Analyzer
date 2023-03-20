@@ -2,26 +2,25 @@
 
 #include <memory>
 
+#include "name_node.h"
 #include "procedure_node.h"
 #include "statement_node.h"
-#include "name_node.h"
 
 namespace ast {
 class CallNode : public StatementNode {
 public:
-  CallNode(std::shared_ptr<NameNode> name);
+  explicit CallNode(const std::shared_ptr<NameNode> &name);
 
-  std::string GetProcedureName();
-  std::string ToString() const override;
-  std::shared_ptr<ProcedureNode> GetProcedure();
-  void SetProcedure(std::shared_ptr<ProcedureNode> procedure);
+  auto GetProcedureName() -> std::string;
+  [[nodiscard]] auto ToString() const -> std::string override;
+  auto GetProcedure() -> std::shared_ptr<ProcedureNode>;
+  void SetProcedure(const std::shared_ptr<ProcedureNode> &procedure);
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 
 private:
   std::string name_;
   std::weak_ptr<ProcedureNode> procedure_;
 };
-}
+} // namespace ast

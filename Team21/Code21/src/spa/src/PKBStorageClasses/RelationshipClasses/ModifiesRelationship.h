@@ -5,30 +5,20 @@
 #ifndef SPA_MODIFIESRELATIONSHIP_H
 #define SPA_MODIFIESRELATIONSHIP_H
 
-#include "Relationship.h"
 #include "../EntityClasses/Variable.h"
+#include "Relationship.h"
 
 class ModifiesRelationship : public Relationship {
-private:
-    // Can be Statement or Procedure
+   private:
+    static const RelationshipType relationshipType;
 
-    Entity* modifier;
-    Variable* modifiedVariable;
+   public:
+    ModifiesRelationship(Entity* modifier, Variable* modifiedVariable);
 
-public:
-    ModifiesRelationship(Entity *modifier, Variable *modifiedVariable);
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
-    bool containsEntityOnLeftHand(Entity *entity) override;
-
-    bool containsEntityOnRightHand(Entity *entity) override;
-
-    RelationshipType getRelationshipType() override;
-
-    Entity* getLeftHandEntity() override;
-
-    Entity* getRightHandEntity() override;
-
+    [[nodiscard]] auto getRelationshipType() const
+        -> const RelationshipType & override;
 };
 
-
-#endif //SPA_MODIFIESRELATIONSHIP_H
+#endif  // SPA_MODIFIESRELATIONSHIP_H

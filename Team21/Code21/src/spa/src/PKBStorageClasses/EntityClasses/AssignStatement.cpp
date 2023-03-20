@@ -1,24 +1,29 @@
 #include "AssignStatement.h"
+
 #include <stdexcept>
+#include <utility>
 
-AssignStatement::AssignStatement(int statementNumber) {
-    Statement::statementNumber = statementNumber;
-    Statement::statementNumberString = std::make_shared<std::string>(std::to_string(statementNumber));
-    this->postFixExpression = std::shared_ptr<std::string>(postFixExpression);
+AssignStatement::AssignStatement(int statementNumber) : Statement(&AssignStatement::getEntityTypeStatic(), statementNumber) {
+}
+auto AssignStatement::getEntityType() const -> const EntityType & {
+  return AssignStatement::assignStatementType;
 }
 
-EntityType AssignStatement::getEntityType() {
-    return EntityType::ASSIGN_STATEMENT;
+auto AssignStatement::getEntityTypeStatic() -> const EntityType & {
+  return AssignStatement::assignStatementType;
 }
 
-void AssignStatement::setPostfixExpression(std::string *postfixExpression) {
-    this->postFixExpression = std::shared_ptr<std::string>(postfixExpression);
+void AssignStatement::setPostfixExpression(std::shared_ptr<std::string> postfixExpression) {
+    this->postFixExpression = std::move(postfixExpression);
 }
 
-std::string * AssignStatement::getPostFixExpression() {
-    if (this->postFixExpression == nullptr) {
-        throw std::runtime_error("Postfix expression is null, please check if it is set");
-    }
+auto AssignStatement::getPostFixExpression() -> std::string * {
+  if (this->postFixExpression == nullptr) {
+    throw std::runtime_error(
+        "Postfix expression is null, please check if it is set");
+  }
 
-    return this->postFixExpression.get();
+  return this->postFixExpression.get();
 }
+
+const EntityType AssignStatement::assignStatementType = EntityType();

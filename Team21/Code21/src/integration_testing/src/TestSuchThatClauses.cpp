@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "QPSUtilities.h"
@@ -38,7 +37,7 @@
 //  normSq = cenX * cenX + cenY * cenY; 21
 //}
 
-
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 qps_test::PopulatePKBHelper::Data PopulateEntities(qps_test::PopulatePKBHelper &pkb_helper) {
   qps_test::PopulatePKBHelper::Data data;
@@ -1079,3 +1078,5 @@ TEST_CASE("QPS can output other synoynm output/failures other than procedure fro
     }
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

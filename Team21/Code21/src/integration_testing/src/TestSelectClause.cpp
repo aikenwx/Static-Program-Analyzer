@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "query/design_entity.h"
@@ -28,6 +27,8 @@
 //    15      read z;
 //    16      print flag
 //}
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("QPS can work with only select clause") {
   qps_test::PopulatePKBHelper::Data data;
@@ -100,4 +101,4 @@ TEST_CASE("QPS can work with only select clause") {
   }
 }
 
-
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

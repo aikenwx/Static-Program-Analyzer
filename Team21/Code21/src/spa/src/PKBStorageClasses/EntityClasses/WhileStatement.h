@@ -4,10 +4,15 @@
 #include "Statement.h"
 
 class WhileStatement : public Statement {
-   public:
-    WhileStatement(int statementNumber);
+   private:
+    static const EntityType whileStatementType;
 
-    EntityType getEntityType() override;
+   public:
+    explicit WhileStatement(int statementNumber);
+
+    static auto getEntityTypeStatic() -> const EntityType &;
+
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif

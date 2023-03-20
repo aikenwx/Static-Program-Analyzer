@@ -5,27 +5,20 @@
 #ifndef INC_22S2_CP_SPA_TEAM_21_CALLSSTARRELATIONSHIP_H
 #define INC_22S2_CP_SPA_TEAM_21_CALLSSTARRELATIONSHIP_H
 
-#include "Relationship.h"
 #include "../EntityClasses/Procedure.h"
+#include "Relationship.h"
 
 class CallsStarRelationship : public Relationship {
-    private:
-    Procedure* caller;
-    Procedure* callee;
+   private:
+    static const RelationshipType relationshipType;
 
-public:
+   public:
     CallsStarRelationship(Procedure* caller, Procedure* callee);
 
-    bool containsEntityOnLeftHand(Entity *entity) override;
+    static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
-    bool containsEntityOnRightHand(Entity *entity) override;
-
-    RelationshipType getRelationshipType() override;
-
-    Entity* getLeftHandEntity() override;
-
-    Entity* getRightHandEntity() override;
+    [[nodiscard]] auto getRelationshipType() const
+        -> const RelationshipType & override;
 };
 
-
-#endif //INC_22S2_CP_SPA_TEAM_21_CALLSSTARRELATIONSHIP_H
+#endif  // INC_22S2_CP_SPA_TEAM_21_CALLSSTARRELATIONSHIP_H

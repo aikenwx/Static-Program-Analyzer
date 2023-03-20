@@ -1,607 +1,657 @@
+#include <catch2/catch_test_macros.hpp>
+
 #include "PKB/PopulateFacade.h"
-#include "catch.hpp"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
 TEST_CASE("PopulateFacade can instantiate") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 }
 
-TEST_CASE("PopulateFacade can add postfix expressions to assignment statements") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeAssignmentStatement(1);
-    populateFacade->storeAssignStatementPostfixExpression(1, "xy+");
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "1");
-    REQUIRE(*((AssignStatement *)entityManager->getStatementByStatementNumber(1))->getPostFixExpression() == "xy+");
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+TEST_CASE(
+    "PopulateFacade can add postfix expressions to assignment statements") {
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storeAssignStatementPostfixExpression(1, "xy+");
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "1");
+  auto key = EntityKey(&Statement::getEntityTypeStatic(), 1);
+  entityManager->getEntity(key);
+  REQUIRE(*(dynamic_cast<AssignStatement *>(entityManager->getEntity(key)))
+               ->getPostFixExpression() == "xy+");
 }
 
-TEST_CASE("Error thrown when trying to add non pattern expression to call statement") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeCallStatement(1);
-    REQUIRE_THROWS(populateFacade->storeAssignStatementPostfixExpression(1, "xy+"));
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+TEST_CASE(
+    "Error thrown when trying to add non pattern expression to call "
+    "statement") {
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeCallStatement(1);
+  REQUIRE_THROWS(
+      populateFacade->storeAssignStatementPostfixExpression(1, "xy+"));
 }
 
 TEST_CASE("PopulateFace can populate assign statement") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    std::string postfixExpression = "xy+";
-    populateFacade->storeAssignmentStatement(1);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "1");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  std::string postfixExpression = "xy+";
+  populateFacade->storeAssignmentStatement(1);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "1");
 }
 
 TEST_CASE("PopulateFace can populate call statement") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeCallStatement(2);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::CALL_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeCallStatement(2);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(CallStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          CallStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFace can populate while statement") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeWhileStatement(3);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::WHILE_STATEMENT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::WHILE_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "3");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeWhileStatement(3);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(WhileStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          WhileStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "3");
 }
 
 TEST_CASE("PopulateFace can populate if statement") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeIfStatement(4);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::IF_STATEMENT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::IF_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "4");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeIfStatement(4);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(IfStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          IfStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "4");
 }
 
 TEST_CASE("PopulateFace can populate procedure") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string procedureName = "main";
-    populateFacade->storeProcedure(procedureName);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::PROCEDURE);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::PROCEDURE);
-    REQUIRE(*entities->at(0)->getEntityValue() == "main");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::string procedureName = "main";
+  populateFacade->storeProcedure(procedureName);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(Procedure::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() == Procedure::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "main");
 }
 
 TEST_CASE("PopulateFace can populate variable") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    std::string variableName = "x";
-    populateFacade->storeVariable(variableName);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::VARIABLE);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::VARIABLE);
-    REQUIRE(*entities->at(0)->getEntityValue() == "x");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  std::string variableName = "x";
+  populateFacade->storeVariable(variableName);
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(Variable::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() == Variable::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "x");
 }
 
 TEST_CASE("PopulateFace can populate constant") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    populateFacade->storeConstant(5);
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::CONSTANT);
-    REQUIRE(entities->size() == 1);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::CONSTANT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "5");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  populateFacade->storeConstant(5); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
+  REQUIRE(entities->size() == 1);
+  REQUIRE(entities->at(0)->getEntityType() == Constant::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "5");
 }
 
 TEST_CASE("PopulateFacade can populate follow relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
-    entityManager->storeStatement(callStatement);
-    entityManager->storeStatement(printStatement);
+  populateFacade->storeCallStatement(1);
+  populateFacade->storePrintStatement(2);
+  populateFacade->storeFollowsRelationship(1, 2);
 
-    populateFacade->storeFollowsRelationship(1, 2);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS, CALL_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::FOLLOWS);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          FollowsRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFacade can populate parent relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
+  populateFacade->storeWhileStatement(1);
+  populateFacade->storePrintStatement(2);
+  populateFacade->storeParentRelationship(1, 2);
 
-    entityManager->storeStatement(whileStatement);
-    entityManager->storeStatement(printStatement);
-
-    populateFacade->storeParentRelationship(1, 2);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT, WHILE_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::PARENT);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          ParentRelationship::getRelationshipTypeStatic(),
+          WhileStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          ParentRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFacade can populate parentStar relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<WhileStatement> whileStatement = std::make_shared<WhileStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
+  populateFacade->storeWhileStatement(1);
+  populateFacade->storePrintStatement(2);
+  populateFacade->storeParentStarRelationship(1, 2);
 
-    entityManager->storeStatement(whileStatement);
-    entityManager->storeStatement(printStatement);
-
-    populateFacade->storeParentStarRelationship(1, 2);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT_STAR,
-                                                                                              WHILE_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::PARENT_STAR);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          ParentStarRelationship::getRelationshipTypeStatic(),
+          WhileStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          ParentStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFacade can populate followStar relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<CallStatement> callStatement = std::make_shared<CallStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
-    entityManager->storeStatement(callStatement);
-    entityManager->storeStatement(printStatement);
+  populateFacade->storeCallStatement(1);
+  populateFacade->storePrintStatement(2);
+  populateFacade->storeFollowsStarRelationship(1, 2);
 
-    populateFacade->storeFollowsStarRelationship(1, 2);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR,
-                                                                                              CALL_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::FOLLOWS_STAR);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsStarRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          FollowsStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
-TEST_CASE("Adding a relationship with a non-existent entity throws an exception") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+TEST_CASE(
+    "Adding a relationship with a non-existent entity throws an exception") {
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    REQUIRE_THROWS_AS(populateFacade->storeParentRelationship(1, 2), std::exception);
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  REQUIRE_THROWS_AS(populateFacade->storeParentRelationship(1, 2),
+                    std::exception);
 }
 
 TEST_CASE("PopulateFacade can populate statement modifies relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string variableName = "variable";
+  std::string variableName = "variable";
 
-    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
-    entityManager->storeStatement(assignStatement);
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string("variable"));
-    entityManager->storeVariable(variable);
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storeVariable(variableName);
+  populateFacade->storeStatementModifiesVariableRelationship(1, variableName);
 
-    populateFacade->storeStatementModifiesVariableRelationship(1, variableName);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(MODIFIES,
-                                                                                              ASSIGN_STATEMENT,
-                                                                                              VARIABLE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::MODIFIES);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "variable");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          ModifiesRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          Variable::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          ModifiesRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "variable");
 }
 
 TEST_CASE("PopulateFacade can populate statement uses relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    std::string variableName = "variable";
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  std::string variableName = "variable";
 
-    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
-    entityManager->storeStatement(assignStatement);
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string(variableName));
-    entityManager->storeVariable(variable);
-    populateFacade->storeStatementUsesVariableRelationship(1, variableName);
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(USES, ASSIGN_STATEMENT,
-                                                                                              VARIABLE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::USES);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "variable");
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storeVariable(variableName);
 
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  populateFacade->storeStatementUsesVariableRelationship(1, variableName);
+
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          UsesRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          Variable::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          UsesRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "variable");
 }
 
 TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
-    entityManager->storeStatement(assignStatement);
-    entityManager->storeStatement(printStatement);
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storePrintStatement(2);
+  populateFacade->storeParentStarRelationship(1, 2);
 
-    populateFacade->storeParentStarRelationship(1, 2);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(PARENT_STAR,
-                                                                                              ASSIGN_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::PARENT_STAR);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          ParentStarRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          ParentStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::shared_ptr<AssignStatement> assignStatement = std::make_shared<AssignStatement>(1);
-    std::shared_ptr<PrintStatement> printStatement = std::make_shared<PrintStatement>(2);
-    entityManager->storeStatement(assignStatement);
-    entityManager->storeStatement(printStatement);
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storePrintStatement(2);
 
-    populateFacade->storeFollowsStarRelationship(1, 2);
+  populateFacade->storeFollowsStarRelationship(1, 2);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(FOLLOWS_STAR,
-                                                                                              ASSIGN_STATEMENT,
-                                                                                              PRINT_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::FOLLOWS_STAR);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsStarRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          PrintStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          FollowsStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "2");
 }
 
 TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string variableName = "variable";
-    std::string procedureName = "Procedure";
+  std::string variableName = "variable";
+  std::string procedureName = "Procedure";
 
-    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string(procedureName));
-    entityManager->storeProcedure(procedure);
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string(variableName));
-    entityManager->storeVariable(variable);
-    populateFacade->storeProcedureModifiesVariableRelationship(procedureName, variableName);
+  populateFacade->storeProcedure(procedureName);
+  populateFacade->storeVariable(variableName);
+  populateFacade->storeProcedureModifiesVariableRelationship(procedureName,
+                                                             variableName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(MODIFIES, PROCEDURE,
-                                                                                              VARIABLE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::MODIFIES);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "variable");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          ModifiesRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          ModifiesRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "Procedure");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "variable");
 }
 
 TEST_CASE("PopulateFacade can populate procedure uses relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string variableName = "variable";
-    std::string procedureName = "Procedure";
+  std::string variableName = "variable";
+  std::string procedureName = "Procedure";
 
-    std::shared_ptr<Procedure> procedure = std::make_shared<Procedure>(new std::string(procedureName));
-    entityManager->storeProcedure(procedure);
-    std::shared_ptr<Variable> variable = std::make_shared<Variable>(new std::string(variableName));
-    entityManager->storeVariable(variable);
+  populateFacade->storeVariable(variableName);
+  populateFacade->storeProcedure(procedureName);
+  populateFacade->storeProcedureUsesVariableRelationship(procedureName,
+                                                         variableName);
 
-    populateFacade->storeProcedureUsesVariableRelationship(procedureName, variableName);
-
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(USES, PROCEDURE,
-                                                                                              VARIABLE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::USES);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "variable");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          UsesRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          UsesRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "Procedure");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "variable");
 }
 
 TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string callerName = "caller";
-    std::string calleeName = "callee";
+  std::string callerName = "caller";
+  std::string calleeName = "callee";
 
-    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string(callerName));
-    entityManager->storeProcedure(caller);
-    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string(calleeName));
-    entityManager->storeProcedure(callee);
+  populateFacade->storeProcedure(callerName);
+  populateFacade->storeProcedure(calleeName);
 
-    populateFacade->storeCallsRelationship(callerName, calleeName);
+  populateFacade->storeCallsRelationship(callerName, calleeName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(CALLS, PROCEDURE,
-                                                                                              PROCEDURE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::CALLS);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "caller");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "callee");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          CallsRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          CallsRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "caller");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "callee");
 }
 
 TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
 
-    std::string callerName = "caller";
-    std::string calleeName = "callee";
+  std::string callerName = "caller";
+  std::string calleeName = "callee";
 
-    std::shared_ptr<Procedure> caller = std::make_shared<Procedure>(new std::string(callerName));
-    entityManager->storeProcedure(caller);
-    std::shared_ptr<Procedure> callee = std::make_shared<Procedure>(new std::string(calleeName));
-    entityManager->storeProcedure(callee);
+  populateFacade->storeProcedure(callerName);
+  populateFacade->storeProcedure(calleeName);
 
-    populateFacade->storeCallsStarRelationship(callerName, calleeName);
+  populateFacade->storeCallsStarRelationship(callerName, calleeName);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(CALLS_STAR, PROCEDURE,
-                                                                                              PROCEDURE);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::CALLS_STAR);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "caller");
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "callee");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          CallsStarRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          CallsStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "caller");
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() ==
+          "callee");
 }
 
 TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
-    EntityManager *entityManager = new EntityManager();
-    RelationshipManager *relationshipManager = new RelationshipManager();
-    PatternManager *patternManager = new PatternManager();
-    PopulateFacade *populateFacade = new PopulateFacade(entityManager, relationshipManager, patternManager);
-    std::string postFixPattern = "xy+";
+  auto entityManager = std::make_shared<EntityManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto patternManager = std::make_shared<PatternManager>();
+  auto cfgManager = std::make_shared<CFGManager>();
+  auto populateFacade = std::make_shared<PopulateFacade>(
+      entityManager.get(), relationshipManager.get(), patternManager.get(),
+      cfgManager.get());
+  std::string postFixPattern = "xy+";
 
-    populateFacade->storeAssignmentStatement(1);
-    populateFacade->storeCallStatement(2);
-    populateFacade->storeAssignmentStatement(3);
-    populateFacade->storeAssignmentStatement(4);
+  populateFacade->storeAssignmentStatement(1);
+  populateFacade->storeCallStatement(2);
+  populateFacade->storeAssignmentStatement(3);
+  populateFacade->storeAssignmentStatement(4);
 
-    populateFacade->storeProcedure("Procedure");
-    populateFacade->storeProcedure("Procedure2");
+  populateFacade->storeProcedure("Procedure");
+  populateFacade->storeProcedure("Procedure2");
 
-    populateFacade->storeParentStarRelationship(1, 2);
-    populateFacade->storeFollowsStarRelationship(1, 3);
-    populateFacade->storeFollowsRelationship(1, 3);
-    populateFacade->storeFollowsRelationship(2, 4);
-    populateFacade->storeCallsRelationship("Procedure", "Procedure2");
-    populateFacade->storeCallsStarRelationship("Procedure", "Procedure2");
+  populateFacade->storeParentStarRelationship(1, 2);
+  populateFacade->storeFollowsStarRelationship(1, 3);
+  populateFacade->storeFollowsRelationship(1, 3);
+  populateFacade->storeFollowsRelationship(2, 4);
+  populateFacade->storeCallsRelationship("Procedure", "Procedure2");
+  populateFacade->storeCallsStarRelationship("Procedure", "Procedure2");
 
-    std::vector<Entity *> *entities = entityManager->getEntitiesByType(EntityType::ASSIGN_STATEMENT);
-    REQUIRE(entities->size() == 3);
-    REQUIRE(entities->at(0)->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*entities->at(0)->getEntityValue() == "1");
+  std::vector<Entity *> *entities =
+      entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  REQUIRE(entities->size() == 3);
+  REQUIRE(entities->at(0)->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*entities->at(0)->getEntityValue() == "1");
 
-    std::vector<Entity *> *entities2 = entityManager->getEntitiesByType(EntityType::CALL_STATEMENT);
-    REQUIRE(entities2->size() == 1);
-    REQUIRE(entities2->at(0)->getEntityType() == EntityType::CALL_STATEMENT);
-    REQUIRE(*entities2->at(0)->getEntityValue() == "2");
+  std::vector<Entity *> *entities2 =
+      entityManager->getEntitiesByType(CallStatement::getEntityTypeStatic());
+  REQUIRE(entities2->size() == 1);
+  REQUIRE(entities2->at(0)->getEntityType() ==
+          CallStatement::getEntityTypeStatic());
+  REQUIRE(*entities2->at(0)->getEntityValue() == "2");
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(RelationshipType::FOLLOWS,
-                                                                                              EntityType::ASSIGN_STATEMENT,
-                                                                                              EntityType::ASSIGN_STATEMENT);
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->getRelationshipType() == RelationshipType::FOLLOWS);
-    REQUIRE(relationships->at(0)->getLeftHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(relationships->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "3");
+  std::vector<Relationship *> *relationships =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->getRelationshipType() ==
+          FollowsRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships->at(0)->getLeftHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(relationships->at(0)->getRightHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships->at(0)->getRightHandEntity()->getEntityValue() == "3");
 
-    std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
-        RelationshipType::FOLLOWS, EntityType::CALL_STATEMENT, EntityType::ASSIGN_STATEMENT);
-    REQUIRE(relationships2->size() == 1);
-    REQUIRE(relationships2->at(0)->getRelationshipType() == RelationshipType::FOLLOWS);
-    REQUIRE(relationships2->at(0)->getLeftHandEntity()->getEntityType() == EntityType::CALL_STATEMENT);
-    REQUIRE(*relationships2->at(0)->getLeftHandEntity()->getEntityValue() == "2");
-    REQUIRE(relationships2->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships2->at(0)->getRightHandEntity()->getEntityValue() == "4");
+  std::vector<Relationship *> *relationships2 =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(relationships2->size() == 1);
+  REQUIRE(relationships2->at(0)->getRelationshipType() ==
+          FollowsRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships2->at(0)->getLeftHandEntity()->getEntityType() ==
+          CallStatement::getEntityTypeStatic());
+  REQUIRE(*relationships2->at(0)->getLeftHandEntity()->getEntityValue() == "2");
+  REQUIRE(relationships2->at(0)->getRightHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships2->at(0)->getRightHandEntity()->getEntityValue() ==
+          "4");
 
-    std::vector<Relationship *> *relationships3 = relationshipManager->getRelationshipsByTypes(
-        RelationshipType::PARENT_STAR, EntityType::ASSIGN_STATEMENT, EntityType::CALL_STATEMENT);
-    REQUIRE(relationships3->size() == 1);
-    REQUIRE(relationships3->at(0)->getRelationshipType() == RelationshipType::PARENT_STAR);
-    REQUIRE(relationships3->at(0)->getLeftHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships3->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(relationships3->at(0)->getRightHandEntity()->getEntityType() == EntityType::CALL_STATEMENT);
-    REQUIRE(*relationships3->at(0)->getRightHandEntity()->getEntityValue() == "2");
+  std::vector<Relationship *> *relationships3 =
+      relationshipManager->getRelationshipsByTypes(
+          ParentStarRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          CallStatement::getEntityTypeStatic());
+  REQUIRE(relationships3->size() == 1);
+  REQUIRE(relationships3->at(0)->getRelationshipType() ==
+          ParentStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships3->at(0)->getLeftHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships3->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(relationships3->at(0)->getRightHandEntity()->getEntityType() ==
+          CallStatement::getEntityTypeStatic());
+  REQUIRE(*relationships3->at(0)->getRightHandEntity()->getEntityValue() ==
+          "2");
 
-    std::vector<Relationship *> *relationships4 = relationshipManager->getRelationshipsByTypes(
-        RelationshipType::FOLLOWS_STAR, EntityType::ASSIGN_STATEMENT, EntityType::ASSIGN_STATEMENT);
-    REQUIRE(relationships4->size() == 1);
-    REQUIRE(relationships4->at(0)->getRelationshipType() == RelationshipType::FOLLOWS_STAR);
-    REQUIRE(relationships4->at(0)->getLeftHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships4->at(0)->getLeftHandEntity()->getEntityValue() == "1");
-    REQUIRE(relationships4->at(0)->getRightHandEntity()->getEntityType() == EntityType::ASSIGN_STATEMENT);
-    REQUIRE(*relationships4->at(0)->getRightHandEntity()->getEntityValue() == "3");
+  std::vector<Relationship *> *relationships4 =
+      relationshipManager->getRelationshipsByTypes(
+          FollowsStarRelationship::getRelationshipTypeStatic(),
+          AssignStatement::getEntityTypeStatic(),
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(relationships4->size() == 1);
+  REQUIRE(relationships4->at(0)->getRelationshipType() ==
+          FollowsStarRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships4->at(0)->getLeftHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships4->at(0)->getLeftHandEntity()->getEntityValue() == "1");
+  REQUIRE(relationships4->at(0)->getRightHandEntity()->getEntityType() ==
+          AssignStatement::getEntityTypeStatic());
+  REQUIRE(*relationships4->at(0)->getRightHandEntity()->getEntityValue() ==
+          "3");
 
-    std::vector<Relationship *> *relationships5 = relationshipManager->getRelationshipsByTypes(
-        RelationshipType::CALLS, EntityType::PROCEDURE, EntityType::PROCEDURE);
+  std::vector<Relationship *> *relationships5 =
+      relationshipManager->getRelationshipsByTypes(
+          CallsRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 
-    REQUIRE(relationships5->size() == 1);
-    REQUIRE(relationships5->at(0)->getRelationshipType() == RelationshipType::CALLS);
-    REQUIRE(relationships5->at(0)->getLeftHandEntity()->getEntityType() == EntityType::PROCEDURE);
-    REQUIRE(*relationships5->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
-    REQUIRE(relationships5->at(0)->getRightHandEntity()->getEntityType() == EntityType::PROCEDURE);
-    REQUIRE(*relationships5->at(0)->getRightHandEntity()->getEntityValue() == "Procedure2");
+  REQUIRE(relationships5->size() == 1);
+  REQUIRE(relationships5->at(0)->getRelationshipType() ==
+          CallsRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships5->at(0)->getLeftHandEntity()->getEntityType() ==
+          Procedure::getEntityTypeStatic());
+  REQUIRE(*relationships5->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "Procedure");
+  REQUIRE(relationships5->at(0)->getRightHandEntity()->getEntityType() ==
+          Procedure::getEntityTypeStatic());
+  REQUIRE(*relationships5->at(0)->getRightHandEntity()->getEntityValue() ==
+          "Procedure2");
 
-    std::vector<Relationship *> *relationships6 = relationshipManager->getRelationshipsByTypes(
-        RelationshipType::CALLS_STAR, EntityType::PROCEDURE, EntityType::PROCEDURE);
+  std::vector<Relationship *> *relationships6 =
+      relationshipManager->getRelationshipsByTypes(
+          CallsRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 
-    REQUIRE(relationships6->size() == 1);
-    REQUIRE(relationships6->at(0)->getRelationshipType() == RelationshipType::CALLS_STAR);
-    REQUIRE(relationships6->at(0)->getLeftHandEntity()->getEntityType() == EntityType::PROCEDURE);
-    REQUIRE(*relationships6->at(0)->getLeftHandEntity()->getEntityValue() == "Procedure");
-    REQUIRE(relationships6->at(0)->getRightHandEntity()->getEntityType() == EntityType::PROCEDURE);
-    REQUIRE(*relationships6->at(0)->getRightHandEntity()->getEntityValue() == "Procedure2");
-
-    delete populateFacade;
-    delete entityManager;
-    delete relationshipManager;
-    delete patternManager;
+  REQUIRE(relationships6->size() == 1);
+  REQUIRE(relationships6->at(0)->getRelationshipType() ==
+          CallsRelationship::getRelationshipTypeStatic());
+  REQUIRE(relationships6->at(0)->getLeftHandEntity()->getEntityType() ==
+          Procedure::getEntityTypeStatic());
+  REQUIRE(*relationships6->at(0)->getLeftHandEntity()->getEntityValue() ==
+          "Procedure");
+  REQUIRE(relationships6->at(0)->getRightHandEntity()->getEntityType() ==
+          Procedure::getEntityTypeStatic());
+  REQUIRE(*relationships6->at(0)->getRightHandEntity()->getEntityValue() ==
+          "Procedure2");
 }

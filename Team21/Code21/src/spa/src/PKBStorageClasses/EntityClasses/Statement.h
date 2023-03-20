@@ -7,18 +7,22 @@
 #include "Entity.h"
 
 class Statement : public Entity {
-   protected:
+   private:
+    static const EntityType statementType;
     int statementNumber;
-    std::shared_ptr<std::string> statementNumberString;
 
    public:
+    Statement(const EntityType *entityType, int statementNumber);
 
-    virtual ~Statement() {};
-    std::string * getEntityValue() override;
+    static auto getEntityTypeStatic() -> const EntityType&;
+    static auto isStatement(Entity* entity) -> bool;
 
-    const int getStatementNumber();
+    ~Statement() override = default;
+    ;
 
-    virtual EntityType getEntityType() override = 0;
+    [[nodiscard]] auto getStatementNumber() const -> int;
+
+    [[nodiscard]] auto getEntityType() const -> const EntityType& override;
 };
 
 #endif

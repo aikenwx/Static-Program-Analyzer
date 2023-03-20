@@ -1,16 +1,20 @@
 #include "program_node.h"
 
+#include "exceptions/parser_error.h"
+
 namespace ast {
 // Handles procedures like a stack LIFO
-void ProgramNode::AddProcedure(std::shared_ptr<ProcedureNode> procedure) {
+void ProgramNode::AddProcedure(
+    const std::shared_ptr<ProcedureNode> &procedure) {
   procedures.push_back(procedure);
 }
 
-std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() {
+auto ProgramNode::GetProcedures() const
+    -> std::vector<std::shared_ptr<ProcedureNode>> {
   return procedures;
 }
 
-std::string ProgramNode::ToString() const {
+auto ProgramNode::ToString() const -> std::string {
   std::string str = "program:\n{\n";
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     str += (*i)->ToString();
@@ -19,11 +23,11 @@ std::string ProgramNode::ToString() const {
   return str;
 }
 
-int ProgramNode::GetTotalStatementCount() {
+auto ProgramNode::GetTotalStatementCount() -> int {
   return procedures.front()->GetEndStatementNumber();
 }
 
-bool ProgramNode::ContainsProcedure(std::string const &procedureName) {
+auto ProgramNode::ContainsProcedure(const std::string &procedureName) -> bool {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
@@ -32,22 +36,26 @@ bool ProgramNode::ContainsProcedure(std::string const &procedureName) {
   return false;
 }
 
-std::shared_ptr<ProcedureNode> ProgramNode::GetProcedure(std::string const &procedureName) {
+auto ProgramNode::GetProcedure(const std::string &procedureName)
+    -> std::shared_ptr<ProcedureNode> {
   for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
     if ((*i)->GetName() == procedureName) {
       return *i;
     }
   }
+
+  throw exceptions::ParserError(
+      "Procedure for " + procedureName +
+      " not found while trying to validate procedure");
 }
 
-void ProgramNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
-  extractor->HandleProgramNode(
-      std::static_pointer_cast<ProgramNode>(currentNode), depth);
+void ProgramNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                                int depth) {
+  extractor.HandleProgramNode(
+      std::static_pointer_cast<ProgramNode>(shared_from_this()), depth);
 
   for (auto i = procedures.begin(); i < procedures.end(); i++) {
-    (*i)->AcceptVisitor(*i, extractor, depth + 1);
+    (*i)->AcceptVisitor(extractor, depth + 1);
   }
 }
-}  // namespace ast
+} // namespace ast

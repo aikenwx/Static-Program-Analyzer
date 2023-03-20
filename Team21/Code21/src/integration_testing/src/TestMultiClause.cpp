@@ -1,6 +1,5 @@
+#include <catch2/catch_test_macros.hpp>
 #include <utility>
-
-#include "catch.hpp"
 
 #include "PopulatePKBHelper.cpp"
 #include "query/design_entity.h"
@@ -22,6 +21,7 @@
 
 
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("Multi clause queries work") {
   qps_test::PopulatePKBHelper::Data data;
@@ -154,3 +154,5 @@ TEST_CASE("Multi clause queries work") {
         *pkb_querier) == empty);
   }
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

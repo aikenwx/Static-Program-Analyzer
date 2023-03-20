@@ -9,6 +9,6 @@ class NotNode : public UnaryOperationNode {
 public:
   using UnaryOperationNode::UnaryOperationNode;
 
-  std::string ToString() const override;
+  [[nodiscard]] auto ToString() const -> std::string override;
 };
 }

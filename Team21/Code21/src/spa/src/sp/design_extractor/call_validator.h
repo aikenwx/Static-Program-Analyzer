@@ -6,9 +6,9 @@ namespace design_extractor {
 class CallValidator : public Extractor {
 public:
   CallValidator() = default;
-  void HandleCallNode(std::shared_ptr<ast::CallNode> node,
+  void HandleCallNode(const std::shared_ptr<ast::CallNode>& node,
     int depth) override;
-  void HandleProgramNode(std::shared_ptr<ast::ProgramNode> node,
+  void HandleProgramNode(const std::shared_ptr<ast::ProgramNode>& node,
     int depth) override;
 
 private:

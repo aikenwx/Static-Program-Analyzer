@@ -4,19 +4,19 @@
 
 namespace qps {
 
-    // Underscore class represents underscore as a type of stmtRef/entRef
-    class Underscore {
+// Underscore class represents underscore as a type of stmtRef/entRef
+class Underscore {
 
-    public:
+public:
+  auto operator==([[maybe_unused]] const Underscore &underscore) const -> bool {
+    return true;
+  }
 
-        bool operator==(const Underscore& us) const {
-            return true;
-        }
-
-        friend std::ostream& operator<<(std::ostream& os, Underscore const& us) {
-            os << "_";
-            return os;
-        }
-    };
-}
-
+  friend auto operator<<(std::ostream &ostream,
+                         [[maybe_unused]] Underscore const &underscore)
+      -> std::ostream & {
+    ostream << "_";
+    return ostream;
+  }
+};
+} // namespace qps

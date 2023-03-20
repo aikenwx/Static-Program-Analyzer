@@ -1,38 +1,45 @@
 #include "while_node.h"
+#include "sp/ast/conditional_node.h"
+
+#include <memory>
+#include <utility>
 
 namespace ast {
 WhileNode::WhileNode(std::shared_ptr<INode> condition,
-                     std::shared_ptr<StatementListNode> body) {
-  this->condition = condition;
-  this->body = body;
+                     std::shared_ptr<StatementListNode> body)
+    : condition(std::move(condition)), body(std::move(body)) {
   IncrementStatementNumber(1);
 }
 
-std::shared_ptr<INode> WhileNode::GetCondition() { return condition; }
+auto WhileNode::GetCondition() const -> std::shared_ptr<INode> { return condition; }
 
-std::shared_ptr<StatementListNode> WhileNode::GetBody() { return body; }
+auto WhileNode::GetBody() const -> std::shared_ptr<StatementListNode> { return body; }
 
-std::string WhileNode::ToString() const {
+auto WhileNode::ToString() const -> std::string {
   return "while:\n{\ncondition:" + condition->ToString() +
          "body:" + body->ToString() + "}\n";
 }
 
-int WhileNode::GetEndStatementNumber() { return body->GetEndStatementNumber(); }
+auto WhileNode::GetEndStatementNumber() const -> int {
+  return body->GetEndStatementNumber();
+}
 
 void WhileNode::IncrementStatementNumber(int value) {
-  statementNumber = body->GetStartStatementNumber();
+  SetStatementNumber(body->GetStartStatementNumber());
   body->IncrementStatementNumbers(value);
 }
 
-void WhileNode::AcceptVisitor(
-    std::shared_ptr<INode> currentNode,
-    std::shared_ptr<design_extractor::Extractor> extractor, int depth) {
-  extractor->HandleStatementNode(
+void WhileNode::AcceptVisitor(design_extractor::Extractor &extractor,
+                              int depth) {
+  auto currentNode = shared_from_this();
+  extractor.HandleStatementNode(
       std::static_pointer_cast<StatementNode>(currentNode), depth);
-  extractor->HandleWhileNode(std::static_pointer_cast<WhileNode>(currentNode),
+  extractor.HandleConditionalNode(
+      std::static_pointer_cast<ConditionalNode>(currentNode), depth);
+  extractor.HandleWhileNode(std::static_pointer_cast<WhileNode>(currentNode),
                              depth);
 
-  condition->AcceptVisitor(condition, extractor, depth + 1);
-  body->AcceptVisitor(body, extractor, depth + 1);
+  condition->AcceptVisitor(extractor, depth + 1);
+  body->AcceptVisitor(extractor, depth + 1);
 }
-}  // namespace ast
+} // namespace ast

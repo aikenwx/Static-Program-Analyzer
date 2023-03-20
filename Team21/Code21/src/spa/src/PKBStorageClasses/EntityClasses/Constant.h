@@ -1,29 +1,27 @@
 //
 // Created by Aiken Wong on 2/2/23.
 //
+#include <memory>
 #include <string>
 
 #include "Entity.h"
-#include <memory>
 
 #ifndef SPA_CONSTANT_H
 #define SPA_CONSTANT_H
 
 class Constant : public Entity {
    private:
-    int constantValue;
+    static const EntityType entityType;
     std::shared_ptr<std::string> constantValueString;
 
    public:
-    Constant(int constantValue);
+    static auto getEntityTypeStatic() -> const EntityType &;
 
-    ~Constant() = default;
+    explicit Constant(int constantValue);
 
-    std::string * getEntityValue() override;
+    ~Constant() override = default;
 
-    EntityType getEntityType() override;
-
-    int getConstantNumber();
+    [[nodiscard]] auto getEntityType() const -> const EntityType & override;
 };
 
 #endif  // SPA_CONSTANT_H

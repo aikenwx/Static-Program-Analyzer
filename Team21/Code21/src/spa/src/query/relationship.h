@@ -16,11 +16,14 @@ enum class Relationship {
   ModifiesS,
   ModifiesP,
   Calls,
-  CallsT
+  CallsT,
+  Next,
+  NextT,
+  Affects,
+  AffectsT
 };
 
-Relationship getRelationshipFromString(std::string reString);
-std::string getStringFromRelationship(Relationship relationship);
+auto getRelationshipFromString(const std::string& reString) -> Relationship;
+auto getStringFromRelationship(Relationship relationship) -> std::string;
 
-}
-
+}  // namespace qps

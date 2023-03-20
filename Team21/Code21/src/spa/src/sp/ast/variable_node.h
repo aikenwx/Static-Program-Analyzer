@@ -6,10 +6,9 @@ class VariableNode : public NamedNode {
 public:
   using NamedNode::NamedNode;
 
-  std::string ToString() const override;
+  [[nodiscard]] auto ToString() const -> std::string override;
 
-  void AcceptVisitor(std::shared_ptr<INode> currentNode,
-                     std::shared_ptr<design_extractor::Extractor> extractor,
+  void AcceptVisitor(design_extractor::Extractor &extractor,
                      int depth) override;
 };
-}
+} // namespace ast

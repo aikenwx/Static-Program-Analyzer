@@ -2,12 +2,14 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
+#include "../ast/procedure_node.h"
 #include "../ast/statement_node.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 
 namespace rel {
-enum RelationshipType {
+enum class RelationshipType {
   USES_PROC_VAR,
   USES_STMT_VAR,
   MODIFIES_PROC_VAR,
@@ -28,18 +30,19 @@ enum RelationshipType {
 
 class Relationship {
  public:
+  Relationship() = default;
   virtual ~Relationship() = default;
-  virtual RelationshipType relationshipType() = 0;
+  Relationship(const Relationship&) = delete;
+  Relationship(Relationship&&) = delete;
+  auto operator=(const Relationship&) -> Relationship& = delete;
+  auto operator=(Relationship&&) -> Relationship& = delete;
+  [[nodiscard]] virtual auto relationshipType() const -> RelationshipType = 0;
 };
 
 class StmtVarRelationship : public Relationship {
  public:
-  virtual int statementNumber() = 0;
-  // TODO: return PKBStorageClasses/EntityClasses/Entity.h?
-  virtual std::string variableName() = 0;
-  // static StmtVarRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> statement, std::string
-  //     variableName);
+  [[nodiscard]] virtual auto statementNumber() const -> int = 0;
+  [[nodiscard]] virtual auto variableName() const -> std::string = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> statementNode_;
@@ -48,10 +51,8 @@ class StmtVarRelationship : public Relationship {
 
 class ProcVarRelationship : public Relationship {
  public:
-  virtual std::string procedureName() = 0;
-  virtual std::string variableName() = 0;
-  // static ProcVarRelationship CreateRelationship(
-  //     std::string procedureName, std::string variableName);
+  [[nodiscard]] virtual auto procedureName() const -> std::string = 0;
+  [[nodiscard]] virtual auto variableName() const -> std::string = 0;
 
  private:
   std::string procedureName_;
@@ -60,11 +61,8 @@ class ProcVarRelationship : public Relationship {
 
 class StmtStmtRelationship : public Relationship {
  public:
-  virtual int firstStatementNumber() = 0;
-  virtual int secondStatementNumber() = 0;
-  // static StmtStmtRelationship CreateRelationship(
-  //     std::shared_ptr<ast::StatementNode> firstStatement,
-  //     std::shared_ptr<ast::StatementNode> secondStatement);
+  [[nodiscard]] virtual auto firstStatementNumber() const -> int = 0;
+  [[nodiscard]] virtual auto secondStatementNumber() const -> int = 0;
 
  private:
   std::shared_ptr<ast::StatementNode> firstStatementNode_;
@@ -73,9 +71,14 @@ class StmtStmtRelationship : public Relationship {
 
 class StmtRelationship : public Relationship {
  public:
-  virtual int statementNumber() = 0;
+  [[nodiscard]] auto parentProcedureName() const -> std::string { return procedureNode_->GetName(); };
+  [[nodiscard]] virtual auto statementNumber() const -> int = 0;
+
+ protected:
+  explicit StmtRelationship(std::shared_ptr<ast::ProcedureNode> procedureNode) : procedureNode_(std::move(procedureNode)) {};
 
  private:
-  std::shared_ptr<ast::StatementNode> statementNode_;
+  std::shared_ptr<ast::ProcedureNode> procedureNode_;
+  // also, some sort of StatementNode, but in child classes
 };
 }  // namespace rel

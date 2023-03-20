@@ -4,28 +4,15 @@
 
 #include "FollowsStarRelationship.h"
 
-bool FollowsStarRelationship::containsEntityOnLeftHand(Entity *entity) {
-    return this->followedStatement->equals(entity);
+FollowsStarRelationship::FollowsStarRelationship(Statement* followedStatement, Statement* followerStatement) : Relationship(&FollowsStarRelationship::relationshipType, followedStatement, followerStatement) {
 }
 
-bool FollowsStarRelationship::containsEntityOnRightHand(Entity *entity) {
-    return this->followerStatement->equals(entity);
+const RelationshipType FollowsStarRelationship::relationshipType = RelationshipType();
+
+auto FollowsStarRelationship::getRelationshipType() const -> const RelationshipType & {
+  return FollowsStarRelationship::relationshipType;
 }
 
-FollowsStarRelationship::FollowsStarRelationship(Statement *followedStatement, Statement *followerStatement) {
-    this->followedStatement = followedStatement;
-    this->followerStatement = followerStatement;
+auto FollowsStarRelationship::getRelationshipTypeStatic() -> const RelationshipType & {
+  return FollowsStarRelationship::relationshipType;
 }
-
-RelationshipType FollowsStarRelationship::getRelationshipType() {
-    return RelationshipType::FOLLOWS_STAR;
-}
-
-Entity* FollowsStarRelationship::getLeftHandEntity() {
-    return this->followedStatement;
-}
-
-Entity* FollowsStarRelationship::getRightHandEntity() {
-    return this->followerStatement;
-}
-

@@ -49,9 +49,9 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
           std::static_pointer_cast<ast::FactorNode>(stack->back());
       // Pops factor node
       stack->pop_back();
-      // References symbol type
+      // References multiplicative symbol type
       ast::SymbolType sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
-      // Pops symbol node
+      // Pops multiplicative symbol node
       stack->pop_back();
       // References term node
       std::shared_ptr<ast::TermNode> ter1 =

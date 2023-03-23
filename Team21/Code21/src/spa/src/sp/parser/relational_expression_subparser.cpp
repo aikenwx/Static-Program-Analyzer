@@ -29,9 +29,9 @@ auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
           std::static_pointer_cast<ast::RelationalFactorNode>(stack->back());
       // Pops relational factor node
       stack->pop_back();
-      // References symbol type
+      // References comparison symbol type
       ast::SymbolType sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
-      // Pops symbol node
+      // Pops comparison symbol node
       stack->pop_back();
       // References relational factor node
       std::shared_ptr<ast::RelationalFactorNode> fac2 =

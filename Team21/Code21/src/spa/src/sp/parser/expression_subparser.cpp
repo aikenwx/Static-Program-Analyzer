@@ -41,9 +41,9 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
           std::static_pointer_cast<ast::TermNode>(stack->back());
       // Pops term node
       stack->pop_back();
-      // References symbol type
+      // References additive symbol type
       ast::SymbolType sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
-      // Pops symbol node
+      // Pops additive symbol node
       stack->pop_back();
       // References expression node
       std::shared_ptr<ast::ExpressionNode> exp1 =

@@ -1,6 +1,5 @@
 #pragma once
 #include "sp/ast/additive_operation_node.h"
-#include "sp/ast/and_node.h"
 #include "sp/ast/assign_node.h"
 #include "sp/ast/ast.h"
 #include "sp/ast/call_node.h"
@@ -12,10 +11,10 @@
 #include "sp/ast/factor_node.h"
 #include "sp/ast/identifier_node.h"
 #include "sp/ast/if_node.h"
+#include "sp/ast/logical_operation_node.h"
 #include "sp/ast/multiplicative_operation_node.h"
 #include "sp/ast/name_node.h"
 #include "sp/ast/not_node.h"
-#include "sp/ast/or_node.h"
 #include "sp/ast/print_node.h"
 #include "sp/ast/procedure_node.h"
 #include "sp/ast/program_node.h"

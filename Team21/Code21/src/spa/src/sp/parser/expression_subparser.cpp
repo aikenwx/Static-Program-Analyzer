@@ -1,3 +1,4 @@
+#include "sp/ast/additive_operation_node.h"
 #include "sp/ast/astlib.h"
 #include "expression_subparser.h"
 #include "sp/token/right_paren_token.h"
@@ -16,6 +17,10 @@ namespace parser {
 auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
+  auto is_correct_symbol = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
+    return symbol_node->GetType() == ast::SymbolType::kPlus
+      || symbol_node->GetType() == ast::SymbolType::kMinus;
+  };
   if (context->IsLookaheadTypeOf<token::RightParenToken>()
     || context->IsLookaheadTypeOf<token::SemicolonToken>()
     || context->IsLookaheadTypeOf<token::PlusToken>()
@@ -26,17 +31,19 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // expr: expr '+' term
+    // expr: expr '+', '-' term
     if (stack->size() >= 3
       && util::instance_of<ast::TermNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kPlus
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && is_correct_symbol(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))
       && util::instance_of<ast::ExpressionNode>(*std::next(iter, 2))) {
       // References term node
       std::shared_ptr<ast::TermNode> ter =
           std::static_pointer_cast<ast::TermNode>(stack->back());
       // Pops term node
       stack->pop_back();
-      // Pops plus symbol node
+      // References symbol type
+      ast::SymbolType sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
+      // Pops symbol node
       stack->pop_back();
       // References expression node
       std::shared_ptr<ast::ExpressionNode> exp1 =
@@ -44,35 +51,8 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops expression node
       stack->pop_back();
       // Creates plus node
-      std::shared_ptr<ast::PlusNode> bin =
-          std::make_shared<ast::PlusNode>(exp1->GetOperand(), ter->GetOperand());
-      // Creates expression node
-      std::shared_ptr<ast::ExpressionNode> exp2 =
-          std::make_shared<ast::ExpressionNode>(bin);
-      // Pushes expression node to parse stack
-      stack->push_back(exp2);
-      return true;
-    }
-    // expr: expr '-' term
-    if (stack->size() >= 3
-      && util::instance_of<ast::TermNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kMinus
-      && util::instance_of<ast::ExpressionNode>(*std::next(iter, 2))) {
-      // References term node
-      std::shared_ptr<ast::TermNode> ter =
-          std::static_pointer_cast<ast::TermNode>(stack->back());
-      // Pops term node
-      stack->pop_back();
-      // Pops minus symbol node
-      stack->pop_back();
-      // References expression node
-      std::shared_ptr<ast::ExpressionNode> exp1 =
-          std::static_pointer_cast<ast::ExpressionNode>(stack->back());
-      // Pops expression node
-      stack->pop_back();
-      // Creates minus node
-      std::shared_ptr<ast::MinusNode> bin =
-          std::make_shared<ast::MinusNode>(exp1->GetOperand(), ter->GetOperand());
+      std::shared_ptr<ast::AdditiveOperationNode> bin =
+          std::make_shared<ast::AdditiveOperationNode>(exp1->GetOperand(), ter->GetOperand(), sym);
       // Creates expression node
       std::shared_ptr<ast::ExpressionNode> exp2 =
           std::make_shared<ast::ExpressionNode>(bin);

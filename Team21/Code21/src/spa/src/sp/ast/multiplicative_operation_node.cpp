@@ -28,6 +28,6 @@ auto MultiplicativeOperationNode::GetSymbolType() const -> std::string {
 }
 
 auto MultiplicativeOperationNode::ToString() const -> std::string {
-  return ":\n" + BinaryOperationNode::ToString();
+  return "multiplicative:\n" + BinaryOperationNode::ToString();
 }
 } // namespace ast

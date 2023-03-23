@@ -21,6 +21,11 @@ namespace parser {
 auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
+  auto is_correct_symbol = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
+    return symbol_node->GetType() == ast::SymbolType::kMultiply
+      || symbol_node->GetType() == ast::SymbolType::kDivide
+      || symbol_node->GetType() == ast::SymbolType::kModulo;
+  };
   if (context->IsLookaheadTypeOf<token::RightParenToken>()
     || context->IsLookaheadTypeOf<token::SemicolonToken>()
     || context->IsLookaheadTypeOf<token::PlusToken>()
@@ -34,12 +39,6 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-
-    auto is_correct_symbol = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return symbol_node->GetType() == ast::SymbolType::kMultiply
-          || symbol_node->GetType() == ast::SymbolType::kDivide
-          || symbol_node->GetType() == ast::SymbolType::kModulo;
-    };
     // term: term '*', '/', '%' factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*iter)

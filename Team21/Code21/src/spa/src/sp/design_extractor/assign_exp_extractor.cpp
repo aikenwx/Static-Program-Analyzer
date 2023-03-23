@@ -7,17 +7,15 @@
 #include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
 #include "../rel/relationship.h"
+#include "sp/ast/additive_operation_node.h"
 #include "sp/ast/multiplicative_operation_node.h"
 #include "util/instance_of.h"
 
 namespace design_extractor {
 auto BinExpExprNodeToOperator(
     const std::shared_ptr<ast::BinaryOperationNode> &node) -> std::string {
-  if (util::instance_of<ast::PlusNode>(node)) {
-    return "+";
-  }
-  if (util::instance_of<ast::MinusNode>(node)) {
-    return "-";
+  if (util::instance_of<ast::AdditiveOperationNode>(node)) {
+    return std::static_pointer_cast<ast::AdditiveOperationNode>(node)->GetSymbolType();
   }
   if (util::instance_of<ast::MultiplicativeOperationNode>(node)) {
     return std::static_pointer_cast<ast::MultiplicativeOperationNode>(node)->GetSymbolType();

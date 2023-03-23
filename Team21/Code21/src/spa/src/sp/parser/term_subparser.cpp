@@ -39,7 +39,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // term: term '*', '/', '%' factor
+    // term: term ['*', '/', '%'] factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*iter)
       && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && is_correct_symbol(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))

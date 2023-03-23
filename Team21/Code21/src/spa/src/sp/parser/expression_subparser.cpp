@@ -50,7 +50,7 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
           std::static_pointer_cast<ast::ExpressionNode>(stack->back());
       // Pops expression node
       stack->pop_back();
-      // Creates plus node
+      // Creates additive operation node
       std::shared_ptr<ast::AdditiveOperationNode> bin =
           std::make_shared<ast::AdditiveOperationNode>(exp1->GetOperand(), ter->GetOperand(), sym);
       // Creates expression node

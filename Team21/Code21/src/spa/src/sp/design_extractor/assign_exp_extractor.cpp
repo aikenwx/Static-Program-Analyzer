@@ -32,10 +32,10 @@ auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
         std::static_pointer_cast<ast::ConstantNode>(node);
     // no std::format before c++20, unfortunate
     postfixExpStack.push('"' + std::to_string(constantNode->GetValue()) + '"');
-  } else if (util::instance_of<ast::VariableNode>(node)) {
-    std::shared_ptr<ast::VariableNode> variableNode =
-        std::static_pointer_cast<ast::VariableNode>(node);
-    postfixExpStack.push('"' + variableNode->GetName() + '"');
+  } else if (util::instance_of<ast::IdentifierNode>(node)) {
+    std::shared_ptr<ast::IdentifierNode> variableNode =
+        std::static_pointer_cast<ast::IdentifierNode>(node);
+    postfixExpStack.push('"' + variableNode->GetValue() + '"');
   } else if (util::instance_of<ast::BinaryOperationNode>(node)) {
     std::shared_ptr<ast::BinaryOperationNode> binaryOperationNode =
         std::static_pointer_cast<ast::BinaryOperationNode>(node);

@@ -45,9 +45,7 @@ SimpleChainParser::SimpleChainParser() noexcept {
     ->SetNext(std::make_shared<RelationalExpressionSubparser>())
     ->SetNext(std::make_shared<ConditionalExpressionSubparser>())
     ->SetNext(std::make_shared<IfSubparser>())
-    ->SetNext(std::make_shared<WhileSubparser>())
-    ->SetNext(std::make_shared<VariableSubparser>())
-    ->SetNext(std::make_shared<NameSubparser>());
+    ->SetNext(std::make_shared<WhileSubparser>());
 }
 
 auto SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input) -> std::unique_ptr<ast::AST> {

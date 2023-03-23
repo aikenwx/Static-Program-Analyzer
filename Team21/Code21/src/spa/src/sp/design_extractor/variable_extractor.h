@@ -6,7 +6,7 @@
 namespace design_extractor {
 class VariableExtractor : public Extractor {
 public:
-  void HandleVariableNode(const std::shared_ptr<ast::VariableNode> &node,
+  void HandleVariableNode(const std::shared_ptr<ast::IdentifierNode> &node,
                           int depth) override;
 
   [[nodiscard]] auto vars() const -> std::unordered_set<std::string> {

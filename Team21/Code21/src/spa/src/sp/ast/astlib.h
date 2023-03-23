@@ -13,7 +13,6 @@
 #include "sp/ast/if_node.h"
 #include "sp/ast/logical_operation_node.h"
 #include "sp/ast/multiplicative_operation_node.h"
-#include "sp/ast/name_node.h"
 #include "sp/ast/not_node.h"
 #include "sp/ast/print_node.h"
 #include "sp/ast/procedure_node.h"
@@ -25,5 +24,4 @@
 #include "sp/ast/statement_list_node.h"
 #include "sp/ast/symbol_node.h"
 #include "sp/ast/term_node.h"
-#include "sp/ast/variable_node.h"
 #include "sp/ast/while_node.h"

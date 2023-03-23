@@ -7,7 +7,7 @@ auto VariableNode::ToString() const -> std::string {
 
 void VariableNode::AcceptVisitor(design_extractor::Extractor &extractor,
                                  int depth) {
-  extractor.HandleVariableNode(
-      std::static_pointer_cast<VariableNode>(shared_from_this()), depth);
+  // extractor.HandleVariableNode(
+  //     std::static_pointer_cast<VariableNode>(shared_from_this()), depth);
 }
 } // namespace ast

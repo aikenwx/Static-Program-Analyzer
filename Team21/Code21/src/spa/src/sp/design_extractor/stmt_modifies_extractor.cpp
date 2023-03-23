@@ -11,13 +11,13 @@ namespace design_extractor {
 void StmtModifiesExtractor::HandleAssignNode(
     const std::shared_ptr<ast::AssignNode>& node, int depth) {
   relns_.push_back(rel::ModifiesStmtVarRelationship::CreateRelationship(
-      node, node->GetVariable()->GetName()));
+      node, node->GetVariable()->GetValue()));
 };
 
 void StmtModifiesExtractor::HandleReadNode(const std::shared_ptr<ast::ReadNode>& node,
                                            int depth) {
   relns_.push_back(rel::ModifiesStmtVarRelationship::CreateRelationship(
-      node, node->GetVariable()->GetName()));
+      node, node->GetVariable()->GetValue()));
 };
 
 auto

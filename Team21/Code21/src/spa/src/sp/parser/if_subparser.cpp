@@ -1,5 +1,6 @@
 #include "sp/ast/astlib.h"
 #include "if_subparser.h"
+#include "sp/design_extractor/extractor.h"
 #include "util/instance_of.h"
 
 namespace parser {
@@ -12,15 +13,15 @@ auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftBrace
-    && util::instance_of<ast::NamedNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::NameNode>(*std::next(iter, 3)))->GetName() == "else"
+    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 3)))->GetValue() == "else"
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 4)))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 5))
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 6)))->GetType() == ast::SymbolType::kLeftBrace
-    && util::instance_of<ast::NameNode>(*std::next(iter, 7)) && (std::static_pointer_cast<ast::NameNode>(*std::next(iter, 7)))->GetName() == "then"
+    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 7)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 7)))->GetValue() == "then"
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 8)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 8)))->GetType() == ast::SymbolType::kRightParen
     && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 9))
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 10)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 10)))->GetType() == ast::SymbolType::kLeftParen
-    && util::instance_of<ast::NameNode>(*std::next(iter, 11)) && (std::static_pointer_cast<ast::NameNode>(*std::next(iter, 11)))->GetName() == "if") {
+    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 11)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 11)))->GetValue() == "if") {
     // Pops right brace symbol node
     stack->pop_back();
     // References statement list node
@@ -30,7 +31,7 @@ auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left brace symbol node
     stack->pop_back();
-    // Pops 'else' name node
+    // Pops 'else' identifier node
     stack->pop_back();
     // Pops right brace symbol node
     stack->pop_back();
@@ -41,7 +42,7 @@ auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left brace symbol node
     stack->pop_back();
-    // Pops 'then' name node
+    // Pops 'then' identifier node
     stack->pop_back();
     // Pops right paren symbol node
     stack->pop_back();
@@ -52,7 +53,7 @@ auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left paren symbol node
     stack->pop_back();
-    // Pops 'if' name node
+    // Pops 'if' identifier node
     stack->pop_back();
     // Creates if node
     std::shared_ptr<ast::IfNode> sta =

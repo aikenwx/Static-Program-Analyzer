@@ -76,7 +76,7 @@ class StmtUsesExtractor : public Extractor {
                            int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
+  void HandleVariableNode(const std::shared_ptr<ast::IdentifierNode>& node,
                           int depth) override;
   void HandleOtherNode(const std::shared_ptr<ast::INode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);

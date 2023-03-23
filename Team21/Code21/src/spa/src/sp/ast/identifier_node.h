@@ -5,12 +5,13 @@
 namespace ast {
 class IdentifierNode : public INode {
 public:
- explicit IdentifierNode(std::string value);
+  explicit IdentifierNode(std::string value);
 
- static void Execute();
- auto GetValue() -> std::string;
- [[nodiscard]] auto ToString() const -> std::string override;
+  auto GetValue() -> std::string;
+  [[nodiscard]] auto ToString() const -> std::string override;
 
+  void AcceptVisitor(design_extractor::Extractor &extractor,
+                     int depth) override;
 private:
   std::string value;
 };

@@ -32,7 +32,7 @@ void StmtUsesExtractor::UpdateParents(const std::shared_ptr<ast::INode>& node,
 }
 
 void StmtUsesExtractor::HandleVariableNode(
-    const std::shared_ptr<ast::VariableNode>& node, int depth) {
+    const std::shared_ptr<ast::IdentifierNode>& node, int depth) {
   UpdateParents(node, depth);
 
   // number of tree levels between variable and `*it`
@@ -48,19 +48,19 @@ void StmtUsesExtractor::HandleVariableNode(
       if (level == 1) {
         // possibly LHS or RHS
         // so, either `node` was in the LHS, or `node` *IS* the RHS
-        if (util::instance_of<ast::VariableNode>(assign->GetAssignment()) &&
-            std::static_pointer_cast<ast::VariableNode>(assign->GetAssignment())
-                    ->GetName() == node->GetName()) {
+        if (util::instance_of<ast::IdentifierNode>(assign->GetAssignment()) &&
+            std::static_pointer_cast<ast::IdentifierNode>(assign->GetAssignment())
+                    ->GetValue() == node->GetValue()) {
           // TODO(zhongfu): possible to optimize this with ptr equality check?
           relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
-              assign, node->GetName()));
+              assign, node->GetValue()));
         }
         // otherwise `node` is not the RHS, i.e. it's the LHS
         // and so this `node` isn't part of a `Uses` relationship
         break;
       }  // definitely RHS
       relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
-          assign, node->GetName()));
+          assign, node->GetValue()));
 
     } else if (util::instance_of<ast::ReadNode>(*it)) {
       // `node` is being modified here, not used
@@ -68,7 +68,7 @@ void StmtUsesExtractor::HandleVariableNode(
     } else if (util::instance_of<ast::StatementNode>(*it)) {
       // `node` is probably somehow being used here
       relns_.push_back(rel::UsesStmtVarRelationship::CreateRelationship(
-          std::static_pointer_cast<ast::StatementNode>(*it), node->GetName()));
+          std::static_pointer_cast<ast::StatementNode>(*it), node->GetValue()));
       break;
     }
   }

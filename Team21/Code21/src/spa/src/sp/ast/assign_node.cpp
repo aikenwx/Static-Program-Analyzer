@@ -3,13 +3,13 @@
 #include <utility>
 
 namespace ast {
-AssignNode::AssignNode(std::shared_ptr<VariableNode> var,
+AssignNode::AssignNode(std::shared_ptr<IdentifierNode> var,
                        const std::shared_ptr<ExpressionNode>& exp)
     : var(std::move(var)) {
   this->assignment = exp->GetOperand();
 }
 
-auto AssignNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
+auto AssignNode::GetVariable() -> std::shared_ptr<IdentifierNode> { return var; }
 
 auto AssignNode::GetAssignment() -> std::shared_ptr<INode> {
   return assignment;

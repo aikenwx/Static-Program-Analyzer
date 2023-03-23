@@ -46,12 +46,12 @@ auto RelationalFactorSubparser::ParsePrimaryCase(const std::shared_ptr<Context> 
       stack->push_back(fac);
       return true;
     }
-    // rel_factor: var_name
-    if (util::instance_of<ast::VariableNode>(*iter)) {
-      // References variable node
-      std::shared_ptr<ast::VariableNode> var =
-          std::static_pointer_cast<ast::VariableNode>(stack->back());
-      // Pops variable node
+    // rel_factor: iden
+    if (util::instance_of<ast::IdentifierNode>(*iter)) {
+      // References identifier node
+      std::shared_ptr<ast::IdentifierNode> var =
+          std::static_pointer_cast<ast::IdentifierNode>(stack->back());
+      // Pops identifier node
       stack->pop_back();
       // Creates relational factor node
       std::shared_ptr<ast::RelationalFactorNode> fac =
@@ -116,12 +116,12 @@ auto RelationalFactorSubparser::ParseSecondaryCase(const std::shared_ptr<Context
       stack->push_back(fac);
       return true;
     }
-    // rel_factor: var_name
-    if (util::instance_of<ast::VariableNode>(*iter)) {
-      // References variable node
-      std::shared_ptr<ast::VariableNode> var =
-          std::static_pointer_cast<ast::VariableNode>(stack->back());
-      // Pops variable node
+    // rel_factor: iden
+    if (util::instance_of<ast::IdentifierNode>(*iter)) {
+      // References identifier node
+      std::shared_ptr<ast::IdentifierNode> var =
+          std::static_pointer_cast<ast::IdentifierNode>(stack->back());
+      // Pops identifier node
       stack->pop_back();
       // Creates relational factor node
       std::shared_ptr<ast::RelationalFactorNode> fac =

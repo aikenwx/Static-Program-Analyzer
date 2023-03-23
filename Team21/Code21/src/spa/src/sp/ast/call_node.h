@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "identifier_node.h"
 #include "name_node.h"
 #include "procedure_node.h"
 #include "statement_node.h"
@@ -9,7 +10,7 @@
 namespace ast {
 class CallNode : public StatementNode {
 public:
-  explicit CallNode(const std::shared_ptr<NameNode> &name);
+  explicit CallNode(const std::shared_ptr<IdentifierNode> &name);
 
   auto GetProcedureName() -> std::string;
   [[nodiscard]] auto ToString() const -> std::string override;

@@ -32,12 +32,12 @@ auto FactorSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // factor: var_name
-    if (util::instance_of<ast::VariableNode>(*iter)) {
-      // References variable node
-      std::shared_ptr<ast::VariableNode> var =
-          std::static_pointer_cast<ast::VariableNode>(stack->back());
-      // Pops variable node
+    // factor: iden
+    if (util::instance_of<ast::IdentifierNode>(*iter)) {
+      // References identifier node
+      std::shared_ptr<ast::IdentifierNode> var =
+          std::static_pointer_cast<ast::IdentifierNode>(stack->back());
+      // Pops identifier node
       stack->pop_back();
       // Creates factor node
       std::shared_ptr<ast::FactorNode> fac =

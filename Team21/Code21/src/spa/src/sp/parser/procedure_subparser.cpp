@@ -3,6 +3,7 @@
 #include "util/instance_of.h"
 
 namespace parser {
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 auto ProcedureSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
@@ -11,7 +12,7 @@ auto ProcedureSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightBrace
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftBrace
-    && util::instance_of<ast::NameNode>(*std::next(iter, 3))
+    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 3))
     && util::instance_of<ast::IdentifierNode>(*std::next(iter, 4)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 4)))->GetValue() == "procedure") {
     // Pops right brace symbol node
     stack->pop_back();
@@ -22,20 +23,21 @@ auto ProcedureSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left brace symbol node
     stack->pop_back();
-    // References name node for procedure name
-    std::shared_ptr<ast::NameNode> nam =
-        std::static_pointer_cast<ast::NameNode>(stack->back());
+    // References identifier node for procedure name
+    std::shared_ptr<ast::IdentifierNode> nam =
+        std::static_pointer_cast<ast::IdentifierNode>(stack->back());
     // Pops name node
     stack->pop_back();
     // Pops 'procedure' identifier node
     stack->pop_back();
     // Creates procedure node
     std::shared_ptr<ast::ProcedureNode> pro =
-        std::make_shared<ast::ProcedureNode>(nam->GetName(), lis);
+        std::make_shared<ast::ProcedureNode>(nam->GetValue(), lis);
     // Pushes procedure node to parse stack
     stack->push_back(pro);
     return true;
   }
   return Subparser::Parse(context);
 }
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }  // namespace parser

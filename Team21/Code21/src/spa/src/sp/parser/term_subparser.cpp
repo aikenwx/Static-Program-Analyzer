@@ -1,4 +1,6 @@
 #include "sp/ast/astlib.h"
+#include "sp/ast/multiplicative_operation_node.h"
+#include "sp/ast/symbol_node.h"
 #include "term_subparser.h"
 #include "sp/token/right_paren_token.h"
 #include "sp/token/semicolon_token.h"
@@ -32,80 +34,34 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     || context->IsLookaheadTypeOf<token::LessEqualToken>()
     || context->IsLookaheadTypeOf<token::GreaterEqualToken>()
     || context->IsLookaheadTypeOf<token::NotEqualToken>()) {
-    // term: term '*' factor
+
+    auto is_correct_symbol = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
+        return symbol_node->GetType() == ast::SymbolType::kMultiply
+          || symbol_node->GetType() == ast::SymbolType::kDivide
+          || symbol_node->GetType() == ast::SymbolType::kModulo;
+    };
+    // term: term '*', '/', '%' factor
     if (stack->size() >= 3
       && util::instance_of<ast::FactorNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kMultiply
+      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && is_correct_symbol(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))
       && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
       // References factor node
       std::shared_ptr<ast::FactorNode> fac =
           std::static_pointer_cast<ast::FactorNode>(stack->back());
       // Pops factor node
       stack->pop_back();
-      // Pops times symbol node
+      // References symbol type
+      ast::SymbolType sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
+      // Pops symbol node
       stack->pop_back();
       // References term node
       std::shared_ptr<ast::TermNode> ter1 =
           std::static_pointer_cast<ast::TermNode>(stack->back());
       // Pops term node
       stack->pop_back();
-      // Creates times node
-      std::shared_ptr<ast::TimesNode> bin =
-          std::make_shared<ast::TimesNode>(ter1->GetOperand(), fac->GetOperand());
-      // Creates term node
-      std::shared_ptr<ast::TermNode> ter2 =
-          std::make_shared<ast::TermNode>(bin);
-      // Pushes term node to parse stack
-      stack->push_back(ter2);
-      return true;
-    }
-    // term: term '/' factor
-    if (stack->size() >= 3
-      && util::instance_of<ast::FactorNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kDivide
-      && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
-      // References factor node
-      std::shared_ptr<ast::FactorNode> fac =
-          std::static_pointer_cast<ast::FactorNode>(stack->back());
-      // Pops factor node
-      stack->pop_back();
-      // Pops divides symbol node
-      stack->pop_back();
-      // References term node
-      std::shared_ptr<ast::TermNode> ter1 =
-          std::static_pointer_cast<ast::TermNode>(stack->back());
-      // Pops term node
-      stack->pop_back();
-      // Creates divide node
-      std::shared_ptr<ast::DivideNode> bin =
-          std::make_shared<ast::DivideNode>(ter1->GetOperand(), fac->GetOperand());
-      // Creates term node
-      std::shared_ptr<ast::TermNode> ter2 =
-          std::make_shared<ast::TermNode>(bin);
-      // Pushes term node to parse stack
-      stack->push_back(ter2);
-      return true;
-    }
-    // term: term '%' factor
-    if (stack->size() >= 3
-      && util::instance_of<ast::FactorNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kModulo
-      && util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
-      // References factor node
-      std::shared_ptr<ast::FactorNode> fac =
-          std::static_pointer_cast<ast::FactorNode>(stack->back());
-      // Pops factor node
-      stack->pop_back();
-      // Pops modulo symbol node
-      stack->pop_back();
-      // References term node
-      std::shared_ptr<ast::TermNode> ter1 =
-          std::static_pointer_cast<ast::TermNode>(stack->back());
-      // Pops term node
-      stack->pop_back();
-      // Creates modulo node
-      std::shared_ptr<ast::ModuloNode> bin =
-          std::make_shared<ast::ModuloNode>(ter1->GetOperand(), fac->GetOperand());
+      // Creates multiplicative operation node
+      std::shared_ptr<ast::MultiplicativeOperationNode> bin =
+          std::make_shared<ast::MultiplicativeOperationNode>(ter1->GetOperand(), fac->GetOperand(), sym);
       // Creates term node
       std::shared_ptr<ast::TermNode> ter2 =
           std::make_shared<ast::TermNode>(bin);

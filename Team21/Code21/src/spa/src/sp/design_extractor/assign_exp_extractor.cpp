@@ -1,11 +1,13 @@
 #include "assign_exp_extractor.h"
 
+#include <memory>
 #include <queue>
 #include <sstream>
 
 #include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
 #include "../rel/relationship.h"
+#include "sp/ast/multiplicative_operation_node.h"
 #include "util/instance_of.h"
 
 namespace design_extractor {
@@ -17,14 +19,8 @@ auto BinExpExprNodeToOperator(
   if (util::instance_of<ast::MinusNode>(node)) {
     return "-";
   }
-  if (util::instance_of<ast::TimesNode>(node)) {
-    return "*";
-  }
-  if (util::instance_of<ast::DivideNode>(node)) {
-    return "/";
-  }
-  if (util::instance_of<ast::ModuloNode>(node)) {
-    return "%";
+  if (util::instance_of<ast::MultiplicativeOperationNode>(node)) {
+    return std::static_pointer_cast<ast::MultiplicativeOperationNode>(node)->GetSymbolType();
   }
   return "";
 }

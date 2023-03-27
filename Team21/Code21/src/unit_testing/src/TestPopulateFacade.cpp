@@ -12,9 +12,9 @@
 
 TEST_CASE("PopulateFacade can instantiate") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -23,9 +23,9 @@ TEST_CASE("PopulateFacade can instantiate") {
 TEST_CASE(
     "PopulateFacade can add postfix expressions to assignment statements") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -47,9 +47,9 @@ TEST_CASE(
     "Error thrown when trying to add non pattern expression to call "
     "statement") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -60,9 +60,9 @@ TEST_CASE(
 
 TEST_CASE("PopulateFace can populate assign statement") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -78,9 +78,9 @@ TEST_CASE("PopulateFace can populate assign statement") {
 
 TEST_CASE("PopulateFace can populate call statement") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -95,9 +95,9 @@ TEST_CASE("PopulateFace can populate call statement") {
 
 TEST_CASE("PopulateFace can populate while statement") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -112,9 +112,9 @@ TEST_CASE("PopulateFace can populate while statement") {
 
 TEST_CASE("PopulateFace can populate if statement") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -129,9 +129,9 @@ TEST_CASE("PopulateFace can populate if statement") {
 
 TEST_CASE("PopulateFace can populate procedure") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -147,9 +147,9 @@ TEST_CASE("PopulateFace can populate procedure") {
 
 TEST_CASE("PopulateFace can populate variable") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -164,13 +164,13 @@ TEST_CASE("PopulateFace can populate variable") {
 
 TEST_CASE("PopulateFace can populate constant") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
-  populateFacade->storeConstant(5); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  populateFacade->storeConstant(5);  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::vector<Entity *> *entities =
       entityManager->getEntitiesByType(Constant::getEntityTypeStatic());
   REQUIRE(entities->size() == 1);
@@ -180,9 +180,9 @@ TEST_CASE("PopulateFace can populate constant") {
 
 TEST_CASE("PopulateFacade can populate follow relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -205,9 +205,9 @@ TEST_CASE("PopulateFacade can populate follow relationship") {
 
 TEST_CASE("PopulateFacade can populate parent relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -230,9 +230,9 @@ TEST_CASE("PopulateFacade can populate parent relationship") {
 
 TEST_CASE("PopulateFacade can populate parentStar relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -255,9 +255,9 @@ TEST_CASE("PopulateFacade can populate parentStar relationship") {
 
 TEST_CASE("PopulateFacade can populate followStar relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -281,9 +281,9 @@ TEST_CASE("PopulateFacade can populate followStar relationship") {
 TEST_CASE(
     "Adding a relationship with a non-existent entity throws an exception") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -294,9 +294,9 @@ TEST_CASE(
 
 TEST_CASE("PopulateFacade can populate statement modifies relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -322,9 +322,9 @@ TEST_CASE("PopulateFacade can populate statement modifies relationship") {
 
 TEST_CASE("PopulateFacade can populate statement uses relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -350,9 +350,9 @@ TEST_CASE("PopulateFacade can populate statement uses relationship") {
 
 TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -375,9 +375,9 @@ TEST_CASE("PopulateFacade can populate statement ParentStar relationship") {
 
 TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -401,9 +401,9 @@ TEST_CASE("PopulateFacade can populate FollowsStar relationship") {
 
 TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -431,9 +431,9 @@ TEST_CASE("PopulateFacade can populate procedure modifies relationship") {
 
 TEST_CASE("PopulateFacade can populate procedure uses relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -461,9 +461,9 @@ TEST_CASE("PopulateFacade can populate procedure uses relationship") {
 
 TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -491,9 +491,9 @@ TEST_CASE("PopulateFacade can populate Caller Calls Callee relationship") {
 
 TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
@@ -521,9 +521,9 @@ TEST_CASE("PopulateFacade can populate Caller Calls* Callee relationship") {
 
 TEST_CASE("PopulateFacade can populate multiple entities and relationships") {
   auto entityManager = std::make_shared<EntityManager>();
-  auto relationshipManager = std::make_shared<RelationshipManager>();
+  auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
   auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGManager>();
+  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());

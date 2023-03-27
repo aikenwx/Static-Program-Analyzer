@@ -28,6 +28,9 @@ struct RelationshipKey : public StorageKey {
     EntityKey *rightEntityKey;
 
    public:
+    auto getLeftEntityKey() -> EntityKey *;
+    auto getRightEntityKey() -> EntityKey *;
+    auto getRelationshipType() -> const RelationshipType *;
     RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
     auto operator==(const RelationshipKey &otherRelationshipLiteralKey) const
         -> bool;

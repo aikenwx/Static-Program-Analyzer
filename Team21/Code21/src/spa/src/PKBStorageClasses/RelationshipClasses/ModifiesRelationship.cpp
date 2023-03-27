@@ -3,13 +3,11 @@
 //
 #include "ModifiesRelationship.h"
 
-#include <stdexcept>
 
-ModifiesRelationship::ModifiesRelationship(Entity *modifier, Variable *modifiedVariable) : Relationship(&ModifiesRelationship::relationshipType, modifier, modifiedVariable) {
-    // modifier can only be Statement or Procedure
-    if (!Statement::isStatement(modifier) && dynamic_cast<Procedure *>(modifier) == nullptr) {
-        throw std::invalid_argument("Statement or Procedure expected for first entity of Modifies Relationship");
-    }
+ModifiesRelationship::ModifiesRelationship(Statement *modifier, Variable *modifiedVariable) : Relationship(&ModifiesRelationship::relationshipType, modifier, modifiedVariable) {
+}
+
+ModifiesRelationship::ModifiesRelationship(Procedure *modifier, Variable *modifiedVariable) : Relationship(&ModifiesRelationship::relationshipType, modifier, modifiedVariable) {
 }
 
 auto ModifiesRelationship::getRelationshipType() const -> const RelationshipType & {

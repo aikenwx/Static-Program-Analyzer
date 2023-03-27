@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKB/CFGManager.h"
+#include "PKB/CFGStorage.h"
 #include "PKB/EntityManager.h"
 #include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
@@ -38,11 +38,11 @@ class QueryFacade {
    private:
     EntityManager* entityManager;
     RelationshipManager* relationshipManager;
-    CFGManager* cfgManager;
+    CFGStorage* cfgManager;
     PatternManager* patternManager;
 
    public:
-    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGManager* cfgManager);
+    QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGStorage* cfgManager);
 
     auto getAllAssignStatements() -> std::vector<AssignStatement*>*;
     auto getAllIfStatements() -> std::vector<IfStatement*>*;

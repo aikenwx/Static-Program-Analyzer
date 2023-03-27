@@ -7,103 +7,34 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
-#include "../PKBStorageClasses/EntityClasses/Entity.h"
+#include "PKBStorageClasses/EntityClasses/Entity.h"
+#include "EntityManager.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
+#include "PKB/RelationshipStorage.h"
+#include "sp/cfg/cfg.h"
 
-struct RelationshipDoubleSynonymKey : public StorageKey {
- private:
-  const RelationshipType *relationshipType;
-  const EntityType *leftHandEntityType;
-  const EntityType *rightHandEntityType;
 
- public:
-  RelationshipDoubleSynonymKey(const RelationshipType *relationshipType,
-                               const EntityType *leftHandEntityType,
-                               const EntityType *rightHandEntityType);
-  auto operator==(
-      const RelationshipDoubleSynonymKey &otherRelationshipSynonymKey) const
-      -> bool;
-};
-
-template <>
-struct std::hash<RelationshipDoubleSynonymKey> {
-  auto operator()(const RelationshipDoubleSynonymKey &relationshipSynonymKey)
-      const -> std::size_t;
-};
-
-struct RelationshipSynonymLiteralKey : public StorageKey {
- private:
-  const RelationshipType *relationshipType;
-  const EntityType *leftHandEntityType;
-  EntityKey *rightHandEntityKey;
-
- public:
-  RelationshipSynonymLiteralKey(const RelationshipType *relationshipType,
-                                const EntityType *entityType,
-                                EntityKey *entityKey);
-  auto operator==(const RelationshipSynonymLiteralKey
-                      &otherRelationshipLiteralSynonymKey) const -> bool;
-};
-
-template <>
-struct std::hash<RelationshipSynonymLiteralKey> {
-  auto operator()(
-      const RelationshipSynonymLiteralKey &relationshipLiteralSynonymKey) const
-      -> std::size_t;
-};
-
-struct RelationshipLiteralSynonymKey : public StorageKey {
- private:
-  const RelationshipType *relationshipType;
-  EntityKey *leftHandEntityKey;
-  const EntityType *rightHandEntityType;
-
- public:
-  RelationshipLiteralSynonymKey(const RelationshipType *relationshipType,
-                                EntityKey *entityKey,
-                                const EntityType *entityType);
-  auto operator==(const RelationshipLiteralSynonymKey
-                      &otherRelationshipLiteralSynonymKey) const -> bool;
-};
-
-template <>
-struct std::hash<RelationshipLiteralSynonymKey> {
-  auto operator()(
-      const RelationshipLiteralSynonymKey &relationshipLiteralSynonymKey) const
-      -> std::size_t;
-};
 
 class RelationshipManager {
  private:
-  std::unordered_map<RelationshipDoubleSynonymKey,
-                     std::shared_ptr<std::vector<Relationship *>>>
-      relationshipDoubleSynonymStore;
 
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Entity *>>>
-      relationshipSynonymLiteralStore;
+  EntityManager *entityManager;
 
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Entity *>>>
-      relationshipSynonymLiteralVectorStore;
+  RelationshipStorage relationshipStorage;
 
-  std::unordered_map<RelationshipLiteralSynonymKey,
-                     std::shared_ptr<std::vector<Entity *>>>
-      relationshipLiteralSynonymStore;
+  std::shared_ptr<cfg::CFG> cfg;
 
-  std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
-      relationshipStore;
 
-  std::vector<Relationship *> emptyDoubleSynonymVector;
+  std::vector<Relationship *> emptyRelationshipVector;
 
   std::vector<Entity *> emptyEntityVector;
 
  public:
-  RelationshipManager();
+  RelationshipManager(EntityManager* entityManager);
+
+  void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
   void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
@@ -120,22 +51,6 @@ class RelationshipManager {
   auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
       RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
       const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
-
- private:
-  void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
-
-  void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
-
-  void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
-
-  void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      RelationshipDoubleSynonymKey relationshipSynonymKey);
-
-  void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-      RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);
-
-  void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      RelationshipSynonymLiteralKey relationshipSynonymLiteralKey);
 };
 
 #endif  // SPA_RELATIONSHIPMANAGER_H

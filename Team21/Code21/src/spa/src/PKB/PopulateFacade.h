@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "PKB/CFGManager.h"
+#include "PKB/CFGStorage.h"
 #include "PKB/EntityManager.h"
 #include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
@@ -20,10 +20,10 @@ class PopulateFacade {
     RelationshipManager *relationshipManager;
     EntityManager *entityManager;
     PatternManager *patternManager;
-    CFGManager *cfgManager;
+    CFGStorage *cfgManager;
 
    public:
-    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGManager *cfgManager);
+    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGStorage *cfgManager);
 
     void storeAssignmentStatement(int statementNumber);
     void storeCallStatement(int statementNumber);

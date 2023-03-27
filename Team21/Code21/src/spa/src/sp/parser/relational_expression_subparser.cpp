@@ -1,8 +1,13 @@
 #include "sp/ast/astlib.h"
 #include "relational_expression_subparser.h"
 #include "sp/ast/comparison_operation_node.h"
+#include "sp/ast/constant_node.h"
+#include "sp/ast/expression_node.h"
+#include "sp/ast/i_node.h"
+#include "sp/ast/identifier_node.h"
 #include "sp/token/right_paren_token.h"
 #include "util/instance_of.h"
+#include <memory>
 
 namespace parser {
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -18,15 +23,25 @@ auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       || symbol_node->GetType() == ast::SymbolType::kLesserEqual
       || symbol_node->GetType() == ast::SymbolType::kGreaterEqual;
   };
+  auto is_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
+    return util::instance_of<ast::ExpressionNode>(node)
+      || util::instance_of<ast::IdentifierNode>(node)
+      || util::instance_of<ast::ConstantNode>(node);
+  };
+  auto get_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
+    if (util::instance_of<ast::ExpressionNode>(node)) {
+      return std::static_pointer_cast<ast::ExpressionNode>(node)->GetOperand();
+    }
+    return node;
+  };
   if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
     // rel_expr: rel_factor ['==', '<', '>', '!=', '<=', '>='] rel_factor
     if (stack->size() >= 3
-      && util::instance_of<ast::RelationalFactorNode>(*iter)
+      && is_relational_factor(*iter)
       && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && is_correct_symbol(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))
-      && util::instance_of<ast::RelationalFactorNode>(*std::next(iter, 2))) {
+      && is_relational_factor(*std::next(iter, 2))) {
       // References relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> fac1 =
-          std::static_pointer_cast<ast::RelationalFactorNode>(stack->back());
+      std::shared_ptr<ast::INode> fac1 = get_relational_factor(stack->back());
       // Pops relational factor node
       stack->pop_back();
       // References comparison symbol type
@@ -34,15 +49,12 @@ auto RelationalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       // Pops comparison symbol node
       stack->pop_back();
       // References relational factor node
-      std::shared_ptr<ast::RelationalFactorNode> fac2 =
-          std::static_pointer_cast<ast::RelationalFactorNode>(stack->back());
+      std::shared_ptr<ast::INode> fac2 = get_relational_factor(stack->back());
       // Pops relational factor node
       stack->pop_back();
       // Creates comparison operation node
       std::shared_ptr<ast::ComparisonOperationNode> bin =
-          std::make_shared<ast::ComparisonOperationNode>(fac2->GetOperand(),
-                                             fac1->GetOperand(),
-                                             sym);
+          std::make_shared<ast::ComparisonOperationNode>(fac2, fac1, sym);
       // Creates relational expression node
       std::shared_ptr<ast::RelationalExpressionNode> exp =
           std::make_shared<ast::RelationalExpressionNode>(bin);

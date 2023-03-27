@@ -40,7 +40,6 @@ SimpleChainParser::SimpleChainParser() noexcept {
     ->SetNext(std::make_shared<TermSubparser>())
     ->SetNext(std::make_shared<ExpressionSubparser>())
     ->SetNext(std::make_shared<AssignSubparser>())
-    ->SetNext(std::make_shared<RelationalFactorSubparser>())
     ->SetNext(std::make_shared<RelationalExpressionSubparser>())
     ->SetNext(std::make_shared<ConditionalExpressionSubparser>())
     ->SetNext(std::make_shared<IfSubparser>())

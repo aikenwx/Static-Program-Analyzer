@@ -32,10 +32,12 @@ namespace qps {
 		{DesignEntity::PROCEDURE, {AttrName::ProcName}},
 	};
 
+	// Get Attribute Type with given Attribute Name
 	auto getAttrType(AttrName attrName) -> AttrType {
 		return attrTypeMap.at(attrName);
 	}
 
+	// Get Attribute Name with given string when parsing
 	auto getAttrNameFromString(const std::string& str) -> AttrName {
 		try {
 			return attrNameMap.at(str);
@@ -45,6 +47,7 @@ namespace qps {
 		}
 	}
 
+	// Get list of valid Attribute Name with given synonym (declaration)
 	auto getValidAttrNameSet(Declaration declaration) -> std::set<AttrName> {
 		DesignEntity entity = declaration.getDesignEntity();
 		return validAttrNameMap.at(entity);

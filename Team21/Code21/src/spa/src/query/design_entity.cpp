@@ -32,6 +32,7 @@ const std::map<std::string, DesignEntity> designEntityMap{ {
 	{"procedure", DesignEntity::PROCEDURE},
 } };
 
+// Get corresponding design entity of a given string when parsing
 auto getDesignEntityFromString(const std::string& deString) -> DesignEntity {
 	try {
 		return designEntityMap.at(deString);
@@ -41,6 +42,7 @@ auto getDesignEntityFromString(const std::string& deString) -> DesignEntity {
 	}
 }
 
+// Get corresponding string representation of a design entity (used for debugging)
 auto getStringFromDE(DesignEntity designEntity) -> std::string {
 	return designEntityStringMap.at(designEntity);
 }

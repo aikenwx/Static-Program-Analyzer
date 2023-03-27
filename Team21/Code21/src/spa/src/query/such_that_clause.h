@@ -9,19 +9,20 @@
 
 namespace qps {
 
+// SuchThatClause represents relRef type in Such That Clause
 class SuchThatClause {
 private:
   Relationship relationship;
   Ref arg1;
   Ref arg2;
 
-  // Since Modifies and Uses are split into 2 types S and P
+  //Helper function to deal with special relationship: Modifies and Uses are split into 2 types S and P
   void handleModifiesUses(std::vector<Declaration> &declarations) {
     if (relationship != Relationship::Uses &&
         relationship != Relationship::Modifies) {
       return;
     }
-    // Handle with synonym case first
+    // Handle Synonym case
     if (std::holds_alternative<Synonym>(arg1)) {
       auto *synonym = std::get_if<Synonym>(&arg1);
       auto declaration =
@@ -35,10 +36,12 @@ private:
                            ? Relationship::UsesS
                            : Relationship::ModifiesS;
       }
+    // Handle Quoted Identifier case
     } else if (std::holds_alternative<QuotedIdentifier>(arg1)) {
       relationship = (relationship == Relationship::Uses)
                          ? Relationship::UsesP
                          : Relationship::ModifiesP;
+    // Handle Statement Number case
     } else if (std::holds_alternative<StatementNumber>(arg1)) {
       relationship = (relationship == Relationship::Uses)
                          ? Relationship::UsesS

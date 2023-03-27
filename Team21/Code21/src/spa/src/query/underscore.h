@@ -4,7 +4,7 @@
 
 namespace qps {
 
-// Underscore class represents underscore as a type of stmtRef/entRef
+// Underscore class represents wildcard as a type of stmtRef/entRef
 class Underscore {
 
 public:

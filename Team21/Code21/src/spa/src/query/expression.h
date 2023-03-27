@@ -4,6 +4,7 @@
 
 namespace qps {
 
+// Expression represents an expression used in pattern clause
 class Expression {
 private:
   bool isPartial;

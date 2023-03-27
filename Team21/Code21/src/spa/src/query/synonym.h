@@ -5,7 +5,7 @@
 
 namespace qps {
 
-// Synonym class represents a PQL synonym.
+// Synonym represents synonym type in Query.
 class Synonym {
  private:
   std::string synonym;

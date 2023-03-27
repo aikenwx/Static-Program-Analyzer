@@ -44,6 +44,7 @@ const std::map<std::string, Relationship> relationshipMap{{
                                                         {"Affects*", Relationship::AffectsT}
                                                     }};
 
+// Get corresponding relationship of given string when parsing
 auto getRelationshipFromString(const std::string& reString) -> Relationship {
   try {
     return relationshipMap.at(reString);
@@ -52,6 +53,8 @@ auto getRelationshipFromString(const std::string& reString) -> Relationship {
     throw QueryException(ErrorType::Syntactic, "Invalid Relationship" + reString);
   }
 }
+
+// Get corresponding string representation of a relationship
 auto getStringFromRelationship(Relationship relationship) -> std::string {
   return relationshipStringMap.at(relationship);
 }

@@ -4,6 +4,7 @@
 
 namespace qps {
 
+// Enum class Relationship represents all valid Relationships supported by Such That Clause
 enum class Relationship {
   Parent,
   ParentT,

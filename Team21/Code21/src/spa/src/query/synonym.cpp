@@ -4,6 +4,7 @@
 
 namespace qps {
 
+// Helper function to check if a given string can be a valid synonym or not
 auto Synonym::isValidSynonym(const std::string& syn) -> bool {
   return std::regex_match(syn, std::regex("[a-zA-Z]([a-zA-Z]|\\d)*"));
 }

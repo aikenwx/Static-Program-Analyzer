@@ -8,6 +8,7 @@ namespace qps {
 
 	enum class ErrorType { Semantic, Syntactic };
 
+	// QueryException represents Query Exception when PQL query got Syntactic or Semantic error
 	class QueryException : public std::runtime_error {
 	private:
 		ErrorType type_;

@@ -10,6 +10,7 @@ namespace qps {
 QueryParser::QueryParser(std::vector<std::string> tokens_)
     : tokens{std::move(tokens_)}, currentIndex{0}, selectClause{Boolean()} {}
 
+// See next PQL string token
 auto QueryParser::peek() -> std::string {
   if (currentIndex < tokens.size()) {
     return tokens[currentIndex];
@@ -17,15 +18,19 @@ auto QueryParser::peek() -> std::string {
   return "";
 }
 
+// Consume next PQL string token
 auto QueryParser::next() -> std::string {
   std::string currentToken{peek()};
   currentIndex++;
   return currentToken;
 }
+
+// Check list of tokens reaching end
 auto QueryParser::isEnd() -> bool {
   return (peek().empty());
 }
 
+// Helper function to check whether interger token is valid
 auto QueryParser::isTokenValidInteger(std::string str) -> bool {
   for (char digit : str) {
     if (std::isdigit(digit) == 0) {
@@ -38,10 +43,12 @@ auto QueryParser::isTokenValidInteger(std::string str) -> bool {
   return str.length() != 0;
 }
 
+// Check whether next token is identical
 auto QueryParser::isSameToken(const std::string& str) -> bool {
   return (peek() == str);
 }
 
+// Assert that the next token should be the specified string
 auto QueryParser::assertNextToken(const std::string& str) -> bool {
   if (isSameToken(str)) {
     return true;
@@ -97,6 +104,7 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
   return Expression(isPartial, expression);
 }
 
+// Helper function to validate Expression string with PQL syntax
 // NOLINTNEXTLINE(readability-function-cognitive-complexity)
 auto QueryParser::validateExpressionHelper(std::string str) -> std::string {
   str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
@@ -363,6 +371,7 @@ auto QueryParser::parseWithClause() -> bool {
   return true;
 }
 
+// Parse the list of string tokens and generate the Query object 
 auto QueryParser::parse() -> Query {
   while (!isEnd()) {
     if (!parseDeclaration()) {
@@ -395,6 +404,7 @@ auto QueryParser::operatorHelper(char character) -> int {
   }
 }
 
+// Helper function to translate Expression string to post-fix form
 auto QueryParser::makePostfix(std::string str) -> std::string {
   std::stack<char> stck;
   std::string postfixed;

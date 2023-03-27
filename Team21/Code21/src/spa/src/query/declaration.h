@@ -10,6 +10,7 @@
 
 namespace qps {
 
+// Declaration represents the declaration of a synonym with design entity
 class Declaration {
 
 private:
@@ -33,6 +34,7 @@ public:
     return ostream;
   }
 
+  // Find Declaration of a synonym from the list of declarations
   static auto findDeclarationWithSynonym(std::vector<Declaration> &decl_list,
                                          Synonym &synonym)
       -> std::optional<Declaration> {
@@ -40,6 +42,7 @@ public:
     return findDeclarationWithString(decl_list, synonym_);
   }
 
+  // Find Declaration of a synonym from the list of declarations (String form)
   static auto findDeclarationWithString(std::vector<Declaration> &decl_list,
                                         std::string &syn_string)
       -> std::optional<Declaration> {

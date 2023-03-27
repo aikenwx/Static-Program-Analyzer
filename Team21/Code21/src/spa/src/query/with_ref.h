@@ -7,8 +7,10 @@
 
 namespace qps {
 
+	// WithRefType represents With Reference type used in With Clause
 	using WithRefType = std::variant<QuotedIdentifier, int, AttrRef>;
 
+	// WithRef represents With Reference used in With Clause
 	class WithRef {
 		public:
 			WithRefType ref;

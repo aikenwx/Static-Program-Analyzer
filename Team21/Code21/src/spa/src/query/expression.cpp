@@ -15,7 +15,6 @@ namespace qps {
 		return isPartial;
 	}
 
-
 	auto Expression::getExpression() -> std::string {
 		return expression;
 	}

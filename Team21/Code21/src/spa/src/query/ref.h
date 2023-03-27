@@ -10,6 +10,7 @@ namespace qps {
 
 	using StatementNumber = int;
 
+	// Ref represents a reference type used as argument in pattern and such that clause.
 	using Ref = std::variant<Synonym, Underscore, StatementNumber, QuotedIdentifier>;
 
 }

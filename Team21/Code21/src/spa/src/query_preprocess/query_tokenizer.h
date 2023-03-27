@@ -5,6 +5,7 @@
 
 namespace qps {
 
+// QueryTokenizer represents Query Tokenizer consuming the PQL String to produce list of String tokens
 class QueryTokenizer {
 	private:
 		std::string queryString;

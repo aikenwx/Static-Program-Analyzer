@@ -12,8 +12,6 @@
 
 
 class NextStarRelationshipType : public CFGEvaluatableRelationshipType {
-  private:
-    static const NextStarCFGEvaluator relationshipEvaluator;
 
   public:
     auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> override;

@@ -34,8 +34,9 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
     if (Statement::isStatement(leftEntity) && Statement::isStatement(rightEntity)) {
       auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-      evaluator->evaluateAndCacheRelationshipFromLeftStatement(
-          static_cast<Statement *>(leftEntity));
+      evaluator->operator()(static_cast<Statement *>(rightEntity), true);
+
+//      std::visit(, static_cast<Statement *>(rightEntity), true);
     }
   }
 
@@ -81,7 +82,7 @@ auto RelationshipManager::getRelationshipsByTypes(
 
 auto RelationshipManager::
     getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        RelationshipType &relationshipType,
+        const RelationshipType &relationshipType,
         const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
         -> std::vector<Entity *> * {
   auto result = this->relationshipStorage.getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(relationshipType, leftHandEntityType, rightHandEntityKey);
@@ -94,7 +95,7 @@ auto RelationshipManager::
 
 auto RelationshipManager::
     getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-        RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+        const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
         const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,

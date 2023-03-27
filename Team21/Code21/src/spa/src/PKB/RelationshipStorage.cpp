@@ -142,7 +142,7 @@ auto RelationshipStorage::getRelationshipsByTypes(
 
 auto RelationshipStorage::
     getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        RelationshipType &relationshipType,
+        const RelationshipType &relationshipType,
         const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
         -> std::vector<Entity *> * {
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
@@ -160,7 +160,7 @@ auto RelationshipStorage::
 
 auto RelationshipStorage::
     getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-        RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+        const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
         const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,

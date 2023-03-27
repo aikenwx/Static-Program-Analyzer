@@ -127,11 +127,11 @@ private:
       -> std::vector<Relationship *> *;
 
   auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-      RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-      EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
+          const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
+          EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
   auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-      RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+          const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+          const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
 
 private:

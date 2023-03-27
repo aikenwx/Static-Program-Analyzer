@@ -13,9 +13,7 @@ class NextStarCFGEvaluator : public CFGRelationshipEvaluator {
 
     auto getRelationshipType() const -> const RelationshipType & override;
 
-  auto evaluateAndCacheRelationshipFromLeftStatement(Statement* leftStatement) -> std::vector<Relationship*>* override;
-
-  auto evaluateAndCacheRelationshipFromRightStatement(Statement* rightEntity) -> std::vector<Relationship*>* override;
+    auto operator()(Statement* statement, bool isReverse) -> std::vector<Entity*>* override;
 };
 
 #endif  // SPA_NEXTSTARCFGEVALUATOR_H

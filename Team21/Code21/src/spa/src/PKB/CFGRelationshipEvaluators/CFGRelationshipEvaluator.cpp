@@ -54,6 +54,7 @@ auto ReverseBlockStatementPairIterator::nextBlockStatementPairs(
               neighbour.lock().get(), neighbour.lock()->end()));
     }
   }
+  return nextBlockStatementPairs;
 }
 
 CFGRelationshipEvaluator::CFGRelationshipEvaluator(

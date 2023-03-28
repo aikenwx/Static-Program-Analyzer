@@ -1,4 +1,5 @@
 #include "pkb_helpers.h"
+
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/PrintStatement.h"
@@ -24,6 +25,27 @@ auto DesignEntityToEntityType(DesignEntity entity) -> EntityType {
     case DesignEntity::VARIABLE:return Variable::getEntityTypeStatic();
     case DesignEntity::CONSTANT:return Constant::getEntityTypeStatic();
     case DesignEntity::PROCEDURE:return Procedure::getEntityTypeStatic();
+  }
+}
+
+auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipType {
+  switch (relationship) {
+    case Relationship::Parent: return ParentRelationship::getRelationshipTypeStatic();
+    case Relationship::ParentT: return ParentStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Follows: return FollowsRelationship::getRelationshipTypeStatic();
+    case Relationship::FollowsT: return FollowsStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Uses:
+    case Relationship::UsesS:
+    case Relationship::UsesP: return UsesRelationship::getRelationshipTypeStatic();
+    case Relationship::Modifies:
+    case Relationship::ModifiesS:
+    case Relationship::ModifiesP: return ModifiesRelationship::getRelationshipTypeStatic();
+    case Relationship::Calls: return CallsRelationship::getRelationshipTypeStatic();
+    case Relationship::CallsT: return CallsStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Next:;
+    case Relationship::NextT:;
+    case Relationship::Affects:;
+    case Relationship::AffectsT:throw std::invalid_argument("Not supported yet");
   }
 }
 

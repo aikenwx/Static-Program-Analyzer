@@ -1,109 +1,156 @@
 #include "relationship_evaluator.h"
+
+#include <utility>
 #include "query/ref.h"
 #include "query/query_exceptions.h"
 #include "query_evaluators/pkb_helpers.h"
 
 namespace qps {
-const std::vector<EntityType>
-    RelationshipEvaluator::CONTAINER_TYPES =
-    {WhileStatement::getEntityTypeStatic(), IfStatement::getEntityTypeStatic()};
+
+class ClauseVisitor {
+ public:
+  ClauseVisitor(QueryFacade &pkb, std::vector<Declaration> &declarations, RelationshipType relationship,
+                EntityType left, EntityType right)
+      : pkb_(pkb), declarations_(declarations), relationship_type_(relationship),
+        left_(left), right_(right) {}
+
+  auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
+    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest);
+    return relationship != nullptr;
+  }
+
+  auto operator()(StatementNumber from, QuotedIdentifier dest) -> ClauseResult {
+    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest.getQuotedId());
+    return relationship != nullptr;
+  }
+
+  auto operator()(QuotedIdentifier from, StatementNumber dest) -> ClauseResult {
+    auto
+        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest);
+    return relationship != nullptr;
+  }
+
+  auto operator()(QuotedIdentifier from, QuotedIdentifier dest) -> ClauseResult {
+    auto
+        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest.getQuotedId());
+    return relationship != nullptr;
+  }
+
+  auto operator()(StatementNumber from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
+    auto *relationships =
+        pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_, left_, from, right_);
+    return relationships != nullptr;
+  }
+
+  auto operator()(QuotedIdentifier from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
+    auto *relationships = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
+                                                                                     left_,
+                                                                                     from.getQuotedId(),
+                                                                                     right_);
+    return relationships != nullptr;
+  }
+
+  auto operator()([[maybe_unused]] Underscore underscore, StatementNumber dest) -> ClauseResult {
+    auto *relationships =
+        pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_, left_, right_, dest);
+    return relationships != nullptr;
+  }
+
+  auto operator()([[maybe_unused]] Underscore underscore, QuotedIdentifier dest) -> ClauseResult {
+    auto *relationships = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
+                                                                                     left_,
+                                                                                     right_,
+                                                                                     dest.getQuotedId());
+    return relationships != nullptr;
+  }
+
+  auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
+                                                                                   left_,
+                                                                                   src,
+
+                                                                                   right_);
+    return ConstructSynonymTable(*relationships, {dest}, ExtractRightEntity);
+
+  }
+
+  auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
+                                                                                   left_,
+                                                                                   right_,
+                                                                                   dest);
+    return ConstructSynonymTable(*relationships, {from}, ExtractLeftEntity);
+  }
+
+  auto operator()(QuotedIdentifier src, Synonym dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
+                                                                                   left_,
+                                                                                   src.getQuotedId(),
+                                                                                   right_);
+    return ConstructSynonymTable(*relationships, {dest}, ExtractRightEntity);
+
+  }
+
+  auto operator()(Synonym from, QuotedIdentifier dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
+                                                                                   left_,
+                                                                                   right_,
+                                                                                   dest.getQuotedId());
+    return ConstructSynonymTable(*relationships, {from}, ExtractLeftEntity);
+  }
+
+  auto operator()(Synonym src, [[maybe_unused]] Underscore underscore) -> ClauseResult {
+    auto *
+        relationships = pkb_.getFollowsRelationshipsByLeftAndRightEntityTypes(left_, right_);
+    return ConstructSynonymTable(*relationships, {src}, ExtractLeftEntity);
+  }
+
+  auto operator()([[maybe_unused]] Underscore underscore, Synonym dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getFollowsRelationshipsByLeftAndRightEntityTypes(left_, right_);
+    return ConstructSynonymTable(*relationships, {dest}, ExtractRightEntity);
+  }
+
+  auto operator()(Synonym src, Synonym dest) -> ClauseResult {
+    auto *
+        relationships = pkb_.getFollowsRelationshipsByLeftAndRightEntityTypes(left_, right_);
+    return ConstructSynonymTable(*relationships, {src, dest}, ExtractBothEntities);
+  }
+
+  auto operator()([[maybe_unused]] Underscore underscore_1, [[maybe_unused]] Underscore underscore_2) -> ClauseResult {
+    auto *
+        relationships = pkb_.getFollowsRelationshipsByLeftAndRightEntityTypes(left_, right_);
+    return relationships != nullptr;
+  }
+
+ private:
+  QueryFacade &pkb_;
+  std::vector<Declaration> &declarations_;
+  RelationshipType relationship_type_;
+  EntityType left_;
+  EntityType right_;
+
+  template<class Extractor>
+  auto ConstructSynonymTable(const std::vector<::Relationship *> &relationships,
+                             std::vector<Synonym> synonyms,
+                             Extractor extractor) {
+    SynonymTable table(std::move(synonyms));
+    for (const auto &relationship : relationships) {
+      table.AddRow(extractor(relationship));
+    }
+    return table;
+  }
+};
 
 auto RelationshipEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
-  std::vector<::Relationship *> filtered_relationships;
-  Ref ref1 = clause_.getArg1();
-  Ref ref2 = clause_.getArg2();
-  auto left_hand = ResolveLeftTypes(ref1);
-  auto right_hand = ResolveRightTypes(ref2);
-  for (auto left : left_hand) {
-    for (auto right : right_hand) {
-      auto res = CallPkb(pkb, left, right);
-      for (auto *relationship : res) {
-        if (!Filter(*relationship)) {
-          filtered_relationships.push_back(relationship);
-        }
-      }
-    }
-  }
-  return qps::RelationshipEvaluator::ConstructResult(filtered_relationships);
-}
 
-auto RelationshipEvaluator::ConstructResult(const std::vector<::Relationship *> &relationships) -> ClauseResult {
-  Ref ref1 = clause_.getArg1();
-  Ref ref2 = clause_.getArg2();
-  std::vector<Synonym> syns;
-  bool left_syn = false;
-  bool right_syn = false;
-  if (Synonym *syn = std::get_if<Synonym>(&ref1)) {
-    left_syn = true;
-    syns.push_back(*syn);
-  }
-  if (Synonym *syn = std::get_if<Synonym>(&ref2)) {
-    right_syn = true;
-    syns.push_back(*syn);
-  }
+//  auto left_entity_types = RelationshipToRelationshipType(clause_.getRelationship());
+//  auto right_entity_types = RelationshipToRelationshipType(clause_.getRelationship());
 
-  if (left_syn && right_syn && syns[0] == syns[1]) {
-    return false;
-  }
 
-  if (!left_syn && !right_syn) {
-    return !relationships.empty();
-  }
-
-  SynonymTable result(syns);
-  for (auto *relation : relationships) {
-    SynonymTable::Row row;
-    if (left_syn) {
-      row.push_back(relation->getLeftHandEntity());
-    }
-    if (right_syn) {
-      row.push_back(relation->getRightHandEntity());
-    }
-    result.AddRow(std::move(row));
-  }
-  return result;
-}
-
-auto RelationshipEvaluator::Filter(::Relationship &relationship) -> bool {
-  Ref ref1 = clause_.getArg1();
-  Ref ref2 = clause_.getArg2();
-  if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref1)) {
-    if (*(relationship.getLeftHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
-      return true;
-    }
-  }
-
-  if (StatementNumber *stmt_num = std::get_if<StatementNumber>(&ref2)) {
-    if (*(relationship.getRightHandEntity()->getEntityValue()) != std::to_string(*stmt_num)) {
-      return true;
-    }
-  }
-
-  if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref1)) {
-    if (*(relationship.getLeftHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
-      return true;
-    }
-  }
-
-  if (QuotedIdentifier *quoted_identifier = std::get_if<QuotedIdentifier>(&ref2)) {
-    if (*(relationship.getRightHandEntity()->getEntityValue()) != quoted_identifier->getQuotedId()) {
-      return true;
-    }
-  }
-  return false;
-}
-auto RelationshipEvaluator::ResolveLeftTypes(Ref &left_arg) -> std::vector<EntityType> {
-  if (Synonym *syn = std::get_if<Synonym>(&left_arg)) {
-    return {GetEntityType(*syn, declarations_)};
-  }
-  return GetLeftHandTypes(left_arg);
-
-}
-
-auto RelationshipEvaluator::ResolveRightTypes(Ref &right_arg) -> std::vector<EntityType> {
-  if (Synonym *syn = std::get_if<Synonym>(&right_arg)) {
-    return {GetEntityType(*syn, declarations_)};
-  }
-  return GetRightHandTypes(right_arg);
 }
 }  // namespace qps

@@ -36,8 +36,8 @@ auto CFGExtractor::CFGHandleStatementList(
 
   // statements are stored in forward order
   auto statements = node->GetStatements();
-  for (auto it = statements.cbegin(); it < statements.cend(); it++) {
-    const auto& statement = *it;
+  for (auto iter = statements.cbegin(); iter < statements.cend(); iter++) {
+    const auto& statement = *iter;
     if (startStmt == -1) {
       startStmt = statement->GetStatementNumber();
     }

@@ -34,7 +34,7 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
     if (Statement::isStatement(leftEntity) && Statement::isStatement(rightEntity)) {
       auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-      evaluator->operator()(static_cast<Statement *>(rightEntity), true);
+      // evaluator->operator()(static_cast<Statement *>(rightEntity), true);
 
 //      std::visit(, static_cast<Statement *>(rightEntity), true);
     }

@@ -3,10 +3,10 @@
 //
 
 #include "RelationshipStorage.h"
-#include "PKBStorageClasses/RelationshipClasses/NullableRelationship.h"
 
 #include <memory>
 
+#include "PKBStorageClasses/RelationshipClasses/NullableRelationship.h"
 
 RelationshipDoubleSynonymKey::RelationshipDoubleSynonymKey(
     const RelationshipType *relationshipType,
@@ -110,9 +110,9 @@ void RelationshipStorage::storeRelationship(
 }
 
 void RelationshipStorage::storeRelationshipOnlyInRelationshipStore(
-    const std::shared_ptr<Relationship> &relationship) {
+    const std::shared_ptr<Relationship> relationship) {
   this->relationshipStore.try_emplace(relationship->getRelationshipKey(),
-                                      std::shared_ptr<Relationship>(relationship));
+                                      relationship);
 }
 
 auto RelationshipStorage::getRelationship(RelationshipKey &key)
@@ -169,7 +169,6 @@ auto RelationshipStorage::
   if (this->relationshipLiteralSynonymStore.find(
           relationshipLiteralSynonymKey) ==
       this->relationshipLiteralSynonymStore.end()) {
-
     return nullptr;
     // return &this->emptyEntityVector;
   }

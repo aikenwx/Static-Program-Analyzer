@@ -11,8 +11,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "EntityManager.h"
+#include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "sp/cfg/cfg.h"
 
@@ -81,9 +81,8 @@ struct std::hash<RelationshipLiteralSynonymKey> {
       -> std::size_t;
 };
 
-
 class RelationshipStorage {
-private:
+ private:
   std::unordered_map<RelationshipDoubleSynonymKey,
                      std::shared_ptr<std::vector<Relationship *>>>
       relationshipDoubleSynonymStore;
@@ -103,6 +102,14 @@ private:
   std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
       relationshipStore;
 
+  //   // some stores will share share vectors, especially for CFG evaluable
+  //   relationships
+  //   // it is important to track subvector count of shared vectors
+  //   std::unordered_set<RelationshipSynonymLiteralKey, int>
+  //       relationshipSynonymLiteralVectorCountStore;
+
+  //   std::unordered_map<RelationshipLiteralSynonymKey, int>
+  //       relationshipLiteralSynonymVectorCountStore;
 
  public:
   RelationshipStorage();
@@ -110,14 +117,13 @@ private:
   void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
   void storeRelationshipOnlyInRelationshipStore(
-      const std::shared_ptr<Relationship> &relationship);
+      const std::shared_ptr<Relationship> relationship);
 
   void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
 
   void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
 
   void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
-
 
   auto getRelationship(RelationshipKey &key) -> Relationship *;
 
@@ -127,14 +133,13 @@ private:
       -> std::vector<Relationship *> *;
 
   auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-          const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-          EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> std::vector<Entity *> *;
   auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-          const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-          const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
-
-private:
   void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
       RelationshipDoubleSynonymKey relationshipSynonymKey);
 
@@ -145,5 +150,4 @@ private:
       RelationshipSynonymLiteralKey relationshipSynonymLiteralKey);
 };
 
-
-#endif //SPA_RELATIONSHIPSTORAGE_H
+#endif  // SPA_RELATIONSHIPSTORAGE_H

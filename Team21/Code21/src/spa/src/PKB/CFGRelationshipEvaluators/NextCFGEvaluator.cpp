@@ -15,93 +15,68 @@ auto NextCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
   return NextRelationship::getRelationshipTypeStatic();
 }
 
-auto NextCFGEvaluator::operator()(Statement* statement, bool isReverse)
-    -> std::vector<Entity*>* {
-  std::vector<Entity*>* cachedResult;
-  // check store if evaluation has been done before
-  if (isReverse) {
-    cachedResult =
-        relationshipStorage
-            ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-                NextRelationship::getRelationshipTypeStatic(),
-                Statement::getEntityTypeStatic(), statement->getEntityKey());
+auto NextCFGEvaluator::getRelatedBlockStatementPairs(
+    std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
+    bool isReverse)
+    -> std::shared_ptr<
+        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
+  // check if the cache has been initialized
+  auto cachedEntities =
+      getEntitiesFromCache(isReverse, *sourceBlockStatementPair.second);
+  if (cachedEntities != nullptr) {
+    auto nextBlockStatementPairs = std::make_shared<
+        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
+    for (auto entity : *cachedEntities) {
+      auto statement = static_cast<Statement*>(entity);
+      nextBlockStatementPairs->push_back(
+          std::make_shared<std::pair<cfg::Block*, Statement*>>(
+              sourceBlockStatementPair.first, statement));
+    }
+    return nextBlockStatementPairs;
+  }
+
+  auto nextBlockStatementPairs = std::make_shared<
+      std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
+
+  auto currentBlock = sourceBlockStatementPair.first;
+  auto currentStatement = sourceBlockStatementPair.second;
+
+  int possibleNextStatementNumber =
+      isReverse ? currentStatement->getStatementNumber() - 1
+                : currentStatement->getStatementNumber() + 1;
+
+  if (currentBlock->IsInBlock(possibleNextStatementNumber)) {
+    auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
+                               possibleNextStatementNumber);
+
+    auto statement =
+        static_cast<Statement*>(entityManager->getEntity(entityKey));
+
+    nextBlockStatementPairs->push_back(
+        std::make_shared<std::pair<cfg::Block*, Statement*>>(currentBlock,
+                                                             statement));
 
   } else {
-    cachedResult =
-        relationshipStorage
-            ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-                NextRelationship::getRelationshipTypeStatic(),
-                statement->getEntityKey(), Statement::getEntityTypeStatic());
-  }
+    auto neighbours =
+        isReverse ? currentBlock->parents() : currentBlock->children();
+    for (auto neighbour : neighbours) {
+      auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
+                                 neighbour.lock()->start());
 
-  if (cachedResult != nullptr) {
-    return cachedResult;
-  }
+      auto statement =
+          static_cast<Statement*>(entityManager->getEntity(entityKey));
 
-  std::shared_ptr<BlockStatementPairIterator> blockStatementPairIterator;
-
-  if (isReverse) {
-    blockStatementPairIterator =
-        std::make_shared<ReverseBlockStatementPairIterator>();
-  } else {
-    blockStatementPairIterator =
-        std::make_shared<ForwardBlockStatementPairIterator>();
-  }
-
-  auto startBlock = cfg->GetBlockAt(statement->getStatementNumber());
-
-  if (!startBlock) {
-    return new std::vector<Entity*>();
-  }
-
-  auto statementNumber = statement->getStatementNumber();
-  auto startBlockStatementPair =
-      std::make_pair(startBlock.value().get(), statementNumber);
-
-  auto nextBlockStatementPairs =
-      blockStatementPairIterator->nextBlockStatementPairs(
-          startBlockStatementPair);
-
-  for (auto nextBlockStatementPair : *nextBlockStatementPairs) {
-    auto nextStatementNumber = nextBlockStatementPair->second;
-
-    auto entityKey =
-        EntityKey(&Statement::getEntityTypeStatic(), nextStatementNumber);
-    auto nextStatement = (Statement*)entityManager->getEntity(entityKey);
-
-    std::shared_ptr<Relationship> relationship;
-    if (isReverse) {
-      relationship =
-          std::make_shared<NextRelationship>(nextStatement, statement);
-
-      relationshipStorage->storeRelationshipOnlyInRelationshipStore(
-          relationship);
-
-      relationshipStorage->storeInRelationshipSynonymLiteralStore(
-          relationship.get());
-
-    } else {
-      relationship =
-          std::make_shared<NextRelationship>(statement, nextStatement);
-
-      relationshipStorage->storeRelationshipOnlyInRelationshipStore(
-
-          relationship);
-
-      relationshipStorage->storeInRelationshipSynonymLiteralStore(
-          relationship.get());
+      nextBlockStatementPairs->push_back(
+          std::make_shared<std::pair<cfg::Block*, Statement*>>(
+              neighbour.lock().get(), statement));
     }
   }
 
-  if (isReverse) {
-    return relationshipStorage
-        ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-            NextRelationship::getRelationshipTypeStatic(),
-            Statement::getEntityTypeStatic(), statement->getEntityKey());
-  } else {
-    return relationshipStorage
-        ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-            NextRelationship::getRelationshipTypeStatic(),
-            statement->getEntityKey(), Statement::getEntityTypeStatic());
-  }
+  return nextBlockStatementPairs;
+}
+
+auto NextCFGEvaluator::createNewRelationship(Statement* leftStatement,
+                                             Statement* rightStatement)
+    -> std::shared_ptr<Relationship> {
+  return std::make_shared<NextRelationship>(leftStatement, rightStatement);
 }

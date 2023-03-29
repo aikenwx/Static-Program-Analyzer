@@ -20,21 +20,6 @@ auto NextCFGEvaluator::getRelatedBlockStatementPairs(
     bool isReverse)
     -> std::shared_ptr<
         std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
-  // check if the cache has been initialized
-  auto cachedEntities =
-      getEntitiesFromCache(isReverse, *sourceBlockStatementPair.second);
-  if (cachedEntities != nullptr) {
-    auto nextBlockStatementPairs = std::make_shared<
-        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
-    for (auto entity : *cachedEntities) {
-      auto statement = static_cast<Statement*>(entity);
-      nextBlockStatementPairs->push_back(
-          std::make_shared<std::pair<cfg::Block*, Statement*>>(
-              sourceBlockStatementPair.first, statement));
-    }
-    return nextBlockStatementPairs;
-  }
-
   auto nextBlockStatementPairs = std::make_shared<
       std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
 

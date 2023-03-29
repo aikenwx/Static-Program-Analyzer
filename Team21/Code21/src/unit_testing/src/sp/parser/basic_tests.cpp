@@ -159,20 +159,20 @@ TEST_CASE(
 };
 
 TEST_CASE(
-  "Parser correctly parses a valid program with multiple procedures",
+  "Parser correctly parses a valid program with one procedure",
   "[Parser]") {
-  std::string program = R"(procedure hello {
-    read x;
-  }
-  procedure world {
-    read y;
-  })";
-
+  std::string program = R"(
+      procedure main {
+        a = 1;
+        b = 2;
+        print x;
+        read y;
+      })";
   REQUIRE(CheckRootIsProgram(program));
 };
 
 TEST_CASE(
-  "Parser correctly parses a valid program ",
+  "Parser correctly parses a valid program with multiple procedures",
   "[Parser]") {
   std::string program = R"(procedure main {
       x = 1;

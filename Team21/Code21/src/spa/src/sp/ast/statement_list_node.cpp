@@ -7,15 +7,15 @@ namespace ast {
 void StatementListNode::AddStatement(
     const std::shared_ptr<StatementNode> &node) {
   if (statements.empty()) {
-    if (util::instance_of<ContainerStatementNode>(node)) {
+    startStatementNumber = node->GetStatementNumber();
+  }
+  if (util::instance_of<ContainerStatementNode>(node)) {
       endStatementNumber =
           std::static_pointer_cast<ContainerStatementNode>(node)
               ->GetEndStatementNumber();
     } else {
       endStatementNumber = node->GetStatementNumber();
     }
-  }
-  startStatementNumber = node->GetStatementNumber();
   statements.push_back(node);
 }
 
@@ -36,20 +36,20 @@ void StatementListNode::IncrementStatementNumbers(int value) {
   for (auto i = statements.begin(); i < statements.end(); i++) {
     (*i)->IncrementStatementNumber(value);
   }
-  // Stack implementation
-  startStatementNumber = statements.back()->GetStatementNumber();
-  if (util::instance_of<ContainerStatementNode>(statements.front())) {
+  // Queue implementation
+  startStatementNumber = statements.front()->GetStatementNumber();
+  if (util::instance_of<ContainerStatementNode>(statements.back())) {
     endStatementNumber =
-        std::static_pointer_cast<ContainerStatementNode>(statements.front())
+        std::static_pointer_cast<ContainerStatementNode>(statements.back())
             ->GetEndStatementNumber();
   } else {
-    endStatementNumber = statements.front()->GetStatementNumber();
+    endStatementNumber = statements.back()->GetStatementNumber();
   }
 }
 
 auto StatementListNode::ToString() const -> std::string {
   std::string str = "stmtLst:\n{\n";
-  for (auto i = statements.rbegin(); i < statements.rend(); i++) {
+  for (auto i = statements.begin(); i < statements.end(); i++) {
     str += (*i)->ToString();
   }
   str += "}\n";
@@ -61,7 +61,7 @@ void StatementListNode::AcceptVisitor(design_extractor::Extractor &extractor,
   extractor.HandleStatementListNode(
       std::static_pointer_cast<StatementListNode>(shared_from_this()), depth);
 
-  for (auto i = statements.rbegin(); i < statements.rend(); i++) {
+  for (auto i = statements.begin(); i < statements.end(); i++) {
     (*i)->AcceptVisitor(extractor, depth + 1);
   }
 }

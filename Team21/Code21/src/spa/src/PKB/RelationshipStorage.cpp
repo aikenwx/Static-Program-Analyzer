@@ -6,7 +6,6 @@
 
 #include <memory>
 
-#include "PKBStorageClasses/RelationshipClasses/NullableRelationship.h"
 
 RelationshipDoubleSynonymKey::RelationshipDoubleSynonymKey(
     const RelationshipType *relationshipType,

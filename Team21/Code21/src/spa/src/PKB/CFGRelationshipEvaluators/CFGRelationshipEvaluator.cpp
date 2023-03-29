@@ -247,10 +247,10 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
 }
 
 auto CFGRelationshipEvaluator::isValidEntityInput(Entity *entity) -> bool {
-  true;
+  return true;
 }
 
 auto CFGRelationshipEvaluator::isValidEntityTypeInput(
     const EntityType &entityType) -> bool {
-  true;
+  return true;
 }

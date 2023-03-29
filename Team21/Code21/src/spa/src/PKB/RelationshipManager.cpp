@@ -7,7 +7,6 @@
 #include <memory>
 
 #include "PKBStorageClasses/RelationshipClasses/CFGEvaluatableRelationshipType.h"
-#include "PKBStorageClasses/RelationshipClasses/NullableRelationship.h"
 
 void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
   this->cfg = cfg;

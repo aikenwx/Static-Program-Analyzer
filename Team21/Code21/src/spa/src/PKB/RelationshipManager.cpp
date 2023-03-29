@@ -31,13 +31,11 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
 
     auto leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
     auto rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
-    if (Statement::isStatement(leftEntity) && Statement::isStatement(rightEntity)) {
-      auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-      // evaluator->operator()(static_cast<Statement *>(rightEntity), true);
-
-//      std::visit(, static_cast<Statement *>(rightEntity), true);
-    }
+    evaluator->evaluateAndCacheRelationshipsByGivenEntities(
+        leftEntity,
+        rightEntity);
   }
 
   return this->relationshipStorage.getRelationship(key);
@@ -52,24 +50,10 @@ auto RelationshipManager::getRelationshipsByTypes(
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-    // // evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType, rightHandEntityType);
-    // // auto leftEntities = this->entityManager->getEntitiesByType(leftHandEntityType);
-    // // auto rightEntities = this->entityManager->getEntitiesByType(rightHandEntityType);
-
-    // // if (leftEntities->empty() || rightEntities->empty()) {
-    // //   // skip
-    // // } else if (!Statement::isStatement(leftEntities->at(0)) || !Statement::isStatement(rightEntities->at(0))) {
-    // //   // skip
-    // // } else {
-    // // }
+    evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType, rightHandEntityType);
   }
-
-  RelationshipDoubleSynonymKey relationshipSynonymKey =
-      RelationshipDoubleSynonymKey(&relationshipType, &leftHandEntityType,
-                                   &rightHandEntityType);
 
   auto result = this->relationshipStorage.getRelationshipsByTypes(relationshipType, leftHandEntityType, rightHandEntityType);
 
@@ -85,6 +69,17 @@ auto RelationshipManager::
         const RelationshipType &relationshipType,
         const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
         -> std::vector<Entity *> * {
+  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+          relationshipType)) {
+    auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
+        &relationshipType);
+
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+
+    auto rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
+    evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(leftHandEntityType, rightHandEntity, true);
+  }
+
   auto result = this->relationshipStorage.getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(relationshipType, leftHandEntityType, rightHandEntityKey);
 
   if (result == nullptr) {
@@ -100,6 +95,17 @@ auto RelationshipManager::
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
+
+  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+          relationshipType)) {
+    auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
+        &relationshipType);
+
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+
+    auto leftHandEntity = this->entityManager->getEntity(leftHandEntityKey);
+    evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(rightHandEntityType, leftHandEntity, false);
+  }
 
   auto result = this->relationshipStorage.getEntitiesForGivenRelationshipTypeAndRightHandEntityType(relationshipType, leftHandEntityKey, rightHandEntityType);
 

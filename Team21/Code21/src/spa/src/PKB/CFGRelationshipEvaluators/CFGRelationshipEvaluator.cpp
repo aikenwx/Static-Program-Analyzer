@@ -40,6 +40,11 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     return;
   }
 
+  if (!isValidEntityTypeInput(leftEntityType) ||
+      !isValidEntityTypeInput(rightEntityType)) {
+    return;
+  }
+
   // already evaluated
   if (relationshipStorage->getRelationshipsByTypes(
           getRelationshipType(), leftEntityType, rightEntityType) != nullptr) {
@@ -50,9 +55,13 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
       leftEntityType, rightEntityType);
 
   for (auto entity : isReverse ? *rightEntityList : *leftEntityList) {
+    if (!isValidEntityInput(entity)) {
+      continue;
+    }
+
     auto results = this->getRelatedBlockStatementPairs(
-            *generateStatementBlockPair(static_cast<Statement *>(entity)),
-            isReverse);
+        *generateStatementBlockPair(static_cast<Statement *>(entity)),
+        isReverse);
 
     auto statement = static_cast<Statement *>(entity);
     initializeCache(isReverse, *statement);
@@ -78,12 +87,20 @@ void CFGRelationshipEvaluator::
         const EntityType &givenEntityType, Entity *entity, bool isReverse) {
   auto entityList = this->entityManager->getEntitiesByType(givenEntityType);
 
+  if (!isValidEntityInput(entity)) {
+    return;
+  }
+
   if (entityList->empty()) {
     return;
   }
 
   if (!Statement::isStatement(entityList->at(0)) ||
       !Statement::isStatement(entity)) {
+    return;
+  }
+
+  if (!isValidEntityInput(entity) || !isValidEntityTypeInput(givenEntityType)) {
     return;
   }
 
@@ -95,7 +112,7 @@ void CFGRelationshipEvaluator::
   }
 
   auto relatedStatements = this->getRelatedBlockStatementPairs(
-          *generateStatementBlockPair(statement), isReverse);
+      *generateStatementBlockPair(statement), isReverse);
 
   initializeCache(isReverse, *statement);
 
@@ -118,10 +135,10 @@ auto CFGRelationshipEvaluator::
   int numberOfForwardRelationshipEvaluationsRequired = 0;
 
   for (auto leftEntity : *leftEntityList) {
-    if (this->relationshipStorage
-            ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-                (RelationshipType &)this->getRelationshipType(),
-                leftEntity->getEntityKey(), rightEntityType) == nullptr) {
+    if (isValidEntityInput(leftEntity) && this->relationshipStorage
+                                                  ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
+                                                      (RelationshipType &)this->getRelationshipType(),
+                                                      leftEntity->getEntityKey(), rightEntityType) == nullptr) {
       numberOfForwardRelationshipEvaluationsRequired++;
     }
   }
@@ -129,10 +146,10 @@ auto CFGRelationshipEvaluator::
   int numberOfReverseRelationshipEvaluationsRequired = 0;
 
   for (auto rightEntity : *rightEntityList) {
-    if (this->relationshipStorage
-            ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-                (RelationshipType &)this->getRelationshipType(), leftEntityType,
-                rightEntity->getEntityKey()) == nullptr) {
+    if (isValidEntityInput(rightEntity) && this->relationshipStorage
+                                                   ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
+                                                       (RelationshipType &)this->getRelationshipType(), leftEntityType,
+                                                       rightEntity->getEntityKey()) == nullptr) {
       numberOfReverseRelationshipEvaluationsRequired++;
     }
   }
@@ -140,7 +157,6 @@ auto CFGRelationshipEvaluator::
   return numberOfForwardRelationshipEvaluationsRequired >
          numberOfReverseRelationshipEvaluationsRequired;
 }
-
 
 auto CFGRelationshipEvaluator::getEntitiesFromCache(bool isReverse,
                                                     Statement &statement)
@@ -193,4 +209,48 @@ void CFGRelationshipEvaluator::populateCache(
     relationshipStorage->storeInRelationshipLiteralSynonymStore(
         relationship.get());
   }
+}
+
+void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
+    Entity *leftEntity, Entity *rightEntity) {
+  if (!Statement::isStatement(leftEntity) ||
+      !Statement::isStatement(rightEntity)) {
+    return;
+  }
+
+  if (!isValidEntityInput(leftEntity) || !isValidEntityInput(rightEntity)) {
+    return;
+  }
+
+  auto relationshipKey =
+      RelationshipKey(&getRelationshipType(), &leftEntity->getEntityKey(),
+                      &rightEntity->getEntityKey());
+
+  // checks if this relationship has already been evaluated
+  if (relationshipStorage->getRelationship(relationshipKey) != nullptr) {
+    return;
+  }
+
+  auto leftStatement = static_cast<Statement *>(leftEntity);
+  auto rightStatement = static_cast<Statement *>(rightEntity);
+
+  if (getEntitiesFromCache(true, *rightStatement) != nullptr) {
+    return;
+  }
+
+  if (getEntitiesFromCache(false, *leftStatement) != nullptr) {
+    return;
+  }
+
+  evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+      leftEntity->getEntityType(), rightEntity, false);
+}
+
+auto CFGRelationshipEvaluator::isValidEntityInput(Entity *entity) -> bool {
+  true;
+}
+
+auto CFGRelationshipEvaluator::isValidEntityTypeInput(
+    const EntityType &entityType) -> bool {
+  true;
 }

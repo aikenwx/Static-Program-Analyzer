@@ -199,12 +199,12 @@ void CFGRelationshipEvaluator::initializeCache(bool isReverse,
 void CFGRelationshipEvaluator::populateCache(
     bool isReverse, std::shared_ptr<Relationship> relationship) {
   if (isReverse) {
-    relationshipStorage->storeRelationshipOnlyInRelationshipStore(relationship);
+      relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
 
     relationshipStorage->storeInRelationshipSynonymLiteralStore(
         relationship.get());
   } else {
-    relationshipStorage->storeRelationshipOnlyInRelationshipStore(relationship);
+      relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
 
     relationshipStorage->storeInRelationshipLiteralSynonymStore(
         relationship.get());
@@ -243,7 +243,7 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
   }
 
   evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-      leftEntity->getEntityType(), rightEntity, false);
+      rightEntity->getEntityType(), leftEntity, false);
 }
 
 auto CFGRelationshipEvaluator::isValidEntityInput(Entity *entity) -> bool {

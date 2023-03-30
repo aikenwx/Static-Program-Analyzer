@@ -116,7 +116,7 @@ class RelationshipStorage {
 
   void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
-  void storeRelationshipOnlyInRelationshipStore(
+  bool tryStoreRelationshipOnlyInRelationshipStore(
       const std::shared_ptr<Relationship> relationship);
 
   void storeInRelationshipDoubleSynonymStore(Relationship *relationship);

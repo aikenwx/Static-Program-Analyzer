@@ -52,9 +52,10 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
       std::stack<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>();
 
   // push all statements from results into stack
+  auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
+           sourceBlockStatementPair, isReverse);
 
-  for (auto result : *nextCFGEvaluator.getRelatedBlockStatementPairs(
-           sourceBlockStatementPair, isReverse)) {
+  for (auto result : *directRelations) {
     statementsToVisit.push(result);
   }
 

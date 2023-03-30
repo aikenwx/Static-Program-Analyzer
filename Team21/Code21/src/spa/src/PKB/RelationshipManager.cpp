@@ -6,7 +6,15 @@
 
 #include <memory>
 
+#include "PKB/CFGRelationshipEvaluators/AffectsCFGEvaluator.h"
+#include "PKB/CFGRelationshipEvaluators/AffectsStarCFGEvaluator.h"
+#include "PKB/CFGRelationshipEvaluators/NextCFGEvaluator.h"
+#include "PKB/CFGRelationshipEvaluators/NextStarCFGEvaluator.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/CFGEvaluatableRelationshipType.h"
+#include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
 
 void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
   this->cfg = cfg;
@@ -30,7 +38,19 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
 
     auto leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
     auto rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
-    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+
+    CFGRelationshipEvaluator *evaluator;
+
+    if (*key.getRelationshipType() == NextRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (*key.getRelationshipType() == NextStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (*key.getRelationshipType() == AffectsRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (*key.getRelationshipType() == AffectsStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    }
+
 
     evaluator->evaluateAndCacheRelationshipsByGivenEntities(
         leftEntity,
@@ -49,7 +69,17 @@ auto RelationshipManager::getRelationshipsByTypes(
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    CFGRelationshipEvaluator *evaluator;
+
+    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    }
 
     evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType, rightHandEntityType);
   }
@@ -73,7 +103,17 @@ auto RelationshipManager::
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    CFGRelationshipEvaluator *evaluator;
+
+    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    }
 
     auto rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
     evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(leftHandEntityType, rightHandEntity, true);
@@ -100,7 +140,17 @@ auto RelationshipManager::
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    CFGRelationshipEvaluator *evaluator;
+
+    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
+      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
+    }
 
     auto leftHandEntity = this->entityManager->getEntity(leftHandEntityKey);
     evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(rightHandEntityType, leftHandEntity, false);

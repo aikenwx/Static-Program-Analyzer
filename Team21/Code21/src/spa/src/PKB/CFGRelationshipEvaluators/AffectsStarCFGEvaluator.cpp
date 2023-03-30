@@ -52,9 +52,10 @@ auto AffectsStarCFGEvaluator::getRelatedBlockStatementPairs(
       std::stack<std::shared_ptr<std::pair<std::shared_ptr<std::pair<cfg::Block*, Statement*>>, Entity*>>>();
 
   // push all statements from results into stack
+  auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
+      sourceBlockStatementPair, isReverse);
 
-  for (auto result : *nextCFGEvaluator.getRelatedBlockStatementPairs(
-           sourceBlockStatementPair, isReverse)) {
+  for (auto result : *directRelations) {
     statementsToVisit.push(std::make_shared<std::pair<std::shared_ptr<std::pair<cfg::Block*, Statement*>>, Entity*>>(result, initialModifiedVariable));
   }
 

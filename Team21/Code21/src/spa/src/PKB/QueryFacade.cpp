@@ -27,7 +27,7 @@
 
 QueryFacade::QueryFacade(EntityManager *entityManager,
                          RelationshipManager *relationshipManager,
-                         PatternManager *patternManager, CFGManager *cfgManager)
+                         PatternManager *patternManager, CFGStorage *cfgManager)
     : entityManager(entityManager),
       relationshipManager(relationshipManager),
       cfgManager(cfgManager),

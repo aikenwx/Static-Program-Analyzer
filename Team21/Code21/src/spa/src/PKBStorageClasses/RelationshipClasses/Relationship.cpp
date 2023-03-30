@@ -29,12 +29,43 @@ RelationshipKey::RelationshipKey(const RelationshipType *relationshipType,
       leftEntityKey(leftEntityKey),
       rightEntityKey(rightEntityKey) {}
 
+RelationshipKey::RelationshipKey(const RelationshipType *relationshipType, std::shared_ptr<EntityKey> leftEntityKeyOwner, EntityKey *rightEntityKey) : StorageKey(relationshipType->getKey() ^ leftEntityKeyOwner->getKey() ^ rightEntityKey->getKey()),
+                                                                                                                                                       relationshipType(relationshipType),
+                                                                                                                                                       leftEntityKeyOwner(leftEntityKeyOwner),
+                                                                                                                                                       rightEntityKey(rightEntityKey),
+                                                                                                                                                       leftEntityKey(leftEntityKeyOwner.get()) {}
+
+RelationshipKey::RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, std::shared_ptr<EntityKey> rightEntityKeyOwner) : StorageKey(relationshipType->getKey() ^ leftEntityKey->getKey() ^ rightEntityKeyOwner->getKey()),
+                                                                                                                                                       relationshipType(relationshipType),
+                                                                                                                                                       leftEntityKey(leftEntityKey),
+                                                                                                                                                       rightEntityKeyOwner(rightEntityKeyOwner),
+                                                                                                                                                       rightEntityKey(rightEntityKeyOwner.get()) {}
+
+RelationshipKey::RelationshipKey(const RelationshipType *relationshipType, std::shared_ptr<EntityKey> leftEntityKeyOwner, std::shared_ptr<EntityKey> rightEntityKeyOwner) : StorageKey(relationshipType->getKey() ^ leftEntityKeyOwner->getKey() ^ rightEntityKeyOwner->getKey()),
+                                                                                                                                                                            relationshipType(relationshipType),
+                                                                                                                                                                            leftEntityKeyOwner(leftEntityKeyOwner),
+                                                                                                                                                                            rightEntityKeyOwner(rightEntityKeyOwner),
+                                                                                                                                                                            leftEntityKey(leftEntityKeyOwner.get()),
+                                                                                                                                                                            rightEntityKey(rightEntityKeyOwner.get()) {}
+
 auto RelationshipKey::operator==(
     const RelationshipKey &otherRelationshipLiteralKey) const -> bool {
   return *this->relationshipType ==
              *otherRelationshipLiteralKey.relationshipType &&
          *this->leftEntityKey == *otherRelationshipLiteralKey.leftEntityKey &&
          *this->rightEntityKey == *otherRelationshipLiteralKey.rightEntityKey;
+}
+
+auto RelationshipKey::getRelationshipType() -> const RelationshipType * {
+  return this->relationshipType;
+}
+
+auto RelationshipKey::getLeftEntityKey() -> EntityKey * {
+  return this->leftEntityKey;
+}
+
+auto RelationshipKey::getRightEntityKey() -> EntityKey * {
+  return this->rightEntityKey;
 }
 
 auto Relationship::containsEntityOnLeftHand(Entity *entity) const -> bool {

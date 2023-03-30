@@ -271,34 +271,34 @@ TEST_CASE("Relationships contain the wrong right entity") {
   REQUIRE_FALSE(callsRelationship->containsEntityOnRightHand(procedure));
   REQUIRE_FALSE(callsStarRelationship->containsEntityOnRightHand(procedure));
 }
-TEST_CASE(
-    "Instantiating a ModifiesRelationship with a non-Procedure or "
-    "non-Statement as LHS throws an exception") {
-  auto variableOwner =
-      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
-  auto variable2Owner =
-      std::make_shared<Variable>(std::make_shared<std::string>("variable2"));
-
-  auto *variable = variableOwner.get();
-  auto *variable2 = variable2Owner.get();
-
-  REQUIRE_THROWS_AS(std::make_shared<ModifiesRelationship>(variable2, variable),
-                    std::invalid_argument);
-}
-
-TEST_CASE(
-    "Instantiating a UsesRelationship with a non-Procedure or non-Statement as "
-    "LHS entity throws an exception") {
-  auto variableOwner =
-      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
-  auto variable2Owner =
-      std::make_shared<Variable>(std::make_shared<std::string>("variable2"));
-
-  auto *variable = variableOwner.get();
-  auto *variable2 = variable2Owner.get();
-
-  REQUIRE_THROWS_AS(std::make_shared<UsesRelationship>(variable2, variable),
-                    std::invalid_argument);
-}
+//TEST_CASE(
+//    "Instantiating a ModifiesRelationship with a non-Procedure or "
+//    "non-Statement as LHS throws an exception") {
+//  auto variableOwner =
+//      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//  auto variable2Owner =
+//      std::make_shared<Variable>(std::make_shared<std::string>("variable2"));
+//
+//  auto *variable = variableOwner.get();
+//  auto *variable2 = variable2Owner.get();
+//
+//  REQUIRE_THROWS_AS(std::make_shared<ModifiesRelationship>(variable2, variable),
+//                    std::invalid_argument);
+//}
+//
+//TEST_CASE(
+//    "Instantiating a UsesRelationship with a non-Procedure or non-Statement as "
+//    "LHS entity throws an exception") {
+//  auto variableOwner =
+//      std::make_shared<Variable>(std::make_shared<std::string>("variable"));
+//  auto variable2Owner =
+//      std::make_shared<Variable>(std::make_shared<std::string>("variable2"));
+//
+//  auto *variable = variableOwner.get();
+//  auto *variable2 = variable2Owner.get();
+//
+//  REQUIRE_THROWS_AS(std::make_shared<UsesRelationship>(variable2, variable),
+//                    std::invalid_argument);
+//}
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

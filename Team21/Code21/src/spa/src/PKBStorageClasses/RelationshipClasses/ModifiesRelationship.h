@@ -9,16 +9,18 @@
 #include "Relationship.h"
 
 class ModifiesRelationship : public Relationship {
-   private:
-    static const RelationshipType relationshipType;
+ private:
+  static const RelationshipType relationshipType;
 
-   public:
-    ModifiesRelationship(Entity* modifier, Variable* modifiedVariable);
+ public:
+  ModifiesRelationship(Statement* modifier, Variable* modifiedVariable);
 
-    static auto getRelationshipTypeStatic() -> const RelationshipType &;
+  ModifiesRelationship(Procedure* modifier, Variable* modifiedVariable);
 
-    [[nodiscard]] auto getRelationshipType() const
-        -> const RelationshipType & override;
+  static auto getRelationshipTypeStatic() -> const RelationshipType&;
+
+  [[nodiscard]] auto getRelationshipType() const
+      -> const RelationshipType& override;
 };
 
 #endif  // SPA_MODIFIESRELATIONSHIP_H

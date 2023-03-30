@@ -21,8 +21,8 @@ auto SuchThatEvaluatorFactory::Create(SuchThatClause &clause,
     case Relationship::Modifies:
     case Relationship::Calls:
     case Relationship::CallsT:return std::make_unique<RelationshipEvaluator>(clause, decl_lst);
-    case Relationship::Next:return std::make_unique<NextEvaluator>(clause, decl_lst);
-    case Relationship::NextT:return std::make_unique<NextStarEvaluator>(clause, decl_lst);
+//    case Relationship::Next:return std::make_unique<NextEvaluator>(clause, decl_lst);
+//    case Relationship::NextT:return std::make_unique<RelationshipEvaluator>(clause, decl_lst);
     default:throw std::invalid_argument("Clause type not supported yet");
   }
 }

@@ -10,6 +10,14 @@
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
 #include "PKBStorageClasses/EntityClasses/Procedure.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
 
 namespace qps {
 
@@ -49,33 +57,12 @@ auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipTy
   }
 }
 
-auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> EntityType {
-  auto decl = Declaration::findDeclarationWithSynonym(declarations, syn);
-  if (!decl) {
-    throw std::invalid_argument("Synonym in clause not in query declaration");
+auto ExtractEntities(const std::vector<::Relationship *> &relationships) -> std::vector<std::vector<Entity *>> {
+  std::vector<std::vector<Entity *>> entities;
+  entities.reserve(relationships.size());
+  for (const auto &entity : relationships) {
+    entities.push_back({entity->getLeftHandEntity(), entity->getRightHandEntity()});
   }
-  return DesignEntityToEntityType(decl->getDesignEntity());
-
+  return entities;
 }
-
-auto GetStatement(int stmt_no, QueryFacade &pkb) -> Statement * {
-  return dynamic_cast<Statement *>(pkb.getEntity(Statement::getEntityTypeStatic(), stmt_no));
-}
-
-auto GetStmtNo(Entity *entity) -> int {
-  return dynamic_cast<Statement *>(entity)->getStatementNumber();
-}
-
-auto GetEntities(Synonym &syn, std::vector<Declaration> &declarations, QueryFacade &pkb) -> std::vector<Entity *> * {
-  auto entity_type = GetEntityType(syn, declarations);
-  return pkb.getEntitiesByType(entity_type);
-}
-
-auto MatchesEntityType(Entity *entity, EntityType type) -> bool {
-  if (type == Statement::getEntityTypeStatic()) {
-    return Statement::isStatement(entity);
-  }
-  return entity->getEntityType() == type;
-}
-
 }  // namespace qps

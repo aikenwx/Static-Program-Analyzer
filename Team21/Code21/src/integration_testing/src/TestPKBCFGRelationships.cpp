@@ -130,6 +130,30 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
     REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
                                          Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
                                          14) == nullptr);
+
+//    auto temp = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+//
+//    auto temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+
+//    auto temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+
+//    auto temp4 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+
+    auto temp5 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+
+//
+    auto pairVector = std::vector<std::pair<std::string*, std::string*>>();
+//
+    for (auto relationship : *temp5) {
+      auto val1 = relationship->getLeftHandEntity()->getEntityValue();
+      auto val2 = relationship->getRightHandEntity()->getEntityValue();
+      pairVector.push_back(std::make_pair(val1, val2));
+    }
+// 11 12, 9 10, 9 11, 9 12, 6 10, 6 11, 6 12, 6 6, 10 11, 10 12, 8 10, 8 11, 8 12, 4 10, 4 11, 4 12,4 8, 4 4,2 10, 2 11, 2 12, 2 6, 1 10, 1 11, 1 12, 1 8, 1 4
+//    auto temp6 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+
+    auto temp7 = pkb_querier->getRelationshipsByTypes(AffectsRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+
   }
 }
 }  // namespace qps

@@ -478,8 +478,15 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
                                   int leftEntityValue,
                                   EntityType rightEntityType,
                                   int rightEntityValue) -> Relationship * {
-  EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
-  EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
+  auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
+  auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
+
+  if (leftEntity == nullptr || rightEntity == nullptr) {
+    return nullptr;
+  }
+
+  auto leftEntityKey = leftEntity->getEntityKey();
+  auto rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
@@ -493,8 +500,15 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
                                   EntityType rightEntityType,
                                   std::string rightEntityValue)
     -> Relationship * {
-  EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
-  EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
+  auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
+  auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
+
+  if (leftEntity == nullptr || rightEntity == nullptr) {
+    return nullptr;
+  }
+
+  auto leftEntityKey = leftEntity->getEntityKey();
+  auto rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
@@ -508,10 +522,17 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
                                   EntityType rightEntityType,
                                   std::string rightEntityValue)
     -> Relationship * {
-  EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
-  EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
+  auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
+  auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
 
-  RelationshipKey relationshipKey =
+  if (leftEntity == nullptr || rightEntity == nullptr) {
+    return nullptr;
+  }
+
+  auto leftEntityKey = leftEntity->getEntityKey();
+  auto rightEntityKey = rightEntity->getEntityKey();
+
+    RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
   return this->relationshipManager->getRelationship(relationshipKey);
@@ -522,9 +543,15 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
                                   std::string leftEntityValue,
                                   EntityType rightEntityType,
                                   int rightEntityValue) -> Relationship * {
-  EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
-  EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
+  auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
+  auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
 
+  if (leftEntity == nullptr || rightEntity == nullptr) {
+    return nullptr;
+  }
+
+  auto leftEntityKey = leftEntity->getEntityKey();
+  auto rightEntityKey = rightEntity->getEntityKey();
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 

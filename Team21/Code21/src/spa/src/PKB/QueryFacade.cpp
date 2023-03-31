@@ -532,7 +532,7 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
   auto leftEntityKey = leftEntity->getEntityKey();
   auto rightEntityKey = rightEntity->getEntityKey();
 
-    RelationshipKey relationshipKey =
+  RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
   return this->relationshipManager->getRelationship(relationshipKey);
@@ -616,4 +616,8 @@ auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
   return this->relationshipManager
       ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
           relationshipType, leftEntity->getEntityKey(), rightEntityType);
+}
+
+void QueryFacade::clearCache() {
+  // todo: clear cache
 }

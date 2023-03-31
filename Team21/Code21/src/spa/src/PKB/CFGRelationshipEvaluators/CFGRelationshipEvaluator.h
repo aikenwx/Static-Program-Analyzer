@@ -15,9 +15,9 @@ class CFGRelationshipEvaluator {
   RelationshipStorage* relationshipStorage;
   EntityManager* entityManager;
 
-  auto isValidEntityInput(Entity* entity) -> bool;
+  virtual auto isValidEntityInput(Entity* entity) -> bool;
 
-  auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
+  virtual auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
 
   void populateCache(bool isReverse,
                      std::shared_ptr<Relationship> relationship);

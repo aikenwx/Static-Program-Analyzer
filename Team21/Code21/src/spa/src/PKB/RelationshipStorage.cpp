@@ -118,39 +118,6 @@ bool RelationshipStorage::tryStoreRelationshipOnlyInRelationshipStore(
   auto leftEntity = relationship->getLeftHandEntity();
   auto rightEntity = relationship->getRightHandEntity();
 
-  if (Statement::isStatement(relationship->getLeftHandEntity())) {
-    auto leftEntityKeyOwner = std::make_shared<EntityKey>(
-        &Statement::getEntityTypeStatic(), leftEntity->getEntityValue());
-
-    auto relationshipKey = RelationshipKey(&relationship->getRelationshipType(),
-                                           leftEntityKeyOwner,
-                                           &rightEntity->getEntityKey());
-    this->relationshipStore.try_emplace(relationshipKey, relationship);
-  }
-
-  if (Statement::isStatement(relationship->getRightHandEntity())) {
-    auto rightEntityKeyOwner = std::make_shared<EntityKey>(
-        &Statement::getEntityTypeStatic(), rightEntity->getEntityValue());
-
-    auto relationshipKey = RelationshipKey(&relationship->getRelationshipType(),
-                                           &leftEntity->getEntityKey(),
-                                           rightEntityKeyOwner);
-    this->relationshipStore.try_emplace(relationshipKey, relationship);
-  }
-
-  if (Statement::isStatement(relationship->getLeftHandEntity()) &&
-      Statement::isStatement(relationship->getRightHandEntity())) {
-    auto leftEntityKeyOwner = std::make_shared<EntityKey>(
-        &Statement::getEntityTypeStatic(), leftEntity->getEntityValue());
-    auto rightEntityKeyOwner = std::make_shared<EntityKey>(
-        &Statement::getEntityTypeStatic(), rightEntity->getEntityValue());
-
-    auto relationshipKey = RelationshipKey(&relationship->getRelationshipType(),
-                                           leftEntityKeyOwner,
-                                           rightEntityKeyOwner);
-    this->relationshipStore.try_emplace(relationshipKey, relationship);
-  }
-
   return true;
 }
 

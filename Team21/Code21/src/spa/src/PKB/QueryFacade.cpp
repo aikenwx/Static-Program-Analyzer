@@ -99,7 +99,7 @@ auto QueryFacade::getAllStatements() -> std::vector<Statement *> * {
 }
 
 auto QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<ParentRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ParentRelationship *> *>(
@@ -110,7 +110,7 @@ auto QueryFacade::getParentRelationshipsByLeftAndRightEntityTypes(
 }
 
 auto QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<FollowsRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<FollowsRelationship *> *>(
@@ -121,7 +121,7 @@ auto QueryFacade::getFollowsRelationshipsByLeftAndRightEntityTypes(
 }
 
 auto QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<ModifiesRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ModifiesRelationship *> *>(
@@ -132,7 +132,7 @@ auto QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(
 }
 
 auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<UsesRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<UsesRelationship *> *>(
@@ -143,7 +143,7 @@ auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
 }
 
 auto QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<ParentStarRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<ParentStarRelationship *> *>(
@@ -154,7 +154,7 @@ auto QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(
 }
 
 auto QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(
-    EntityType leftEntityType, EntityType rightEntityType)
+    const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<FollowsStarRelationship *> * {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   return reinterpret_cast<std::vector<FollowsStarRelationship *> *>(
@@ -473,10 +473,10 @@ auto QueryFacade::getEntitiesByType(EntityType entityType)
   return this->entityManager->getEntitiesByType(entityType);
 }
 
-auto QueryFacade::getRelationship(RelationshipType relationshipType,
-                                  EntityType leftEntityType,
+auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
+                                  const EntityType &leftEntityType,
                                   int leftEntityValue,
-                                  EntityType rightEntityType,
+                                  const EntityType &rightEntityType,
                                   int rightEntityValue) -> Relationship * {
   auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
   auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
@@ -494,10 +494,10 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
   return this->relationshipManager->getRelationship(relationshipKey);
 }
 
-auto QueryFacade::getRelationship(RelationshipType relationshipType,
-                                  EntityType leftEntityType,
+auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
+                                  const EntityType &leftEntityType,
                                   std::string leftEntityValue,
-                                  EntityType rightEntityType,
+                                  const EntityType &rightEntityType,
                                   std::string rightEntityValue)
     -> Relationship * {
   auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
@@ -516,10 +516,10 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
   return this->relationshipManager->getRelationship(relationshipKey);
 }
 
-auto QueryFacade::getRelationship(RelationshipType relationshipType,
-                                  EntityType leftEntityType,
+auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
+                                  const EntityType &leftEntityType,
                                   int leftEntityValue,
-                                  EntityType rightEntityType,
+                                  const EntityType &rightEntityType,
                                   std::string rightEntityValue)
     -> Relationship * {
   auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
@@ -538,10 +538,10 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
   return this->relationshipManager->getRelationship(relationshipKey);
 }
 
-auto QueryFacade::getRelationship(RelationshipType relationshipType,
-                                  EntityType leftEntityType,
+auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
+                                  const EntityType &leftEntityType,
                                   std::string leftEntityValue,
-                                  EntityType rightEntityType,
+                                  const EntityType &rightEntityType,
                                   int rightEntityValue) -> Relationship * {
   auto leftEntity = this->getEntity(leftEntityType, leftEntityValue);
   auto rightEntity = this->getEntity(rightEntityType, rightEntityValue);
@@ -558,17 +558,17 @@ auto QueryFacade::getRelationship(RelationshipType relationshipType,
   return this->relationshipManager->getRelationship(relationshipKey);
 }
 
-auto QueryFacade::getRelationshipsByTypes(RelationshipType relationshipType,
-                                          EntityType leftEntityType,
-                                          EntityType rightEntityType)
+auto QueryFacade::getRelationshipsByTypes(const RelationshipType &relationshipType,
+                                          const EntityType &leftEntityType,
+                                          const EntityType &rightEntityType)
     -> std::vector<Relationship *> * {
   return this->relationshipManager->getRelationshipsByTypes(
       relationshipType, leftEntityType, rightEntityType);
 }
 
 auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
-    RelationshipType relationshipType, EntityType leftEntityType,
-    EntityType rightEntityType, int rightEntityValue)
+    const RelationshipType &relationshipType, const EntityType &leftEntityType,
+    const EntityType &rightEntityType, int rightEntityValue)
     -> std::vector<Entity *> * {
   EntityKey rightEntityKey = EntityKey(&rightEntityType, rightEntityValue);
 
@@ -580,8 +580,8 @@ auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
 }
 
 auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
-    RelationshipType relationshipType, EntityType leftEntityType,
-    EntityType rightEntityType, std::string rightEntityValue)
+    const RelationshipType &relationshipType, const EntityType &leftEntityType,
+    const EntityType &rightEntityType, std::string rightEntityValue)
     -> std::vector<Entity *> * {
   EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
 
@@ -593,8 +593,8 @@ auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
 }
 
 auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
-    RelationshipType relationshipType, EntityType leftEntityType,
-    int leftEntityValue, EntityType rightEntityType)
+    const RelationshipType &relationshipType, const EntityType &leftEntityType,
+    int leftEntityValue, const EntityType &rightEntityType)
     -> std::vector<Entity *> * {
   EntityKey leftEntityKey = EntityKey(&leftEntityType, leftEntityValue);
 
@@ -606,8 +606,8 @@ auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
 }
 
 auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
-    RelationshipType relationshipType, EntityType leftEntityType,
-    std::string leftEntityValue, EntityType rightEntityType)
+    const RelationshipType &relationshipType, const EntityType &leftEntityType,
+    std::string leftEntityValue, const EntityType &rightEntityType)
     -> std::vector<Entity *> * {
   EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
 

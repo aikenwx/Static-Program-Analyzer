@@ -6,23 +6,28 @@
 
 #include "Entity.h"
 
+struct StatementType : public EntityType {
+ public:
+  static auto isStatementType(const EntityType& entityType) -> bool;
+};
+
 class Statement : public Entity {
-   private:
-    static const EntityType statementType;
-    int statementNumber;
+ private:
+  static const StatementType statementType;
+  int statementNumber;
 
-   public:
-    Statement(const EntityType *entityType, int statementNumber);
+ public:
+  Statement(const EntityType* entityType, int statementNumber);
 
-    static auto getEntityTypeStatic() -> const EntityType&;
-    static auto isStatement(Entity* entity) -> bool;
+  static auto getEntityTypeStatic() -> const EntityType&;
+  static auto isStatement(Entity* entity) -> bool;
 
-    ~Statement() override = default;
-    ;
+  ~Statement() override = default;
+  ;
 
-    [[nodiscard]] auto getStatementNumber() const -> int;
+  [[nodiscard]] auto getStatementNumber() const -> int;
 
-    [[nodiscard]] auto getEntityType() const -> const EntityType& override;
+  [[nodiscard]] auto getEntityType() const -> const EntityType& override;
 };
 
 #endif

@@ -16,6 +16,7 @@ NextRelationship::NextRelationship(Statement* prevStatement, Statement* nextStat
 const NextRelationshipType NextRelationship::relationshipType = NextRelationshipType();
 
 auto NextRelationship::getRelationshipTypeStatic() -> const RelationshipType& {
+    auto test = NextRelationship::relationshipType;
   return NextRelationship::relationshipType;
 }
 

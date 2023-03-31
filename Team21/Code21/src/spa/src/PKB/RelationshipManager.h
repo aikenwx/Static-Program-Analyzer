@@ -27,12 +27,14 @@ class RelationshipManager {
   std::shared_ptr<cfg::CFG> cfg;
 
 
-  std::vector<Relationship *> emptyRelationshipVector;
+  static std::vector<Relationship *> emptyRelationshipVector;
 
-  std::vector<Entity *> emptyEntityVector;
+  static std::vector<Entity *> emptyEntityVector;
 
  public:
   RelationshipManager(EntityManager* entityManager);
+
+  static auto getEmptyEntityVector() -> std::vector<Entity *> *;
 
   void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 

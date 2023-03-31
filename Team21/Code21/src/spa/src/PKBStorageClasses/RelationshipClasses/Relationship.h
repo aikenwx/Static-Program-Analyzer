@@ -12,7 +12,8 @@ struct RelationshipType : public StorageKey {
 
  public:
   RelationshipType();
-  auto operator==(const RelationshipType &relationshipType) const -> bool;
+    virtual ~RelationshipType() = default;
+    auto operator==(const RelationshipType &relationshipType) const -> bool;
 };
 
 template <>
@@ -34,9 +35,6 @@ struct RelationshipKey : public StorageKey {
   auto getRightEntityKey() -> EntityKey *;
   auto getRelationshipType() -> const RelationshipType *;
   RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, EntityKey *rightEntityKey);
-  RelationshipKey(const RelationshipType *relationshipType, std::shared_ptr<EntityKey> leftEntityKeyOwner, EntityKey *rightEntityKey);
-  RelationshipKey(const RelationshipType *relationshipType, EntityKey *leftEntityKey, std::shared_ptr<EntityKey> rightEntityKeyOwner);
-  RelationshipKey(const RelationshipType *relationshipType, std::shared_ptr<EntityKey> leftEntityKeyOwner, std::shared_ptr<EntityKey> rightEntityKeyOwner);
 
   auto operator==(const RelationshipKey &otherRelationshipLiteralKey) const
       -> bool;

@@ -45,6 +45,9 @@ class CFGRelationshipEvaluator {
 
   virtual auto getRelationshipType() const -> const RelationshipType& = 0;
 
+  virtual auto getEvaluatableEntitiesFromEntityType(
+      const EntityType& entityType) -> std::vector<Entity*>*;
+
  public:
   CFGRelationshipEvaluator(cfg::CFG* cfg,
                            RelationshipStorage* relationshipStorage,

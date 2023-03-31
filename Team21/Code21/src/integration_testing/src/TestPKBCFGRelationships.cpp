@@ -73,6 +73,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
   pkb_helper.StoreCFG(cfg);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
+  auto test = NextRelationship::getRelationshipTypeStatic();
   SECTION("Next/Affect/Affect*: (LIT, LIT)") {
     REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(),
                                          Statement::getEntityTypeStatic(), 3, Statement::getEntityTypeStatic(),
@@ -183,7 +184,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
   }
 }
 
-TEST_CASE("test_tets") {
+TEST_CASE("Test relationship retrieval with Statement entity type") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::VARIABLE] = {"count"};
   data[qps::DesignEntity::ASSIGN] = {"1"};

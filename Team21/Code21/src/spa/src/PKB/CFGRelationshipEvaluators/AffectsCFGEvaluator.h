@@ -24,9 +24,9 @@ class AffectsCFGEvaluator : public CFGRelationshipEvaluator {
       -> std::shared_ptr<std::vector<
           std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> override;
 
-  auto isValidEntityInput(Entity* entity) -> bool;
+  auto isValidEntityInput(Entity* entity) -> bool override;
 
-  auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
+  auto isValidEntityTypeInput(const EntityType& entityType) -> bool override;
 };
 
 #endif  // SPA_AFFECTSCFGEVALUATOR_H

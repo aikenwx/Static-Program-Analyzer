@@ -29,6 +29,11 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   auto rightEntityList =
       this->entityManager->getEntitiesByType(rightEntityType);
 
+  if (relationshipStorage->getRelationshipsByTypes(
+          getRelationshipType(), leftEntityType, rightEntityType) != nullptr) {
+    return;
+  }
+
   // if either list is empty, no need to evaluate, relationships cannot exist
   if (leftEntityList->empty() || rightEntityList->empty()) {
     return;
@@ -50,6 +55,12 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
           getRelationshipType(), leftEntityType, rightEntityType) != nullptr) {
     return;
   }
+
+  auto relationshipDoubleSynonymKey = RelationshipDoubleSynonymKey(
+      &getRelationshipType(), &leftEntityType, &rightEntityType);
+
+  relationshipStorage->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
+      relationshipDoubleSynonymKey);
 
   bool isReverse = shouldEvaluateRelationshipsByEntityTypesInReverse(
       leftEntityType, rightEntityType);
@@ -76,8 +87,9 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
                     : createNewRelationship(statement, result->second);
 
       this->populateCache(isReverse, relationship);
+
       this->relationshipStorage->storeInRelationshipDoubleSynonymStore(
-          relationship.get());
+          relationshipStorage->getRelationship(relationshipKey));
     }
   }
 }
@@ -199,12 +211,12 @@ void CFGRelationshipEvaluator::initializeCache(bool isReverse,
 void CFGRelationshipEvaluator::populateCache(
     bool isReverse, std::shared_ptr<Relationship> relationship) {
   if (isReverse) {
-      relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
+    relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
 
     relationshipStorage->storeInRelationshipSynonymLiteralStore(
         relationship.get());
   } else {
-      relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
+    relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
 
     relationshipStorage->storeInRelationshipLiteralSynonymStore(
         relationship.get());

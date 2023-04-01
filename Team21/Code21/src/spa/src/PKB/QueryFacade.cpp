@@ -574,6 +574,10 @@ auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
 
   Entity *rightEntity = this->entityManager->getEntity(rightEntityKey);
 
+  if (rightEntity == nullptr) {
+    return RelationshipManager::getEmptyEntityVector();
+  }
+
   return this->relationshipManager
       ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
           relationshipType, leftEntityType, rightEntity->getEntityKey());
@@ -586,6 +590,10 @@ auto QueryFacade::getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
   EntityKey rightEntityKey = EntityKey(&rightEntityType, &rightEntityValue);
 
   Entity *rightEntity = this->entityManager->getEntity(rightEntityKey);
+
+  if (rightEntity == nullptr) {
+    return RelationshipManager::getEmptyEntityVector();
+  }
 
   return this->relationshipManager
       ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
@@ -600,6 +608,10 @@ auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
 
   Entity *leftEntity = this->entityManager->getEntity(leftEntityKey);
 
+  if (leftEntity == nullptr) {
+    return RelationshipManager::getEmptyEntityVector();
+  }
+
   return this->relationshipManager
       ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
           relationshipType, leftEntity->getEntityKey(), rightEntityType);
@@ -612,6 +624,10 @@ auto QueryFacade::getRelationshipsByLeftEntityLiteralAndRightEntityType(
   EntityKey leftEntityKey = EntityKey(&leftEntityType, &leftEntityValue);
 
   Entity *leftEntity = this->entityManager->getEntity(leftEntityKey);
+
+  if (leftEntity == nullptr) {
+    return RelationshipManager::getEmptyEntityVector();
+  }
 
   return this->relationshipManager
       ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(

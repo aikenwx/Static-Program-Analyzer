@@ -68,10 +68,7 @@ class ClauseVisitor {
                                                                               src,
 
                                                                               right_);
-    if (entities != nullptr) {
-      return false;
-    }
-    return SynonymTable(std::move(dest), *entities);
+    return CreateClauseResult(std::move(dest), entities);
   }
 
   auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
@@ -81,10 +78,7 @@ class ClauseVisitor {
                                                                               right_,
                                                                               dest);
 
-    if (entities != nullptr) {
-      return false;
-    }
-    return SynonymTable(std::move(from), *entities);
+    return CreateClauseResult(std::move(from), entities);
   }
 
   auto operator()(QuotedIdentifier src, Synonym dest) -> ClauseResult {
@@ -93,12 +87,7 @@ class ClauseVisitor {
                                                                               left_,
                                                                               src.getQuotedId(),
                                                                               right_);
-
-    if (entities != nullptr) {
-      return false;
-    }
-    return SynonymTable(std::move(dest), *entities);
-
+    return CreateClauseResult(std::move(dest), entities);
   }
 
   auto operator()(Synonym from, QuotedIdentifier dest) -> ClauseResult {
@@ -108,20 +97,14 @@ class ClauseVisitor {
                                                                               right_,
                                                                               dest.getQuotedId());
 
-    if (entities != nullptr) {
-      return false;
-    }
-    return SynonymTable(std::move(from), *entities);
+    return CreateClauseResult(std::move(from), entities);
   }
 
   auto operator()(Synonym src, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *
         relationships = pkb_.getRelationshipsByTypes(relationship_type_, left_, right_);
 
-    if (relationships != nullptr) {
-      return false;
-    }
-    return SynonymTable({std::move(src)}, ExtractEntities(*relationships));
+    return SynonymTable({std::move(src)}, ExtractEntities(relationships, true, false));
   }
 
   auto operator()([[maybe_unused]] Underscore underscore, Synonym dest) -> ClauseResult {
@@ -131,7 +114,7 @@ class ClauseVisitor {
     if (relationships != nullptr) {
       return false;
     }
-    return SynonymTable({std::move(dest)}, ExtractEntities(*relationships));
+    return SynonymTable({std::move(dest)}, ExtractEntities(relationships, false, true));
   }
 
   auto operator()(Synonym src, Synonym dest) -> ClauseResult {
@@ -140,7 +123,7 @@ class ClauseVisitor {
     if (relationships != nullptr) {
       return false;
     }
-    return SynonymTable({std::move(src), std::move(dest)}, ExtractEntities(*relationships));
+    return SynonymTable({std::move(src), std::move(dest)}, ExtractEntities(relationships, true, true));
   }
 
   auto operator()([[maybe_unused]] Underscore underscore_1, [[maybe_unused]] Underscore underscore_2) -> ClauseResult {
@@ -155,6 +138,13 @@ class ClauseVisitor {
   RelationshipType relationship_type_;
   EntityType left_;
   EntityType right_;
+
+  auto CreateClauseResult(Synonym syn, std::vector<Entity *> *entities) -> ClauseResult {
+    if (entities != nullptr || !(entities->empty())) {
+      return false;
+    }
+    return SynonymTable(std::move(syn), *entities);
+  }
 };
 
 auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> EntityType {

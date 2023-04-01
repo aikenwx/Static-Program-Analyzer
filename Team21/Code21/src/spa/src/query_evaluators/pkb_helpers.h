@@ -11,7 +11,8 @@
 namespace qps {
 auto DesignEntityToEntityType(DesignEntity entity) -> EntityType;
 auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipType;
-//auto GetEntityType(Synonym &syn, const std::vector<Declaration> &declarations) -> EntityType;
-auto ExtractEntities(const std::vector<::Relationship *> &relationships) -> std::vector<std::vector<Entity *>>;
+auto ExtractEntities(const std::vector<::Relationship *> *relationships,
+                     bool left,
+                     bool right) -> std::vector<std::vector<Entity *>>;
 
 } // qps

@@ -57,11 +57,25 @@ auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipTy
   }
 }
 
-auto ExtractEntities(const std::vector<::Relationship *> &relationships) -> std::vector<std::vector<Entity *>> {
+auto ExtractEntities(const std::vector<::Relationship *> *relationships,
+                     bool left,
+                     bool right) -> std::vector<std::vector<Entity *>> {
   std::vector<std::vector<Entity *>> entities;
-  entities.reserve(relationships.size());
-  for (const auto &entity : relationships) {
-    entities.push_back({entity->getLeftHandEntity(), entity->getRightHandEntity()});
+  if (relationships == nullptr) {
+    return entities;;
+  }
+  entities.reserve(relationships->size());
+  for (const auto &entity : *relationships) {
+    std::vector<Entity *> row;
+    if (left) {
+      row.push_back(entity->getLeftHandEntity());
+    }
+
+    if (right) {
+      row.push_back(entity->getRightHandEntity());
+    }
+
+    entities.push_back(std::move(row));
   }
   return entities;
 }

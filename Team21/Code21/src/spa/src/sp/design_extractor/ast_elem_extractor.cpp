@@ -59,9 +59,9 @@ void AstElemExtractor::HandleReadNode(const std::shared_ptr<ast::ReadNode>& read
 }
 
 void AstElemExtractor::HandleVariableNode(
-    const std::shared_ptr<ast::VariableNode>& variable_node, int depth) {
+    const std::shared_ptr<ast::IdentifierNode>& variable_node, int depth) {
   relns_.push_back(
-      rel::VarRelationship::CreateRelationship(variable_node->GetName()));
+      rel::VarRelationship::CreateRelationship(variable_node->GetValue()));
 }
 
 auto

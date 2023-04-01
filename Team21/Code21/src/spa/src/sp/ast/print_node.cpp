@@ -3,9 +3,9 @@
 #include <utility>
 
 namespace ast {
-PrintNode::PrintNode(std::shared_ptr<VariableNode> var) : var(std::move(var)) {}
+PrintNode::PrintNode(std::shared_ptr<IdentifierNode> var) : var(std::move(var)) {}
 
-auto PrintNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
+auto PrintNode::GetVariable() -> std::shared_ptr<IdentifierNode> { return var; }
 
 auto PrintNode::ToString() const -> std::string {
   return "print:\n{\n" + var->ToString() + "}\n";

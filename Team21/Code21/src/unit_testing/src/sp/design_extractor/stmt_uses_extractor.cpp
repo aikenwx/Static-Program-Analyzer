@@ -12,9 +12,9 @@ SCENARIO("Uses extractor should be able to handle single-level assign node "
          "appropriately") {
   GIVEN("Assign node") {
     auto assignNode = std::make_shared<ast::AssignNode>(
-        std::make_shared<ast::VariableNode>("a"),
+        std::make_shared<ast::IdentifierNode>("a"),
         std::make_shared<ast::ExpressionNode>(
-            std::make_shared<ast::VariableNode>("b")));
+            std::make_shared<ast::IdentifierNode>("b")));
     assignNode->SetStatementNumber(15);
 
     WHEN("Variable node from LHS of assign node is handled") {
@@ -46,11 +46,11 @@ SCENARIO("Uses extractor should be able to handle single-level assign node "
         REQUIRE(usesRel->statementNumber() == assignNode->GetStatementNumber());
 
         // i mean, this has to be the case, right?
-        std::shared_ptr<ast::VariableNode> varNode =
-            std::static_pointer_cast<ast::VariableNode>(
+        std::shared_ptr<ast::IdentifierNode> varNode =
+            std::static_pointer_cast<ast::IdentifierNode>(
                 assignNode->GetAssignment());
 
-        REQUIRE(usesRel->variableName() == varNode->GetName());
+        REQUIRE(usesRel->variableName() == varNode->GetValue());
       }
     }
   };

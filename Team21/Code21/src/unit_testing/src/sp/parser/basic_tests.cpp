@@ -159,15 +159,48 @@ TEST_CASE(
 };
 
 TEST_CASE(
+  "Parser correctly parses a valid program with one procedure",
+  "[Parser]") {
+  std::string program = R"(
+      procedure main {
+        a = 1;
+        b = 2;
+        print x;
+        read y;
+      })";
+  REQUIRE(CheckRootIsProgram(program));
+};
+
+TEST_CASE(
   "Parser correctly parses a valid program with multiple procedures",
   "[Parser]") {
-  std::string program = R"(procedure hello {
-    read x;
-  }
-  procedure world {
-    read y;
-  })";
-
+  std::string program = R"(procedure main {
+      x = 1;
+      read y;
+      print z;
+      call foo;
+    }
+    procedure foo {
+      z = 2;
+      call bar;
+    }
+    procedure bar {
+      x = 1;
+      if (x == 1) then {
+        call baz;
+      } else {
+        call qux;
+      }
+    }
+    procedure baz {
+      x = 4;
+    }
+    procedure qux {
+      print w;
+    }
+    procedure quux {
+      call main;
+    })";
   REQUIRE(CheckRootIsProgram(program));
 };
 
@@ -185,7 +218,7 @@ TEST_CASE(
   "Parser correctly parses identifiers",
   "[Parser]") {
   std::string input = R"(hello)";
-  REQUIRE(CheckRootIsNodeType<ast::NameNode>(input));
+  REQUIRE(CheckRootIsNodeType<ast::IdentifierNode>(input));
 };
 
 /*

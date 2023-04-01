@@ -8,7 +8,7 @@ namespace qps {
 
 class ClauseVisitor {
  public:
-  ClauseVisitor(QueryFacade &pkb, RelationshipType relationship, EntityType left, EntityType right)
+  ClauseVisitor(QueryFacade &pkb, const RelationshipType &relationship, const EntityType &left, const EntityType &right)
       : pkb_(pkb), relationship_type_(relationship), left_(left), right_(right) {}
 
   auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
@@ -135,12 +135,12 @@ class ClauseVisitor {
 
  private:
   QueryFacade &pkb_;
-  RelationshipType relationship_type_;
-  EntityType left_;
-  EntityType right_;
+  const RelationshipType &relationship_type_;
+  const EntityType &left_;
+  const EntityType &right_;
 
   auto CreateClauseResult(Synonym syn, std::vector<Entity *> *entities) -> ClauseResult {
-    if (entities != nullptr || !(entities->empty())) {
+    if (entities == nullptr || entities->empty()) {
       return false;
     }
     return SynonymTable(std::move(syn), *entities);

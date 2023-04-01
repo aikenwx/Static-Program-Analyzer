@@ -1,11 +1,11 @@
 #include "query_evaluator.h"
 #include "select_evaluators/select_evaluator.h"
-#include "query_evaluators/such_that_evaluators/such_that_evaluator_factory.h"
 #include "pattern_evaluators/pattern_evaluator_factory.h"
 #include "with_evaluators/with_evaluator_factory.h"
 #include "join/constraints_solver.h"
 #include "tables/table_helpers.h"
 #include "string_helpers.h"
+#include "query_evaluators/such_that_evaluators/such_that_evaluator.h"
 
 namespace qps {
 QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)) {}
@@ -13,7 +13,7 @@ QueryEvaluator::QueryEvaluator(Query query) : query_(std::move(query)) {}
 void QueryEvaluator::CreateClauseEvaluators() {
   auto declarations = query_.getDeclarations();
   for (auto &clause : query_.getSuchThatClause()) {
-    clause_evaluators_.push_back(SuchThatEvaluatorFactory::Create(clause, declarations));
+    clause_evaluators_.push_back(std::make_unique<SuchThatEvaluator>(clause, declarations));
   }
   for (auto &clause : query_.getPatternClause()) {
     clause_evaluators_.push_back(PatternEvaluatorFactory::Create(clause, declarations));

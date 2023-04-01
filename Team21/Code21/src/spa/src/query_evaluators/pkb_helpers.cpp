@@ -18,10 +18,14 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 
 namespace qps {
 
-auto DesignEntityToEntityType(DesignEntity entity) -> EntityType {
+auto DesignEntityToEntityType(DesignEntity entity) -> const EntityType & {
   switch (entity) {
     case DesignEntity::STMT:return Statement::getEntityTypeStatic();
     case DesignEntity::READ:return ReadStatement::getEntityTypeStatic();
@@ -36,7 +40,7 @@ auto DesignEntityToEntityType(DesignEntity entity) -> EntityType {
   }
 }
 
-auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipType {
+auto RelationshipToRelationshipType(Relationship relationship) -> const RelationshipType & {
   switch (relationship) {
     case Relationship::Parent: return ParentRelationship::getRelationshipTypeStatic();
     case Relationship::ParentT: return ParentStarRelationship::getRelationshipTypeStatic();
@@ -50,22 +54,20 @@ auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipTy
     case Relationship::ModifiesP: return ModifiesRelationship::getRelationshipTypeStatic();
     case Relationship::Calls: return CallsRelationship::getRelationshipTypeStatic();
     case Relationship::CallsT: return CallsStarRelationship::getRelationshipTypeStatic();
-    case Relationship::Next:;
-    case Relationship::NextT:;
-    case Relationship::Affects:;
-    case Relationship::AffectsT:throw std::invalid_argument("Not supported yet");
+    case Relationship::Next: return NextRelationship::getRelationshipTypeStatic();
+    case Relationship::NextT: return NextStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Affects: return AffectsRelationship::getRelationshipTypeStatic();
+    case Relationship::AffectsT: return AffectsStarRelationship::getRelationshipTypeStatic();
   }
 }
 
-auto ExtractEntities(const std::vector<::Relationship *> *relationships,
+auto ExtractEntities(const std::vector<::Relationship *> &relationships,
                      bool left,
                      bool right) -> std::vector<std::vector<Entity *>> {
   std::vector<std::vector<Entity *>> entities;
-  if (relationships == nullptr) {
-    return entities;;
-  }
-  entities.reserve(relationships->size());
-  for (const auto &entity : *relationships) {
+
+  entities.reserve(relationships.size());
+  for (const auto &entity : relationships) {
     std::vector<Entity *> row;
     if (left) {
       row.push_back(entity->getLeftHandEntity());

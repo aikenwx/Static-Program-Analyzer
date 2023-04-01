@@ -9,9 +9,9 @@
 #include "query/declaration.h"
 
 namespace qps {
-auto DesignEntityToEntityType(DesignEntity entity) -> EntityType;
-auto RelationshipToRelationshipType(Relationship relationship) -> RelationshipType;
-auto ExtractEntities(const std::vector<::Relationship *> *relationships,
+auto DesignEntityToEntityType(DesignEntity entity) -> const EntityType &;
+auto RelationshipToRelationshipType(Relationship relationship) -> const RelationshipType &;
+auto ExtractEntities(const std::vector<::Relationship *> &relationships,
                      bool left,
                      bool right) -> std::vector<std::vector<Entity *>>;
 

@@ -4,7 +4,11 @@
 #include "util/interval_tree.h"
 #include "util/small_int_key_interval_tree.h"
 
+// SCENARIO analogue for TEMPLATE_TEST_CASE; basically the same as SCENARIO
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define TEMPLATE_SCENARIO(...) TEMPLATE_TEST_CASE("Scenario: " __VA_ARGS__)
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 namespace test_util {
 TEMPLATE_SCENARIO("IntervalTree can be constructed",
@@ -200,3 +204,5 @@ TEMPLATE_SCENARIO("IntervalTree can search for intervals",
   }
 }
 } // namespace test_util
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

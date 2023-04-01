@@ -138,7 +138,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
     REQUIRE(temp->size() == 100);
 
     auto temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
-
+    
     REQUIRE(temp2->size() == 47);
 
     auto temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
@@ -200,6 +200,65 @@ TEST_CASE("Test relationship retrieval with Statement entity type") {
                                                     "count");
   REQUIRE(relationship != nullptr);
 }
+
+
+    TEST_CASE("Test 123") {
+        qps_test::PopulatePKBHelper::Data data;
+        data[qps::DesignEntity::ASSIGN] = {"1", "2", "4", "6", "8", "9", "10", "11", "12"};
+        data[qps::DesignEntity::WHILE] = {"3"};
+        data[qps::DesignEntity::IF] = {"7"};
+        data[qps::DesignEntity::CALL] = {"5"};
+
+        auto cfg = std::make_shared<cfg::CFG>();
+        auto one = std::make_shared<cfg::Block>(1, 2);
+        auto three = std::make_shared<cfg::Block>(3, 3);
+        auto four = std::make_shared<cfg::Block>(4, 6);
+        auto seven = std::make_shared<cfg::Block>(7, 7);
+        auto eight = std::make_shared<cfg::Block>(8, 8);
+        auto nine = std::make_shared<cfg::Block>(9, 9);
+        auto ten = std::make_shared<cfg::Block>(10, 12);
+
+        one->AddChild(three);
+        three->AddChild(four);
+        three->AddChild(seven);
+        four->AddChild(three);
+        seven->AddChild(eight);
+        seven->AddChild(nine);
+        eight->AddChild(ten);
+        nine->AddChild(ten);
+
+        cfg->InsertBlock(one);
+        cfg->InsertBlock(three);
+        cfg->InsertBlock(four);
+        cfg->InsertBlock(seven);
+        cfg->InsertBlock(eight);
+        cfg->InsertBlock(nine);
+        cfg->InsertBlock(ten);
+
+        qps_test::PopulatePKBHelper pkb_helper;
+        pkb_helper.PopulateEntities(data);
+        pkb_helper.StoreCFG(cfg);
+        QueryFacade *pkb_querier = pkb_helper.GetQuerier();
+
+//  auto temp = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
+//                                                   Statement::getEntityTypeStatic(),
+//                                                   Statement::getEntityTypeStatic());
+//
+//  REQUIRE(temp->size() == 13);
+
+        auto temp1 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
+                                                          WhileStatement::getEntityTypeStatic(),
+                                                          Statement::getEntityTypeStatic());
+
+        REQUIRE(temp1->size() == 2);
+
+        auto temp3 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
+                                                          Statement::getEntityTypeStatic(),
+                                                          Statement::getEntityTypeStatic());
+
+        REQUIRE(temp3->size() == 13);
+
+    }
 }  // namespace qps
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

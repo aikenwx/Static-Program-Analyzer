@@ -22,10 +22,12 @@ class CFGRelationshipEvaluator {
   void populateCache(bool isReverse,
                      std::shared_ptr<Relationship> relationship);
 
-  void initializeCache(bool isReverse, Statement& statement);
+  void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity &statement,
+                                               const EntityType &entityType);
 
-  auto getEntitiesFromCache(bool isReverse, Statement& statement)
-      -> std::vector<Entity*>*;
+  auto getEntitiesFromStore(bool isReverse, Entity &sourceEntity,
+                            const EntityType &destinationEntityType)
+      -> std::vector<Entity *> *;
 
   auto generateStatementBlockPair(Statement* statement)
       -> std::shared_ptr<std::pair<cfg::Block*, Statement*>>;

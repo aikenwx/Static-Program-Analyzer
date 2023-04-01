@@ -5,8 +5,8 @@
 #ifndef SPA_AFFECTSSTARCFGEVALUATOR_H
 #define SPA_AFFECTSSTARCFGEVALUATOR_H
 
-#include "CFGRelationshipEvaluator.h"
-class AffectsStarCFGEvaluator : public CFGRelationshipEvaluator {
+#include "AffectsRelatedCFGEvaluator.h"
+class AffectsStarCFGEvaluator : public AffectsRelatedCFGEvaluator {
  public:
   AffectsStarCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
                           EntityManager* entityManager);
@@ -22,10 +22,6 @@ class AffectsStarCFGEvaluator : public CFGRelationshipEvaluator {
       bool isReverse)
       -> std::shared_ptr<std::vector<
           std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> override;
-
-  auto isValidEntityInput(Entity* entity) -> bool override;
-
-  auto isValidEntityTypeInput(const EntityType& entityType) -> bool override;
 };
 
 #endif  // SPA_AFFECTSSTARCFGEVALUATOR_H

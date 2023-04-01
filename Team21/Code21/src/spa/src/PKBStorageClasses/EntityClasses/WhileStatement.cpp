@@ -11,4 +11,4 @@ auto WhileStatement::getEntityTypeStatic() -> const EntityType & {
   return WhileStatement::whileStatementType;
 }
 
-const EntityType WhileStatement::whileStatementType = EntityType();
+const StatementType WhileStatement::whileStatementType = StatementType();

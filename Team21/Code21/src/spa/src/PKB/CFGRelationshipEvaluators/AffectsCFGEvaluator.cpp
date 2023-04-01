@@ -16,7 +16,7 @@
 AffectsCFGEvaluator::AffectsCFGEvaluator(cfg::CFG* cfg,
                                          RelationshipStorage* relationshipStorage,
                                          EntityManager* entityManager)
-    : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
+    : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, entityManager) {}
 
 auto AffectsCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
   return AffectsRelationship::getRelationshipTypeStatic();
@@ -124,14 +124,4 @@ auto AffectsCFGEvaluator::createNewRelationship(Statement* leftStatement,
         "AssignStatement");
   }
   return std::make_shared<AffectsRelationship>(leftAssignStatement, rightAssignStatement);
-}
-
-auto AffectsCFGEvaluator::isValidEntityInput(Entity* entity) -> bool {
-  return entity->getEntityType() == AssignStatement::getEntityTypeStatic();
-}
-
-auto AffectsCFGEvaluator::isValidEntityTypeInput(const EntityType& entityType) -> bool {
-  entityManager->getEntitiesByType(entityType);
-  return entityType == AssignStatement::getEntityTypeStatic() ||
-         entityType == Statement::getEntityTypeStatic();
 }

@@ -1,6 +1,6 @@
 #include "IfStatement.h"
 
-const EntityType IfStatement::ifStatementType = EntityType();
+const StatementType IfStatement::ifStatementType = StatementType();
 
 auto IfStatement::getEntityTypeStatic() -> const EntityType & {
   return IfStatement::ifStatementType;

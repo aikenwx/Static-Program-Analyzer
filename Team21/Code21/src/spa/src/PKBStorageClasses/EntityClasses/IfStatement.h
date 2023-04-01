@@ -5,7 +5,7 @@
 
 class IfStatement : public Statement {
    private:
-    static const EntityType ifStatementType;
+    static const StatementType ifStatementType;
 
    public:
     explicit IfStatement(int statementNumber);

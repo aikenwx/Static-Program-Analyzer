@@ -16,6 +16,9 @@
 #include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
 
+auto RelationshipManager::emptyRelationshipVector = std::vector<Relationship *>();
+auto RelationshipManager::emptyEntityVector = std::vector<Entity *>();
+
 void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
   this->cfg = cfg;
 }
@@ -33,24 +36,14 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
   if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
           *key.getRelationshipType()) &&
       relationshipStorage.getRelationship(key) == nullptr) {
-    auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
-        key.getRelationshipType());
-
     auto leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
     auto rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
 
-    CFGRelationshipEvaluator *evaluator;
+    auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
+        key.getRelationshipType());
 
-    if (*key.getRelationshipType() == NextRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (*key.getRelationshipType() == NextStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (*key.getRelationshipType() == AffectsRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (*key.getRelationshipType() == AffectsStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    }
-
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
+        this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
     evaluator->evaluateAndCacheRelationshipsByGivenEntities(
         leftEntity,
@@ -69,17 +62,8 @@ auto RelationshipManager::getRelationshipsByTypes(
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    CFGRelationshipEvaluator *evaluator;
-
-    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    }
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
+        this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
     evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType, rightHandEntityType);
   }
@@ -103,17 +87,8 @@ auto RelationshipManager::
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    CFGRelationshipEvaluator *evaluator;
-
-    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    }
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
+        this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
     auto rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
     evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(leftHandEntityType, rightHandEntity, true);
@@ -140,19 +115,11 @@ auto RelationshipManager::
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
 
-    CFGRelationshipEvaluator *evaluator;
-
-    if (relationshipType == NextRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == NextStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new NextStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    } else if (relationshipType == AffectsStarRelationship::getRelationshipTypeStatic()) {
-      evaluator = new AffectsStarCFGEvaluator(this->cfg.get(), &this->relationshipStorage, this->entityManager);
-    }
+    auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
+        this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
     auto leftHandEntity = this->entityManager->getEntity(leftHandEntityKey);
+
     evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(rightHandEntityType, leftHandEntity, false);
   }
 
@@ -162,4 +129,8 @@ auto RelationshipManager::
     return &emptyEntityVector;
   }
   return result;
+}
+
+auto RelationshipManager::getEmptyEntityVector() -> std::vector<Entity *> * {
+  return &emptyEntityVector;
 }

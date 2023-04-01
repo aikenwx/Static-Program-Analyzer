@@ -26,4 +26,4 @@ auto AssignStatement::getPostFixExpression() -> std::string * {
   return this->postFixExpression.get();
 }
 
-const EntityType AssignStatement::assignStatementType = EntityType();
+const StatementType AssignStatement::assignStatementType = StatementType();

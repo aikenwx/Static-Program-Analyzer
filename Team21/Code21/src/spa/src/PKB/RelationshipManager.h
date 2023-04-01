@@ -9,30 +9,28 @@
 #include <string>
 #include <vector>
 
-#include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "EntityManager.h"
-#include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "PKB/RelationshipStorage.h"
+#include "PKBStorageClasses/EntityClasses/Entity.h"
+#include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "sp/cfg/cfg.h"
-
-
 
 class RelationshipManager {
  private:
-
   EntityManager *entityManager;
 
   RelationshipStorage relationshipStorage;
 
   std::shared_ptr<cfg::CFG> cfg;
 
+  static std::vector<Relationship *> emptyRelationshipVector;
 
-  std::vector<Relationship *> emptyRelationshipVector;
-
-  std::vector<Entity *> emptyEntityVector;
+  static std::vector<Entity *> emptyEntityVector;
 
  public:
-  RelationshipManager(EntityManager* entityManager);
+  RelationshipManager(EntityManager *entityManager);
+
+  static auto getEmptyEntityVector() -> std::vector<Entity *> *;
 
   void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 
@@ -46,11 +44,11 @@ class RelationshipManager {
       -> std::vector<Relationship *> *;
 
   auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-          const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-          EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
+      const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
+      EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
   auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-          const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-          const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 };
 
 #endif  // SPA_RELATIONSHIPMANAGER_H

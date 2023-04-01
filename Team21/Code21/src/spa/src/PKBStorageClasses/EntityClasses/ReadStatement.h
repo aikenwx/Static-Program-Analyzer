@@ -4,7 +4,7 @@
 #include "Statement.h"
 class ReadStatement : public Statement {
    private:
-    static const EntityType readStatementType;
+    static const StatementType readStatementType;
 
    public:
     explicit ReadStatement(int statementNumber);

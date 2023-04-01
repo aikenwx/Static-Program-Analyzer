@@ -20,8 +20,12 @@ auto Statement::getEntityTypeStatic() -> const EntityType & {
   return Statement::statementType;
 }
 
-const EntityType Statement::statementType = EntityType();
+const StatementType Statement::statementType = StatementType();
 
 auto Statement::getEntityType() const -> const EntityType & {
   return Statement::statementType;
+}
+
+auto StatementType::isStatementType(const EntityType &entityType) -> bool {
+  return dynamic_cast<const StatementType *>(&entityType) != nullptr;
 }

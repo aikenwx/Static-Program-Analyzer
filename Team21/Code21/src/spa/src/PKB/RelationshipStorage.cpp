@@ -207,6 +207,12 @@ void RelationshipStorage::
       relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>());
 }
 
+void RelationshipStorage::storeInSpecifiedRelationshipDoubleSynonymStore(
+    Relationship *relationship, RelationshipDoubleSynonymKey key) {
+  this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(key);
+  this->relationshipDoubleSynonymStore.at(key)->push_back(relationship);
+}
+
 void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
     Relationship *relationship) {
   RelationshipDoubleSynonymKey relationshipSynonymKey =

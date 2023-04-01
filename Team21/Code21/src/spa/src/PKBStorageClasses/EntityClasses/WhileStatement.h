@@ -5,7 +5,7 @@
 
 class WhileStatement : public Statement {
    private:
-    static const EntityType whileStatementType;
+    static const StatementType whileStatementType;
 
    public:
     explicit WhileStatement(int statementNumber);

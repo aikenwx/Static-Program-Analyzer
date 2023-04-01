@@ -4,6 +4,7 @@
 #include <map>
 #include <optional>
 #include <utility>
+#include <vector>
 
 namespace util {
 template <typename Key, typename Val>
@@ -16,14 +17,7 @@ class IntervalTree {
   IntervalTree() = default;
 
   auto Insert(std::pair<Key, Key> interval, Val value) -> bool {
-    if (interval.first > interval.second) {
-      return false;
-    }
-    if (HasOverlap(interval)) {
-      return false;
-    }
-    intervals_.insert({interval, value});
-    return true;
+    return InsertRetPtr(interval, value).first;
   }
 
   auto Delete(std::pair<Key, Key> interval) -> bool {
@@ -43,6 +37,19 @@ class IntervalTree {
 
   [[nodiscard]] auto Size() const -> int {
     return intervals_.size();
+  }
+
+ protected:
+  auto InsertRetPtr(std::pair<Key, Key> interval, Val value) -> std::pair<bool, Val*> {
+    if (interval.first > interval.second) {
+      return std::make_pair(false, nullptr);
+    }
+    if (HasOverlap(interval)) {
+      return std::make_pair(false, nullptr);
+    }
+    // pair: (iterator pointing to newly inserted (k, v) elem, bool indicating success)
+    auto ret = intervals_.insert({interval, value});
+    return std::make_pair(true, &ret.first->second);
   }
 
  private:

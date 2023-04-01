@@ -29,7 +29,7 @@ SCENARIO("SP should terminate if there are non-unique procedure names") {
 
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SemanticError,
+            sp::SP::Process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Duplicate procedure name: ")));
       }
     }
@@ -50,7 +50,7 @@ SCENARIO("SP should terminate if a nonexistent procedure is called") {
 
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SemanticError,
+            sp::SP::Process(program, &pkb), exceptions::SemanticError,
             Message("Semantic error: Call node cannot call procedure "
                            "that does not exist"));
       }
@@ -69,7 +69,7 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
 
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SemanticError,
+            sp::SP::Process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }
@@ -90,7 +90,7 @@ SCENARIO("SP should terminate if a recursive procedure call exists") {
 
       THEN("SP should terminate with a semantic error") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SemanticError,
+            sp::SP::Process(program, &pkb), exceptions::SemanticError,
             MessageMatches(StartsWith("Semantic error: Procedure call is recursive: ")));
       }
     }

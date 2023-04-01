@@ -8,6 +8,6 @@ namespace sp {
 class SP {
  public:
   SP() = delete;
-  static auto process(const std::string& program, PKB* pkb) -> bool;
+  static auto Process(std::string_view program, PKB* pkb) -> bool;
 };
 }  // namespace sp

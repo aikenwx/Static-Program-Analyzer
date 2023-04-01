@@ -19,7 +19,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
     WHEN("The program is processed") {
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SyntaxError,
+            sp::SP::Process(program, &pkb), exceptions::SyntaxError,
             Message("Syntax error: Invalid identifier"));
       }
     }
@@ -33,7 +33,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
     WHEN("The program is processed") {
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SyntaxError,
+            sp::SP::Process(program, &pkb), exceptions::SyntaxError,
             Message("Syntax error: Unexpected symbol"));
       }
     }
@@ -45,7 +45,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
     WHEN("The program is processed") {
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SyntaxError,
+            sp::SP::Process(program, &pkb), exceptions::SyntaxError,
             Message("Syntax error: Empty program"));
       }
     }
@@ -57,7 +57,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
     WHEN("The program is processed") {
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SyntaxError,
+            sp::SP::Process(program, &pkb), exceptions::SyntaxError,
             Message("Syntax error: Invalid program"));
       }
     }
@@ -69,7 +69,7 @@ SCENARIO("SP should terminate if there are syntax errors in the program", "[sp]"
     WHEN("The program is processed") {
       THEN("A syntax error should be thrown") {
         REQUIRE_THROWS_MATCHES(
-            sp::SP::process(program, &pkb), exceptions::SyntaxError,
+            sp::SP::Process(program, &pkb), exceptions::SyntaxError,
             Message("Syntax error: Invalid program"));
       }
     }

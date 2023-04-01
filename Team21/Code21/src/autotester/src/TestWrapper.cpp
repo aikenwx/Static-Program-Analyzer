@@ -35,7 +35,7 @@ void TestWrapper::parse(std::string filename) {
   buf << t.rdbuf();
   std::string program = buf.str();
 
-  sp::SP::process(program, pkb_);
+  sp::SP::Process(program, pkb_);
 }
 
 // method to evaluating a query

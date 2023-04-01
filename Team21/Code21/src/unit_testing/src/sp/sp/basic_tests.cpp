@@ -13,6 +13,6 @@ TEST_CASE("SP can process a simple program") {
 
   auto pkb = PKB();
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 }
 }  // namespace test_sp

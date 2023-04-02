@@ -21,11 +21,10 @@ class NextCFGEvaluator : public CFGRelationshipEvaluator {
   // auto isRelated(std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
   //                Statement& destinationStatement, bool isReverse)
   //     -> bool override;
-  auto getRelatedBlockStatementPairs(
-      std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
-      bool isReverse)
-      -> std::shared_ptr<std::vector<
-          std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> override;
+  auto getRelatedStatements(
+          Statement *sourceStatement,
+          bool isReverse)
+      -> std::shared_ptr<std::vector<Statement *>> override;
 };
 
 #endif  // SPA_NEXTCFGEVALUATOR_H

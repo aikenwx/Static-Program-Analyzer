@@ -19,11 +19,10 @@ class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
                              Statement* rightStatement)
       -> std::shared_ptr<Relationship> override;
 
-  auto getRelatedBlockStatementPairs(
-      std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
-      bool isReverse)
-      -> std::shared_ptr<std::vector<
-          std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> override;
+  auto getRelatedStatements(
+          Statement *sourceStatement,
+          bool isReverse)
+      -> std::shared_ptr<std::vector<Statement *>> override;
 };
 
 #endif  // SPA_AFFECTSCFGEVALUATOR_H

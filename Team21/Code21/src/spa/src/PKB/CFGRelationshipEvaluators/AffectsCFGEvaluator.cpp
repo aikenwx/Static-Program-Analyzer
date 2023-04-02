@@ -22,15 +22,13 @@ auto AffectsCFGEvaluator::getRelationshipType() const -> const RelationshipType&
   return AffectsRelationship::getRelationshipTypeStatic();
 }
 
-auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
-    std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
+auto AffectsCFGEvaluator::getRelatedStatements(
+    Statement* sourceStatement,
     bool isReverse)
-    -> std::shared_ptr<
-        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
-  auto* statement = sourceBlockStatementPair.second;
-  if (!isValidEntityInput(sourceBlockStatementPair.second)) {
+    -> std::shared_ptr<std::vector<Statement*>> {
+  if (!isValidEntityInput(sourceStatement)) {
     throw std::invalid_argument(
-        "AffectsCFGEvaluator::getRelatedBlockStatementPairs: "
+        "AffectsCFGEvaluator::getRelatedStatements: "
         "sourceBlockStatementPair.second is not a valid entity");
   }
 
@@ -40,70 +38,72 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
 
   auto* modifiedVariable = getRelationshipStorage()->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
                                                        ModifiesRelationship::getRelationshipTypeStatic(),
-                                                       statement->getEntityKey(),
+                                                       sourceStatement->getEntityKey(),
                                                        Variable::getEntityTypeStatic())
                                ->at(0);
 
-  auto results = std::make_shared<
-      std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
+  auto results = std::make_shared<std::vector<Statement*>>();
 
   // create stack of statements to visit
-  auto statementsToVisit =
-      std::stack<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>();
+  auto statementsToVisit = std::stack<Statement*>();
 
   // push all statements from results into stack
-  auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
-      sourceBlockStatementPair, isReverse);
+
+  nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+      Statement::getEntityTypeStatic(), sourceStatement, isReverse);
+
+  auto *directRelations = nextCFGEvaluator.getEntitiesFromStore(isReverse,
+                                                               *sourceStatement, Statement::getEntityTypeStatic());
 
   for (const auto& result : *directRelations) {
-    statementsToVisit.push(result);
+    statementsToVisit.push(dynamic_cast<Statement*>(result));
   }
 
   // bfs
   while (!statementsToVisit.empty()) {
-    auto nextToVisit = statementsToVisit.top();
+    auto *nextToVisit = statementsToVisit.top();
     statementsToVisit.pop();
 
     if (visitedStatementNumbers.find(
-            nextToVisit->second->getStatementNumber()) !=
+            nextToVisit->getStatementNumber()) !=
         visitedStatementNumbers.end()) {
       continue;
     }
 
-    visitedStatementNumbers.insert(nextToVisit->second->getStatementNumber());
+    visitedStatementNumbers.insert(nextToVisit->getStatementNumber());
 
     auto usesRelationshipKey = RelationshipKey(
         &UsesRelationship::getRelationshipTypeStatic(),
-        &nextToVisit->second->getEntityKey(),
+        &nextToVisit->getEntityKey(),
         &modifiedVariable->getEntityKey());
 
     // we check uses first, as we don't want to skip case where assign statement uses and modifies same variable that was modified by source statement
     // statement is affected by source statement
-    if ((getRelationshipStorage()->getRelationship(usesRelationshipKey) != nullptr) && isValidEntityInput(nextToVisit->second)) {
+    if ((getRelationshipStorage()->getRelationship(usesRelationshipKey) != nullptr) && isValidEntityInput(nextToVisit)) {
       // only add if its an assign statement
       results->push_back(nextToVisit);
     }
 
-    if (isAllowedModifier(nextToVisit->second)) {
-        auto modifiesRelationshipKey = RelationshipKey(
-                &ModifiesRelationship::getRelationshipTypeStatic(),
-                &nextToVisit->second->getEntityKey(),
-                &modifiedVariable->getEntityKey());
+    if (isAllowedModifier(nextToVisit)) {
+      auto modifiesRelationshipKey = RelationshipKey(
+          &ModifiesRelationship::getRelationshipTypeStatic(),
+          &nextToVisit->getEntityKey(),
+          &modifiedVariable->getEntityKey());
 
-        // there is a modification, we terminate traversing this path
-        if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) != nullptr) {
-            continue;
-        }
+      // there is a modification, we terminate traversing this path
+      if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) != nullptr) {
+        continue;
+      }
     }
 
+    nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+        Statement::getEntityTypeStatic(), nextToVisit, isReverse);
 
-
-
-    auto nextResults =
-        nextCFGEvaluator.getRelatedBlockStatementPairs(*nextToVisit, isReverse);
+    auto *nextResults = nextCFGEvaluator.getEntitiesFromStore(isReverse,
+                                                             *nextToVisit, Statement::getEntityTypeStatic());
 
     for (const auto& nextResult : *nextResults) {
-      statementsToVisit.push(nextResult);
+      statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
     }
   }
 

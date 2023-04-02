@@ -109,15 +109,14 @@ void CFGRelationshipEvaluator::
     return;
   }
 
-  auto relatedStatements = this->getRelatedBlockStatementPairs(
-      *generateStatementBlockPair(statement), isReverse);
+  auto relatedStatements = this->getRelatedStatements(statement, isReverse);
 
   initializeCacheGivenEntityAndEntityType(isReverse, *statement, givenEntityType);
 
   for (const auto &relatedStatement : *relatedStatements) {
     auto relationship =
-        isReverse ? createNewRelationship(relatedStatement->second, statement)
-                  : createNewRelationship(statement, relatedStatement->second);
+        isReverse ? createNewRelationship(relatedStatement, statement)
+                  : createNewRelationship(statement, relatedStatement);
     populateCache(isReverse, relationship);
   }
 }

@@ -51,7 +51,6 @@ class Entity {
          const std::shared_ptr<std::string> &entityValue);
 
   virtual ~Entity() = default;
-  ;
 
   [[nodiscard]] virtual auto getEntityType() const -> const EntityType & = 0;
 

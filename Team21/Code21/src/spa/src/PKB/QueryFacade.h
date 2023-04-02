@@ -116,11 +116,11 @@ class QueryFacade {
                                 std::string calleeName)
       -> CallsStarRelationship*;
 
-  auto getEntity(EntityType entityType, int entityValue) -> Entity*;
+  auto getEntity(const EntityType& entityType, int entityValue) -> Entity*;
 
-  auto getEntity(EntityType entityType, std::string entityValue) -> Entity*;
+  auto getEntity(const EntityType& entityType, std::string entityValue) -> Entity*;
 
-  auto getEntitiesByType(EntityType entityType) -> std::vector<Entity*>*;
+  auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
   auto getRelationship(const RelationshipType & relationshipType,
                        const EntityType & leftEntityType, int leftEntityValue,

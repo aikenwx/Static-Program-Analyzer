@@ -10,17 +10,18 @@
 #include "sp/cfg/cfg.h"
 
 class CFGRelationshipEvaluator {
- protected:
-  cfg::CFG* cfg;
-  RelationshipStorage* relationshipStorage;
-  EntityManager* entityManager;
+private:
+    cfg::CFG* cfg;
+    RelationshipStorage* relationshipStorage;
+    EntityManager* entityManager;
 
+protected:
   virtual auto isValidEntityInput(Entity* entity) -> bool;
 
   virtual auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
 
   void populateCache(bool isReverse,
-                     std::shared_ptr<Relationship> relationship);
+                     const std::shared_ptr<Relationship>& relationship);
 
   void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity &statement,
                                                const EntityType &entityType);
@@ -45,15 +46,24 @@ class CFGRelationshipEvaluator {
       -> std::shared_ptr<
           std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> = 0;
 
-  virtual auto getRelationshipType() const -> const RelationshipType& = 0;
+  [[nodiscard]] virtual auto getRelationshipType() const -> const RelationshipType& = 0;
 
-  virtual auto getEvaluatableEntitiesFromEntityType(
+  virtual auto getEvaluableEntitiesFromEntityType(
       const EntityType& entityType) -> std::vector<Entity*>*;
 
- public:
+  auto getCFG() -> cfg::CFG*;
+
+  auto getRelationshipStorage() -> RelationshipStorage*;
+
+  auto getEntityManager() -> EntityManager*;
+
+public:
+
   CFGRelationshipEvaluator(cfg::CFG* cfg,
                            RelationshipStorage* relationshipStorage,
                            EntityManager* entityManager);
+
+  virtual ~CFGRelationshipEvaluator() = default;
 
   void evaluateAndCacheRelationshipsByGivenEntities(
       Entity* leftEntity, Entity* rightEntity);

@@ -16,16 +16,16 @@ auto AffectsRelatedCFGEvaluator::isValidEntityInput(Entity* entity) -> bool {
 }
 
 auto AffectsRelatedCFGEvaluator::isValidEntityTypeInput(const EntityType& entityType) -> bool {
-  entityManager->getEntitiesByType(entityType);
+  getEntityManager()->getEntitiesByType(entityType);
   return entityType == AssignStatement::getEntityTypeStatic() ||
          entityType == Statement::getEntityTypeStatic();
 }
 
-auto AffectsRelatedCFGEvaluator::getEvaluatableEntitiesFromEntityType(
+auto AffectsRelatedCFGEvaluator::getEvaluableEntitiesFromEntityType(
     const EntityType& entityType) -> std::vector<Entity*>* {
   if (!isValidEntityTypeInput(entityType)) {
     return RelationshipManager::getEmptyEntityVector();
   }
 
-  return entityManager->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  return getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 }

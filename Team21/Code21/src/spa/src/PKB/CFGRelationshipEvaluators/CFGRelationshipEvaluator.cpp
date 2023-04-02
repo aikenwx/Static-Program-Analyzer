@@ -17,8 +17,6 @@ auto CFGRelationshipEvaluator::generateStatementBlockPair(Statement *statement)
     -> std::shared_ptr<std::pair<cfg::Block *, Statement *>> {
   auto cfgBlock = cfg->GetBlockAt(statement->getStatementNumber());
 
-  auto block = cfgBlock.value().get();
-
   auto sourceBlockStatementPairs =
       std::make_shared<std::pair<cfg::Block *, Statement *>>(
           cfgBlock.value().get(), statement);
@@ -27,8 +25,8 @@ auto CFGRelationshipEvaluator::generateStatementBlockPair(Statement *statement)
 
 void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     const EntityType &leftEntityType, const EntityType &rightEntityType) {
-  auto leftEntityList = getEvaluatableEntitiesFromEntityType(leftEntityType);
-  auto rightEntityList = getEvaluatableEntitiesFromEntityType(rightEntityType);
+  auto *leftEntityList = getEvaluableEntitiesFromEntityType(leftEntityType);
+  auto *rightEntityList = getEvaluableEntitiesFromEntityType(rightEntityType);
   this->entityManager->getEntitiesByType(rightEntityType);
 
   // if either list is empty, no need to evaluate, relationships cannot exist
@@ -62,15 +60,15 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   bool isReverse = shouldEvaluateRelationshipsByEntityTypesInReverse(
       leftEntityType, rightEntityType);
 
-  for (auto entity : isReverse ? *rightEntityList : *leftEntityList) {
+  for (auto *entity : isReverse ? *rightEntityList : *leftEntityList) {
     evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
         isReverse ? leftEntityType : rightEntityType, entity, isReverse);
 
-    auto results = getEntitiesFromStore(isReverse, *static_cast<Statement *>(entity), isReverse ? leftEntityType : rightEntityType);
+    auto *results = getEntitiesFromStore(isReverse, *dynamic_cast<Statement *>(entity), isReverse ? leftEntityType : rightEntityType);
 
     initializeCacheGivenEntityAndEntityType(isReverse, *entity, isReverse ? leftEntityType : rightEntityType);
 
-    for (auto result : *results) {
+    for (auto *result : *results) {
       auto relationshipKey = isReverse ? RelationshipKey(&getRelationshipType(), &result->getEntityKey(),
                                                          &entity->getEntityKey())
                                        : RelationshipKey(&getRelationshipType(), &entity->getEntityKey(),
@@ -85,7 +83,7 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
 void CFGRelationshipEvaluator::
     evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
         const EntityType &givenEntityType, Entity *entity, bool isReverse) {
-  auto entityList = this->entityManager->getEntitiesByType(givenEntityType);
+  auto *entityList = this->entityManager->getEntitiesByType(givenEntityType);
 
   if (!isValidEntityInput(entity)) {
     return;
@@ -104,7 +102,7 @@ void CFGRelationshipEvaluator::
     return;
   }
 
-  auto statement = static_cast<Statement *>(entity);
+  auto *statement = dynamic_cast<Statement *>(entity);
 
   // already evaluated
   if (getEntitiesFromStore(isReverse, *statement, givenEntityType) != nullptr) {
@@ -116,7 +114,7 @@ void CFGRelationshipEvaluator::
 
   initializeCacheGivenEntityAndEntityType(isReverse, *statement, givenEntityType);
 
-  for (auto relatedStatement : *relatedStatements) {
+  for (const auto &relatedStatement : *relatedStatements) {
     auto relationship =
         isReverse ? createNewRelationship(relatedStatement->second, statement)
                   : createNewRelationship(statement, relatedStatement->second);
@@ -128,15 +126,15 @@ auto CFGRelationshipEvaluator::
     shouldEvaluateRelationshipsByEntityTypesInReverse(
         const EntityType &leftEntityType, const EntityType &rightEntityType)
         -> bool {
-  auto leftEntityList = getEvaluatableEntitiesFromEntityType(leftEntityType);
-  auto rightEntityList = getEvaluatableEntitiesFromEntityType(rightEntityType);
+  auto *leftEntityList = getEvaluableEntitiesFromEntityType(leftEntityType);
+  auto *rightEntityList = getEvaluableEntitiesFromEntityType(rightEntityType);
 
   int numberOfForwardRelationshipEvaluationsRequired = 0;
 
-  for (auto leftEntity : *leftEntityList) {
+  for (auto *leftEntity : *leftEntityList) {
     if (this->relationshipStorage
             ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-                (RelationshipType &)this->getRelationshipType(),
+                this->getRelationshipType(),
                 leftEntity->getEntityKey(), rightEntityType) == nullptr) {
       numberOfForwardRelationshipEvaluationsRequired++;
     }
@@ -144,10 +142,10 @@ auto CFGRelationshipEvaluator::
 
   int numberOfReverseRelationshipEvaluationsRequired = 0;
 
-  for (auto rightEntity : *rightEntityList) {
+  for (auto *rightEntity : *rightEntityList) {
     if (this->relationshipStorage
             ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-                (RelationshipType &)this->getRelationshipType(), leftEntityType,
+                this->getRelationshipType(), leftEntityType,
                 rightEntity->getEntityKey()) == nullptr) {
       numberOfReverseRelationshipEvaluationsRequired++;
     }
@@ -196,7 +194,7 @@ void CFGRelationshipEvaluator::initializeCacheGivenEntityAndEntityType(bool isRe
 }
 
 void CFGRelationshipEvaluator::populateCache(
-    bool isReverse, std::shared_ptr<Relationship> relationship) {
+    bool isReverse, const std::shared_ptr<Relationship> &relationship) {
   if (isReverse) {
     relationshipStorage->tryStoreRelationshipOnlyInRelationshipStore(relationship);
 
@@ -230,8 +228,8 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
     return;
   }
 
-  auto leftStatement = static_cast<Statement *>(leftEntity);
-  auto rightStatement = static_cast<Statement *>(rightEntity);
+  auto *leftStatement = dynamic_cast<Statement *>(leftEntity);
+  auto *rightStatement = dynamic_cast<Statement *>(rightEntity);
 
   if (getEntitiesFromStore(true, *rightStatement, Statement::getEntityTypeStatic()) != nullptr) {
     return;
@@ -246,25 +244,31 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
 }
 
 auto CFGRelationshipEvaluator::isValidEntityInput(Entity *entity) -> bool {
-  if (!Statement::isStatement(entity)) {
-    return false;
-  }
-  return true;
+  return Statement::isStatement(entity);
 }
 
 auto CFGRelationshipEvaluator::isValidEntityTypeInput(
     const EntityType &entityType) -> bool {
-  if (!StatementType::isStatementType(entityType)) {
-    return false;
-  }
-  return true;
+  return StatementType::isStatementType(entityType);
 }
 
-auto CFGRelationshipEvaluator::getEvaluatableEntitiesFromEntityType(
+auto CFGRelationshipEvaluator::getEvaluableEntitiesFromEntityType(
     const EntityType &entityType) -> std::vector<Entity *> * {
   if (!StatementType::isStatementType(entityType)) {
     return RelationshipManager::getEmptyEntityVector();
   }
 
   return this->entityManager->getEntitiesByType(entityType);
+}
+
+auto CFGRelationshipEvaluator::getCFG() -> cfg::CFG * {
+  return this->cfg;
+}
+
+auto CFGRelationshipEvaluator::getRelationshipStorage() -> RelationshipStorage * {
+  return this->relationshipStorage;
+}
+
+auto CFGRelationshipEvaluator::getEntityManager() -> EntityManager * {
+  return this->entityManager;
 }

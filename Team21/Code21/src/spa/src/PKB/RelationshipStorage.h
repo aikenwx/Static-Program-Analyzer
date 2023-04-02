@@ -120,7 +120,7 @@ class RelationshipStorage {
       const std::shared_ptr<Relationship> relationship);
 
   void storeInSpecifiedRelationshipDoubleSynonymStore(
-      Relationship *relationship, RelationshipDoubleSynonymKey key);
+      Relationship *relationship, const RelationshipDoubleSynonymKey& key);
 
   void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
 
@@ -150,7 +150,7 @@ class RelationshipStorage {
       RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);
 
   void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      RelationshipSynonymLiteralKey relationshipSynonymLiteralKey);
+      const RelationshipSynonymLiteralKey& relationshipSynonymLiteralKey);
 };
 
 #endif  // SPA_RELATIONSHIPSTORAGE_H

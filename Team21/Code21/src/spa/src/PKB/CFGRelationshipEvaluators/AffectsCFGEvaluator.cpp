@@ -27,7 +27,7 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
     bool isReverse)
     -> std::shared_ptr<
         std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
-  auto statement = sourceBlockStatementPair.second;
+  auto* statement = sourceBlockStatementPair.second;
   if (!isValidEntityInput(sourceBlockStatementPair.second)) {
     throw std::invalid_argument(
         "AffectsCFGEvaluator::getRelatedBlockStatementPairs: "
@@ -36,13 +36,13 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
 
   auto visitedStatementNumbers = std::unordered_set<int>();
 
-  NextCFGEvaluator nextCFGEvaluator(cfg, relationshipStorage, entityManager);
+  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
 
-  auto modifiedVariable = relationshipStorage->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-                                                 ModifiesRelationship::getRelationshipTypeStatic(),
-                                                 statement->getEntityKey(),
-                                                 Variable::getEntityTypeStatic())
-                              ->at(0);
+  auto* modifiedVariable = getRelationshipStorage()->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
+                                                       ModifiesRelationship::getRelationshipTypeStatic(),
+                                                       statement->getEntityKey(),
+                                                       Variable::getEntityTypeStatic())
+                               ->at(0);
 
   auto results = std::make_shared<
       std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
@@ -53,9 +53,9 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
 
   // push all statements from results into stack
   auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
-           sourceBlockStatementPair, isReverse);
+      sourceBlockStatementPair, isReverse);
 
-  for (auto result : *directRelations) {
+  for (const auto& result : *directRelations) {
     statementsToVisit.push(result);
   }
 
@@ -79,7 +79,7 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
 
     // we check uses first, as we don't want to skip case where assign statement uses and modifies same variable that was modified by source statement
     // statement is affected by source statement
-    if (relationshipStorage->getRelationship(usesRelationshipKey) && isValidEntityInput(nextToVisit->second)) {
+    if ((getRelationshipStorage()->getRelationship(usesRelationshipKey) != nullptr) && isValidEntityInput(nextToVisit->second)) {
       // only add if its an assign statement
       results->push_back(nextToVisit);
       continue;
@@ -91,14 +91,14 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
         &modifiedVariable->getEntityKey());
 
     // there is a modification, we terminate traversing this path
-    if (relationshipStorage->getRelationship(modifiesRelationshipKey)) {
+    if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) != nullptr) {
       continue;
     }
 
     auto nextResults =
         nextCFGEvaluator.getRelatedBlockStatementPairs(*nextToVisit, isReverse);
 
-    for (auto nextResult : *nextResults) {
+    for (const auto& nextResult : *nextResults) {
       statementsToVisit.push(nextResult);
     }
   }
@@ -109,15 +109,16 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
 auto AffectsCFGEvaluator::createNewRelationship(Statement* leftStatement,
                                                 Statement* rightStatement)
     -> std::shared_ptr<Relationship> {
-  auto leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
-  auto rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);
+  auto* leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
+  auto* rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);
 
   if (leftAssignStatement == nullptr) {
     throw std::runtime_error(
         "AffectsCFGEvaluator::createNewRelationship: "
         "leftStatement or rightStatement is not an "
         "AssignStatement");
-  } else if (rightAssignStatement == nullptr) {
+  }
+  if (rightAssignStatement == nullptr) {
     throw std::runtime_error(
         "AffectsCFGEvaluator::createNewRelationship: "
         "leftStatement or rightStatement is not an "

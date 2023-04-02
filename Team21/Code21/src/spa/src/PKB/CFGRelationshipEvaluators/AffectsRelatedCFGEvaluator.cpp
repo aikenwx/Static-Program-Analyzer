@@ -6,23 +6,23 @@
 
 #include "PKB/RelationshipManager.h"
 
-AffectsRelatedCFGEvaluator::AffectsRelatedCFGEvaluator(cfg::CFG* cfg,
-                                                       RelationshipStorage* relationshipStorage,
-                                                       EntityManager* entityManager)
+AffectsRelatedCFGEvaluator::AffectsRelatedCFGEvaluator(cfg::CFG *cfg,
+                                                       RelationshipStorage *relationshipStorage,
+                                                       EntityManager *entityManager)
     : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
 
-auto AffectsRelatedCFGEvaluator::isValidEntityInput(Entity* entity) -> bool {
+auto AffectsRelatedCFGEvaluator::isValidEntityInput(Entity *entity) -> bool {
   return entity->getEntityType() == AssignStatement::getEntityTypeStatic();
 }
 
-auto AffectsRelatedCFGEvaluator::isValidEntityTypeInput(const EntityType& entityType) -> bool {
+auto AffectsRelatedCFGEvaluator::isValidEntityTypeInput(const EntityType &entityType) -> bool {
   getEntityManager()->getEntitiesByType(entityType);
   return entityType == AssignStatement::getEntityTypeStatic() ||
-         entityType == Statement::getEntityTypeStatic();
+      entityType == Statement::getEntityTypeStatic();
 }
 
 auto AffectsRelatedCFGEvaluator::getEvaluableEntitiesFromEntityType(
-    const EntityType& entityType) -> std::vector<Entity*>* {
+    const EntityType &entityType) -> std::vector<Entity *> * {
   if (!isValidEntityTypeInput(entityType)) {
     return RelationshipManager::getEmptyEntityVector();
   }
@@ -30,6 +30,7 @@ auto AffectsRelatedCFGEvaluator::getEvaluableEntitiesFromEntityType(
   return getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 }
 
-auto AffectsRelatedCFGEvaluator::isAllowedModifier(Entity* entity) -> bool {
-  return !(entity->getEntityType() == WhileStatement::getEntityTypeStatic()) && !(entity->getEntityType() == IfStatement::getEntityTypeStatic());
+auto AffectsRelatedCFGEvaluator::isAllowedModifier(Entity *entity) -> bool {
+  return !(entity->getEntityType() == WhileStatement::getEntityTypeStatic())
+      && !(entity->getEntityType() == IfStatement::getEntityTypeStatic());
 }

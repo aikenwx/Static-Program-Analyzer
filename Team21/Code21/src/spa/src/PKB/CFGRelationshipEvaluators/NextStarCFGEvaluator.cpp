@@ -19,49 +19,49 @@ auto NextStarCFGEvaluator::getRelationshipType() const
   return NextStarRelationship::getRelationshipTypeStatic();
 }
 
-auto NextStarCFGEvaluator::getRelatedBlockStatementPairs(
-    std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
+auto NextStarCFGEvaluator::getRelatedStatements(
+    Statement* sourceStatement,
     bool isReverse)
-    -> std::shared_ptr<
-        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
+    -> std::shared_ptr<std::vector<Statement*>> {
   auto visitedStatementNumbers = std::unordered_set<int>();
 
   NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
 
-  auto results = std::make_shared<
-      std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
+  auto results = std::make_shared<std::vector<Statement*>>();
 
   // create stack of statements to visit
   auto statementsToVisit =
-      std::stack<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>();
+      std::stack<Statement*>();
 
+  nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+      Statement::getEntityTypeStatic(), sourceStatement, isReverse);
   // push all statements from results into stack
-  auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
-      sourceBlockStatementPair, isReverse);
+  auto directRelations = nextCFGEvaluator.getEntitiesFromStore(isReverse, *sourceStatement, Statement::getEntityTypeStatic());
 
   for (const auto& result : *directRelations) {
-    statementsToVisit.push(result);
+    statementsToVisit.push(dynamic_cast<Statement*>(result));
   }
 
-  // bfs
   while (!statementsToVisit.empty()) {
     auto nextToVisit = statementsToVisit.top();
     statementsToVisit.pop();
 
     if (visitedStatementNumbers.find(
-            nextToVisit->second->getStatementNumber()) !=
+            nextToVisit->getStatementNumber()) !=
         visitedStatementNumbers.end()) {
       continue;
     }
 
-    visitedStatementNumbers.insert(nextToVisit->second->getStatementNumber());
+    visitedStatementNumbers.insert(nextToVisit->getStatementNumber());
     results->push_back(nextToVisit);
 
-    auto nextResults =
-        nextCFGEvaluator.getRelatedBlockStatementPairs(*nextToVisit, isReverse);
+    nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+        Statement::getEntityTypeStatic(), nextToVisit, isReverse);
+
+    auto nextResults = nextCFGEvaluator.getEntitiesFromStore(isReverse, *nextToVisit, Statement::getEntityTypeStatic());
 
     for (const auto& nextResult : *nextResults) {
-      statementsToVisit.push(nextResult);
+      statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
     }
   }
 

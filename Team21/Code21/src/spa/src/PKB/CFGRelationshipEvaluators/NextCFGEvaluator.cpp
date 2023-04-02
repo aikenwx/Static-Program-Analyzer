@@ -15,49 +15,40 @@ auto NextCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
   return NextRelationship::getRelationshipTypeStatic();
 }
 
-auto NextCFGEvaluator::getRelatedBlockStatementPairs(
-    std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
+auto NextCFGEvaluator::getRelatedStatements(
+    Statement* sourceStatement,
     bool isReverse)
-    -> std::shared_ptr<
-        std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
-  auto nextBlockStatementPairs = std::make_shared<
-      std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
+    -> std::shared_ptr<std::vector<Statement*>> {
+  auto nextStatements = std::make_shared<
+      std::vector<Statement*>>();
 
-  auto* currentBlock = sourceBlockStatementPair.first;
-  auto* currentStatement = sourceBlockStatementPair.second;
+  auto* currentBlock = getCFG()->GetBlockAt(sourceStatement->getStatementNumber()).value().get();
 
   int possibleNextStatementNumber =
-      isReverse ? currentStatement->getStatementNumber() - 1
-                : currentStatement->getStatementNumber() + 1;
+      isReverse ? sourceStatement->getStatementNumber() - 1
+                : sourceStatement->getStatementNumber() + 1;
 
   if (currentBlock->IsInBlock(possibleNextStatementNumber)) {
     auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
                                possibleNextStatementNumber);
 
-    auto* statement =
-        dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
+    auto* statement = dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
 
-    nextBlockStatementPairs->push_back(
-        std::make_shared<std::pair<cfg::Block*, Statement*>>(currentBlock,
-                                                             statement));
+    nextStatements->push_back(statement);
 
   } else {
-    auto neighbours =
-        isReverse ? currentBlock->parents() : currentBlock->children();
+    auto neighbours = isReverse ? currentBlock->parents() : currentBlock->children();
     for (const auto& neighbour : neighbours) {
       auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
                                  isReverse ? neighbour.lock()->end() : neighbour.lock()->start());
 
-      auto* statement =
-          dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
+      auto* statement = dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
 
-      nextBlockStatementPairs->push_back(
-          std::make_shared<std::pair<cfg::Block*, Statement*>>(
-              neighbour.lock().get(), statement));
+      nextStatements->push_back(statement);
     }
   }
 
-  return nextBlockStatementPairs;
+  return nextStatements;
 }
 
 auto NextCFGEvaluator::createNewRelationship(Statement* leftStatement,

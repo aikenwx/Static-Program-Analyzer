@@ -11,7 +11,7 @@ class AffectsStarCFGEvaluator : public AffectsRelatedCFGEvaluator {
   AffectsStarCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
                           EntityManager* entityManager);
 
-  auto getRelationshipType() const -> const RelationshipType& override;
+  [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
 
   auto createNewRelationship(Statement* leftStatement,
                              Statement* rightStatement)

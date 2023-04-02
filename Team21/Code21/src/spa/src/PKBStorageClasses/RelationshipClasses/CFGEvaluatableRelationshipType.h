@@ -5,16 +5,14 @@
 #ifndef SPA_CFGEVALUATABLERELATIONSHIPTYPE_H
 #define SPA_CFGEVALUATABLERELATIONSHIPTYPE_H
 
-#include "Relationship.h"
 #include "PKB/CFGRelationshipEvaluators/CFGRelationshipEvaluator.h"
+#include "Relationship.h"
 
-class CFGEvaluatableRelationshipType : public RelationshipType {
+class CFGEvaluableRelationshipType : public RelationshipType {
+ public:
+  static auto isCFGEvaluableRelationship(const RelationshipType& relationshipType) -> bool;
 
-  public: 
-    static auto isCFGEvaluableRelationship(const RelationshipType &relationshipType) -> bool;
-
-    virtual auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> = 0;
+  virtual auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> = 0;
 };
 
-
-#endif //SPA_CFGEVALUATABLERELATIONSHIPTYPE_H
+#endif  // SPA_CFGEVALUATABLERELATIONSHIPTYPE_H

@@ -107,14 +107,11 @@ void RelationshipStorage::storeRelationship(
   this->storeInRelationshipSynonymLiteralStore(relationship.get());
 }
 
-bool RelationshipStorage::tryStoreRelationshipOnlyInRelationshipStore(
-    const std::shared_ptr<Relationship> relationship) {
-  if (!this->relationshipStore
+auto RelationshipStorage::tryStoreRelationshipOnlyInRelationshipStore(
+    const std::shared_ptr<Relationship>& relationship) -> bool {
+  return this->relationshipStore
            .try_emplace(relationship->getRelationshipKey(), relationship)
-           .second) {
-    return false;
-  }
-  return true;
+           .second;
 }
 
 auto RelationshipStorage::getRelationship(RelationshipKey &key)
@@ -181,7 +178,7 @@ auto RelationshipStorage::
 
 void RelationshipStorage::
     initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-        RelationshipDoubleSynonymKey relationshipSynonymKey) {
+        const RelationshipDoubleSynonymKey& relationshipSynonymKey) {
   // inserts only if key doesn't exist
   this->relationshipDoubleSynonymStore.try_emplace(
       relationshipSynonymKey, std::make_shared<std::vector<Relationship *>>());
@@ -197,14 +194,14 @@ void RelationshipStorage::
 
 void RelationshipStorage::
     initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-        RelationshipSynonymLiteralKey relationshipSynonymLiteralKey) {
+        const RelationshipSynonymLiteralKey& relationshipSynonymLiteralKey) {
   // inserts only if key doesn't exist
   this->relationshipSynonymLiteralStore.try_emplace(
       relationshipSynonymLiteralKey, std::make_shared<std::vector<Entity *>>());
 }
 
 void RelationshipStorage::storeInSpecifiedRelationshipDoubleSynonymStore(
-    Relationship *relationship, RelationshipDoubleSynonymKey key) {
+    Relationship *relationship, const RelationshipDoubleSynonymKey& key) {
   this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(key);
   this->relationshipDoubleSynonymStore.at(key)->push_back(relationship);
 }

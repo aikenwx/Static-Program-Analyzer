@@ -15,14 +15,12 @@ class AffectsRelatedCFGEvaluator : public CFGRelationshipEvaluator {
 
   auto isValidEntityTypeInput(const EntityType& entityType) -> bool override;
 
-  virtual auto getRelatedBlockStatementPairs(
-      std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
-      bool isReverse)
-      -> std::shared_ptr<std::vector<
-          std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> override = 0;
 
-         auto getEvaluatableEntitiesFromEntityType(
+         auto getEvaluableEntitiesFromEntityType(
       const EntityType& entityType) -> std::vector<Entity*>* override;
+
+  auto isAllowedModifier(Entity* entity) -> bool;
+  
 };
 
 #endif  // SPA_AFFECTSRELATEDCFGEVALUATOR_H

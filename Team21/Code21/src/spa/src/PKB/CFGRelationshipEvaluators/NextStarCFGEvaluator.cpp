@@ -26,7 +26,7 @@ auto NextStarCFGEvaluator::getRelatedBlockStatementPairs(
         std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>> {
   auto visitedStatementNumbers = std::unordered_set<int>();
 
-  NextCFGEvaluator nextCFGEvaluator(cfg, relationshipStorage, entityManager);
+  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
 
   auto results = std::make_shared<
       std::vector<std::shared_ptr<std::pair<cfg::Block*, Statement*>>>>();
@@ -37,9 +37,9 @@ auto NextStarCFGEvaluator::getRelatedBlockStatementPairs(
 
   // push all statements from results into stack
   auto directRelations = nextCFGEvaluator.getRelatedBlockStatementPairs(
-          sourceBlockStatementPair, isReverse);
+      sourceBlockStatementPair, isReverse);
 
-  for (auto result : *directRelations) {
+  for (const auto& result : *directRelations) {
     statementsToVisit.push(result);
   }
 
@@ -60,7 +60,7 @@ auto NextStarCFGEvaluator::getRelatedBlockStatementPairs(
     auto nextResults =
         nextCFGEvaluator.getRelatedBlockStatementPairs(*nextToVisit, isReverse);
 
-    for (auto nextResult : *nextResults) {
+    for (const auto& nextResult : *nextResults) {
       statementsToVisit.push(nextResult);
     }
   }

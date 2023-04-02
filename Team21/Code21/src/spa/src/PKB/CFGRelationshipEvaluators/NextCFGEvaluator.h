@@ -9,10 +9,10 @@
 
 class NextCFGEvaluator : public CFGRelationshipEvaluator {
  public:
-  NextCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
+    NextCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
                    EntityManager* entityManager);
 
-  auto getRelationshipType() const -> const RelationshipType& override;
+  [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
 
   auto createNewRelationship(Statement* leftStatement,
                              Statement* rightStatement)

@@ -46,7 +46,7 @@ auto NextCFGEvaluator::getRelatedBlockStatementPairs(
         isReverse ? currentBlock->parents() : currentBlock->children();
     for (auto neighbour : neighbours) {
       auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
-                                 neighbour.lock()->start());
+                                  isReverse ? neighbour.lock()->end() : neighbour.lock()->start());
 
       auto statement =
           static_cast<Statement*>(entityManager->getEntity(entityKey));

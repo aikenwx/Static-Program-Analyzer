@@ -5,26 +5,18 @@
 #include "RelationshipManager.h"
 
 #include <memory>
+#include <utility>
 
-#include "PKB/CFGRelationshipEvaluators/AffectsCFGEvaluator.h"
-#include "PKB/CFGRelationshipEvaluators/AffectsStarCFGEvaluator.h"
-#include "PKB/CFGRelationshipEvaluators/NextCFGEvaluator.h"
-#include "PKB/CFGRelationshipEvaluators/NextStarCFGEvaluator.h"
-#include "PKBStorageClasses/RelationshipClasses/AffectsRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/CFGEvaluatableRelationshipType.h"
-#include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
 
 std::vector<Relationship *>  RelationshipManager::emptyRelationshipVector;
 std::vector<Entity *> RelationshipManager::emptyEntityVector;
 
-void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-  this->cfg = cfg;
+void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> givenCfg) {
+  this->cfg = std::move(givenCfg);
 }
 
-RelationshipManager::RelationshipManager(EntityManager *entityManager)
-    : relationshipStorage(RelationshipStorage()), entityManager(entityManager) {
+RelationshipManager::RelationshipManager(EntityManager *entityManager) : entityManager(entityManager) {
 }
 
 void RelationshipManager::storeRelationship(
@@ -37,10 +29,10 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
   if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
       *key.getRelationshipType()) &&
       relationshipStorage.getRelationship(key) == nullptr) {
-    auto leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
-    auto rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
+    auto *leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
+    auto *rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
 
-    auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
+    const auto *cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         key.getRelationshipType());
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
@@ -62,7 +54,6 @@ auto RelationshipManager::getRelationshipsByTypes(
       relationshipType)) {
     auto cfgRelationshipType = static_cast<const CFGEvaluatableRelationshipType *>(
         &relationshipType);
-
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
         this->cfg.get(), &this->relationshipStorage, this->entityManager);
 

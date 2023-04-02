@@ -75,112 +75,119 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
   auto test = NextRelationship::getRelationshipTypeStatic();
   SECTION("Next/Affect/Affect*: (LIT, LIT)") {
-    REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 3, Statement::getEntityTypeStatic(),
-                                         4) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 3, Statement::getEntityTypeStatic(),
+                                        4) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         7, Statement::getEntityTypeStatic(), 8) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        7, Statement::getEntityTypeStatic(), 8) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         7, Statement::getEntityTypeStatic(), 9) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        7, Statement::getEntityTypeStatic(), 9) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         7, Statement::getEntityTypeStatic(), 9) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        7, Statement::getEntityTypeStatic(), 9) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         1, Statement::getEntityTypeStatic(), 12) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        1, Statement::getEntityTypeStatic(), 12) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         1, Statement::getEntityTypeStatic(), 9) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        1, Statement::getEntityTypeStatic(), 9) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         8, Statement::getEntityTypeStatic(), 9) == nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        8, Statement::getEntityTypeStatic(), 9) == nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
-                                         6, Statement::getEntityTypeStatic(), 4) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(),
+                                        6, Statement::getEntityTypeStatic(), 4) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         8) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        8) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 8, Statement::getEntityTypeStatic(),
-                                         12) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 8, Statement::getEntityTypeStatic(),
+                                        12) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         12) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        12) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         6) == nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        6) == nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         6) == nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        6) == nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         11) == nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        11) == nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         12) != nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        12) != nullptr);
 
-    REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
-                                         Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
-                                         14) == nullptr);
+   REQUIRE(pkb_querier->getRelationship(AffectsStarRelationship::getRelationshipTypeStatic(),
+                                        Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
+                                        14) == nullptr);
 
-    auto temp = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
-    //
+   auto temp = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+   //
 
-    REQUIRE(temp->size() == 100);
+   REQUIRE(temp->size() == 100);
 
-    auto temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+   auto temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp2->size() == 47);
+   REQUIRE(temp2->size() == 47);
 
-    auto temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+   auto temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp3->size() == 27);
+   REQUIRE(temp3->size() == 27);
 
-    auto temp4 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+   auto temp4 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp4->size() == 0);
+   REQUIRE(temp4->size() == 0);
 
-    auto temp5 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+   auto temp5 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp5->size() == 27);
+   REQUIRE(temp5->size() == 27);
 
-    //
-    auto pairVector = std::vector<std::pair<std::string, std::string>>();
-    //
-    for (auto relationship : *temp5) {
-      auto val1 = *relationship->getLeftHandEntity()->getEntityValue();
-      auto val2 = *relationship->getRightHandEntity()->getEntityValue();
-      pairVector.push_back(std::make_pair(val1, val2));
-    }
-    // 11 12, 9 10, 9 11, 9 12, 6 10, 6 11, 6 12, 6 6, 10 11, 10 12, 8 10, 8 11, 8 12, 4 10, 4 11, 4 12,4 8, 4 4,2 10, 2 11, 2 12, 2 6, 1 10, 1 11, 1 12, 1 8, 1 4
+   //
+   auto pairVector = std::vector<std::pair<std::string, std::string>>();
+   //
+   for (auto relationship : *temp5) {
+     auto val1 = *relationship->getLeftHandEntity()->getEntityValue();
+     auto val2 = *relationship->getRightHandEntity()->getEntityValue();
+     pairVector.push_back(std::make_pair(val1, val2));
+   }
+   // 11 12, 9 10, 9 11, 9 12, 6 10, 6 11, 6 12, 6 6, 10 11, 10 12, 8 10, 8 11, 8 12, 4 10, 4 11, 4 12,4 8, 4 4,2 10, 2 11, 2 12, 2 6, 1 10, 1 11, 1 12, 1 8, 1 4
 
-    REQUIRE(pairVector.size() == 27);
+   REQUIRE(pairVector.size() == 27);
 
-    auto expectedPairs = std::vector<std::pair<std::string, std::string>>({{"11", "12"}, {"9", "10"}, {"9", "11"}, {"9", "12"}, {"6", "10"}, {"6", "11"}, {"6", "12"}, {"6", "6"}, {"10", "11"}, {"10", "12"}, {"8", "10"}, {"8", "11"}, {"8", "12"}, {"4", "10"}, {"4", "11"}, {"4", "12"}, {"4", "8"}, {"4", "4"}, {"2", "10"}, {"2", "11"}, {"2", "12"}, {"2", "6"}, {"1", "10"}, {"1", "11"}, {"1", "12"}, {"1", "8"}, {"1", "4"}});
+   auto expectedPairs = std::vector<std::pair<std::string, std::string>>({{"11", "12"}, {"9", "10"}, {"9", "11"}, {"9", "12"}, {"6", "10"}, {"6", "11"}, {"6", "12"}, {"6", "6"}, {"10", "11"}, {"10", "12"}, {"8", "10"}, {"8", "11"}, {"8", "12"}, {"4", "10"}, {"4", "11"}, {"4", "12"}, {"4", "8"}, {"4", "4"}, {"2", "10"}, {"2", "11"}, {"2", "12"}, {"2", "6"}, {"1", "10"}, {"1", "11"}, {"1", "12"}, {"1", "8"}, {"1", "4"}});
 
-    for (auto pair : expectedPairs) {
-      REQUIRE(std::find(pairVector.begin(), pairVector.end(), pair) != pairVector.end());
-    }
+   for (auto pair : expectedPairs) {
+     REQUIRE(std::find(pairVector.begin(), pairVector.end(), pair) != pairVector.end());
+   }
 
-    auto temp6 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+   auto temp6 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
-    REQUIRE(temp6->size() == 27);
+   REQUIRE(temp6->size() == 27);
 
-    auto temp7 = pkb_querier->getRelationshipsByTypes(AffectsRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+   auto temp7 = pkb_querier->getRelationshipsByTypes(AffectsRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp7->size() == 14);
-    auto temp8 = pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), 1, Statement::getEntityTypeStatic());
+   REQUIRE(temp7->size() == 14);
+   auto temp8 = pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), 1, Statement::getEntityTypeStatic());
 
-    REQUIRE(temp8->size() == 5);
+   REQUIRE(temp8->size() == 5);
+
+   auto temp10 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+
+    auto temp9 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic(), 8);
+
+    REQUIRE(temp9->size() == 1);
+    REQUIRE(*temp9->at(0)->getEntityValue() == "5");
   }
 }
 

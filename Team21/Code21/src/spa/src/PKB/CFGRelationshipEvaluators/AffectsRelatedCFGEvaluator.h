@@ -15,12 +15,10 @@ class AffectsRelatedCFGEvaluator : public CFGRelationshipEvaluator {
 
   auto isValidEntityTypeInput(const EntityType& entityType) -> bool override;
 
-
-         auto getEvaluableEntitiesFromEntityType(
+  auto getEvaluableEntitiesFromEntityType(
       const EntityType& entityType) -> std::vector<Entity*>* override;
 
-  auto isAllowedModifier(Entity* entity) -> bool;
-  
+  static auto isAllowedModifier(Entity* entity) -> bool;
 };
 
 #endif  // SPA_AFFECTSRELATEDCFGEVALUATOR_H

@@ -64,9 +64,9 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
         isReverse ? leftEntityType : rightEntityType, entity, isReverse);
 
-    auto *results = getEntitiesFromStore(isReverse, *dynamic_cast<Statement *>(entity), isReverse ? leftEntityType : rightEntityType);
-
     initializeCacheGivenEntityAndEntityType(isReverse, *entity, isReverse ? leftEntityType : rightEntityType);
+
+    auto *results = getEntitiesFromStore(isReverse, *dynamic_cast<Statement *>(entity), isReverse ? leftEntityType : rightEntityType);
 
     for (auto *result : *results) {
       auto relationshipKey = isReverse ? RelationshipKey(&getRelationshipType(), &result->getEntityKey(),
@@ -105,13 +105,13 @@ void CFGRelationshipEvaluator::
   auto *statement = dynamic_cast<Statement *>(entity);
 
   // already evaluated
-  if (getEntitiesFromStore(isReverse, *statement, givenEntityType) != nullptr) {
+  if (getEntitiesFromStore(isReverse, *statement, Statement::getEntityTypeStatic()) != nullptr) {
     return;
   }
 
   auto relatedStatements = this->getRelatedStatements(statement, isReverse);
 
-  initializeCacheGivenEntityAndEntityType(isReverse, *statement, givenEntityType);
+  initializeCacheGivenEntityAndEntityType(isReverse, *statement, Statement::getEntityTypeStatic());
 
   for (const auto &relatedStatement : *relatedStatements) {
     auto relationship =

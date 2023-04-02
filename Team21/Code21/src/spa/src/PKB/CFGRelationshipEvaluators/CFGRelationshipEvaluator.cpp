@@ -67,22 +67,14 @@ void CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
         isReverse ? leftEntityType : rightEntityType, entity, isReverse);
 
     auto results = getEntitiesFromStore(isReverse, *static_cast<Statement *>(entity), isReverse ? leftEntityType : rightEntityType);
-    
-
-
 
     initializeCacheGivenEntityAndEntityType(isReverse, *entity, isReverse ? leftEntityType : rightEntityType);
 
     for (auto result : *results) {
-      auto relationshipKey =
-          RelationshipKey(&getRelationshipType(), &entity->getEntityKey(),
-                          &result->getEntityKey());
-
-      auto resultStatement = static_cast<Statement *>(result);
-      auto sourceStatement = static_cast<Statement *>(entity);
-      auto relationship =
-          isReverse ? createNewRelationship(resultStatement, sourceStatement)
-                    : createNewRelationship(sourceStatement, resultStatement);
+      auto relationshipKey = isReverse ? RelationshipKey(&getRelationshipType(), &result->getEntityKey(),
+                                                         &entity->getEntityKey())
+                                       : RelationshipKey(&getRelationshipType(), &entity->getEntityKey(),
+                                                         &result->getEntityKey());
 
       this->relationshipStorage->storeInSpecifiedRelationshipDoubleSynonymStore(
           relationshipStorage->getRelationship(relationshipKey), relationshipDoubleSynonymKey);
@@ -171,13 +163,13 @@ auto CFGRelationshipEvaluator::getEntitiesFromStore(bool isReverse, Entity &sour
   return isReverse
              ? relationshipStorage
                    ->getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-                           this->getRelationshipType(),
-                           destinationEntityType,
-                           sourceEntity.getEntityKey())
+                       this->getRelationshipType(),
+                       destinationEntityType,
+                       sourceEntity.getEntityKey())
              : relationshipStorage
                    ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-                           this->getRelationshipType(), sourceEntity.getEntityKey(),
-                           destinationEntityType);
+                       this->getRelationshipType(), sourceEntity.getEntityKey(),
+                       destinationEntityType);
 }
 
 void CFGRelationshipEvaluator::initializeCacheGivenEntityAndEntityType(bool isReverse, Entity &statement,

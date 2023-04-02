@@ -114,10 +114,6 @@ bool RelationshipStorage::tryStoreRelationshipOnlyInRelationshipStore(
            .second) {
     return false;
   }
-
-  auto leftEntity = relationship->getLeftHandEntity();
-  auto rightEntity = relationship->getRightHandEntity();
-
   return true;
 }
 

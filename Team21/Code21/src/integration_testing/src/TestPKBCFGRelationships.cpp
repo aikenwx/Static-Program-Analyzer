@@ -289,6 +289,84 @@ TEST_CASE("Test 123") {
   REQUIRE(temp3->size() == 13);
 }
 
+TEST_CASE("Test processed sp") {
+
+  auto pkb = PKB();
+
+  auto program = R"(procedure main {
+  while (x + y < f - 5) {
+    if (x > 5) then {
+      call f;
+    }
+    else {
+      call g;
+    }
+    x = y + 5 + x;
+
+    if (1 == 1) then {
+      print z;
+    } else {
+      print x;
+    }
+  }
+}
+
+procedure f {
+  if (x > 5) then {
+    call g;
+  }
+  else {
+    read x;
+  }
+}
+
+procedure g {
+  print z;
+  z = z + 1;
+  print x;
+
+  if (x + y > 5) then {
+    while (z < 5) {
+      read x;
+      print x;
+    }
+    while (10 % 5 >= 5) {
+      print x;
+    }
+  } else {
+    if (x + y > 5 + x) then {
+      x = x + 1 + y;
+    } else {
+      y = y + 1;
+      z = z + 1;
+      x = y + 1;
+    }
+  }
+
+  while (x + y < 1) {
+    read x;
+  }
+})";
+
+
+
+sp::SP::process(program, &pkb);
+
+
+auto result = pkb.getQueryFacade()->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(),
+                                                       AssignStatement::getEntityTypeStatic(),
+                                                       CallStatement::getEntityTypeStatic());
+
+
+REQUIRE(result->size() == 2);
+
+REQUIRE(*result->at(0)->getLeftHandEntity()->getEntityValue() == "5");
+REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "3");
+REQUIRE(*result->at(1)->getLeftHandEntity()->getEntityValue() == "5");
+REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "4");
+
+}
+
 TEST_CASE("Retrieve related entities to non existent entity") {
   qps_test::PopulatePKBHelper pkb_helper;
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();

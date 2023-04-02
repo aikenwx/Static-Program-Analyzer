@@ -11,6 +11,14 @@ class ParentStatement : public Statement {
  public:
   ParentStatement(const EntityType* entityType, int statementNumber);
 
+  auto operator=(const ParentStatement& parentStatement) -> ParentStatement& = default;
+
+  ParentStatement(const ParentStatement& parentStatement) = default;
+
+  auto operator=(ParentStatement&& parentStatement) noexcept -> ParentStatement& = default;
+
+  ParentStatement(ParentStatement&& parentStatement) noexcept = default;
+
   static auto isParentStatement(Entity* entity) -> bool;
 
   ~ParentStatement() override = default;

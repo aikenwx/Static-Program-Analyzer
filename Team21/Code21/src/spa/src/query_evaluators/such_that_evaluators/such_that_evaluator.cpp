@@ -116,8 +116,11 @@ class ClauseVisitor {
   auto operator()(Synonym src, Synonym dest) -> ClauseResult {
     auto *
         relationships = pkb_.getRelationshipsByTypes(relationship_type_, left_, right_);
-
-    return SynonymTable({std::move(src), std::move(dest)}, ExtractEntities(*relationships, true, true));
+    bool require_equal = false;
+    if (src == dest) {
+      require_equal = true;
+    }
+    return SynonymTable({std::move(src), std::move(dest)}, ExtractEntities(*relationships, true, true, require_equal));
   }
 
   auto operator()([[maybe_unused]] Underscore underscore_1, [[maybe_unused]] Underscore underscore_2) -> ClauseResult {

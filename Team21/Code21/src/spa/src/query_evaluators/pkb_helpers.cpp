@@ -63,22 +63,26 @@ auto RelationshipToRelationshipType(Relationship relationship) -> const Relation
 
 auto ExtractEntities(const std::vector<::Relationship *> &relationships,
                      bool left,
-                     bool right) -> std::vector<std::vector<Entity *>> {
-  std::vector<std::vector<Entity *>> entities;
+                     bool right,
+                     bool require_equal) -> std::vector<std::vector<Entity *>> {
+  std::vector<std::vector<Entity *>> rows;
+  rows.reserve(relationships.size());
+  for (const auto &relationship : relationships) {
+    if (require_equal && relationship->getLeftHandEntity() != relationship->getRightHandEntity()) {
+      continue;
+    }
 
-  entities.reserve(relationships.size());
-  for (const auto &entity : relationships) {
     std::vector<Entity *> row;
     if (left) {
-      row.push_back(entity->getLeftHandEntity());
+      row.push_back(relationship->getLeftHandEntity());
     }
 
     if (right) {
-      row.push_back(entity->getRightHandEntity());
+      row.push_back(relationship->getRightHandEntity());
     }
 
-    entities.push_back(std::move(row));
+    rows.push_back(std::move(row));
   }
-  return entities;
+  return rows;
 }
 }  // namespace qps

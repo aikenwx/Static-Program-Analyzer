@@ -13,6 +13,7 @@ auto DesignEntityToEntityType(DesignEntity entity) -> const EntityType &;
 auto RelationshipToRelationshipType(Relationship relationship) -> const RelationshipType &;
 auto ExtractEntities(const std::vector<::Relationship *> &relationships,
                      bool left,
-                     bool right) -> std::vector<std::vector<Entity *>>;
+                     bool right,
+                     bool require_equal = false) -> std::vector<std::vector<Entity *>>;
 
 } // qps

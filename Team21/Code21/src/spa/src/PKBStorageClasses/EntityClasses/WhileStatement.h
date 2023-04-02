@@ -1,9 +1,9 @@
 #ifndef SPA_WHILESTATEMENT_H
 #define SPA_WHILESTATEMENT_H
 
-#include "Statement.h"
+#include "ParentStatement.h"
 
-class WhileStatement : public Statement {
+class WhileStatement : public ParentStatement {
    private:
     static const StatementType whileStatementType;
 

@@ -23,7 +23,6 @@ class Statement : public Entity {
   static auto isStatement(Entity* entity) -> bool;
 
   ~Statement() override = default;
-  ;
 
   [[nodiscard]] auto getStatementNumber() const -> int;
 

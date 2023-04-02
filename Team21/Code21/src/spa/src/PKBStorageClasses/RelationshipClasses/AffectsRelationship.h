@@ -9,7 +9,7 @@
 #include "PKB/CFGRelationshipEvaluators/AffectsCFGEvaluator.h"
 #include "Relationship.h"
 
-class AffectsRelationshipType : public CFGEvaluatableRelationshipType {
+class AffectsRelationshipType : public CFGEvaluableRelationshipType {
  public:
   auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> override;
 };

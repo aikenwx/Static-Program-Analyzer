@@ -102,22 +102,13 @@ class RelationshipStorage {
   std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
       relationshipStore;
 
-  //   // some stores will share share vectors, especially for CFG evaluable
-  //   relationships
-  //   // it is important to track subvector count of shared vectors
-  //   std::unordered_set<RelationshipSynonymLiteralKey, int>
-  //       relationshipSynonymLiteralVectorCountStore;
-
-  //   std::unordered_map<RelationshipLiteralSynonymKey, int>
-  //       relationshipLiteralSynonymVectorCountStore;
-
  public:
   RelationshipStorage();
 
   void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
-  bool tryStoreRelationshipOnlyInRelationshipStore(
-      const std::shared_ptr<Relationship> relationship);
+  auto tryStoreRelationshipOnlyInRelationshipStore(
+      const std::shared_ptr<Relationship>& relationship) -> bool;
 
   void storeInSpecifiedRelationshipDoubleSynonymStore(
       Relationship *relationship, const RelationshipDoubleSynonymKey& key);
@@ -144,7 +135,7 @@ class RelationshipStorage {
       const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
   void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      RelationshipDoubleSynonymKey relationshipSynonymKey);
+      const RelationshipDoubleSynonymKey& relationshipSynonymKey);
 
   void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
       RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);

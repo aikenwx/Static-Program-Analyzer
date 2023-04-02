@@ -29,13 +29,13 @@ void RelationshipManager::storeRelationship(
 
 auto RelationshipManager::getRelationship(RelationshipKey &key)
     -> Relationship * {
-  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+  if (CFGEvaluableRelationshipType::isCFGEvaluableRelationship(
           *key.getRelationshipType()) &&
       relationshipStorage.getRelationship(key) == nullptr) {
     auto *leftEntity = this->entityManager->getEntity(*key.getLeftEntityKey());
     auto *rightEntity = this->entityManager->getEntity(*key.getRightEntityKey());
 
-    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
+    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluableRelationshipType *>(
         key.getRelationshipType());
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
@@ -53,9 +53,9 @@ auto RelationshipManager::getRelationshipsByTypes(
     const RelationshipType &relationshipType,
     const EntityType &leftHandEntityType, const EntityType &rightHandEntityType)
     -> std::vector<Relationship *> * {
-  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+  if (CFGEvaluableRelationshipType::isCFGEvaluableRelationship(
           relationshipType)) {
-    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
+    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluableRelationshipType *>(
         &relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
@@ -78,9 +78,9 @@ auto RelationshipManager::
         const RelationshipType &relationshipType,
         const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
         -> std::vector<Entity *> * {
-  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+  if (CFGEvaluableRelationshipType::isCFGEvaluableRelationship(
           relationshipType)) {
-    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
+    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluableRelationshipType *>(
         &relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
@@ -102,9 +102,9 @@ auto RelationshipManager::
     getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
         const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
         const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
-  if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
+  if (CFGEvaluableRelationshipType::isCFGEvaluableRelationship(
           relationshipType)) {
-    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
+    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluableRelationshipType *>(
         &relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(

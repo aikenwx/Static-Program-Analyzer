@@ -10,12 +10,12 @@
 #include "sp/cfg/cfg.h"
 
 class CFGRelationshipEvaluator {
-private:
-    cfg::CFG* cfg;
-    RelationshipStorage* relationshipStorage;
-    EntityManager* entityManager;
+ private:
+  cfg::CFG* cfg;
+  RelationshipStorage* relationshipStorage;
+  EntityManager* entityManager;
 
-protected:
+ protected:
   virtual auto isValidEntityInput(Entity* entity) -> bool;
 
   virtual auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
@@ -23,12 +23,12 @@ protected:
   void populateCache(bool isReverse,
                      const std::shared_ptr<Relationship>& relationship);
 
-  void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity &statement,
-                                               const EntityType &entityType);
+  void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity& statement,
+                                               const EntityType& entityType);
 
-  auto getEntitiesFromStore(bool isReverse, Entity &sourceEntity,
-                            const EntityType &destinationEntityType)
-      -> std::vector<Entity *> *;
+  auto getEntitiesFromStore(bool isReverse, Entity& sourceEntity,
+                            const EntityType& destinationEntityType)
+      -> std::vector<Entity*>*;
 
   auto generateStatementBlockPair(Statement* statement)
       -> std::shared_ptr<std::pair<cfg::Block*, Statement*>>;
@@ -57,11 +57,18 @@ protected:
 
   auto getEntityManager() -> EntityManager*;
 
-public:
-
+ public:
   CFGRelationshipEvaluator(cfg::CFG* cfg,
                            RelationshipStorage* relationshipStorage,
                            EntityManager* entityManager);
+
+  auto operator=(const CFGRelationshipEvaluator& cfgRelationshipEvaluator) -> CFGRelationshipEvaluator& = default;
+
+  CFGRelationshipEvaluator(const CFGRelationshipEvaluator& cfgRelationshipEvaluator) = default;
+
+  auto operator=(CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept -> CFGRelationshipEvaluator& = default;
+
+  CFGRelationshipEvaluator(CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept = default;
 
   virtual ~CFGRelationshipEvaluator() = default;
 

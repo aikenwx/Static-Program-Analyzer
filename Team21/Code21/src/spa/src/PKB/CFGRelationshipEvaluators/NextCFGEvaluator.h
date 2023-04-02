@@ -9,9 +9,6 @@
 
 class NextCFGEvaluator : public CFGRelationshipEvaluator {
  public:
-
-    ~NextCFGEvaluator() = default;
-
     NextCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
                    EntityManager* entityManager);
 

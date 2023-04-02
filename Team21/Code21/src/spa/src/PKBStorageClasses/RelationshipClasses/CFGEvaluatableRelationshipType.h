@@ -8,7 +8,7 @@
 #include "PKB/CFGRelationshipEvaluators/CFGRelationshipEvaluator.h"
 #include "Relationship.h"
 
-class CFGEvaluatableRelationshipType : public RelationshipType {
+class CFGEvaluableRelationshipType : public RelationshipType {
  public:
   static auto isCFGEvaluableRelationship(const RelationshipType& relationshipType) -> bool;
 

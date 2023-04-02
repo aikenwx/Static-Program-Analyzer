@@ -167,7 +167,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
     auto expectedPairs = std::vector<std::pair<std::string, std::string>>({{"11", "12"}, {"9", "10"}, {"9", "11"}, {"9", "12"}, {"6", "10"}, {"6", "11"}, {"6", "12"}, {"6", "6"}, {"10", "11"}, {"10", "12"}, {"8", "10"}, {"8", "11"}, {"8", "12"}, {"4", "10"}, {"4", "11"}, {"4", "12"}, {"4", "8"}, {"4", "4"}, {"2", "10"}, {"2", "11"}, {"2", "12"}, {"2", "6"}, {"1", "10"}, {"1", "11"}, {"1", "12"}, {"1", "8"}, {"1", "4"}});
 
-    for (const auto& pair : expectedPairs) {
+    for (const auto &pair : expectedPairs) {
       REQUIRE(std::find(pairVector.begin(), pairVector.end(), pair) != pairVector.end());
     }
 
@@ -182,12 +182,13 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
     REQUIRE(temp8->size() == 5);
 
-    auto *temp10 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
-
     auto *temp9 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic(), 8);
 
     REQUIRE(temp9->size() == 1);
     REQUIRE(*temp9->at(0)->getEntityValue() == "5");
+
+    auto *temp10 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+    REQUIRE(temp10->size() == 12);
 
     auto *temp11 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
         NextStarRelationship::getRelationshipTypeStatic(),
@@ -232,7 +233,7 @@ TEST_CASE("Test relationship retrieval with Statement entity type") {
   REQUIRE(relationship != nullptr);
 }
 
-TEST_CASE("Test 123") {
+TEST_CASE("Test incorrect/premature caching") {
   qps_test::PopulatePKBHelper::Data data;
   data[qps::DesignEntity::ASSIGN] = {"1", "2", "4", "6", "8", "9", "10", "11", "12"};
   data[qps::DesignEntity::WHILE] = {"3"};
@@ -270,27 +271,20 @@ TEST_CASE("Test 123") {
   pkb_helper.StoreCFG(cfg);
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
-  //  auto temp = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
-  //                                                   Statement::getEntityTypeStatic(),
-  //                                                   Statement::getEntityTypeStatic());
-  //
-  //  REQUIRE(temp->size() == 13);
-
   auto *temp1 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
-                                                    WhileStatement::getEntityTypeStatic(),
-                                                    Statement::getEntityTypeStatic());
+                                                     WhileStatement::getEntityTypeStatic(),
+                                                     Statement::getEntityTypeStatic());
 
   REQUIRE(temp1->size() == 2);
 
   auto *temp3 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
-                                                    Statement::getEntityTypeStatic(),
-                                                    Statement::getEntityTypeStatic());
+                                                     Statement::getEntityTypeStatic(),
+                                                     Statement::getEntityTypeStatic());
 
   REQUIRE(temp3->size() == 13);
 }
 
 TEST_CASE("Test processed sp") {
-
   auto pkb = PKB();
 
   const auto *program = R"(procedure main {
@@ -348,23 +342,18 @@ procedure g {
   }
 })";
 
+  sp::SP::process(program, &pkb);
 
+  auto *result = pkb.getQueryFacade()->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(),
+                                                               AssignStatement::getEntityTypeStatic(),
+                                                               CallStatement::getEntityTypeStatic());
 
-sp::SP::process(program, &pkb);
+  REQUIRE(result->size() == 2);
 
-
-auto *result = pkb.getQueryFacade()->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(),
-                                                       AssignStatement::getEntityTypeStatic(),
-                                                       CallStatement::getEntityTypeStatic());
-
-
-REQUIRE(result->size() == 2);
-
-REQUIRE(*result->at(0)->getLeftHandEntity()->getEntityValue() == "5");
-REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "3");
-REQUIRE(*result->at(1)->getLeftHandEntity()->getEntityValue() == "5");
-REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "4");
-
+  REQUIRE(*result->at(0)->getLeftHandEntity()->getEntityValue() == "5");
+  REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "3");
+  REQUIRE(*result->at(1)->getLeftHandEntity()->getEntityValue() == "5");
+  REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "4");
 }
 
 TEST_CASE("Retrieve related entities to non existent entity") {

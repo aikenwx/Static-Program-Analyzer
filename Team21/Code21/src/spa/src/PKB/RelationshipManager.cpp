@@ -9,14 +9,17 @@
 
 #include "PKBStorageClasses/RelationshipClasses/CFGEvaluatableRelationshipType.h"
 
-auto RelationshipManager::emptyRelationshipVector = std::vector<Relationship *>();
-auto RelationshipManager::emptyEntityVector = std::vector<Entity *>();
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+std::vector<Relationship *> RelationshipManager::emptyRelationshipVector = std::vector<Relationship *>();
+
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+std::vector<Entity *> RelationshipManager::emptyEntityVector = std::vector<Entity *>();
 
 void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> givenCfg) {
   this->cfg = std::move(givenCfg);
 }
 
-RelationshipManager::RelationshipManager(EntityManager *entityManager) :  entityManager(entityManager) {
+RelationshipManager::RelationshipManager(EntityManager *entityManager) : entityManager(entityManager) {
 }
 
 void RelationshipManager::storeRelationship(
@@ -52,8 +55,8 @@ auto RelationshipManager::getRelationshipsByTypes(
     -> std::vector<Relationship *> * {
   if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
           relationshipType)) {
-      const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
-              &relationshipType);
+    const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(
+        &relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
         this->cfg.get(), &this->relationshipStorage, this->entityManager);
@@ -99,7 +102,6 @@ auto RelationshipManager::
     getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
         const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
         const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
-
   if (CFGEvaluatableRelationshipType::isCFGEvaluableRelationship(
           relationshipType)) {
     const auto *cfgRelationshipType = dynamic_cast<const CFGEvaluatableRelationshipType *>(

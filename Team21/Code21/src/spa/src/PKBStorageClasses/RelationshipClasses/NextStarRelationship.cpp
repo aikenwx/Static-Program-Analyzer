@@ -4,14 +4,11 @@
 
 #include "NextStarRelationship.h"
 
-
 auto NextStarRelationshipType::getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> {
   return std::make_shared<NextStarCFGEvaluator>(cfg, relationshipStorage, entityManager);
 }
 
 NextStarRelationship::NextStarRelationship(Statement* prevStatement, Statement* nextStatement) : Relationship(&NextStarRelationship::relationshipType, prevStatement, nextStatement) {
-
-
 }
 
 const NextStarRelationshipType NextStarRelationship::relationshipType = NextStarRelationshipType();
@@ -23,4 +20,3 @@ auto NextStarRelationship::getRelationshipTypeStatic() -> const RelationshipType
 auto NextStarRelationship::getRelationshipType() const -> const RelationshipType& {
   return NextStarRelationship::relationshipType;
 }
-

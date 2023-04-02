@@ -132,34 +132,34 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
                                          Statement::getEntityTypeStatic(), 4, Statement::getEntityTypeStatic(),
                                          14) == nullptr);
 
-    auto temp = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+    auto *temp = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
     //
 
     REQUIRE(temp->size() == 100);
 
-    auto temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+    auto *temp2 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(temp2->size() == 47);
 
-    auto temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+    auto *temp3 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(temp3->size() == 27);
 
-    auto temp4 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+    auto *temp4 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
-    REQUIRE(temp4->size() == 0);
+    REQUIRE(temp4->empty());
 
-    auto temp5 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+    auto *temp5 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(temp5->size() == 27);
 
     //
     auto pairVector = std::vector<std::pair<std::string, std::string>>();
     //
-    for (auto relationship : *temp5) {
+    for (auto *relationship : *temp5) {
       auto val1 = *relationship->getLeftHandEntity()->getEntityValue();
       auto val2 = *relationship->getRightHandEntity()->getEntityValue();
-      pairVector.push_back(std::make_pair(val1, val2));
+      pairVector.emplace_back(val1, val2);
     }
     // 11 12, 9 10, 9 11, 9 12, 6 10, 6 11, 6 12, 6 6, 10 11, 10 12, 8 10, 8 11, 8 12, 4 10, 4 11, 4 12,4 8, 4 4,2 10, 2 11, 2 12, 2 6, 1 10, 1 11, 1 12, 1 8, 1 4
 
@@ -167,42 +167,42 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
     auto expectedPairs = std::vector<std::pair<std::string, std::string>>({{"11", "12"}, {"9", "10"}, {"9", "11"}, {"9", "12"}, {"6", "10"}, {"6", "11"}, {"6", "12"}, {"6", "6"}, {"10", "11"}, {"10", "12"}, {"8", "10"}, {"8", "11"}, {"8", "12"}, {"4", "10"}, {"4", "11"}, {"4", "12"}, {"4", "8"}, {"4", "4"}, {"2", "10"}, {"2", "11"}, {"2", "12"}, {"2", "6"}, {"1", "10"}, {"1", "11"}, {"1", "12"}, {"1", "8"}, {"1", "4"}});
 
-    for (auto pair : expectedPairs) {
+    for (const auto& pair : expectedPairs) {
       REQUIRE(std::find(pairVector.begin(), pairVector.end(), pair) != pairVector.end());
     }
 
-    auto temp6 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+    auto *temp6 = pkb_querier->getRelationshipsByTypes(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
     REQUIRE(temp6->size() == 27);
 
-    auto temp7 = pkb_querier->getRelationshipsByTypes(AffectsRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
+    auto *temp7 = pkb_querier->getRelationshipsByTypes(AffectsRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(), AssignStatement::getEntityTypeStatic());
 
     REQUIRE(temp7->size() == 14);
-    auto temp8 = pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), 1, Statement::getEntityTypeStatic());
+    auto *temp8 = pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(AffectsStarRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), 1, Statement::getEntityTypeStatic());
 
     REQUIRE(temp8->size() == 5);
 
-    auto temp10 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
+    auto *temp10 = pkb_querier->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
-    auto temp9 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic(), 8);
+    auto *temp9 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(NextStarRelationship::getRelationshipTypeStatic(), CallStatement::getEntityTypeStatic(), Statement::getEntityTypeStatic(), 8);
 
     REQUIRE(temp9->size() == 1);
     REQUIRE(*temp9->at(0)->getEntityValue() == "5");
 
-    auto temp11 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+    auto *temp11 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
         NextStarRelationship::getRelationshipTypeStatic(),
         CallStatement::getEntityTypeStatic(),
         Statement::getEntityTypeStatic(),
         8);
 
-    auto temp12 = pkb_querier->getRelationship(
+    auto *temp12 = pkb_querier->getRelationship(
         NextStarRelationship::getRelationshipTypeStatic(),
         CallStatement::getEntityTypeStatic(),
         5,
         Statement::getEntityTypeStatic(),
         8);
 
-    auto temp13 = pkb_querier->getRelationship(
+    auto *temp13 = pkb_querier->getRelationship(
         NextStarRelationship::getRelationshipTypeStatic(),
         Statement::getEntityTypeStatic(),
         5,
@@ -276,13 +276,13 @@ TEST_CASE("Test 123") {
   //
   //  REQUIRE(temp->size() == 13);
 
-  auto temp1 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
+  auto *temp1 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
                                                     WhileStatement::getEntityTypeStatic(),
                                                     Statement::getEntityTypeStatic());
 
   REQUIRE(temp1->size() == 2);
 
-  auto temp3 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
+  auto *temp3 = pkb_querier->getRelationshipsByTypes(NextRelationship::getRelationshipTypeStatic(),
                                                     Statement::getEntityTypeStatic(),
                                                     Statement::getEntityTypeStatic());
 
@@ -293,7 +293,7 @@ TEST_CASE("Test processed sp") {
 
   auto pkb = PKB();
 
-  auto program = R"(procedure main {
+  const auto *program = R"(procedure main {
   while (x + y < f - 5) {
     if (x > 5) then {
       call f;
@@ -353,7 +353,7 @@ procedure g {
 sp::SP::process(program, &pkb);
 
 
-auto result = pkb.getQueryFacade()->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(),
+auto *result = pkb.getQueryFacade()->getRelationshipsByTypes(NextStarRelationship::getRelationshipTypeStatic(),
                                                        AssignStatement::getEntityTypeStatic(),
                                                        CallStatement::getEntityTypeStatic());
 

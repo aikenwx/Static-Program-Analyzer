@@ -82,18 +82,22 @@ auto AffectsCFGEvaluator::getRelatedBlockStatementPairs(
     if ((getRelationshipStorage()->getRelationship(usesRelationshipKey) != nullptr) && isValidEntityInput(nextToVisit->second)) {
       // only add if its an assign statement
       results->push_back(nextToVisit);
-      continue;
     }
 
-    auto modifiesRelationshipKey = RelationshipKey(
-        &ModifiesRelationship::getRelationshipTypeStatic(),
-        &nextToVisit->second->getEntityKey(),
-        &modifiedVariable->getEntityKey());
+    if (isAllowedModifier(nextToVisit->second)) {
+        auto modifiesRelationshipKey = RelationshipKey(
+                &ModifiesRelationship::getRelationshipTypeStatic(),
+                &nextToVisit->second->getEntityKey(),
+                &modifiedVariable->getEntityKey());
 
-    // there is a modification, we terminate traversing this path
-    if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) != nullptr) {
-      continue;
+        // there is a modification, we terminate traversing this path
+        if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) != nullptr) {
+            continue;
+        }
     }
+
+
+
 
     auto nextResults =
         nextCFGEvaluator.getRelatedBlockStatementPairs(*nextToVisit, isReverse);

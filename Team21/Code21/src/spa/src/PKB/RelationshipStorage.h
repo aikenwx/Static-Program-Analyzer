@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <array>
 
 #include "EntityManager.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
@@ -91,10 +92,6 @@ class RelationshipStorage {
                      std::shared_ptr<std::vector<Entity *>>>
       relationshipSynonymLiteralStore;
 
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Entity *>>>
-      relationshipSynonymLiteralVectorStore;
-
   std::unordered_map<RelationshipLiteralSynonymKey,
                      std::shared_ptr<std::vector<Entity *>>>
       relationshipLiteralSynonymStore;
@@ -102,22 +99,40 @@ class RelationshipStorage {
   std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
       relationshipStore;
 
+  std::unordered_map<RelationshipDoubleSynonymKey,
+                     std::shared_ptr<std::vector<Relationship *>>>
+      relationshipDoubleSynonymCache;
+
+  std::unordered_map<RelationshipSynonymLiteralKey,
+                     std::shared_ptr<std::vector<Entity *>>>
+      relationshipSynonymLiteralCache;
+
+  std::unordered_map<RelationshipLiteralSynonymKey,
+                     std::shared_ptr<std::vector<Entity *>>>
+      relationshipLiteralSynonymCache;
+
+  std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
+      relationshipCache;
+
  public:
   RelationshipStorage();
 
   void storeRelationship(const std::shared_ptr<Relationship> &relationship);
 
   auto tryStoreRelationshipOnlyInRelationshipStore(
-      const std::shared_ptr<Relationship>& relationship) -> bool;
+      const std::shared_ptr<Relationship> &relationship, bool useCache) -> bool;
 
   void storeInSpecifiedRelationshipDoubleSynonymStore(
-      Relationship *relationship, const RelationshipDoubleSynonymKey& key);
+      Relationship *relationship, const RelationshipDoubleSynonymKey &key,
+      bool useCache);
 
   void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
 
-  void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
+  void storeInRelationshipSynonymLiteralStore(Relationship *relationship,
+                                              bool useCache);
 
-  void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
+  void storeInRelationshipLiteralSynonymStore(Relationship *relationship,
+                                              bool useCache);
 
   auto getRelationship(RelationshipKey &key) -> Relationship *;
 
@@ -135,13 +150,21 @@ class RelationshipStorage {
       const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
   void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      const RelationshipDoubleSynonymKey& relationshipSynonymKey);
+      const RelationshipDoubleSynonymKey &relationshipSynonymKey,
+      bool useCache);
 
   void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-      RelationshipLiteralSynonymKey relationshipLiteralSynonymKey);
+      RelationshipLiteralSynonymKey relationshipLiteralSynonymKey,
+      bool useCache);
 
   void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      const RelationshipSynonymLiteralKey& relationshipSynonymLiteralKey);
+      const RelationshipSynonymLiteralKey &relationshipSynonymLiteralKey,
+      bool useCache);
+
+  // strictly for testing purposes
+  auto getStoreAndCacheSizes() -> std::vector<int>;
+
+  void clearCache();
 };
 
 #endif  // SPA_RELATIONSHIPSTORAGE_H

@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <array>
 
 #include "EntityManager.h"
 #include "PKB/RelationshipStorage.h"
@@ -46,11 +47,17 @@ class RelationshipManager {
       -> std::vector<Relationship *> *;
 
   auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-      const RelationshipType &relationshipType, const EntityType &leftHandEntityType,
-      EntityKey &rightHandEntityKey) -> std::vector<Entity *> *;
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> std::vector<Entity *> *;
   auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
       const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
       const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+
+  void clearCache();
+
+  // strictly for testing purposes
+  auto getStoreAndCacheSizes() -> std::vector<int>;
 };
 
 #endif  // SPA_RELATIONSHIPMANAGER_H

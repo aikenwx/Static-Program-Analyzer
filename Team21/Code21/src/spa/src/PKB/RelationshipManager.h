@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <array>
 
 #include "EntityManager.h"
 #include "PKB/RelationshipStorage.h"

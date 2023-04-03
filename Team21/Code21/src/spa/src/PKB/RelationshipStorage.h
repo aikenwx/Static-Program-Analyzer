@@ -10,7 +10,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <array>
 
 #include "EntityManager.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"

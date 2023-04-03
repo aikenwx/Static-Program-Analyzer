@@ -1,9 +1,9 @@
 #ifndef SPA_IFSTATEMENT_H
 #define SPA_IFSTATEMENT_H
 
-#include "Statement.h"
+#include "ParentStatement.h"
 
-class IfStatement : public Statement {
+class IfStatement : public ParentStatement {
    private:
     static const StatementType ifStatementType;
 

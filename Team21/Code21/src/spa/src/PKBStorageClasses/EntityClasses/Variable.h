@@ -9,7 +9,6 @@
 class Variable : public Entity {
    private:
     static const EntityType variableType;
-    size_t hash{};
 
    public:
     static auto getEntityTypeStatic() -> const EntityType &;

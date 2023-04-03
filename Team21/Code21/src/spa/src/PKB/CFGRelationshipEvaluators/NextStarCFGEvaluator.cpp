@@ -36,14 +36,14 @@ auto NextStarCFGEvaluator::getRelatedStatements(
   nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
       Statement::getEntityTypeStatic(), sourceStatement, isReverse);
   // push all statements from results into stack
-  auto directRelations = nextCFGEvaluator.getEntitiesFromStore(isReverse, *sourceStatement, Statement::getEntityTypeStatic());
+  auto *directRelations = nextCFGEvaluator.getEntitiesFromStore(isReverse, *sourceStatement, Statement::getEntityTypeStatic());
 
   for (const auto& result : *directRelations) {
     statementsToVisit.push(dynamic_cast<Statement*>(result));
   }
 
   while (!statementsToVisit.empty()) {
-    auto nextToVisit = statementsToVisit.top();
+    auto *nextToVisit = statementsToVisit.top();
     statementsToVisit.pop();
 
     if (visitedStatementNumbers.find(
@@ -58,7 +58,7 @@ auto NextStarCFGEvaluator::getRelatedStatements(
     nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
         Statement::getEntityTypeStatic(), nextToVisit, isReverse);
 
-    auto nextResults = nextCFGEvaluator.getEntitiesFromStore(isReverse, *nextToVisit, Statement::getEntityTypeStatic());
+    auto *nextResults = nextCFGEvaluator.getEntitiesFromStore(isReverse, *nextToVisit, Statement::getEntityTypeStatic());
 
     for (const auto& nextResult : *nextResults) {
       statementsToVisit.push(dynamic_cast<Statement*>(nextResult));

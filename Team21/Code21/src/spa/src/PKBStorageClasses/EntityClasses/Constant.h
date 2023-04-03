@@ -12,7 +12,6 @@
 class Constant : public Entity {
    private:
     static const EntityType entityType;
-    std::shared_ptr<std::string> constantValueString;
 
    public:
     static auto getEntityTypeStatic() -> const EntityType &;

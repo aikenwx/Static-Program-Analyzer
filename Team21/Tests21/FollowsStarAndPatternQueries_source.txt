@@ -12,24 +12,24 @@ procedure program1 {
     }
 
     while(count < 10) {
-       count = 11;
+      count = 11;
     }
 
     while (x != 1000) {
-        x = x+y%20;
-	  z = z/6-x*2;
-        if (z == 2000) then {
-            read a;
-            print z;
-		while (y > 20) {
-                print y;
-                x = x * 2;
-		}
-  } else {
-	print x;
-	a = x + 1;
-	y = 2;
-  }
+      x = x+y%20;
+	    z = z/6-x*2;
+      if (z == 2000) then {
+        read a;
+        print z;
+        while (y > 20) {
+          print y;
+          x = x * 2;
+        }
+      } else {
+        print x;
+        a = x + 1;
+        y = 2;
+      }
     }
     read i;
     y=x-1;

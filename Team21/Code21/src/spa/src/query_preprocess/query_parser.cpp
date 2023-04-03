@@ -371,7 +371,7 @@ auto QueryParser::parseWithClause() -> bool {
   return true;
 }
 
-// Parse the list of string tokens and generate the Query object 
+// Parse the list of string tokens and generate the Query object
 auto QueryParser::parse() -> Query {
   while (!isEnd()) {
     if (!parseDeclaration()) {

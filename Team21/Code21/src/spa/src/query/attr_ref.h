@@ -20,7 +20,7 @@ enum class AttrName {
 	StmtNo,
 };
 
-// AttrType represents valid type of AttrName 
+// AttrType represents valid type of AttrName
 enum class AttrType {
 	NAME,
 	INTEGER,

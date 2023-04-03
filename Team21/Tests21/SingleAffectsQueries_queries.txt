@@ -21,7 +21,7 @@ Select <i, a> such that Affects(21, a)
 5 - relationship(synonym, synonym)
 while w; if i; stmt s1, s2;
 Select w such that Affects(s1, s2)
-5, 9, 17 
+5, 9, 17
 5000
 6 - relationship(wildcard, synonym)
 while w; if i; stmt s1, s2;

@@ -18,4 +18,5 @@ Synonym::Synonym(const std::string& syn) : synonym{syn} {
     throw QueryException(ErrorType::Syntactic, "Invalid synonym: " + syn);
   }
 }
+
 }  // namespace qps

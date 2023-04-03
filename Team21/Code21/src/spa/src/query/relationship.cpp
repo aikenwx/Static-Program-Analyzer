@@ -6,6 +6,7 @@
 
 namespace qps {
 
+// Lookup table from Relationship to String representation
 const std::map<Relationship, std::string> relationshipStringMap{{
                                                               {Relationship::Follows, "Follows"},
                                                               {Relationship::FollowsT, "Follows*"},
@@ -23,8 +24,9 @@ const std::map<Relationship, std::string> relationshipStringMap{{
                                                               {Relationship::NextT, "Next*"},
                                                               {Relationship::Affects, "Affects"},
                                                               {Relationship::AffectsT, "Affects*"}
-                                                          }};
+                                                                }};
 
+// Lookup table from PQL substring to Relationship
 const std::map<std::string, Relationship> relationshipMap{{
                                                         {"Follows", Relationship::Follows},
                                                         {"Follows*", Relationship::FollowsT},
@@ -42,7 +44,7 @@ const std::map<std::string, Relationship> relationshipMap{{
                                                         {"Next*", Relationship::NextT},
                                                         {"Affects", Relationship::Affects},
                                                         {"Affects*", Relationship::AffectsT}
-                                                    }};
+                                                          }};
 
 // Get corresponding relationship of given string when parsing
 auto getRelationshipFromString(const std::string& reString) -> Relationship {

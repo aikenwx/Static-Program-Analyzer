@@ -14,14 +14,14 @@ using ExpressionSpec = std::variant<Underscore, Expression>;
 
 // PatternClause represents a pattern in query Pattern clause.
 class PatternClause {
-private:
+ private:
   Synonym stmtSynonym;
   Ref arg1;
   ExpressionSpec arg2;
   bool gotExpression;
   bool isPartial;
 
-public:
+ public:
   PatternClause(Synonym synonym_, Ref arg1_, ExpressionSpec arg2);
   [[maybe_unused]] [[nodiscard]] auto clauseGotExpression() const -> bool;
   [[maybe_unused]] [[nodiscard]] auto isExpressionPartial() const -> bool;

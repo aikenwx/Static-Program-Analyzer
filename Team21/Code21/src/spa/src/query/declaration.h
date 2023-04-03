@@ -12,12 +12,11 @@ namespace qps {
 
 // Declaration represents the declaration of a synonym with design entity
 class Declaration {
-
-private:
+ private:
   DesignEntity design_entity;
   Synonym synonym;
 
-public:
+ public:
   auto getDesignEntity() -> DesignEntity;
   auto getSynonym() -> Synonym;
   Declaration(DesignEntity design_entity_, Synonym synonym_);
@@ -54,4 +53,5 @@ public:
     return std::nullopt;
   }
 };
+
 } // namespace qps

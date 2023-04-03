@@ -7,6 +7,7 @@
 
 namespace qps {
 
-	// Element represents element type used in Select Clause
-	using Element = std::variant<Synonym, AttrRef>;
+// Element represents element type used in Select Clause
+using Element = std::variant<Synonym, AttrRef>;
+
 }

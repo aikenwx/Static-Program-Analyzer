@@ -4,14 +4,15 @@
 
 namespace qps {
 
-	Declaration::Declaration(DesignEntity design_entity_, Synonym synonym_)
-		: design_entity{ design_entity_ }, synonym{std::move( std::move(synonym_) )} {}
+Declaration::Declaration(DesignEntity design_entity_, Synonym synonym_)
+	: design_entity{ design_entity_ }, synonym{std::move( std::move(synonym_) )} {}
 
-	auto Declaration::getDesignEntity() -> DesignEntity {
-		return design_entity;
-	}
+auto Declaration::getDesignEntity() -> DesignEntity {
+	return design_entity;
+}
 
-	auto Declaration::getSynonym() -> Synonym {
-		return synonym;
-	}
+auto Declaration::getSynonym() -> Synonym {
+	return synonym;
+}
+
 }  // namespace qps

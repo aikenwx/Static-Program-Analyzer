@@ -463,4 +463,5 @@ auto QueryParser::makePostfix(std::string str) -> std::string {
   }
   return postfixed;
 }
+
 }  // namespace qps

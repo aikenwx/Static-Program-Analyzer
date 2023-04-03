@@ -32,14 +32,14 @@ auto getValidAttrNameSet(Declaration declaration) -> std::set<AttrName>;
 
 // AttrRef represents Attribute Reference to be used in With Clause and Select Clause
 class AttrRef {
-	public:
-		Synonym synonym;
-		AttrName attrName;
+ public:
+	Synonym synonym;
+	AttrName attrName;
 
-		AttrRef(Synonym synonym_, AttrName attrName_);
+	AttrRef(Synonym synonym_, AttrName attrName_);
 
-		auto operator==(const AttrRef& other) const -> bool {
-			return synonym == other.synonym && attrName == other.attrName;
-		}
+	auto operator==(const AttrRef& other) const -> bool {
+		return synonym == other.synonym && attrName == other.attrName;
+	}
 };
 }  // namespace qps

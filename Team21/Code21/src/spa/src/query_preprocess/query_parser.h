@@ -30,11 +30,11 @@ class QueryParser {
 		auto parseRef() -> Ref;
 		auto parseExpressionSpec() -> ExpressionSpec;
 		static auto validateExpression(std::string str) -> std::string;
-		static void checkAlphanumericHelper(std::string str, int &idx);
-		static void checkNumberHelper(std::string str, int &idx, int last, int &prev);
+		static void checkAlphanumericHelper(std::string str, int &idx, int &next, int &prev);
+		static void checkNumberHelper(std::string str, int &idx, int last, int &next, int &prev);
 		static void checkLeftBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &openBracketCount);
 		static void checkRightBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &closeBracketCount, int &openBracketCount);
-		static void checkOperatorHelper(std::string str, int &idx, int last, int &next);
+		static void checkOperatorHelper(std::string str, int &idx, int last, int &next, int &prev);
 		auto parseElement() -> Element;
 		auto parseWithRef() -> WithRef;
 		auto parseTupleSelect() -> std::vector<Element>;

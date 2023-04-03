@@ -4,6 +4,7 @@
 #include <cctype>
 #include <algorithm>
 #include <utility>
+#include <ostream>
 
 namespace qps {
 
@@ -101,16 +102,23 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
 auto QueryParser::validateExpression(std::string str) -> std::string {
   str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
   int idx = 0;
+  int firstidx = idx;
   int last = static_cast<int>(str.length()) - 1;
   int openBracketCount = 0;
   int closeBracketCount = 0;
   while (idx < str.length()) {
     int next = idx + 1;
     int prev = idx - 1;
-    checkAlphanumericHelper(str, idx);
-    checkNumberHelper(str, idx, last, prev);
+    checkAlphanumericHelper(str, idx, next, prev);
+    checkNumberHelper(str, idx, last, next, prev);
     checkLeftBracketHelper(str, idx, last, prev, next, openBracketCount);
     checkRightBracketHelper(str, idx, last, prev, next, closeBracketCount, openBracketCount);
+    checkOperatorHelper(str, idx, last, next, prev);
+    if (firstidx == idx) {
+      throw QueryException(ErrorType::Syntactic,
+        "Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character");
+    }
+    firstidx = idx;
   }
   if (openBracketCount != closeBracketCount) {
     throw QueryException(ErrorType::Syntactic, "Syntactic error. Closing brackets are insufficient");
@@ -118,29 +126,33 @@ auto QueryParser::validateExpression(std::string str) -> std::string {
   return str;
 }
 
-void QueryParser::checkAlphanumericHelper(std::string str, int &idx) {
+void QueryParser::checkAlphanumericHelper(std::string str, int &idx, int &next, int &prev) {
   if (isalpha(str[idx]) != 0) {
-    idx++;
+    ++idx;
     while (idx < str.length() && (isalnum(str[idx]) != 0)) {
-      idx++;
+      ++idx;
     }
   }
+  next = idx + 1;
+  prev = idx - 1;
 }
 
-void QueryParser::checkNumberHelper(std::string str, int &idx, int last, int &prev) {
+void QueryParser::checkNumberHelper(std::string str, int &idx, int last, int &next, int &prev) {
     if (isdigit(str[idx]) != 0) {
-      idx++;
+      ++idx;
       prev = idx - 1;
       if (str[prev] == '0' && idx < str.length() && (isdigit(str[idx]) != 0)) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Expression spec contains leading zero");
       }
       while (idx < str.length() && (isdigit(str[idx]) != 0)) {
-        idx++;
+        ++idx;
       }
       if (idx <= last && (isalpha(str[idx]) != 0)) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Integer has a letter in it");
       }
     }
+    next = idx + 1;
+    prev = idx - 1;
 }
 
 void QueryParser::checkLeftBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &openBracketCount) {
@@ -152,8 +164,10 @@ void QueryParser::checkLeftBracketHelper(std::string str, int &idx, int last, in
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is followed by neither an alphanumeric char or (");
       }
       openBracketCount += 1;
-      idx++;
+      ++idx;
     }
+    next = idx + 1;
+    prev = idx - 1;
 }
 
 void QueryParser::checkRightBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &closeBracketCount, int &openBracketCount) {
@@ -171,11 +185,13 @@ void QueryParser::checkRightBracketHelper(std::string str, int &idx, int last, i
         if (closeBracketCount > openBracketCount) {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is not supposed to be allowed without a opening bracket");
         }
-      idx++;
+      ++idx;
     }
+    next = idx + 1;
+    prev = idx - 1;
 }
 
-void QueryParser::checkOperatorHelper(std::string str, int &idx, int last, int &next) {
+void QueryParser::checkOperatorHelper(std::string str, int &idx, int last, int &next, int& prev) {
     if (operatorHelper(str[idx]) >= 0 && idx < last) {
       if (idx == 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Operator cannot be first char");
@@ -183,12 +199,10 @@ void QueryParser::checkOperatorHelper(std::string str, int &idx, int last, int &
       if (operatorHelper(str[next]) >= 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. operator cannot be followed by operator");
       }
-      idx++;
+      ++idx;
     }
-    else {
-      throw QueryException(ErrorType::Syntactic,
-        "Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character");
-    }
+    next = idx + 1;
+    prev = idx - 1;
 }
 
 auto QueryParser::parseElement() -> Element {

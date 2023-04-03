@@ -43,8 +43,3 @@ while w; if i; stmt s1, s2; call c;
 Select c such that Parent*(_, _)
 13, 15, 19
 5000
-
-
-
-
-

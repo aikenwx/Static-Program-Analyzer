@@ -10,6 +10,8 @@ class SuchThatEvaluator : public ClauseEvaluator {
   SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
       : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
 
+  auto Evaluate(QueryFacade &pkb) -> ClauseResult override;
+ private:
   SuchThatClause clause_;
   std::vector<Declaration> declarations_;
 };

@@ -9,16 +9,16 @@
 
 class AffectsRelatedCFGEvaluator : public CFGRelationshipEvaluator {
  public:
-  AffectsRelatedCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-                             EntityManager* entityManager);
-  auto isValidEntityInput(Entity* entity) -> bool override;
+  AffectsRelatedCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                             EntityManager *entityManager);
+  auto isValidEntityInput(Entity *entity) -> bool override;
 
-  auto isValidEntityTypeInput(const EntityType& entityType) -> bool override;
+  auto isValidEntityTypeInput(const EntityType &entityType) -> bool override;
 
   auto getEvaluableEntitiesFromEntityType(
-      const EntityType& entityType) -> std::vector<Entity*>* override;
+      const EntityType &entityType) -> std::vector<Entity *> * override;
 
-  static auto isAllowedModifier(Entity* entity) -> bool;
+  static auto isAllowedModifier(Entity *entity) -> bool;
 };
 
 #endif  // SPA_AFFECTSRELATEDCFGEVALUATOR_H

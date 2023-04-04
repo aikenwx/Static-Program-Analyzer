@@ -1,4 +1,5 @@
 #include "pkb_helpers.h"
+
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
 #include "PKBStorageClasses/EntityClasses/PrintStatement.h"
@@ -9,10 +10,22 @@
 #include "PKBStorageClasses/EntityClasses/Variable.h"
 #include "PKBStorageClasses/EntityClasses/Constant.h"
 #include "PKBStorageClasses/EntityClasses/Procedure.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/FollowsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/CallsStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 
 namespace qps {
 
-auto DesignEntityToEntityType(DesignEntity entity) -> EntityType {
+auto DesignEntityToEntityType(DesignEntity entity) -> const EntityType & {
   switch (entity) {
     case DesignEntity::STMT:return Statement::getEntityTypeStatic();
     case DesignEntity::READ:return ReadStatement::getEntityTypeStatic();
@@ -27,33 +40,49 @@ auto DesignEntityToEntityType(DesignEntity entity) -> EntityType {
   }
 }
 
-auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> EntityType {
-  auto decl = Declaration::findDeclarationWithSynonym(declarations, syn);
-  if (!decl) {
-    throw std::invalid_argument("Synonym in clause not in query declaration");
+auto RelationshipToRelationshipType(Relationship relationship) -> const RelationshipType & {
+  switch (relationship) {
+    case Relationship::Parent: return ParentRelationship::getRelationshipTypeStatic();
+    case Relationship::ParentT: return ParentStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Follows: return FollowsRelationship::getRelationshipTypeStatic();
+    case Relationship::FollowsT: return FollowsStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Uses:
+    case Relationship::UsesS:
+    case Relationship::UsesP: return UsesRelationship::getRelationshipTypeStatic();
+    case Relationship::Modifies:
+    case Relationship::ModifiesS:
+    case Relationship::ModifiesP: return ModifiesRelationship::getRelationshipTypeStatic();
+    case Relationship::Calls: return CallsRelationship::getRelationshipTypeStatic();
+    case Relationship::CallsT: return CallsStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Next: return NextRelationship::getRelationshipTypeStatic();
+    case Relationship::NextT: return NextStarRelationship::getRelationshipTypeStatic();
+    case Relationship::Affects: return AffectsRelationship::getRelationshipTypeStatic();
+    case Relationship::AffectsT: return AffectsStarRelationship::getRelationshipTypeStatic();
   }
-  return DesignEntityToEntityType(decl->getDesignEntity());
-
 }
 
-auto GetStatement(int stmt_no, QueryFacade &pkb) -> Statement * {
-  return dynamic_cast<Statement *>(pkb.getEntity(Statement::getEntityTypeStatic(), stmt_no));
-}
+auto ExtractEntities(const std::vector<::Relationship *> &relationships,
+                     bool left,
+                     bool right,
+                     bool require_equal) -> std::vector<std::vector<Entity *>> {
+  std::vector<std::vector<Entity *>> rows;
+  rows.reserve(relationships.size());
+  for (const auto &relationship : relationships) {
+    if (require_equal && relationship->getLeftHandEntity() != relationship->getRightHandEntity()) {
+      continue;
+    }
 
-auto GetStmtNo(Entity *entity) -> int {
-  return dynamic_cast<Statement *>(entity)->getStatementNumber();
-}
+    std::vector<Entity *> row;
+    if (left) {
+      row.push_back(relationship->getLeftHandEntity());
+    }
 
-auto GetEntities(Synonym &syn, std::vector<Declaration> &declarations, QueryFacade &pkb) -> std::vector<Entity *> * {
-  auto entity_type = GetEntityType(syn, declarations);
-  return pkb.getEntitiesByType(entity_type);
-}
+    if (right) {
+      row.push_back(relationship->getRightHandEntity());
+    }
 
-auto MatchesEntityType(Entity *entity, EntityType type) -> bool {
-  if (type == Statement::getEntityTypeStatic()) {
-    return Statement::isStatement(entity);
+    rows.push_back(std::move(row));
   }
-  return entity->getEntityType() == type;
+  return rows;
 }
-
 }  // namespace qps

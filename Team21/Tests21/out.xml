@@ -1,0 +1,24 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>Tests21</name><parsing_time_taken>1648.406000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="integer with(literal, literal)">1</id><querystr><![CDATA[stmt s, s1; Select s such that Affects*(s,s1);]]></querystr>
+<stuans>SyntaxError</stuans>
+<correct></correct>
+<time_taken>1.367000</time_taken>
+<failed>
+<missing></missing>
+<additional>SyntaxError</additional>
+<summary>
+<expected>0</expected>
+<matched>0</matched>
+<missing>0</missing>
+<additional>1</additional>
+</summary>
+</failed>
+</query>
+</queries>
+</test_results>

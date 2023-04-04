@@ -1030,12 +1030,12 @@ TEST_CASE("Test AffectsStar worst case") {
   auto *result = pkb.getQueryFacade()->getRelationshipsByTypes(
       AffectsStarRelationship::getRelationshipTypeStatic(),
       Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
-//
-//  auto end = std::chrono::high_resolution_clock::now();
-//  auto duration =
-//      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//  std::cout << "Time taken by function: " << duration.count() << " microseconds"
-//            << std::endl;
+
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  std::cout << "Time taken by function: " << duration.count() << " microseconds"
+            << std::endl;
 }
 
 TEST_CASE("Test CFG relationship cache") {

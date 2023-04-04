@@ -25,131 +25,140 @@
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 TEST_CASE("RelationshipManager instantiates") {
-    RelationshipManager relationshipManager = RelationshipManager();
+  EntityManager entityManager;
+  RelationshipManager relationshipManager = RelationshipManager(&entityManager);
 }
 
 TEST_CASE("RelationshipManager stores relationship") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
 
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
+  auto readStatement = std::make_shared<ReadStatement>(1);
+  auto readStatement2 = std::make_shared<ReadStatement>(2);
 
-    relationshipManager->storeRelationship(std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get()));
+  relationshipManager->storeRelationship(std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get()));
 }
 
 TEST_CASE("RelationshipManager retrieves relationship") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  auto readStatement = std::make_shared<ReadStatement>(1);
+  auto readStatement2 = std::make_shared<ReadStatement>(2);
 
-    auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
-    relationshipManager->storeRelationship(relationship);
+  auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
+  relationshipManager->storeRelationship(relationship);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
-        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
-        ReadStatement::getEntityTypeStatic());
+  std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+      FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+      ReadStatement::getEntityTypeStatic());
 
-    REQUIRE(relationships->size() == 1);
-    REQUIRE(relationships->at(0)->equals(relationship.get()));
+  REQUIRE(relationships->size() == 1);
+  REQUIRE(relationships->at(0)->equals(relationship.get()));
 }
 
 TEST_CASE("RelationshipManager retrieves multitple relationships") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
-    auto readStatement3 = std::make_shared<ReadStatement>(3);
-    auto readStatement4 = std::make_shared<ReadStatement>(4);
+  EntityManager entityManager;
 
-    auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  auto readStatement = std::make_shared<ReadStatement>(1);
+  auto readStatement2 = std::make_shared<ReadStatement>(2);
+  auto readStatement3 = std::make_shared<ReadStatement>(3);
+  auto readStatement4 = std::make_shared<ReadStatement>(4);
 
-    auto relationship2 = std::make_shared<FollowsRelationship>(readStatement3.get(), readStatement4.get());
+  auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
+  auto relationship2 = std::make_shared<FollowsRelationship>(readStatement3.get(), readStatement4.get());
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
-        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
-        ReadStatement::getEntityTypeStatic());
+  relationshipManager->storeRelationship(relationship);
+  relationshipManager->storeRelationship(relationship2);
 
-    REQUIRE(relationships->size() == 2);
-    REQUIRE(relationships->at(0)->equals(relationship.get()));
-    REQUIRE(relationships->at(1)->equals(relationship2.get()));
+  std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+      FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+      ReadStatement::getEntityTypeStatic());
+
+  REQUIRE(relationships->size() == 2);
+  REQUIRE(relationships->at(0)->equals(relationship.get()));
+  REQUIRE(relationships->at(1)->equals(relationship2.get()));
 }
 
 TEST_CASE("RelationshipManager returns empty vector if no entries") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
-        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
-        ReadStatement::getEntityTypeStatic());
+  std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+      FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+      ReadStatement::getEntityTypeStatic());
 
-    REQUIRE(relationships->empty());
+  REQUIRE(relationships->empty());
 }
 
 TEST_CASE("RelationshipManager returns empty vector if no entries of type") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  auto readStatement = std::make_shared<ReadStatement>(1);
+  auto readStatement2 = std::make_shared<ReadStatement>(2);
 
-    auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
+  auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
 
-    relationshipManager->storeRelationship(relationship);
+  relationshipManager->storeRelationship(relationship);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
-        FollowsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
-        ReadStatement::getEntityTypeStatic());
+  std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+      FollowsStarRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+      ReadStatement::getEntityTypeStatic());
 
-    REQUIRE(relationships->empty());
+  REQUIRE(relationships->empty());
 }
 
 TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple types") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
-    auto readStatement = std::make_shared<ReadStatement>(1);
-    auto readStatement2 = std::make_shared<ReadStatement>(2);
-    auto readStatement3 = std::make_shared<ReadStatement>(3);
-    auto readStatement4 = std::make_shared<ReadStatement>(4);
-    auto assignStatement = std::make_shared<AssignStatement>(5);
-    auto assignStatement2 = std::make_shared<AssignStatement>(6);
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  auto readStatement = std::make_shared<ReadStatement>(1);
+  auto readStatement2 = std::make_shared<ReadStatement>(2);
+  auto readStatement3 = std::make_shared<ReadStatement>(3);
+  auto readStatement4 = std::make_shared<ReadStatement>(4);
+  auto assignStatement = std::make_shared<AssignStatement>(5);
+  auto assignStatement2 = std::make_shared<AssignStatement>(6);
 
-    auto aString = std::make_shared<std::string>("a");
-    auto bString = std::make_shared<std::string>("b");
-    auto variable = std::make_shared<Variable>(aString);
-    auto variable2 = std::make_shared<Variable>(bString);
+  auto aString = std::make_shared<std::string>("a");
+  auto bString = std::make_shared<std::string>("b");
+  auto variable = std::make_shared<Variable>(aString);
+  auto variable2 = std::make_shared<Variable>(bString);
 
-    auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
-    auto relationship2 = std::make_shared<FollowsRelationship>(readStatement3.get(), readStatement4.get());
-    auto relationship3 = std::make_shared<ModifiesRelationship>(assignStatement.get(), variable.get());
-    auto relationship4 = std::make_shared<ModifiesRelationship>(assignStatement2.get(), variable2.get());
+  auto relationship = std::make_shared<FollowsRelationship>(readStatement.get(), readStatement2.get());
+  auto relationship2 = std::make_shared<FollowsRelationship>(readStatement3.get(), readStatement4.get());
+  auto relationship3 = std::make_shared<ModifiesRelationship>(assignStatement.get(), variable.get());
+  auto relationship4 = std::make_shared<ModifiesRelationship>(assignStatement2.get(), variable2.get());
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
-    relationshipManager->storeRelationship(relationship3);
-    relationshipManager->storeRelationship(relationship4);
+  relationshipManager->storeRelationship(relationship);
+  relationshipManager->storeRelationship(relationship2);
+  relationshipManager->storeRelationship(relationship3);
+  relationshipManager->storeRelationship(relationship4);
 
-    std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
-        FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
-        ReadStatement::getEntityTypeStatic());
+  std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsByTypes(
+      FollowsRelationship::getRelationshipTypeStatic(), ReadStatement::getEntityTypeStatic(),
+      ReadStatement::getEntityTypeStatic());
 
-    REQUIRE(relationships->size() == 2);
-    REQUIRE(relationship->equals(relationships->at(0)));
-    REQUIRE(relationship2->equals(relationships->at(1)));
-    std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
-        ModifiesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
-        Variable::getEntityTypeStatic());
+  REQUIRE(relationships->size() == 2);
+  REQUIRE(relationship->equals(relationships->at(0)));
+  REQUIRE(relationship2->equals(relationships->at(1)));
+  std::vector<Relationship *> *relationships2 = relationshipManager->getRelationshipsByTypes(
+      ModifiesRelationship::getRelationshipTypeStatic(), AssignStatement::getEntityTypeStatic(),
+      Variable::getEntityTypeStatic());
 
-    REQUIRE(relationships2->size() == 2);
-    REQUIRE(relationship3->equals(relationships2->at(0)));
-    REQUIRE(relationship4->equals(relationships2->at(1)));
+  REQUIRE(relationships2->size() == 2);
+  REQUIRE(relationship3->equals(relationships2->at(0)));
+  REQUIRE(relationship4->equals(relationships2->at(1)));
 }
 
 // TEST_CASE("Retrieve Statement follow Statement") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     ReadStatement *readStatement = new ReadStatement(1);
 //     ReadStatement *readStatement2 = new ReadStatement(2);
@@ -191,7 +200,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Statement Follows Statement") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     ReadStatement *readStatement = new ReadStatement(1);
 //     ReadStatement *readStatement2 = new ReadStatement(2);
@@ -245,7 +255,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Statement Follows Statement2") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     IfStatement *ifStatement = new IfStatement(1);
 //     WhileStatement *whileStatement = new WhileStatement(2);
@@ -284,7 +295,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve While Parent While") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     WhileStatement *whileStatement = new WhileStatement(1);
 //     WhileStatement *whileStatement2 = new WhileStatement(2);
@@ -317,7 +329,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Call Follows Calls") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     CallStatement *callStatement = new CallStatement(1);
 //     CallStatement *callStatement2 = new CallStatement(2);
@@ -362,7 +375,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Statement Parent Assignment") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     ReadStatement *readStatement = new ReadStatement(1);
 //     ReadStatement *readStatement2 = new ReadStatement(2);
@@ -404,7 +418,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Assign Parent Statement") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     ReadStatement *readStatement = new ReadStatement(1);
 //     ReadStatement *readStatement2 = new ReadStatement(2);
@@ -443,7 +458,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Statement Follows Statement from empty RelationshipManager") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 
 //     std::vector<Relationship *> *relationships = relationshipManager->getRelationshipsVectorByTypes(FOLLOWS, STATEMENT,
@@ -453,7 +469,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // // }
 
 // TEST_CASE("Retrieve While FollowsStar While") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     WhileStatement *whileStatement = new WhileStatement(1);
 //     WhileStatement *whileStatement2 = new WhileStatement(2);
@@ -487,7 +504,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve While FollowsStar Statement") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     WhileStatement *whileStatement = new WhileStatement(1);
 //     PrintStatement *printStatement = new PrintStatement(2);
@@ -536,7 +554,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve If ParentStar Call") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     IfStatement *ifStatement = new IfStatement(1);
 //     CallStatement *callStatement = new CallStatement(2);
@@ -580,7 +599,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Retrieve Statement Follows Call") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     CallStatement *callStatement = new CallStatement(1);
 //     AssignStatement *assignStatement = new AssignStatement(2);
@@ -629,7 +649,8 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 // TEST_CASE("Duplicate Relationship has no effect") {
-// auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
+// EntityManager entityManager;
+// auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
 //     RelationshipManager *relationshipManagerelationshipManagerOwner.get();r();
 //     WhileStatement *whileStatement = new WhileStatement(1);
 //     WhileStatement *whileStatement2 = new WhileStatement(2);
@@ -662,104 +683,105 @@ TEST_CASE("RelationshipManager can retrieve mulitple relationships of multiple t
 // }
 
 TEST_CASE("Can retrieve relationship by literal values") {
-    auto relationshipManagerOwner = std::make_shared<RelationshipManager>();
-    RelationshipManager *relationshipManager = relationshipManagerOwner.get();
+  EntityManager entityManager;
+  auto relationshipManagerOwner = std::make_shared<RelationshipManager>(&entityManager);
+  RelationshipManager *relationshipManager = relationshipManagerOwner.get();
 
-    auto whileStatementOwner = std::make_shared<WhileStatement>(1);
-    auto whileStatementOwner2 = std::make_shared<WhileStatement>(2);
-    auto assignStatementOwner = std::make_shared<AssignStatement>(3);
-    auto assignStatementOwner2 = std::make_shared<AssignStatement>(4);
-    auto callStatementOwner = std::make_shared<CallStatement>(5);
-    auto readStatementOwner = std::make_shared<ReadStatement>(6);
-    auto printStatementOwner = std::make_shared<PrintStatement>(7);
-    auto ifStatementOwner = std::make_shared<IfStatement>(8);
-    auto variableOwner = std::make_shared<Variable>(std::make_shared<std::string>("x"));
-    auto variableOwner2 = std::make_shared<Variable>(std::make_shared<std::string>("y"));
-    auto procedureOwner = std::make_shared<Procedure>(std::make_shared<std::string>("main"));
+  auto whileStatementOwner = std::make_shared<WhileStatement>(1);
+  auto whileStatementOwner2 = std::make_shared<WhileStatement>(2);
+  auto assignStatementOwner = std::make_shared<AssignStatement>(3);
+  auto assignStatementOwner2 = std::make_shared<AssignStatement>(4);
+  auto callStatementOwner = std::make_shared<CallStatement>(5);
+  auto readStatementOwner = std::make_shared<ReadStatement>(6);
+  auto printStatementOwner = std::make_shared<PrintStatement>(7);
+  auto ifStatementOwner = std::make_shared<IfStatement>(8);
+  auto variableOwner = std::make_shared<Variable>(std::make_shared<std::string>("x"));
+  auto variableOwner2 = std::make_shared<Variable>(std::make_shared<std::string>("y"));
+  auto procedureOwner = std::make_shared<Procedure>(std::make_shared<std::string>("main"));
 
-    WhileStatement *whileStatement = whileStatementOwner.get();
-    WhileStatement *whileStatement2 = whileStatementOwner2.get();
-    AssignStatement *assignStatement = assignStatementOwner.get();
-    AssignStatement *assignStatement2 = assignStatementOwner2.get();
-    CallStatement *callStatement = callStatementOwner.get();
-    ReadStatement *readStatement = readStatementOwner.get();
-    PrintStatement *printStatement = printStatementOwner.get();
-    IfStatement *ifStatement = ifStatementOwner.get();
-    Variable *variable = variableOwner.get();
-    Variable *variable2 = variableOwner2.get();
-    Procedure *procedure = procedureOwner.get();
+  WhileStatement *whileStatement = whileStatementOwner.get();
+  WhileStatement *whileStatement2 = whileStatementOwner2.get();
+  AssignStatement *assignStatement = assignStatementOwner.get();
+  AssignStatement *assignStatement2 = assignStatementOwner2.get();
+  CallStatement *callStatement = callStatementOwner.get();
+  ReadStatement *readStatement = readStatementOwner.get();
+  PrintStatement *printStatement = printStatementOwner.get();
+  IfStatement *ifStatement = ifStatementOwner.get();
+  Variable *variable = variableOwner.get();
+  Variable *variable2 = variableOwner2.get();
+  Procedure *procedure = procedureOwner.get();
 
-    std::shared_ptr<Relationship> relationship = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
-    std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(whileStatement, assignStatement);
-    std::shared_ptr<Relationship> relationship3 = std::make_shared<ParentStarRelationship>(assignStatement, assignStatement2);
-    std::shared_ptr<Relationship> relationship4 = std::make_shared<ParentRelationship>(assignStatement, callStatement);
-    std::shared_ptr<Relationship> relationship5 = std::make_shared<UsesRelationship>(callStatement, variable);
-    std::shared_ptr<Relationship> relationship6 = std::make_shared<ModifiesRelationship>(callStatement, variable2);
-    std::shared_ptr<Relationship> relationship7 = std::make_shared<ModifiesRelationship>(readStatement, variable2);
-    std::shared_ptr<Relationship> relationship9 = std::make_shared<UsesRelationship>(procedure, variable);
-    std::shared_ptr<Relationship> relationship10 = std::make_shared<ModifiesRelationship>(ifStatement, variable2);
-    std::shared_ptr<Relationship> relationship11 = std::make_shared<UsesRelationship>(printStatement, variable2);
+  std::shared_ptr<Relationship> relationship = std::make_shared<FollowsStarRelationship>(whileStatement, whileStatement2);
+  std::shared_ptr<Relationship> relationship2 = std::make_shared<FollowsRelationship>(whileStatement, assignStatement);
+  std::shared_ptr<Relationship> relationship3 = std::make_shared<ParentStarRelationship>(assignStatement, assignStatement2);
+  std::shared_ptr<Relationship> relationship4 = std::make_shared<ParentRelationship>(assignStatement, callStatement);
+  std::shared_ptr<Relationship> relationship5 = std::make_shared<UsesRelationship>(callStatement, variable);
+  std::shared_ptr<Relationship> relationship6 = std::make_shared<ModifiesRelationship>(callStatement, variable2);
+  std::shared_ptr<Relationship> relationship7 = std::make_shared<ModifiesRelationship>(readStatement, variable2);
+  std::shared_ptr<Relationship> relationship9 = std::make_shared<UsesRelationship>(procedure, variable);
+  std::shared_ptr<Relationship> relationship10 = std::make_shared<ModifiesRelationship>(ifStatement, variable2);
+  std::shared_ptr<Relationship> relationship11 = std::make_shared<UsesRelationship>(printStatement, variable2);
 
-    relationshipManager->storeRelationship(relationship);
-    relationshipManager->storeRelationship(relationship2);
-    relationshipManager->storeRelationship(relationship3);
-    relationshipManager->storeRelationship(relationship4);
-    relationshipManager->storeRelationship(relationship5);
-    relationshipManager->storeRelationship(relationship6);
-    relationshipManager->storeRelationship(relationship7);
-    relationshipManager->storeRelationship(relationship9);
-    relationshipManager->storeRelationship(relationship10);
-    relationshipManager->storeRelationship(relationship11);
+  relationshipManager->storeRelationship(relationship);
+  relationshipManager->storeRelationship(relationship2);
+  relationshipManager->storeRelationship(relationship3);
+  relationshipManager->storeRelationship(relationship4);
+  relationshipManager->storeRelationship(relationship5);
+  relationshipManager->storeRelationship(relationship6);
+  relationshipManager->storeRelationship(relationship7);
+  relationshipManager->storeRelationship(relationship9);
+  relationshipManager->storeRelationship(relationship10);
+  relationshipManager->storeRelationship(relationship11);
 
-    auto relationshipKey1 = RelationshipKey(&relationship->getRelationshipType(), &relationship->getLeftHandEntity()->getEntityKey(),
-                                            &relationship->getRightHandEntity()->getEntityKey());
+  auto relationshipKey1 = RelationshipKey(&relationship->getRelationshipType(), &relationship->getLeftHandEntity()->getEntityKey(),
+                                          &relationship->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship->equals(relationshipManager->getRelationship(relationshipKey1)));
+  REQUIRE(relationship->equals(relationshipManager->getRelationship(relationshipKey1)));
 
-    auto relationshipKey2 = RelationshipKey(&relationship2->getRelationshipType(), &relationship2->getLeftHandEntity()->getEntityKey(),
-                                            &relationship2->getRightHandEntity()->getEntityKey());
+  auto relationshipKey2 = RelationshipKey(&relationship2->getRelationshipType(), &relationship2->getLeftHandEntity()->getEntityKey(),
+                                          &relationship2->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship2->equals(relationshipManager->getRelationship(relationshipKey2)));
+  REQUIRE(relationship2->equals(relationshipManager->getRelationship(relationshipKey2)));
 
-    auto relationshipKey3 = RelationshipKey(&relationship3->getRelationshipType(), &relationship3->getLeftHandEntity()->getEntityKey(),
-                                            &relationship3->getRightHandEntity()->getEntityKey());
+  auto relationshipKey3 = RelationshipKey(&relationship3->getRelationshipType(), &relationship3->getLeftHandEntity()->getEntityKey(),
+                                          &relationship3->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship3->equals(relationshipManager->getRelationship(relationshipKey3)));
+  REQUIRE(relationship3->equals(relationshipManager->getRelationship(relationshipKey3)));
 
-    auto relationshipKey4 = RelationshipKey(&relationship4->getRelationshipType(), &relationship4->getLeftHandEntity()->getEntityKey(),
-                                            &relationship4->getRightHandEntity()->getEntityKey());
+  auto relationshipKey4 = RelationshipKey(&relationship4->getRelationshipType(), &relationship4->getLeftHandEntity()->getEntityKey(),
+                                          &relationship4->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship4->equals(relationshipManager->getRelationship(relationshipKey4)));
+  REQUIRE(relationship4->equals(relationshipManager->getRelationship(relationshipKey4)));
 
-    auto relationshipKey5 = RelationshipKey(&relationship5->getRelationshipType(), &relationship5->getLeftHandEntity()->getEntityKey(),
-                                            &relationship5->getRightHandEntity()->getEntityKey());
+  auto relationshipKey5 = RelationshipKey(&relationship5->getRelationshipType(), &relationship5->getLeftHandEntity()->getEntityKey(),
+                                          &relationship5->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship5->equals(relationshipManager->getRelationship(relationshipKey5)));
+  REQUIRE(relationship5->equals(relationshipManager->getRelationship(relationshipKey5)));
 
-    auto relationshipKey6 = RelationshipKey(&relationship6->getRelationshipType(), &relationship6->getLeftHandEntity()->getEntityKey(),
-                                            &relationship6->getRightHandEntity()->getEntityKey());
+  auto relationshipKey6 = RelationshipKey(&relationship6->getRelationshipType(), &relationship6->getLeftHandEntity()->getEntityKey(),
+                                          &relationship6->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship6->equals(relationshipManager->getRelationship(relationshipKey6)));
+  REQUIRE(relationship6->equals(relationshipManager->getRelationship(relationshipKey6)));
 
-    auto relationshipKey7 = RelationshipKey(&relationship7->getRelationshipType(), &relationship7->getLeftHandEntity()->getEntityKey(),
-                                            &relationship7->getRightHandEntity()->getEntityKey());
+  auto relationshipKey7 = RelationshipKey(&relationship7->getRelationshipType(), &relationship7->getLeftHandEntity()->getEntityKey(),
+                                          &relationship7->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship7->equals(relationshipManager->getRelationship(relationshipKey7)));
+  REQUIRE(relationship7->equals(relationshipManager->getRelationship(relationshipKey7)));
 
-    auto relationshipKey9 = RelationshipKey(&relationship9->getRelationshipType(), &relationship9->getLeftHandEntity()->getEntityKey(),
-                                            &relationship9->getRightHandEntity()->getEntityKey());
+  auto relationshipKey9 = RelationshipKey(&relationship9->getRelationshipType(), &relationship9->getLeftHandEntity()->getEntityKey(),
+                                          &relationship9->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship9->equals(relationshipManager->getRelationship(relationshipKey9)));
+  REQUIRE(relationship9->equals(relationshipManager->getRelationship(relationshipKey9)));
 
-    auto relationshipKey10 = RelationshipKey(&relationship10->getRelationshipType(), &relationship10->getLeftHandEntity()->getEntityKey(),
-                                             &relationship10->getRightHandEntity()->getEntityKey());
+  auto relationshipKey10 = RelationshipKey(&relationship10->getRelationshipType(), &relationship10->getLeftHandEntity()->getEntityKey(),
+                                           &relationship10->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship10->equals(relationshipManager->getRelationship(relationshipKey10)));
+  REQUIRE(relationship10->equals(relationshipManager->getRelationship(relationshipKey10)));
 
-    auto relationshipKey11 = RelationshipKey(&relationship11->getRelationshipType(), &relationship11->getLeftHandEntity()->getEntityKey(),
-                                             &relationship11->getRightHandEntity()->getEntityKey());
+  auto relationshipKey11 = RelationshipKey(&relationship11->getRelationshipType(), &relationship11->getLeftHandEntity()->getEntityKey(),
+                                           &relationship11->getRightHandEntity()->getEntityKey());
 
-    REQUIRE(relationship11->equals(relationshipManager->getRelationship(relationshipKey11)));
+  REQUIRE(relationship11->equals(relationshipManager->getRelationship(relationshipKey11)));
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

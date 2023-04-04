@@ -37,6 +37,18 @@ auto RelationshipKey::operator==(
          *this->rightEntityKey == *otherRelationshipLiteralKey.rightEntityKey;
 }
 
+auto RelationshipKey::getRelationshipType() -> const RelationshipType * {
+  return this->relationshipType;
+}
+
+auto RelationshipKey::getLeftEntityKey() -> EntityKey * {
+  return this->leftEntityKey;
+}
+
+auto RelationshipKey::getRightEntityKey() -> EntityKey * {
+  return this->rightEntityKey;
+}
+
 auto Relationship::containsEntityOnLeftHand(Entity *entity) const -> bool {
   return this->getLeftHandEntity()->equals(entity);
 }

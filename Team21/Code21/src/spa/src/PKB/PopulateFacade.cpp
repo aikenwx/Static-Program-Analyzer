@@ -32,7 +32,7 @@
 PopulateFacade::PopulateFacade(EntityManager *entityManager,
                                RelationshipManager *relationshipManager,
                                PatternManager *patternManager,
-                               CFGManager *cfgManager)
+                               CFGStorage *cfgManager)
     : entityManager(entityManager),
       relationshipManager(relationshipManager),
       patternManager(patternManager),
@@ -310,5 +310,6 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 }
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-  this->cfgManager->storeCFG(std::move(cfg));
+  this->relationshipManager->storeCFG(cfg);
+  this->cfgManager->storeCFG(cfg);
 }

@@ -46,51 +46,62 @@ procedure fun {
           } else {
 33            clown = 12 * 12 + 4 % pennywise;
 34            call bob;
+35			  if (happy != 0) then {
+36			   	happy = 1;
+37				happy = 2;
+38				happy = 3;
+39				happy = 4;
+			  } else {
+40				happy = 10;
+41				happy = 11;
+			  }
           }
       }
 
-35    if (mugger == dead % 2) then {
-36        mugger = dead + sleep * laugh;
+42    if (mugger == dead % 2) then {
+43        mugger = dead + sleep * laugh;
       } else {
-37        if (dead < 0) then {
-38            mugger = mugger + 1;
-39            laugh = laugh * laugh;
-40            dead = mugger;
+44      while (mugger > 0) {
+45        if (dead < 0) then {
+46            mugger = mugger + 1;
+47            laugh = laugh * laugh;
+48            dead = mugger;
           } else {
-41            print mugger;
-42            read laugh;
-43            mugger = 12 * 12 * 12;
+49            print mugger;
+50            read laugh;
+51            mugger = 12 * 12 * 12;
           }
+        }
       }
 
-44    while (ctf != 0) {
-45        security = secure + 1234567 % 20;
-46	      flag = security / 6 - secure * 2;
-47        if (found == 0) then {
-48            read hack;
-49            print ctf;
-50            hack = hack + 1;
-51		      while (hack > 20) {
-52                found = found + 100 - secure;
-53                print found;
-54                read security;
+52    while (ctf != 0) {
+53        security = secure + 1234567 % 20;
+54	      flag = security / 6 - secure * 2;
+55        if (found == 0) then {
+56            read hack;
+57            print ctf;
+58            hack = hack + 1;
+59		      while (hack > 20) {
+60                found = found + 100 - secure;
+61                print found;
+62                read security;
 		      }
           } else {
-55            print cs2107;
-56            found = 0;
-57            print found;
-58            print security;
+63            print cs2107;
+64            found = 0;
+65            print found;
+66            print security;
           }
       }
-59    print flag;
-60    print clown;
-61    print mugger;
-62    read happy;
+67    print flag;
+68    print clown;
+69    print mugger;
+70    read happy;
   }
 
 procedure bob {
-63    bob1 = bob1;
-64    print IamBob;
-65    bob1 = sad * 10 / 9;
-66    print helpBOB;
+71    bob1 = bob1;
+72    print IamBob;
+73    bob1 = sad * 10 / 9;
+74    print helpBOB;
   }

@@ -1,7 +1,7 @@
 1 - relationship(literal, literal)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1;
 Select a such that Follows(21, 22)
-6, 7, 9, 11, 12, 14, 15, 17, 19, 23, 24, 26, 28, 29, 30, 31, 32, 33, 36, 38, 39, 40, 43, 45, 46, 50, 52, 56, 63, 65
+6, 7, 9, 11, 12, 14, 15, 17, 19, 23, 24, 26, 28, 29, 30, 31, 32, 33, 36, 37, 38, 39, 40, 41, 43, 46, 47, 48, 51, 53, 54, 58, 60, 64, 71, 73
 5000
 2 - relationship(synonym, literal)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1;
@@ -11,22 +11,22 @@ clown, mugger, dead, laugh, sleep, ctf, security, hack, secure, flag, found, kil
 3 - relationship(wildcard, literal)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select i such that Follows(_, 18)
-5, 25, 27, 35, 37, 47
+5, 25, 27, 35, 42, 45, 55
 5000
 4 - relationship(literal, synonym)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select i such that Follows(46, i)
-47
+none
 5000
 5 - relationship(synonym, synonym)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select w such that Follows(i, w)
-44
+52
 5000
 6 - relationship(wildcard, literal)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select p such that Follows(_, 59)
-3, 4, 10, 21, 41, 49, 53, 55, 57, 58, 59, 60, 61, 64, 66
+3, 4, 10, 21, 49, 57, 61, 63, 65, 66, 67, 68, 69, 72, 74
 5000
 7 - relationship(literal, wildcard)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
@@ -36,10 +36,10 @@ none
 8 - relationship(synonym, wildcard)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select r such that Follows(s, _)
-1, 2, 22, 42, 48, 54, 62
+1, 2, 22, 50, 56, 62, 70
 5000
 9 - relationship(wildcard, wildcard)
 assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select w such that Follows(_, _)
-13, 16, 18, 20, 44, 51
+13, 16, 18, 20, 44, 52, 59
 5000

@@ -43,3 +43,43 @@ assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
 Select w such that Follows(_, _)
 13, 16, 18, 20, 44, 52, 59
 5000
+10 - relationship(literal, literal) where we check three levels of while
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(21, 22)
+TRUE
+5000
+11 - relationship(literal, literal) where we check three levels of while, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(22, 23)
+FALSE
+5000
+12 - relationship(literal, literal) where we check three levels of if in the else region
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(40, 41)
+TRUE
+5000
+13 - relationship(literal, literal) where we check three levels of if in the else region, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(34, 40)
+FALSE
+5000
+14 - relationship(literal, literal) where we check three levels of if in the if region
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(36, 37)
+TRUE
+5000
+15 - relationship(literal, literal) where we check three levels of if in the if region, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(35, 36)
+FALSE
+5000
+16 - relationship(literal, literal) where we check in a while, if, while
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(60, 61)
+TRUE
+5000
+17 - relationship(literal, literal) where we check in a while, if, while, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(62, 63)
+FALSE
+5000

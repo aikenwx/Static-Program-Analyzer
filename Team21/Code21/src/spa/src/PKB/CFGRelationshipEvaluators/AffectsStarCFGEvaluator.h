@@ -13,14 +13,14 @@ class AffectsStarCFGEvaluator : public AffectsRelatedCFGEvaluator {
 
   [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
 
-  auto createNewRelationship(Statement* leftStatement,
-                             Statement* rightStatement)
+  auto createNewRelationship(Entity *leftStatement,
+                             Entity *rightStatement)
       -> std::shared_ptr<Relationship> override;
 
   auto getRelatedStatements(
           Statement *sourceStatement,
           bool isReverse)
-      -> std::shared_ptr<std::vector<Statement *>> override;
+      -> std::shared_ptr<std::vector<Entity *>> override;
 };
 
 #endif  // SPA_AFFECTSSTARCFGEVALUATOR_H

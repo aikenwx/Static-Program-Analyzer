@@ -23,22 +23,21 @@ class CFGRelationshipEvaluator {
   auto generateStatementBlockPair(Statement* statement)
       -> std::shared_ptr<std::pair<cfg::Block*, Statement*>>;
 
-  virtual auto createNewRelationship(Statement* leftStatement,
-                                     Statement* rightStatement)
+  virtual auto createNewRelationship(Entity* leftStatement,
+                                     Entity* rightStatement)
       -> std::shared_ptr<Relationship> = 0;
 
   // for next, should be O(1), assuming CFG's getNextBlock is O(1)
   // for next*/affect/affect* should be O(N) where N is the number of statements
   // within the containing procedure
-  virtual auto getRelatedStatements(
-          Statement *sourceStatement,
-          bool isReverse)
-      -> std::shared_ptr<std::vector<Statement *>> = 0;
+  virtual auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
+      -> std::shared_ptr<std::vector<Entity*>> = 0;
 
-  [[nodiscard]] virtual auto getRelationshipType() const -> const RelationshipType& = 0;
+  [[nodiscard]] virtual auto getRelationshipType() const
+      -> const RelationshipType& = 0;
 
-  virtual auto getEvaluableEntitiesFromEntityType(
-      const EntityType& entityType) -> std::vector<Entity*>*;
+  virtual auto getEvaluableEntitiesFromEntityType(const EntityType& entityType)
+      -> std::vector<Entity*>*;
 
   auto getCFG() -> cfg::CFG*;
 
@@ -51,33 +50,45 @@ class CFGRelationshipEvaluator {
                            RelationshipStorage* relationshipStorage,
                            EntityManager* entityManager);
 
-  auto operator=(const CFGRelationshipEvaluator& cfgRelationshipEvaluator) -> CFGRelationshipEvaluator& = default;
+  auto operator=(const CFGRelationshipEvaluator& cfgRelationshipEvaluator)
+      -> CFGRelationshipEvaluator& = default;
 
-  CFGRelationshipEvaluator(const CFGRelationshipEvaluator& cfgRelationshipEvaluator) = default;
+  CFGRelationshipEvaluator(
+      const CFGRelationshipEvaluator& cfgRelationshipEvaluator) = default;
 
-  auto operator=(CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept -> CFGRelationshipEvaluator& = default;
+  auto operator=(CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept
+      -> CFGRelationshipEvaluator& = default;
 
-  CFGRelationshipEvaluator(CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept = default;
+  CFGRelationshipEvaluator(
+      CFGRelationshipEvaluator&& cfgRelationshipEvaluator) noexcept = default;
 
   virtual ~CFGRelationshipEvaluator() = default;
 
-  void evaluateAndCacheRelationshipsByGivenEntities(
+  Relationship* evaluateAndCacheRelationshipsByGivenEntities(
       Entity* leftEntity, Entity* rightEntity);
 
-  void evaluateAndCacheRelationshipsByEntityTypes(
+  std::vector<Relationship*>* evaluateAndCacheRelationshipsByEntityTypes(
       const EntityType& leftEntityType, const EntityType& rightEntityType);
 
-  void evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+  std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>
+  evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
       const EntityType& givenEntityType, Entity* entity, bool isReverse);
 
-  void populateCache(bool isReverse,
-                     const std::shared_ptr<Relationship>& relationship);
+  //   void populateCache(bool isReverse,
+  //                      const std::shared_ptr<Relationship>& relationship);
 
-  void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity& statement,
-                                               const EntityType& entityType);
+  //   void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity&
+  //   statement,
+  //                                                const EntityType&
+  //                                                entityType);
   auto getEntitiesFromStore(bool isReverse, Entity& sourceEntity,
                             const EntityType& destinationEntityType)
       -> std::vector<Entity*>*;
+
+  auto getCachedRelationships(
+      bool isReverse, Entity& sourceEntity,
+      const EntityType& destinationEntityType)
+      -> std::vector<Relationship *> *;
 
  private:
   auto shouldEvaluateRelationshipsByEntityTypesInReverse(

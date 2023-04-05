@@ -27,7 +27,7 @@ auto AffectsCFGEvaluator::getRelationshipType() const
 
 auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
                                                bool isReverse)
-    -> std::shared_ptr<std::vector<Statement*>> {
+    -> std::shared_ptr<std::vector<Entity *>> {
   if (!isValidEntityInput(sourceStatement)) {
     throw std::invalid_argument(
         "AffectsCFGEvaluator::getRelatedStatements: "
@@ -42,7 +42,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   isReverse ? initializeReverseEvaluation(sourceStatement)
             : initializeForwardsEvaluation(sourceStatement);
 
-  auto results = std::make_shared<std::vector<Statement*>>();
+  auto results = std::make_shared<std::vector<Entity*>>();
 
   // create stack of statements to visit
   auto statementsToVisit = std::stack<Statement*>();
@@ -70,8 +70,8 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
     visitedStatementNumbers.insert(nextToVisit->getStatementNumber());
 
-    if (isReverse ? visitInReverseEvaluation(nextToVisit, results.get())
-                  : visitInForwardsEvaluation(nextToVisit, results.get())) {
+    if (isReverse ? visitInReverseEvaluation(nextToVisit, reinterpret_cast<std::vector<Statement *> *>(results.get()))
+                  : visitInForwardsEvaluation(nextToVisit, reinterpret_cast<std::vector<Statement *> *>(results.get()))) {
       continue;
     }
 
@@ -89,8 +89,8 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   return results;
 }
 
-auto AffectsCFGEvaluator::createNewRelationship(Statement* leftStatement,
-                                                Statement* rightStatement)
+auto AffectsCFGEvaluator::createNewRelationship(Entity *leftStatement,
+                                                Entity *rightStatement)
     -> std::shared_ptr<Relationship> {
   auto* leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
   auto* rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);

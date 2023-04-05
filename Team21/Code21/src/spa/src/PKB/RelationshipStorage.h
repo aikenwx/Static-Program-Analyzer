@@ -110,8 +110,17 @@ class RelationshipStorage {
                      std::shared_ptr<std::vector<Entity *>>>
       relationshipLiteralSynonymCache;
 
-  std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
-      relationshipCache;
+  std::unordered_map<RelationshipSynonymLiteralKey,
+                     std::shared_ptr<std::vector<Relationship *>>>
+      relationshipVectorSynonymLiteralCache;
+
+  std::unordered_map<RelationshipLiteralSynonymKey,
+                     std::shared_ptr<std::vector<Relationship *>>>
+      relationshipVectorLiteralSynonymCache;
+
+  std::unordered_map<RelationshipKey, Relationship *> relationshipCache;
+
+  std::vector<std::shared_ptr<Relationship>> relationshipOwnerCache;
 
  public:
   RelationshipStorage();
@@ -133,7 +142,68 @@ class RelationshipStorage {
   void storeInRelationshipLiteralSynonymStore(Relationship *relationship,
                                               bool useCache);
 
+  void storeInRelationshipOwnerCache(
+      std::shared_ptr<Relationship> relationship);
+
+ void storeInRelationshipMapCache(Relationship *relationship);
+
+  void storeInRelationshipLiteralSynonymCache(
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType,
+      std::shared_ptr<std::vector<Entity *>> relatedEntities);
+
+  void storeInRelationshipSynonymLiteralCache(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
+      std::shared_ptr<std::vector<Entity *>> relatedEntities);
+
+  void storeInRelationshipLiteralSynonymCache(
+          const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+          const EntityType &rightHandEntityType,
+          std::shared_ptr<std::vector<Relationship *>>
+          relationships);
+
+  void storeInRelationshipSynonymLiteralCache(
+          const RelationshipType &relationshipType,
+          const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
+          std::shared_ptr<std::vector<Relationship *>>
+          relationships);
+
+  void storeInRelationshipDoubleSynonymCache(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType,
+      const EntityType &rightHandEntityType,
+      std::shared_ptr<std::vector<Relationship *>> relationships);
+
+  auto getCachedRelationship(RelationshipKey &key) -> Relationship *;
+
+  auto containedInRelationshipCache(RelationshipKey &key) -> bool;
+
   auto getRelationship(RelationshipKey &key) -> Relationship *;
+
+  auto getCachedEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> std::vector<Entity *> *;
+
+  auto getCachedEntitiesForGivenRelationshipTypeAndRightHandEntityType(
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+
+  auto getCachedRelationshipsByTypes(const RelationshipType &relationshipType,
+                                     const EntityType &leftHandEntityType,
+                                     const EntityType &rightHandEntityType)
+      -> std::vector<Relationship *> *;
+
+  auto getCachedRelationshipsForGivenRelationshipTypeAndRightHandEntityType(
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType)
+      -> std::vector<Relationship *> *;
+
+  auto getCachedRelationshipsForGivenRelationshipTypeAndLeftHandEntityType(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> std::vector<Relationship *> *;
 
   auto getRelationshipsByTypes(const RelationshipType &relationshipType,
                                const EntityType &leftHandEntityType,

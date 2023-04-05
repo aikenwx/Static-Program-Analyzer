@@ -25,7 +25,7 @@ auto AffectsStarCFGEvaluator::getRelationshipType() const -> const RelationshipT
 auto AffectsStarCFGEvaluator::getRelatedStatements(
     Statement* sourceStatement,
     bool isReverse)
-    -> std::shared_ptr<std::vector<Statement*>> {
+    -> std::shared_ptr<std::vector<Entity *>> {
   if (!isValidEntityInput(sourceStatement)) {
     throw std::invalid_argument(
         "AffectsCFGEvaluator::getRelatedStatements: "
@@ -36,7 +36,7 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(
 
   AffectsCFGEvaluator affectsCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
 
-  auto results = std::make_shared<std::vector<Statement*>>();
+  auto results = std::make_shared<std::vector<Entity*>>();
 
   // create stack of statements to visit
   auto statementsToVisit =
@@ -80,8 +80,8 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(
   return results;
 }
 
-auto AffectsStarCFGEvaluator::createNewRelationship(Statement* leftStatement,
-                                                    Statement* rightStatement)
+auto AffectsStarCFGEvaluator::createNewRelationship(Entity *leftStatement,
+                                                    Entity *rightStatement)
     -> std::shared_ptr<Relationship> {
   auto* leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
   auto* rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);

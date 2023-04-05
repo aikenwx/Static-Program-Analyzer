@@ -22,12 +22,12 @@ auto NextStarCFGEvaluator::getRelationshipType() const
 auto NextStarCFGEvaluator::getRelatedStatements(
     Statement* sourceStatement,
     bool isReverse)
-    -> std::shared_ptr<std::vector<Statement*>> {
+    -> std::shared_ptr<std::vector<Entity *>> {
   auto visitedStatementNumbers = std::unordered_set<int>();
 
   NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
 
-  auto results = std::make_shared<std::vector<Statement*>>();
+  auto results = std::make_shared<std::vector<Entity*>>();
 
   // create stack of statements to visit
   auto statementsToVisit =
@@ -68,8 +68,8 @@ auto NextStarCFGEvaluator::getRelatedStatements(
   return results;
 }
 
-auto NextStarCFGEvaluator::createNewRelationship(Statement* leftStatement,
-                                                 Statement* rightStatement)
+auto NextStarCFGEvaluator::createNewRelationship(Entity *leftStatement,
+                                                 Entity *rightStatement)
     -> std::shared_ptr<Relationship> {
-  return std::make_shared<NextStarRelationship>(leftStatement, rightStatement);
+  return std::make_shared<NextStarRelationship>(dynamic_cast<Statement*> (leftStatement), dynamic_cast<Statement*> (rightStatement));
 }

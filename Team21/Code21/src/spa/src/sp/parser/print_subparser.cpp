@@ -1,13 +1,12 @@
 #include "sp/ast/astlib.h"
 #include "print_subparser.h"
-#include "sp/token/semicolon_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
 auto PrintSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
+  if (context->IsLookaheadSymbolValue(";")) {
     // print: 'print' iden ';'
     if (stack->size() >= 2
       && util::instance_of<ast::IdentifierNode>(*iter)

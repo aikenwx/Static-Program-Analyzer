@@ -5,8 +5,8 @@
 #ifndef SPA_NEXTSTARCFGEVALUATOR_H
 #define SPA_NEXTSTARCFGEVALUATOR_H
 
-#include "CFGRelationshipEvaluator.h"
-class NextStarCFGEvaluator : public CFGRelationshipEvaluator {
+#include "NextRelatedCFGEvaluator.h"
+class NextStarCFGEvaluator : public NextRelatedCFGEvaluator {
  public:
 
   NextStarCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager);
@@ -17,10 +17,10 @@ class NextStarCFGEvaluator : public CFGRelationshipEvaluator {
                                Entity *rightStatement)
     -> std::shared_ptr<Relationship> override;
 
-    auto getRelatedStatements(
-            Statement *sourceStatement,
+    auto getRelatedStatementNumbers(
+            int sourceStatementNumber,
             bool isReverse)
-    -> std::shared_ptr<std::vector<Entity *>> override;
+    -> std::shared_ptr<std::vector<int>> override;
 };
 
 #endif  // SPA_NEXTSTARCFGEVALUATOR_H

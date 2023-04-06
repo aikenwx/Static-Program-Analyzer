@@ -27,11 +27,7 @@ class CFGRelationshipEvaluator {
                                      Entity* rightStatement)
       -> std::shared_ptr<Relationship> = 0;
 
-  // for next, should be O(1), assuming CFG's getNextBlock is O(1)
-  // for next*/affect/affect* should be O(N) where N is the number of statements
-  // within the containing procedure
-  virtual auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
-      -> std::shared_ptr<std::vector<Entity*>> = 0;
+  virtual auto getRelatedStatements(Statement* statement, bool isReverse) -> std::shared_ptr<std::vector<Entity *>> = 0;
 
   [[nodiscard]] virtual auto getRelationshipType() const
       -> const RelationshipType& = 0;

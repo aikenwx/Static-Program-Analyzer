@@ -29,14 +29,17 @@ struct std::hash<EntityType> {
 };
 
 struct EntityKey : public StorageKey {
- private:
+
   const EntityType *entityType;
   std::string *entityValue;
   std::string entityValueStore;
-
- public:
+ private:
+    int entityIntValue = -1;
+public:
   EntityKey(const EntityType *entityType, std::string *entityValue);
   EntityKey(const EntityType *entityType, int entityIntValue);
+
+  auto getOptionalInt() -> int*;
 
   auto operator==(const EntityKey &entityKey) const -> bool;
 };

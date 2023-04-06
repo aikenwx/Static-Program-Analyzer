@@ -31,5 +31,6 @@ auto AffectsRelatedCFGEvaluator::getEvaluableEntitiesFromEntityType(
 }
 
 auto AffectsRelatedCFGEvaluator::isAllowedModifier(Entity *entity) -> bool {
-  return !ParentStatement::isParentStatement(entity);
+  return entity->getEntityType() == ReadStatement::getEntityTypeStatic() || entity->getEntityType() == CallStatement::getEntityTypeStatic() ||
+  entity->getEntityType() == AssignStatement::getEntityTypeStatic();
 }

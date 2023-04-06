@@ -23,10 +23,15 @@
 
 class EntityManager {
  private:
+    static const int MAX_NUMBER_OF_STMTS_WITH_BUFFER = 600;
   std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
   std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>>
       entityTypeToEntityStore;
   std::vector<Entity*> emptyEntityVector;
+
+  // we need this because unorderedmap access is way too slow, and since we are accessing individual stmts often
+  // there is quite a lot of overhead
+  std::vector<Statement*> fastAccessStmts;
 
   int numberOfStatements = 0;
 
@@ -39,7 +44,10 @@ class EntityManager {
 
   auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
-  auto getNumberOfStatements() -> int;
+  auto getNumberOfStatements() const -> int;
+
+  
+  auto getStmtByNumber(int stmtNumber) -> Statement*;
 
  private:
   void storeInEntityTypeStore(Entity* entity);

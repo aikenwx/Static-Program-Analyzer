@@ -23,9 +23,18 @@ EntityKey::EntityKey(const EntityType *entityType, int entityIntValue)
     : StorageKey(entityType->getKey() ^
                  std::hash<std::string>()(std::to_string(entityIntValue))),
       entityType(entityType) {
+    this->entityIntValue = entityIntValue;
   this->entityValueStore = std::to_string(entityIntValue);
   this->entityValue = &entityValueStore;
 }
+
+auto EntityKey::getOptionalInt() -> int* {
+    if (entityIntValue == -1) {
+        return nullptr;
+    }
+    return &entityIntValue;
+}
+
 
 auto EntityKey::operator==(const EntityKey &entityKey) const -> bool {
   return *this->entityType == *entityKey.entityType &&

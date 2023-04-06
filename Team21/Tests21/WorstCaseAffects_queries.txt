@@ -1,5 +1,5 @@
 1 - integer with(literal, literal)
 stmt s, s1;
-Select s such that Affects*(s,s1) and Affects*(s1, s)
+Select <s, s1> such that Affects*(s,s1)
 
 5000

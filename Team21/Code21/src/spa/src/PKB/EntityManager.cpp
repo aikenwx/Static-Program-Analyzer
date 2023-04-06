@@ -5,7 +5,9 @@
 #include "EntityManager.h"
 
 EntityManager::EntityManager() {
-  this->entityTypeToEntityStore =
+    this->fastAccessStmts = std::vector<Statement *>(EntityManager::MAX_NUMBER_OF_STMTS_WITH_BUFFER, nullptr);
+
+    this->entityTypeToEntityStore =
       std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity *>>>();
   this->entityStore = std::unordered_map<EntityKey, std::shared_ptr<Entity>>();
 }
@@ -21,6 +23,8 @@ void EntityManager::storeEntity(const std::shared_ptr<Entity> &entity) {
         EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
     this->entityStore.try_emplace(statementKey, entity);
 
+    auto* stmt = dynamic_cast<Statement*>(entity.get());
+    this->fastAccessStmts[stmt->getStatementNumber()] = stmt;
     numberOfStatements++;
   }
 
@@ -28,6 +32,10 @@ void EntityManager::storeEntity(const std::shared_ptr<Entity> &entity) {
 }
 
 auto EntityManager::getEntity(EntityKey &key) -> Entity * {
+    if (StatementType::isStatementType(*key.entityType) && key.getOptionalInt() != nullptr) {
+        return fastAccessStmts.at(*key.getOptionalInt());
+    }
+
   if (entityStore.find(key) != entityStore.end()) {
     return this->entityStore.at(key).get();
   }
@@ -66,6 +74,10 @@ void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(
       entityType, std::make_shared<std::vector<Entity *>>());
 }
 
-auto EntityManager::getNumberOfStatements() -> int {
+auto EntityManager::getNumberOfStatements() const -> int {
   return this->numberOfStatements;
+}
+
+auto EntityManager::getStmtByNumber(int stmtNumber) -> Statement * {
+    return fastAccessStmts.at(stmtNumber);
 }

@@ -12,64 +12,59 @@
 NextStarCFGEvaluator::NextStarCFGEvaluator(
     cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
     EntityManager* entityManager)
-    : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
+    : NextRelatedCFGEvaluator(cfg, relationshipStorage, entityManager) {}
 
 auto NextStarCFGEvaluator::getRelationshipType() const
     -> const RelationshipType& {
   return NextStarRelationship::getRelationshipTypeStatic();
 }
 
-auto NextStarCFGEvaluator::getRelatedStatements(
-    Statement* sourceStatement,
-    bool isReverse)
-    -> std::shared_ptr<std::vector<Entity *>> {
-  auto visitedStatementNumbers = std::unordered_set<int>();
+auto NextStarCFGEvaluator::getRelatedStatementNumbers(int sourceStatementNumber,
+                                                      bool isReverse)
+    -> std::shared_ptr<std::vector<int>> {
+  auto visitedStatementNumbers =
+      std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
-  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getEntityManager());
+  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(),
+                                    getEntityManager());
 
-  auto results = std::make_shared<std::vector<Entity*>>();
+  auto results = std::make_shared<std::vector<int>>();
 
   // create stack of statements to visit
-  auto statementsToVisit =
-      std::stack<Statement*>();
+  auto statementNumbersToVisit = std::stack<int>();
 
-  nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-      Statement::getEntityTypeStatic(), sourceStatement, isReverse);
-  // push all statements from results into stack
-  auto *directRelations = nextCFGEvaluator.getEntitiesFromStore(isReverse, *sourceStatement, Statement::getEntityTypeStatic());
-
-  for (const auto& result : *directRelations) {
-    statementsToVisit.push(dynamic_cast<Statement*>(result));
+  auto directRelations = nextCFGEvaluator.getRelatedStatementNumbers(
+      sourceStatementNumber, isReverse);
+  for (const auto result : *directRelations) {
+    statementNumbersToVisit.push(result);
   }
 
-  while (!statementsToVisit.empty()) {
-    auto *nextToVisit = statementsToVisit.top();
-    statementsToVisit.pop();
+  while (!statementNumbersToVisit.empty()) {
+    auto nextToVisit = statementNumbersToVisit.top();
+    statementNumbersToVisit.pop();
 
-    if (visitedStatementNumbers.find(
-            nextToVisit->getStatementNumber()) !=
-        visitedStatementNumbers.end()) {
+    if (visitedStatementNumbers.at(nextToVisit)) {
       continue;
     }
 
-    visitedStatementNumbers.insert(nextToVisit->getStatementNumber());
+    visitedStatementNumbers[nextToVisit] = true;
     results->push_back(nextToVisit);
 
-    nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        Statement::getEntityTypeStatic(), nextToVisit, isReverse);
+    auto nextResults =
+        nextCFGEvaluator.getRelatedStatementNumbers(nextToVisit, isReverse);
 
-    auto *nextResults = nextCFGEvaluator.getEntitiesFromStore(isReverse, *nextToVisit, Statement::getEntityTypeStatic());
-
-    for (const auto& nextResult : *nextResults) {
-      statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
+    for (const auto nextResult : *nextResults) {
+      statementNumbersToVisit.push(nextResult);
     }
   }
 
   return results;
 }
 
-auto NextStarCFGEvaluator::createNewRelationship(Entity *leftStatement,
-                                                 Entity *rightStatement)
+auto NextStarCFGEvaluator::createNewRelationship(Entity* leftStatement,
+                                                 Entity* rightStatement)
     -> std::shared_ptr<Relationship> {
-  return std::make_shared<NextStarRelationship>(dynamic_cast<Statement*> (leftStatement), dynamic_cast<Statement*> (rightStatement));
+  return std::make_shared<NextStarRelationship>(
+      dynamic_cast<Statement*>(leftStatement),
+      dynamic_cast<Statement*>(rightStatement));
 }

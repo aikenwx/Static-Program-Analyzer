@@ -600,7 +600,3 @@ void RelationshipStorage::storeInRelationshipMapCache(
   this->relationshipCache.try_emplace(relationship->getRelationshipKey(),
                                       relationship);
 }
-
- auto getNumberOfStatements () -> int {
-  
- }

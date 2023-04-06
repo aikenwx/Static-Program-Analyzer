@@ -12,7 +12,7 @@ class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
 private:
   Entity* modifiedEntityFromSource;
 
-  std::unique_ptr<std::unordered_map<EntityKey, Entity*>> usedEntitiesFromSource;
+  std::unique_ptr<std::unordered_map<std::string, Entity*>> usedEntitiesFromSource;
 
 
  public:
@@ -26,7 +26,7 @@ private:
                              Entity *rightStatement)
       -> std::shared_ptr<Relationship> override;
 
-  auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
+  auto getRelatedStatements(Statement *sourceStatement, bool isReverse)
       -> std::shared_ptr<std::vector<Entity *>> override;
 
  private:

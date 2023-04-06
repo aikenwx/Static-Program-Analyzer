@@ -45,7 +45,7 @@ auto RelationshipManager::getRelationship(RelationshipKey &key)
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
         this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-    evaluator->evaluateAndCacheRelationshipsByGivenEntities(leftEntity,
+    return evaluator->evaluateAndCacheRelationshipsByGivenEntities(leftEntity,
                                                             rightEntity);
   }
 
@@ -64,7 +64,7 @@ auto RelationshipManager::getRelationshipsByTypes(
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
         this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
-    evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType,
+    return evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType,
                                                           rightHandEntityType);
   }
 
@@ -92,8 +92,8 @@ auto RelationshipManager::
         this->cfg.get(), &this->relationshipStorage, this->entityManager);
 
     auto *rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
-    evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        leftHandEntityType, rightHandEntity, true);
+    return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+        leftHandEntityType, rightHandEntity, true).first;
   }
 
   auto *result =
@@ -121,8 +121,8 @@ auto RelationshipManager::
 
     auto *leftHandEntity = this->entityManager->getEntity(leftHandEntityKey);
 
-    evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        rightHandEntityType, leftHandEntity, false);
+    return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+        rightHandEntityType, leftHandEntity, false).first;
   }
 
   auto *result =

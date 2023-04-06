@@ -28,6 +28,8 @@ class EntityManager {
       entityTypeToEntityStore;
   std::vector<Entity*> emptyEntityVector;
 
+  int numberOfStatements = 0;
+
  public:
   EntityManager();
 
@@ -36,6 +38,8 @@ class EntityManager {
   auto getEntity(EntityKey& key) -> Entity*;
 
   auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
+
+  auto getNumberOfStatements() -> int;
 
  private:
   void storeInEntityTypeStore(Entity* entity);

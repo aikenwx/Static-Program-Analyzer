@@ -425,9 +425,9 @@ procedure g {
   REQUIRE(result->size() == 2);
 
   REQUIRE(*result->at(0)->getLeftHandEntity()->getEntityValue() == "5");
-  REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "3");
+  REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "4");
   REQUIRE(*result->at(1)->getLeftHandEntity()->getEntityValue() == "5");
-  REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "4");
+  REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "3");
 }
 
 TEST_CASE("Retrieve related entities to non existent entity") {
@@ -1036,6 +1036,149 @@ TEST_CASE("Test AffectsStar worst case") {
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);
   std::cout << "Time taken by function: " << duration.count() << " microseconds"
             << std::endl;
+}
+
+TEST_CASE("stress test unorderedmap with entitykey") {
+  std::vector<std::shared_ptr<Entity>> entities;
+
+  for (int i = 0; i < 1000000; i++) {
+    auto entity = std::make_shared<AssignStatement>(i);
+
+    entities.push_back(entity);
+  }
+
+  SECTION("actual test") {
+    std::unordered_map<EntityKey, std::shared_ptr<Entity>> map;
+
+    for (auto &entity : entities) {
+      map.try_emplace(entity->getEntityKey(), entity);
+    }
+  }
+}
+
+TEST_CASE("stress test  unorderedmap with pointer member") {
+  // make vector of entities
+  std::vector<AssignStatement> entities;
+
+  for (int i = 0; i < 1000000; i++) {
+    auto entity = AssignStatement(i);
+
+    entities.push_back(entity);
+  }
+
+  SECTION("actual test") {
+    std::unordered_map<EntityKey, Entity *> map;
+
+    for (auto &entity : entities) {
+      map.try_emplace(entity.getEntityKey(), &entity);
+    }
+  }
+}
+
+TEST_CASE("stress test unorderedset with int member") {
+  std::vector<AssignStatement> entities;
+
+  for (int i = 0; i < 1000000; i++) {
+    auto entity = AssignStatement(i);
+
+    entities.push_back(entity);
+  }
+
+  SECTION("actual test") {
+    std::unordered_map<int, Entity*> map;
+
+    for (auto &entity : entities) {
+        map.try_emplace(entity.getStatementNumber(), &entity);
+    }
+  }
+
+}
+
+TEST_CASE("stress test unordered set for entity keys") {
+
+  std::unordered_map<EntityKey, Entity*> map;
+
+  for (int i = 0; i < 1000000; i++) {
+      AssignStatement* test = new AssignStatement(i);
+//
+      EntityKey key = test->getEntityKey();
+//     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
+
+    map.try_emplace(key, test);
+  }
+
+
+}
+
+    TEST_CASE("stress test unordered map for int and entity") {
+
+        std::unordered_map<int, Entity*> map;
+
+        for (int i = 0; i < 1000000; i++) {
+            AssignStatement* test = new AssignStatement(i);
+//
+//            EntityKey key = test->getEntityKey();
+//     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
+
+            map.try_emplace(test->getStatementNumber(), test);
+        }
+
+
+    }
+
+    TEST_CASE("stress test vector for int and entity") {
+
+        std::vector<Entity*> vec = std::vector<Entity*>(1000000);
+
+        for (int i = 0; i < 1000000; i++) {
+            AssignStatement* test = new AssignStatement(i);
+//
+//            EntityKey key = test->getEntityKey();
+//     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
+
+            vec[i] = test;
+        }
+
+
+    }
+
+
+
+TEST_CASE("stress test unordered_map with int member") {
+  std::vector<AssignStatement> entities;
+
+  for (int i = 0; i < 1000000; i++) {
+    auto entity = AssignStatement(i);
+
+    entities.push_back(entity);
+  }
+
+  SECTION("actual test") {
+    std::unordered_map<int, Entity *> map;
+
+    for (auto &entity : entities) {
+      map.try_emplace(entity.getStatementNumber(), &entity);
+    }
+  }
+}
+
+
+TEST_CASE("Stress test pass by value string") {
+  std::vector<std::shared_ptr<Entity>> entities;
+
+  for (int i = 0; i < 1000000; i++) {
+    auto entity = std::make_shared<AssignStatement>(i);
+
+    entities.push_back(entity);
+  }
+
+  SECTION("actual test") {
+    std::unordered_map<EntityKey, std::shared_ptr<Entity>> map;
+
+    for (auto &entity : entities) {
+      map.try_emplace(entity->getEntityKey(), entity);
+    }
+  }
 }
 
 TEST_CASE("Test CFG relationship cache") {

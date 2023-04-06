@@ -432,8 +432,10 @@ void RelationshipStorage::storeInRelationshipLiteralSynonymCache(
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
 
-  this->relationshipLiteralSynonymCache.try_emplace(
+  auto test = this->relationshipLiteralSynonymCache.try_emplace(
       relationshipLiteralSynonymKey, relatedEntities);
+
+  int x = 0;
 }
 
 void RelationshipStorage::storeInRelationshipSynonymLiteralCache(
@@ -445,6 +447,8 @@ void RelationshipStorage::storeInRelationshipSynonymLiteralCache(
                                     &rightHandEntityKey);
   this->relationshipSynonymLiteralCache.try_emplace(
       relationshipSynonymLiteralKey, relatedEntities);
+
+
 }
 
 void RelationshipStorage::storeInRelationshipLiteralSynonymCache(
@@ -455,8 +459,10 @@ void RelationshipStorage::storeInRelationshipLiteralSynonymCache(
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
 
-  this->relationshipVectorLiteralSynonymCache.try_emplace(
+  auto test= this->relationshipVectorLiteralSynonymCache.try_emplace(
       relationshipLiteralSynonymKey, relationships);
+
+  int x = 0;
 }
 
 void RelationshipStorage::storeInRelationshipSynonymLiteralCache(
@@ -588,6 +594,13 @@ void RelationshipStorage::storeInRelationshipOwnerCache(
 
 void RelationshipStorage::storeInRelationshipMapCache(
     Relationship *relationship) {
+    if (relationship == nullptr) {
+        return;
+    }
   this->relationshipCache.try_emplace(relationship->getRelationshipKey(),
                                       relationship);
 }
+
+ auto getNumberOfStatements () -> int {
+  
+ }

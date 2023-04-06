@@ -20,6 +20,8 @@ void EntityManager::storeEntity(const std::shared_ptr<Entity> &entity) {
     EntityKey statementKey =
         EntityKey(&Statement::getEntityTypeStatic(), entity->getEntityValue());
     this->entityStore.try_emplace(statementKey, entity);
+
+    numberOfStatements++;
   }
 
   this->storeInEntityTypeStore(entity.get());
@@ -62,4 +64,8 @@ void EntityManager::initialiseVectorForEntityTypeStoreIfIndexNotExist(
   // below line only inserts if the key doesn't already exist
   this->entityTypeToEntityStore.try_emplace(
       entityType, std::make_shared<std::vector<Entity *>>());
+}
+
+auto EntityManager::getNumberOfStatements() -> int {
+  return this->numberOfStatements;
 }

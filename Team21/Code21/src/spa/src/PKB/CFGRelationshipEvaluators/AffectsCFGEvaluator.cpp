@@ -18,7 +18,7 @@ AffectsCFGEvaluator::AffectsCFGEvaluator(
     EntityManager* entityManager)
     : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, entityManager),
       modifiedEntityFromSource(nullptr),
-      usedEntitiesFromSource(nullptr) {}
+      currentUnusedVariables(nullptr) {}
 
 auto AffectsCFGEvaluator::getRelationshipType() const
     -> const RelationshipType& {
@@ -27,7 +27,7 @@ auto AffectsCFGEvaluator::getRelationshipType() const
 
 auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
                                                bool isReverse)
-    -> std::unique_ptr<std::vector<Entity *>> {
+    -> std::unique_ptr<std::vector<Entity*>> {
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
@@ -41,27 +41,27 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
   // create stack of statements to visit
   auto statementNumbersToVisit = std::stack<int>();
+  auto unusedVariablesForStatementsYetToVisit =
+      std::stack<std::shared_ptr<std::unordered_map<std::string, Entity*>>>();
 
   // push all statements from results into stack
   auto directRelations = nextCFGEvaluator.getRelatedStatementNumbers(
       sourceStatement->getStatementNumber(), isReverse);
 
-  //  nextCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-  //          Statement::getEntityTypeStatic(), sourceStatementNumber,
-  //          isReverse);
-  //
-  //  auto* directRelations = nextCFGEvaluator.getEntitiesFromStore(
-  //          isReverse, *sourceStatementNumber,
-  //          Statement::getEntityTypeStatic());
-
   for (const auto result : *directRelations) {
     statementNumbersToVisit.push(result);
+    if (isReverse) {
+      unusedVariablesForStatementsYetToVisit.push(this->currentUnusedVariables);
+    }
   }
 
   while (!statementNumbersToVisit.empty()) {
     auto nextToVisit = statementNumbersToVisit.top();
     statementNumbersToVisit.pop();
-
+    if (isReverse) {
+      currentUnusedVariables = unusedVariablesForStatementsYetToVisit.top();
+      unusedVariablesForStatementsYetToVisit.pop();
+    }
     if (visitedStatementNumbers[nextToVisit]) {
       continue;
     }
@@ -85,6 +85,10 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
     for (const auto neighbour : *neighbours) {
       statementNumbersToVisit.push(neighbour);
+      if (isReverse) {
+        unusedVariablesForStatementsYetToVisit.push(
+            this->currentUnusedVariables);
+      }
     }
   }
 
@@ -118,30 +122,29 @@ void AffectsCFGEvaluator::initializeForwardsEvaluation(
   // assign statements only modify one variable, so we can just get the first
   // one
   modifiedEntityFromSource =
-          getRelationshipStorage()
-                  ->getEntitiesFromLiteralSynonymStore(
-                          ModifiesRelationship::getRelationshipTypeStatic(),
-                          sourceStatement->getEntityKey(), Variable::getEntityTypeStatic())
+      getRelationshipStorage()
+          ->getEntitiesFromLiteralSynonymStore(
+              ModifiesRelationship::getRelationshipTypeStatic(),
+              sourceStatement->getEntityKey(), Variable::getEntityTypeStatic())
           ->at(0);
 }
 
 void AffectsCFGEvaluator::initializeReverseEvaluation(
     Statement* sourceStatement) {
   auto* usedEntitiesFromSourceVector =
-          getRelationshipStorage()
-                  ->getEntitiesFromLiteralSynonymStore(
-                          UsesRelationship::getRelationshipTypeStatic(),
-                          sourceStatement->getEntityKey(), Variable::getEntityTypeStatic());
+      getRelationshipStorage()->getEntitiesFromLiteralSynonymStore(
+          UsesRelationship::getRelationshipTypeStatic(),
+          sourceStatement->getEntityKey(), Variable::getEntityTypeStatic());
 
-  usedEntitiesFromSource =
-      std::make_unique<std::unordered_map<std::string, Entity*>>();
+  currentUnusedVariables =
+      std::make_shared<std::unordered_map<std::string, Entity*>>();
 
   if (usedEntitiesFromSourceVector == nullptr) {
-      return;
+    return;
   }
 
   for (const auto& usedEntity : *usedEntitiesFromSourceVector) {
-    usedEntitiesFromSource->insert({*usedEntity->getEntityValue(), usedEntity});
+    currentUnusedVariables->insert({*usedEntity->getEntityValue(), usedEntity});
   }
 }
 
@@ -156,8 +159,8 @@ auto AffectsCFGEvaluator::visitInForwardsEvaluation(
         RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(),
                         &visitedStatement->getEntityKey(),
                         &modifiedEntityFromSource->getEntityKey());
-    if (getRelationshipStorage()->getRelationshipFromStore(usesRelationshipKey) !=
-        nullptr) {
+    if (getRelationshipStorage()->getRelationshipFromStore(
+            usesRelationshipKey) != nullptr) {
       partialResults->push_back(visitedStatement);
     }
   }
@@ -169,8 +172,8 @@ auto AffectsCFGEvaluator::visitInForwardsEvaluation(
                         &modifiedEntityFromSource->getEntityKey());
 
     // there is a modification, we terminate traversing this path
-    if (getRelationshipStorage()->getRelationshipFromStore(modifiesRelationshipKey) !=
-        nullptr) {
+    if (getRelationshipStorage()->getRelationshipFromStore(
+            modifiesRelationshipKey) != nullptr) {
       return true;
     }
   }
@@ -183,7 +186,7 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
     -> bool {
   // we terminate traversing this path once we have encountered modifiers
   // for all variables used by source statement along this path
-  if (usedEntitiesFromSource->empty()) {
+  if (currentUnusedVariables->empty()) {
     return true;
   }
 
@@ -191,11 +194,9 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
     return false;
   }
   auto* modifiedVariables =
-          getRelationshipStorage()
-                  ->getEntitiesFromLiteralSynonymStore(
-                          ModifiesRelationship::getRelationshipTypeStatic(),
-                          visitedStatement->getEntityKey(),
-                          Variable::getEntityTypeStatic());
+      getRelationshipStorage()->getEntitiesFromLiteralSynonymStore(
+          ModifiesRelationship::getRelationshipTypeStatic(),
+          visitedStatement->getEntityKey(), Variable::getEntityTypeStatic());
 
   // early return if statement does not modify any variables or is a container
   // stmt
@@ -205,26 +206,37 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
 
   // source statement is affected by this assign statement
   if (isValidEntityInput(visitedStatement) &&
-      usedEntitiesFromSource->find(*modifiedVariables->at(0)->getEntityValue()) !=
-          usedEntitiesFromSource->end()) {
-    usedEntitiesFromSource->erase(*modifiedVariables->at(0)->getEntityValue());
+      currentUnusedVariables->find(
+          *modifiedVariables->at(0)->getEntityValue()) !=
+          currentUnusedVariables->end()) {
+    // copy before making modifications
+    currentUnusedVariables =
+        std::make_shared<std::unordered_map<std::string, Entity*>>(
+            *currentUnusedVariables);
+    currentUnusedVariables->erase(*modifiedVariables->at(0)->getEntityValue());
     partialResults->push_back(visitedStatement);
     return false;
   }
 
   // we check if any of the variables used by source statement is modified by
   // the visited stmt and remove it from the map if it is
-  if (modifiedVariables->size() < usedEntitiesFromSource->size()) {
+  if (modifiedVariables->size() < currentUnusedVariables->size()) {
+    // copy before making modifications
+
+    currentUnusedVariables =
+        std::make_shared<std::unordered_map<std::string, Entity*>>(
+            *currentUnusedVariables);
+
     for (const auto& modifiedVariable : *modifiedVariables) {
-      if (usedEntitiesFromSource->find(*modifiedVariable->getEntityValue()) !=
-          usedEntitiesFromSource->end()) {
-        usedEntitiesFromSource->erase(*modifiedVariable->getEntityValue());
+      if (currentUnusedVariables->find(*modifiedVariable->getEntityValue()) !=
+          currentUnusedVariables->end()) {
+        currentUnusedVariables->erase(*modifiedVariable->getEntityValue());
       }
     }
 
   } else {
-    std::vector<std::string *> usedVariablesToDelete;
-    for (const auto& usedVariablePair : *usedEntitiesFromSource) {
+    std::vector<std::string*> usedVariablesToDelete;
+    for (const auto& usedVariablePair : *currentUnusedVariables) {
       auto* usedVariable = usedVariablePair.second;
       auto relationshipKey = RelationshipKey(
           &ModifiesRelationship::getRelationshipTypeStatic(),
@@ -235,10 +247,21 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
         usedVariablesToDelete.push_back(usedVariable->getEntityValue());
       }
     }
+
+    if (!usedVariablesToDelete.empty()) {
+      // copy before making modifications
+      currentUnusedVariables =
+          std::make_shared<std::unordered_map<std::string, Entity*>>(
+              *currentUnusedVariables);
+    }
     // we cannot delete from the map while iterating over it, so we store the
     // keys to delete and delete them after
     for (const auto& usedVariableToDelete : usedVariablesToDelete) {
-      usedEntitiesFromSource->erase(*usedVariableToDelete);
+      // copy before making modifications
+      currentUnusedVariables =
+          std::make_shared<std::unordered_map<std::string, Entity*>>(
+              *currentUnusedVariables);
+      currentUnusedVariables->erase(*usedVariableToDelete);
     }
   }
 

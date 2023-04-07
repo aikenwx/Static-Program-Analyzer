@@ -9,11 +9,11 @@
 #include "CFGRelationshipEvaluator.h"
 
 class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
-private:
+ private:
   Entity* modifiedEntityFromSource;
 
-  std::unique_ptr<std::unordered_map<std::string, Entity*>> usedEntitiesFromSource;
-
+  std::shared_ptr<std::unordered_map<std::string, Entity*>>
+      currentUnusedVariables;
 
  public:
   AffectsCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
@@ -22,12 +22,11 @@ private:
   [[nodiscard]] auto getRelationshipType() const
       -> const RelationshipType& override;
 
-  auto createNewRelationship(Entity *leftStatement,
-                             Entity *rightStatement)
+  auto createNewRelationship(Entity* leftStatement, Entity* rightStatement)
       -> std::unique_ptr<Relationship> override;
 
-  auto getRelatedStatements(Statement *sourceStatement, bool isReverse)
-      -> std::unique_ptr<std::vector<Entity *>> override;
+  auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
+      -> std::unique_ptr<std::vector<Entity*>> override;
 
  private:
   void initializeForwardsEvaluation(Statement* sourceStatement);
@@ -39,7 +38,7 @@ private:
                                  std::vector<Statement*>* partialResults)
       -> bool;
 
-  auto visitInReverseEvaluation(Statement* statement,
+  auto visitInReverseEvaluation(Statement* visitedStatement,
                                 std::vector<Statement*>* partialResults)
       -> bool;
 };

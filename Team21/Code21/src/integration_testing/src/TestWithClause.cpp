@@ -239,6 +239,14 @@ TEST_CASE("With clause queries work with multiple clauses. Only one of each") {
       REQUIRE(qps_test::RunQuery(
           "variable v; assign a; Select <v, v.varName> with v.varName = \"cenX\"",
           *pkb_querier) == expected);
+      expected = {};
+      REQUIRE(qps_test::RunQuery(
+          "variable v; assign a; procedure p; Select <v, v.varName> with p.procName = \"cenX\"",
+          *pkb_querier) == expected);
+      expected = {};
+      REQUIRE(qps_test::RunQuery(
+          "variable v; assign a; procedure p; Select <v, v.varName> with v.varName = \"cedsnX\"",
+          *pkb_querier) == expected);
     }
   }
 }

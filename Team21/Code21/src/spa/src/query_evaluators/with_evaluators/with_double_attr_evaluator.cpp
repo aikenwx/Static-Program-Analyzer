@@ -23,8 +23,8 @@ auto WithDoubleAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vect
   auto decl1 = Declaration::findDeclarationWithSynonym(decl, ref1Attr.synonym);
   auto decl2 = Declaration::findDeclarationWithSynonym(decl, ref2Attr.synonym);
 
-  auto & ent1 = DesignEntityToEntityType(decl1.value().getDesignEntity());
-  auto & ent2 = DesignEntityToEntityType(decl2.value().getDesignEntity());
+  const EntityType &ent1 = DesignEntityToEntityType(decl1.value().getDesignEntity());
+  const EntityType &ent2 = DesignEntityToEntityType(decl2.value().getDesignEntity());
 
   auto *pkb_res1 = pkb.getEntitiesByType(ent1);
   auto *pkb_res2 = pkb.getEntitiesByType(ent2);

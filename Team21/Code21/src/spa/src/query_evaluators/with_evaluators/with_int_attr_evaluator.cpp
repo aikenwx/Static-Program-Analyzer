@@ -24,7 +24,7 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal->synonym);
 
-  const EntityType & entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  const EntityType &entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
   auto *pkb_res = pkb.getEntity(entType, *numberVal);
 

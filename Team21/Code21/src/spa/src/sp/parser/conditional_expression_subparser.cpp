@@ -2,7 +2,6 @@
 #include "conditional_expression_subparser.h"
 #include "sp/ast/conditional_expression_node.h"
 #include "sp/ast/logical_operation_node.h"
-#include "sp/token/right_paren_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
@@ -35,7 +34,7 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     }
     return node;
   };
-  if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
+  if (context->IsLookaheadSymbolValue(")")) {
     // cond_expr: '!' '(' cond_expr ')'
     if (stack->size() >= 4
       && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightParen

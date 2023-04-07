@@ -4,7 +4,6 @@
 #include "sp/ast/container_statement_node.h"
 #include "sp/ast/statement_list_node.h"
 #include "sp/token/identifier_token.h"
-#include "sp/token/right_brace_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
@@ -12,7 +11,7 @@ auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   // stmtLst: stmt+ (adds container statement to statement list)
-  if (context->IsLookaheadTypeOf<token::RightBraceToken>()
+  if (context->IsLookaheadSymbolValue("}")
     || context->IsLookaheadTypeOf<token::IdentifierToken>()) {
     if (stack->size() >= 2
       && util::instance_of<ast::ContainerStatementNode>(*iter)

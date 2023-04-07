@@ -15,7 +15,7 @@ public:
   auto operator=(const TokenFactory &) -> TokenFactory & = delete;
   auto operator=(TokenFactory &&) -> TokenFactory & = delete;
   virtual ~TokenFactory() = default;
-  virtual auto CreateToken(std::string_view value) -> std::unique_ptr<token::Token> = 0;
+  virtual auto CreateToken(const std::string& value) -> std::unique_ptr<token::Token> = 0;
   virtual auto isWhitespace(const char& chr) -> bool = 0;
   virtual auto isSymbolPrefixChar(const char& chr) -> bool = 0;
   virtual auto checkSymbol(std::string_view chr) -> CheckSymbolResult = 0;

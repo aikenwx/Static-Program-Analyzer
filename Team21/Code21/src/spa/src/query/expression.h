@@ -4,12 +4,13 @@
 
 namespace qps {
 
+// Expression represents an expression used in pattern clause
 class Expression {
-private:
+ private:
   bool isPartial;
   std::string expression;
 
-public:
+ public:
   Expression(bool isPartial_, std::string expression_);
   [[nodiscard]] auto isExpressionPartial() const -> bool;
   auto getExpression() -> std::string;
@@ -24,4 +25,5 @@ public:
     return ostream;
   }
 };
+
 } // namespace qps

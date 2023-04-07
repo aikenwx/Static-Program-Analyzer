@@ -6,6 +6,7 @@
 
 namespace qps {
 
+// Look up table from Design Entity to string representation
 const std::map<DesignEntity, std::string> designEntityStringMap{ {
 	{DesignEntity::STMT, "stmt"},
 	{DesignEntity::READ, "read"},
@@ -19,6 +20,7 @@ const std::map<DesignEntity, std::string> designEntityStringMap{ {
 	{DesignEntity::PROCEDURE, "procedure"},
 } };
 
+// Look up table from query substring to Design Entity
 const std::map<std::string, DesignEntity> designEntityMap{ {
 	{"stmt", DesignEntity::STMT},
 	{"read", DesignEntity::READ},
@@ -32,6 +34,7 @@ const std::map<std::string, DesignEntity> designEntityMap{ {
 	{"procedure", DesignEntity::PROCEDURE},
 } };
 
+// Get corresponding design entity of a given string when parsing
 auto getDesignEntityFromString(const std::string& deString) -> DesignEntity {
 	try {
 		return designEntityMap.at(deString);
@@ -41,6 +44,7 @@ auto getDesignEntityFromString(const std::string& deString) -> DesignEntity {
 	}
 }
 
+// Get corresponding string representation of a design entity (used for debugging)
 auto getStringFromDE(DesignEntity designEntity) -> std::string {
 	return designEntityStringMap.at(designEntity);
 }

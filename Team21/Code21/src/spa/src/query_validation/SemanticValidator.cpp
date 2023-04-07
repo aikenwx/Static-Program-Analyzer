@@ -8,6 +8,7 @@ namespace qps {
 
 SemanticValidator::SemanticValidator(Query& query) : QueryValidator(query) {}
 
+//checks semantically query by doing checks
 auto SemanticValidator::validateQuery() -> bool {
   checkForDuplicateDeclarations();
   checkIfSynonymContainedInDeclaration();
@@ -20,6 +21,7 @@ auto SemanticValidator::validateQuery() -> bool {
   return true;
 }
 
+//checks for no duplicate declarations
 void SemanticValidator::checkForDuplicateDeclarations() {
   //create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
   std::unordered_set<std::string> seen;
@@ -33,6 +35,7 @@ void SemanticValidator::checkForDuplicateDeclarations() {
   }
 }
 
+//checks that all synonyms in clauses are from declarations
 void SemanticValidator::checkIfSynonymContainedInDeclaration() {
   std::vector<Declaration> declr = getQuery().getDeclarations();
   Result result = getQuery().getSelectClause();
@@ -63,6 +66,7 @@ void SemanticValidator::checkIfSynonymContainedInDeclaration() {
   }
 }
 
+//check that the pattern clause has a synonym with valid design entity
 void SemanticValidator::checkPatternClauseSynonym() {
   std::vector<Declaration> declr = getQuery().getDeclarations();
   std::vector<PatternClause> patternClauses = getQuery().getPatternClause();
@@ -80,38 +84,7 @@ void SemanticValidator::checkPatternClauseSynonym() {
   }
 }
 
-void SemanticValidator::checkSynonymDeclareHelper(Ref reff, std::vector<Declaration>& declr, const std::string &missing) {
-  if (std::holds_alternative<Synonym>(reff)) {
-    if (!static_cast<bool>(Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(reff)).has_value())) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in " + missing);
-    }
-  }
-}
-
-void SemanticValidator::checkElementSynonymDeclareHelper(Element ele, std::vector<Declaration>& declr) {
-  if (std::holds_alternative<Synonym>(ele)) {
-    if (!Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(ele)).has_value()) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym " +
-        std::get<Synonym>(ele).getSynonym());
-    }
-  }
-  else if (std::holds_alternative<AttrRef>(ele)) {
-    if (!Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(ele).synonym).has_value()) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) " +
-        std::get<AttrRef>(ele).synonym.getSynonym());
-    }
-  }
-}
-
-void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef reff, std::vector<Declaration>& declr) {
-  if (std::holds_alternative<AttrRef>(reff.ref)) {
-    if (!Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(reff.ref).synonym).has_value()) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym (in WithRef) " +
-        std::get<AttrRef>(reff.ref).synonym.getSynonym());
-    }
-  }
-}
-
+//checks that no wild card as first argument for modifies and uses
 void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {
   std::vector<SuchThatClause> suchClauses = getQuery().getSuchThatClause();
   for (auto & suchClause : suchClauses) {
@@ -126,6 +99,7 @@ void SemanticValidator::checkNoWildCardFirstArgModifiesUses() {
   }
 }
 
+//checks that synonyms declared in such that clause for relationships(e.g. parent) have the correct design entity types for that relation
 void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
   std::vector<SuchThatClause> suchClauses = getQuery().getSuchThatClause();
   std::vector<Declaration> declr = getQuery().getDeclarations();
@@ -152,30 +126,7 @@ void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
   }
 }
 
-void SemanticValidator::checkSecondSynonymHelper(DesignEntity des2, const std::string &relStr, Relationship rel) {
-  if ((rel == Relationship::Calls || rel == Relationship::CallsT)) {
-    if (des2 != DesignEntity::PROCEDURE) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-    }
-  }
-  else if ((rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS
-            || rel == Relationship::UsesS)) {
-    if (des2 != DesignEntity::VARIABLE) {
-      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-    }
-  }
-  else {
-    checkSynonymStatementHelper(des2, relStr);
-  }
-}
-
-void SemanticValidator::checkSynonymStatementHelper(DesignEntity des, const std::string &relStr) {
-  if (des != DesignEntity::STMT && des != DesignEntity::READ && des != DesignEntity::PRINT && des != DesignEntity::ASSIGN
-      && des != DesignEntity::IF && des != DesignEntity::WHILE && des != DesignEntity::CALL) {
-    throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
-  }
-}
-
+//checks that pattern first arg is variable if it is synonym
 void SemanticValidator::checkPatternSynonymMatchDesignEntity() {
   std::vector<PatternClause> patternClauses = getQuery().getPatternClause();
   std::vector<Declaration> declr = getQuery().getDeclarations();
@@ -190,6 +141,7 @@ void SemanticValidator::checkPatternSynonymMatchDesignEntity() {
   }
 }
 
+//checks that with clause contain comparison of same type of attribute
 void SemanticValidator::checkWithClauseSameAttributeCompare() {
   std::vector<WithClause> withClauses = getQuery().getWithClause();
   std::vector<Declaration> declr = getQuery().getDeclarations();
@@ -200,6 +152,7 @@ void SemanticValidator::checkWithClauseSameAttributeCompare() {
   }
 }
 
+//checks that attrRef have valid attrName
 void SemanticValidator::checkAttrRefValidAttrName() {
   std::vector<Declaration> declr = getQuery().getDeclarations();
   Result result = getQuery().getSelectClause();
@@ -224,6 +177,70 @@ void SemanticValidator::checkAttrRefValidAttrName() {
   }
 }
 
+// HELPER FUNCTIONS
+
+//Check Synonym got Declaration
+void SemanticValidator::checkSynonymDeclareHelper(Ref reff, std::vector<Declaration>& declr, const std::string& missing) {
+  if (std::holds_alternative<Synonym>(reff)) {
+    if (!static_cast<bool>(Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(reff)).has_value())) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in " + missing);
+    }
+  }
+}
+
+//Check Synonym in Element got Declaration
+void SemanticValidator::checkElementSynonymDeclareHelper(Element ele, std::vector<Declaration>& declr) {
+  if (std::holds_alternative<Synonym>(ele)) {
+    if (!Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(ele)).has_value()) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym " +
+        std::get<Synonym>(ele).getSynonym());
+    }
+  }
+  else if (std::holds_alternative<AttrRef>(ele)) {
+    if (!Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(ele).synonym).has_value()) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration in Select clause for synonym (in AttrRef) " +
+        std::get<AttrRef>(ele).synonym.getSynonym());
+    }
+  }
+}
+
+//Check Synonym in WithRef got Declaration
+void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef reff, std::vector<Declaration>& declr) {
+  if (std::holds_alternative<AttrRef>(reff.ref)) {
+    if (!Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(reff.ref).synonym).has_value()) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. There is missing declaration for synonym (in WithRef) " +
+        std::get<AttrRef>(reff.ref).synonym.getSynonym());
+    }
+  }
+}
+
+//Check correct statement design entity
+void SemanticValidator::checkSynonymStatementHelper(DesignEntity des, const std::string& relStr) {
+  if (des != DesignEntity::STMT && des != DesignEntity::READ && des != DesignEntity::PRINT && des != DesignEntity::ASSIGN
+    && des != DesignEntity::IF && des != DesignEntity::WHILE && des != DesignEntity::CALL) {
+    throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+  }
+}
+
+//Check correct design entity of second synonym in Relationship
+void SemanticValidator::checkSecondSynonymHelper(DesignEntity des2, const std::string& relStr, Relationship rel) {
+  if ((rel == Relationship::Calls || rel == Relationship::CallsT)) {
+    if (des2 != DesignEntity::PROCEDURE) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+    }
+  }
+  else if ((rel == Relationship::ModifiesP || rel == Relationship::UsesP || rel == Relationship::ModifiesS
+    || rel == Relationship::UsesS)) {
+    if (des2 != DesignEntity::VARIABLE) {
+      throw QueryException(ErrorType::Semantic, "Semantic error. Wrong design entity type for " + relStr);
+    }
+  }
+  else {
+    checkSynonymStatementHelper(des2, relStr);
+  }
+}
+
+//Check Attribute Name is valid with given synonym
 void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr) {
   if (Declaration::findDeclarationWithSynonym(declr, attr.synonym).has_value()) {
     Declaration decl = Declaration::findDeclarationWithSynonym(declr, attr.synonym).value();

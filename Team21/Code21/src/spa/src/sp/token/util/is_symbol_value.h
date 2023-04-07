@@ -1,5 +1,5 @@
-#include "symbol_token.h"
-#include "token.h"
+#include "../symbol_token.h"
+#include "../token.h"
 #include "util/instance_of.h"
 #include <algorithm>
 #include <initializer_list>

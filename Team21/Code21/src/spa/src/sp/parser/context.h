@@ -5,7 +5,7 @@
 
 #include "sp/ast/astlib.h"
 #include "sp/token/token.h"
-#include "sp/token/util.h"
+#include "sp/token/util/is_symbol_value.h"
 #include "util/instance_of.h"
 
 namespace parser {

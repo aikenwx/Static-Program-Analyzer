@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 3.20.2)
-project (SPA)
+cmake_minimum_required(VERSION 3.20.2)
+project(SPA)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 
@@ -15,10 +15,10 @@ endif()
 
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+  set(CMAKE_CXX_FLAGS_PROFILE "-g -pg")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
   set(CMAKE_EXE_LINKER_FLAGS "-no-pie")
 endif()
-
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -34,5 +34,6 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/lib")
 add_subdirectory(src/spa)
 add_subdirectory(src/autotester)
 #add_subdirectory(src/autotester_gui)
+add_subdirectory(src/profiling_helper)
 add_subdirectory(src/unit_testing)
 add_subdirectory(src/integration_testing)

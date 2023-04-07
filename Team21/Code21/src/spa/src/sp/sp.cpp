@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <queue>
+#include <string_view>
 #include <unordered_set>
 
 #include "PKBStorageClasses/EntityClasses/IfStatement.h"
@@ -466,7 +467,7 @@ void PopulateCondVarRels(
   }
 }
 
-auto SP::process(const std::string& program, PKB* pkb) -> bool {
+auto SP::Process(std::string_view program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);

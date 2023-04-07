@@ -1,0 +1,15 @@
+buildType:
+  default: release
+  choices:
+    debug:
+      short: Debug
+      long: Build with debugging information
+      buildType: Debug
+    release:
+      short: Release
+      long: Optimize the resulting binaries
+      buildType: Release
+    profile:
+      short: Profile
+      long: Build with profiling instrumentation
+      buildType: Profile

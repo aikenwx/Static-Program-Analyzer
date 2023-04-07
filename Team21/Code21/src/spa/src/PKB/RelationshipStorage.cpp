@@ -85,38 +85,25 @@ auto std::hash<RelationshipSynonymLiteralKey>::operator()(
 }
 
 RelationshipStorage::RelationshipStorage() {
-  this->relationshipDoubleSynonymStore =
-      std::unordered_map<RelationshipDoubleSynonymKey,
-                         std::shared_ptr<std::vector<Relationship *>>>();
-  this->relationshipStore =
-      std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>();
+  this->placeholderEntityVector = std::make_unique<std::vector<Entity *>>();
+  this->placeholderRelationshipVector =
+      std::make_unique<std::vector<Relationship *>>();
 }
 
 void RelationshipStorage::storeRelationship(
-    const std::shared_ptr<Relationship> &relationship) {
+    std::unique_ptr<Relationship> relationship) {
+  auto *relationshipPtr = relationship.get();
+
   if (!this->relationshipStore
-           .try_emplace(relationship->getRelationshipKey(),
-                        std::shared_ptr<Relationship>(relationship))
+           .try_emplace(relationship->getRelationshipKey(), relationshipPtr)
            .second) {
-    // early return if relationship already exists
     return;
   }
-  this->tryStoreRelationshipOnlyInRelationshipStore(relationship, false);
-  this->storeInRelationshipDoubleSynonymStore(relationship.get());
-  this->storeInRelationshipLiteralSynonymStore(relationship.get(), false);
-  this->storeInRelationshipSynonymLiteralStore(relationship.get(), false);
-}
+  relationshipStoreOwner.push_back(std::move(relationship));
 
-auto RelationshipStorage::tryStoreRelationshipOnlyInRelationshipStore(
-    const std::shared_ptr<Relationship> &relationship, bool useCache) -> bool {
-  if (useCache) {
-    // return this->relationshipCache
-    //     .try_emplace(relationship->getRelationshipKey(), relationship)
-    //     .second;
-  }
-  return this->relationshipStore
-      .try_emplace(relationship->getRelationshipKey(), relationship)
-      .second;
+  this->storeInRelationshipDoubleSynonymStore(relationshipPtr);
+  this->storeInRelationshipLiteralSynonymStore(relationshipPtr);
+  this->storeInRelationshipSynonymLiteralStore(relationshipPtr);
 }
 
 auto RelationshipStorage::getCachedRelationship(RelationshipKey &key)
@@ -129,18 +116,15 @@ auto RelationshipStorage::containedInRelationshipCache(RelationshipKey &key)
   return this->relationshipCache.find(key) != this->relationshipCache.end();
 }
 
-auto RelationshipStorage::getRelationship(RelationshipKey &key)
+auto RelationshipStorage::getRelationshipFromStore(RelationshipKey &key)
     -> Relationship * {
   if (this->relationshipStore.find(key) != this->relationshipStore.end()) {
-    return this->relationshipStore.at(key).get();
+    return this->relationshipStore.at(key);
   }
-  // if (this->relationshipCache.find(key) != this->relationshipCache.end()) {
-  //   return this->relationshipCache.at(key);
-  // }
   return nullptr;
 }
 
-auto RelationshipStorage::getRelationshipsByTypes(
+auto RelationshipStorage::getRelationshipsByTypesFromStore(
     const RelationshipType &relationshipType,
     const EntityType &leftHandEntityType, const EntityType &rightHandEntityType)
     -> std::vector<Relationship *> * {
@@ -150,22 +134,19 @@ auto RelationshipStorage::getRelationshipsByTypes(
 
   if (this->relationshipDoubleSynonymStore.find(relationshipSynonymKey) !=
       this->relationshipDoubleSynonymStore.end()) {
-    return this->relationshipDoubleSynonymStore.at(relationshipSynonymKey)
-        .get();
+    return this->relationshipDoubleSynonymStore.at(relationshipSynonymKey);
   }
   if (this->relationshipDoubleSynonymCache.find(relationshipSynonymKey) !=
       this->relationshipDoubleSynonymCache.end()) {
-    return this->relationshipDoubleSynonymCache.at(relationshipSynonymKey)
-        .get();
+    return this->relationshipDoubleSynonymCache.at(relationshipSynonymKey);
   }
   return nullptr;
 }
 
-auto RelationshipStorage::
-    getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        const RelationshipType &relationshipType,
-        const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-        -> std::vector<Entity *> * {
+auto RelationshipStorage::getEntitiesFromSynonymLiteralStore(
+    const RelationshipType &relationshipType,
+    const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+    -> std::vector<Entity *> * {
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
       RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
                                     &rightHandEntityKey);
@@ -173,24 +154,16 @@ auto RelationshipStorage::
   if (this->relationshipSynonymLiteralStore.find(
           relationshipSynonymLiteralKey) !=
       this->relationshipSynonymLiteralStore.end()) {
-    return this->relationshipSynonymLiteralStore
-        .at(relationshipSynonymLiteralKey)
-        .get();
+    return this->relationshipSynonymLiteralStore.at(
+        relationshipSynonymLiteralKey);
   }
-  if (this->relationshipSynonymLiteralCache.find(
-          relationshipSynonymLiteralKey) !=
-      this->relationshipSynonymLiteralCache.end()) {
-    return this->relationshipSynonymLiteralCache
-        .at(relationshipSynonymLiteralKey)
-        .get();
-  }
+
   return nullptr;
 }
 
-auto RelationshipStorage::
-    getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-        const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-        const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
+auto RelationshipStorage::getEntitiesFromLiteralSynonymStore(
+    const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+    const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
@@ -198,80 +171,25 @@ auto RelationshipStorage::
   if (this->relationshipLiteralSynonymStore.find(
           relationshipLiteralSynonymKey) !=
       this->relationshipLiteralSynonymStore.end()) {
-    return this->relationshipLiteralSynonymStore
-        .at(relationshipLiteralSynonymKey)
-        .get();
+    return this->relationshipLiteralSynonymStore.at(
+        relationshipLiteralSynonymKey);
   }
-  if (this->relationshipLiteralSynonymCache.find(
-          relationshipLiteralSynonymKey) !=
-      this->relationshipLiteralSynonymCache.end()) {
-    return this->relationshipLiteralSynonymCache
-        .at(relationshipLiteralSynonymKey)
-        .get();
-  }
+
   return nullptr;
 }
 
-void RelationshipStorage::
-    initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-        const RelationshipDoubleSynonymKey &relationshipSynonymKey,
-        bool useCache) {
-  // inserts only if key doesn't exist
-
-  if (useCache) {
-    // this->relationshipDoubleSynonymCache.try_emplace(
-    //     relationshipSynonymKey,
-    //     std::make_shared<std::vector<Relationship *>>());
-  } else {
-    this->relationshipDoubleSynonymStore.try_emplace(
-        relationshipSynonymKey,
-        std::make_shared<std::vector<Relationship *>>());
-  }
+auto RelationshipStorage::generateRelationshipVector()
+    -> std::vector<Relationship *> * {
+  auto owner = std::make_unique<std::vector<Relationship *>>();
+  auto *ptr = owner.get();
+  this->relationshipVectorStoreOwner.push_back(std::move(owner));
+  return ptr;
 }
-
-void RelationshipStorage::
-    initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-        RelationshipLiteralSynonymKey relationshipLiteralSynonymKey,
-        bool useCache) {
-  // inserts only if key doesn't exist
-
-  if (useCache) {
-    // this->relationshipLiteralSynonymCache.try_emplace(
-    //     relationshipLiteralSynonymKey,
-    //     std::make_shared<std::vector<Entity *>>());
-  } else {
-    this->relationshipLiteralSynonymStore.try_emplace(
-        relationshipLiteralSynonymKey,
-        std::make_shared<std::vector<Entity *>>());
-  }
-}
-
-void RelationshipStorage::
-    initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-        const RelationshipSynonymLiteralKey &relationshipSynonymLiteralKey,
-        bool useCache) {
-  // inserts only if key doesn't exist
-  if (useCache) {
-    // this->relationshipSynonymLiteralCache.try_emplace(
-    //     relationshipSynonymLiteralKey,
-    //     std::make_shared<std::vector<Entity *>>());
-  } else {
-    this->relationshipSynonymLiteralStore.try_emplace(
-        relationshipSynonymLiteralKey,
-        std::make_shared<std::vector<Entity *>>());
-  }
-}
-
-void RelationshipStorage::storeInSpecifiedRelationshipDoubleSynonymStore(
-    Relationship *relationship, const RelationshipDoubleSynonymKey &key,
-    bool useCache) {
-  this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(key,
-                                                                    useCache);
-  if (useCache) {
-    // this->relationshipDoubleSynonymCache.at(key)->push_back(relationship);
-  } else {
-    this->relationshipDoubleSynonymStore.at(key)->push_back(relationship);
-  }
+auto RelationshipStorage::generateEntityVector() -> std::vector<Entity *> * {
+  auto owner = std::make_unique<std::vector<Entity *>>();
+  auto *ptr = owner.get();
+  this->entityVectorStoreOwner.push_back(std::move(owner));
+  return ptr;
 }
 
 void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
@@ -282,122 +200,83 @@ void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
           &relationship->getLeftHandEntity()->getEntityType(),
           &relationship->getRightHandEntity()->getEntityType());
 
-  this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      relationshipSynonymKey, false);
-
-  this->relationshipDoubleSynonymStore.at(relationshipSynonymKey)
+  getVectorForDoubleSynonymStore(relationshipSynonymKey)
       ->push_back(relationship);
 
   if (Statement::isStatement(relationship->getLeftHandEntity())) {
-    RelationshipDoubleSynonymKey leftStatementRelationship =
+    RelationshipDoubleSynonymKey leftStatementRelationshipKey =
         RelationshipDoubleSynonymKey(
             &relationship->getRelationshipType(),
             &Statement::getEntityTypeStatic(),
             &relationship->getRightHandEntity()->getEntityType());
-    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-        leftStatementRelationship, false);
-
-    this->relationshipDoubleSynonymStore.at(leftStatementRelationship)
+    getVectorForDoubleSynonymStore(leftStatementRelationshipKey)
         ->push_back(relationship);
   }
+
   if (Statement::isStatement(relationship->getRightHandEntity())) {
-    RelationshipDoubleSynonymKey rightStatementRelationship =
+    RelationshipDoubleSynonymKey rightStatementRelationshipKey =
         RelationshipDoubleSynonymKey(
             &relationship->getRelationshipType(),
             &relationship->getLeftHandEntity()->getEntityType(),
             &Statement::getEntityTypeStatic());
-    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-        rightStatementRelationship, false);
-
-    this->relationshipDoubleSynonymStore.at(rightStatementRelationship)
+    getVectorForDoubleSynonymStore(rightStatementRelationshipKey)
         ->push_back(relationship);
   }
   if (Statement::isStatement(relationship->getLeftHandEntity()) &&
       Statement::isStatement(relationship->getRightHandEntity())) {
-    RelationshipDoubleSynonymKey bothStatementRelationship =
+    RelationshipDoubleSynonymKey bothStatementRelationshipKey =
         RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
                                      &Statement::getEntityTypeStatic(),
                                      &Statement::getEntityTypeStatic());
-    this->initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-        bothStatementRelationship, false);
-
-    this->relationshipDoubleSynonymStore.at(bothStatementRelationship)
+    getVectorForDoubleSynonymStore(bothStatementRelationshipKey)
         ->push_back(relationship);
   }
 }
 
 void RelationshipStorage::storeInRelationshipLiteralSynonymStore(
-    Relationship *relationship, bool useCache) {
+    Relationship *relationship) {
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(
           &relationship->getRelationshipType(),
           &relationship->getLeftHandEntity()->getEntityKey(),
           &relationship->getRightHandEntity()->getEntityType());
 
-  this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-      relationshipLiteralSynonymKey, useCache);
+  this->getVectorForStore(relationshipLiteralSynonymKey,
+                          relationshipLiteralSynonymStore)
+      ->push_back(relationship->getRightHandEntity());
 
-  if (useCache) {
-    // this->relationshipLiteralSynonymCache.at(relationshipLiteralSynonymKey)
-    //     ->push_back(relationship->getRightHandEntity());
-  } else {
-    this->relationshipLiteralSynonymStore.at(relationshipLiteralSynonymKey)
-        ->push_back(relationship->getRightHandEntity());
-  }
   if (Statement::isStatement(relationship->getRightHandEntity())) {
-    RelationshipLiteralSynonymKey rightStatementRelationship =
+    RelationshipLiteralSynonymKey rightStatementRelationshipKey =
         RelationshipLiteralSynonymKey(
             &relationship->getRelationshipType(),
             &relationship->getLeftHandEntity()->getEntityKey(),
             &Statement::getEntityTypeStatic());
 
-    this->initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-        rightStatementRelationship, useCache);
-    if (useCache) {
-      // this->relationshipLiteralSynonymCache.at(rightStatementRelationship)
-      //     ->push_back(relationship->getRightHandEntity());
-    } else {
-      this->relationshipLiteralSynonymStore.at(rightStatementRelationship)
-          ->push_back(relationship->getRightHandEntity());
-    }
+    this->getVectorForStore(rightStatementRelationshipKey,
+                            relationshipLiteralSynonymStore);
   }
 }
 
 void RelationshipStorage::storeInRelationshipSynonymLiteralStore(
-    Relationship *relationship, bool useCache) {
+    Relationship *relationship) {
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
       RelationshipSynonymLiteralKey(
           &relationship->getRelationshipType(),
           &relationship->getLeftHandEntity()->getEntityType(),
           &relationship->getRightHandEntity()->getEntityKey());
-
-  this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      relationshipSynonymLiteralKey, useCache);
-
-  if (useCache) {
-    // this->relationshipSynonymLiteralCache.at(relationshipSynonymLiteralKey)
-    //     ->push_back(relationship->getLeftHandEntity());
-  } else {
-    this->relationshipSynonymLiteralStore.at(relationshipSynonymLiteralKey)
-        ->push_back(relationship->getLeftHandEntity());
-  }
+  this->getVectorForStore(relationshipSynonymLiteralKey,
+                          relationshipSynonymLiteralStore)
+      ->push_back(relationship->getLeftHandEntity());
 
   if (Statement::isStatement(relationship->getLeftHandEntity())) {
-    RelationshipSynonymLiteralKey leftStatementRelationship =
+    RelationshipSynonymLiteralKey leftStatementRelationshipKey =
         RelationshipSynonymLiteralKey(
             &relationship->getRelationshipType(),
             &Statement::getEntityTypeStatic(),
             &relationship->getRightHandEntity()->getEntityKey());
-    this->initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-        leftStatementRelationship, useCache);
-
-    if (useCache) {
-      // this->relationshipSynonymLiteralCache.at(leftStatementRelationship)
-      //     ->push_back(relationship->getLeftHandEntity());
-    } else {
-      this->relationshipSynonymLiteralStore.at(leftStatementRelationship)
-          ->push_back(relationship->getLeftHandEntity());
-    }
+    this->getVectorForStore(leftStatementRelationshipKey,
+                            relationshipSynonymLiteralStore)
+        ->push_back(relationship->getLeftHandEntity());
   }
 }
 
@@ -405,9 +284,11 @@ void RelationshipStorage::clearCache() {
   this->relationshipDoubleSynonymCache.clear();
   this->relationshipLiteralSynonymCache.clear();
   this->relationshipSynonymLiteralCache.clear();
-  this->relationshipVectorLiteralSynonymCache.clear();
-  this->relationshipVectorSynonymLiteralCache.clear();
   this->relationshipCache.clear();
+  this->relationshipVectorCacheOwner.clear();
+  this->entityVectorCacheOwner.clear();
+  this->relationshipCacheOwner.clear();
+  this->relationshipCacheOwner.clear();
 }
 
 auto RelationshipStorage::getStoreAndCacheSizes() -> std::vector<int> {
@@ -416,82 +297,73 @@ auto RelationshipStorage::getStoreAndCacheSizes() -> std::vector<int> {
       static_cast<int>(this->relationshipLiteralSynonymStore.size()),
       static_cast<int>(this->relationshipSynonymLiteralStore.size()),
       static_cast<int>(this->relationshipStore.size()),
+      static_cast<int>(this->relationshipStoreOwner.size()),
+      static_cast<int>(this->relationshipVectorStoreOwner.size()),
+      static_cast<int>(this->entityVectorStoreOwner.size()),
       static_cast<int>(this->relationshipDoubleSynonymCache.size()),
       static_cast<int>(this->relationshipLiteralSynonymCache.size()),
       static_cast<int>(this->relationshipSynonymLiteralCache.size()),
       static_cast<int>(this->relationshipCache.size()),
-      static_cast<int>(this->relationshipVectorLiteralSynonymCache.size()),
-      static_cast<int>(this->relationshipVectorSynonymLiteralCache.size())};
+      static_cast<int>(this->entityVectorCacheOwner.size()),
+      static_cast<int>(this->relationshipCacheOwner.size())};
 }
 
-void RelationshipStorage::storeInRelationshipLiteralSynonymCache(
+void RelationshipStorage::storeInRelationshipLiteralSynonymCaches(
     const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
     const EntityType &rightHandEntityType,
-    std::shared_ptr<std::vector<Entity *>> relatedEntities) {
-  RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
-      RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
-                                    &rightHandEntityType);
+    std::unique_ptr<std::vector<Entity *>> relatedEntities,
+    std::unique_ptr<std::vector<Relationship *>> relationships) {
+  if (!this->relationshipLiteralSynonymCache
+           .try_emplace(
+               RelationshipLiteralSynonymKey(
+                   &relationshipType, &leftHandEntityKey, &rightHandEntityType),
+               std::make_pair(relatedEntities.get(), relationships.get()))
+           .second) {
+    return;
+  }
 
-  auto test = this->relationshipLiteralSynonymCache.try_emplace(
-      relationshipLiteralSynonymKey, relatedEntities);
-
-  int x = 0;
+  relationshipVectorCacheOwner.push_back(std::move(relationships));
+  entityVectorCacheOwner.push_back(std::move(relatedEntities));
 }
 
 void RelationshipStorage::storeInRelationshipSynonymLiteralCache(
     const RelationshipType &relationshipType,
     const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
-    std::shared_ptr<std::vector<Entity *>> relatedEntities) {
-  RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
-      RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
-                                    &rightHandEntityKey);
-  this->relationshipSynonymLiteralCache.try_emplace(
-      relationshipSynonymLiteralKey, relatedEntities);
+    std::unique_ptr<std::vector<Entity *>> relatedEntities,
+    std::unique_ptr<std::vector<Relationship *>> relationships) {
+  if (!this->relationshipSynonymLiteralCache
+           .try_emplace(
+               RelationshipSynonymLiteralKey(
+                   &relationshipType, &leftHandEntityType, &rightHandEntityKey),
+               std::make_pair(relatedEntities.get(), relationships.get()))
+           .second) {
+    return;
+  }
 
-
-}
-
-void RelationshipStorage::storeInRelationshipLiteralSynonymCache(
-    const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-    const EntityType &rightHandEntityType,
-    std::shared_ptr<std::vector<Relationship *>> relationships) {
-  RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
-      RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
-                                    &rightHandEntityType);
-
-  auto test= this->relationshipVectorLiteralSynonymCache.try_emplace(
-      relationshipLiteralSynonymKey, relationships);
-
-  int x = 0;
-}
-
-void RelationshipStorage::storeInRelationshipSynonymLiteralCache(
-    const RelationshipType &relationshipType,
-    const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
-    std::shared_ptr<std::vector<Relationship *>> relationships) {
-  RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
-      RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
-                                    &rightHandEntityKey);
-  this->relationshipVectorSynonymLiteralCache.try_emplace(
-      relationshipSynonymLiteralKey, relationships);
+  relationshipVectorCacheOwner.push_back(std::move(relationships));
+  entityVectorCacheOwner.push_back(std::move(relatedEntities));
 }
 
 void RelationshipStorage::storeInRelationshipDoubleSynonymCache(
     const RelationshipType &relationshipType,
     const EntityType &leftHandEntityType, const EntityType &rightHandEntityType,
-    std::shared_ptr<std::vector<Relationship *>> relationships) {
-  RelationshipDoubleSynonymKey relationshipDoubleSynonymKey =
-      RelationshipDoubleSynonymKey(&relationshipType, &leftHandEntityType,
-                                   &rightHandEntityType);
-  this->relationshipDoubleSynonymCache.try_emplace(relationshipDoubleSynonymKey,
-                                                   relationships);
+    std::unique_ptr<std::vector<Relationship *>> relationships) {
+  if (!this->relationshipDoubleSynonymCache
+           .try_emplace(RelationshipDoubleSynonymKey(&relationshipType,
+                                                     &leftHandEntityType,
+                                                     &rightHandEntityType),
+                        relationships.get())
+           .second) {
+    return;
+  }
+
+  relationshipVectorCacheOwner.push_back(std::move(relationships));
 }
 
-auto RelationshipStorage::
-    getCachedEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-        const RelationshipType &relationshipType,
-        const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-        -> std::vector<Entity *> * {
+auto RelationshipStorage::getCachedResultsFromSynonymLiteralCache(
+    const RelationshipType &relationshipType,
+    const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+    -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> {
   RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
       RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
                                     &rightHandEntityKey);
@@ -499,18 +371,17 @@ auto RelationshipStorage::
   if (this->relationshipSynonymLiteralCache.find(
           relationshipSynonymLiteralKey) !=
       this->relationshipSynonymLiteralCache.end()) {
-    return this->relationshipSynonymLiteralCache
-        .at(relationshipSynonymLiteralKey)
-        .get();
+    return this->relationshipSynonymLiteralCache.at(
+        relationshipSynonymLiteralKey);
   }
 
-  return nullptr;
+  return std::make_pair(nullptr, nullptr);
 }
 
-auto RelationshipStorage::
-    getCachedEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-        const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-        const EntityType &rightHandEntityType) -> std::vector<Entity *> * {
+auto RelationshipStorage::getCachedResultsFromLiteralSynonymCache(
+    const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+    const EntityType &rightHandEntityType)
+    -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> {
   RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
       RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
                                     &rightHandEntityType);
@@ -518,13 +389,11 @@ auto RelationshipStorage::
   if (this->relationshipLiteralSynonymCache.find(
           relationshipLiteralSynonymKey) !=
       this->relationshipLiteralSynonymCache.end()) {
-    return this->relationshipLiteralSynonymCache
-        .at(relationshipLiteralSynonymKey)
-        .get();
+    return this->relationshipLiteralSynonymCache.at(
+        relationshipLiteralSynonymKey);
   }
 
-    return nullptr;
-
+  return std::make_pair(nullptr, nullptr);
 }
 
 auto RelationshipStorage::getCachedRelationshipsByTypes(
@@ -537,66 +406,86 @@ auto RelationshipStorage::getCachedRelationshipsByTypes(
 
   if (this->relationshipDoubleSynonymCache.find(relationshipDoubleSynonymKey) !=
       this->relationshipDoubleSynonymCache.end()) {
-    return this->relationshipDoubleSynonymCache.at(relationshipDoubleSynonymKey)
-        .get();
+    return this->relationshipDoubleSynonymCache.at(
+        relationshipDoubleSynonymKey);
   }
 
-    return nullptr;
-
-}
-
-auto RelationshipStorage::
-    getCachedRelationshipsForGivenRelationshipTypeAndRightHandEntityType(
-        const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-        const EntityType &rightHandEntityType)
-        -> std::vector<Relationship *> * {
-  RelationshipLiteralSynonymKey relationshipLiteralSynonymKey =
-      RelationshipLiteralSynonymKey(&relationshipType, &leftHandEntityKey,
-                                    &rightHandEntityType);
-
-  if (this->relationshipVectorLiteralSynonymCache.find(
-          relationshipLiteralSynonymKey) !=
-      this->relationshipVectorLiteralSynonymCache.end()) {
-    return this->relationshipVectorLiteralSynonymCache
-        .at(relationshipLiteralSynonymKey)
-        .get();
-  }
-
-    return nullptr;
-
-}
-
-auto RelationshipStorage::
-    getCachedRelationshipsForGivenRelationshipTypeAndLeftHandEntityType(
-        const RelationshipType &relationshipType,
-        const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-        -> std::vector<Relationship *> * {
-  RelationshipSynonymLiteralKey relationshipSynonymLiteralKey =
-      RelationshipSynonymLiteralKey(&relationshipType, &leftHandEntityType,
-                                    &rightHandEntityKey);
-
-  if (this->relationshipVectorSynonymLiteralCache.find(
-          relationshipSynonymLiteralKey) !=
-      this->relationshipVectorSynonymLiteralCache.end()) {
-    return this->relationshipVectorSynonymLiteralCache
-        .at(relationshipSynonymLiteralKey)
-        .get();
-  }
-
-    return nullptr;
-
+  return nullptr;
 }
 
 void RelationshipStorage::storeInRelationshipOwnerCache(
-    std::shared_ptr<Relationship> relationship) {
-  this->relationshipOwnerCache.push_back(relationship);
+    std::unique_ptr<Relationship> relationship) {
+  this->relationshipCacheOwner.push_back(std::move(relationship));
 }
 
 void RelationshipStorage::storeInRelationshipMapCache(
     Relationship *relationship) {
-    if (relationship == nullptr) {
-        return;
-    }
+  if (relationship == nullptr) {
+    return;
+  }
   this->relationshipCache.try_emplace(relationship->getRelationshipKey(),
                                       relationship);
+}
+
+// auto
+// RelationshipStorage::getVectorForSynonymLiteralStore(RelationshipSynonymLiteralKey
+// & relationshipSynonymLiteralKey) -> std::vector<Entity *>* {
+//
+//     // we use fallbackEntityVector so we do not instantiate entityVectors
+//     unnecessarily
+//
+//     auto * placeholderEntityVectorPtr = placeholderEntityVector.get();
+//
+//     auto emplaceResult =
+//     this->relationshipSynonymLiteralStore.try_emplace(relationshipSynonymLiteralKey,
+//     placeholderEntityVectorPtr); if (emplaceResult.second) {
+//         entityVectorStoreOwner.push_back(std::move(placeholderEntityVector));
+//
+//         placeholderEntityVector = std::make_unique<std::vector<Entity *>>();
+//
+//         return placeholderEntityVectorPtr;
+//     }
+//
+//
+//     return emplaceResult.first->second;
+// }
+
+template <typename T>
+auto RelationshipStorage::getVectorForStore(
+    T &key, std::unordered_map<T, std::vector<Entity *> *> &store)
+    -> std::vector<Entity *> * {
+  auto *placeholderEntityVectorPtr = placeholderEntityVector.get();
+
+  auto emplaceResult = store.try_emplace(key, placeholderEntityVectorPtr);
+
+  if (emplaceResult.second) {
+    entityVectorStoreOwner.push_back(std::move(placeholderEntityVector));
+
+    placeholderEntityVector = std::make_unique<std::vector<Entity *>>();
+
+    return placeholderEntityVectorPtr;
+  }
+
+  return emplaceResult.first->second;
+}
+
+auto RelationshipStorage::getVectorForDoubleSynonymStore(
+    RelationshipDoubleSynonymKey relationshipDoubleSynonymKey)
+    -> std::vector<Relationship *> * {
+  auto *placeholderRelationshipVectorPtr = placeholderRelationshipVector.get();
+
+  auto emplaceResult = this->relationshipDoubleSynonymStore.try_emplace(
+      relationshipDoubleSynonymKey, placeholderRelationshipVectorPtr);
+
+  if (emplaceResult.second) {
+    relationshipVectorStoreOwner.push_back(
+        std::move(placeholderRelationshipVector));
+
+    placeholderRelationshipVector =
+        std::make_unique<std::vector<Relationship *>>();
+
+    return placeholderRelationshipVectorPtr;
+  }
+
+  return emplaceResult.first->second;
 }

@@ -24,10 +24,17 @@
 class EntityManager {
  private:
     static const int MAX_NUMBER_OF_STMTS_WITH_BUFFER = 600;
-  std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
-  std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>>
+  std::unordered_map<EntityKey, Entity *> entityStore;
+  std::unordered_map<EntityType, std::vector<Entity*>*>
       entityTypeToEntityStore;
   std::vector<Entity*> emptyEntityVector;
+
+  std::unique_ptr<std::vector<Entity*>> placeholderEntityVector;
+
+  std::vector<std::unique_ptr<Entity>>  entitiesOwner;
+  std::vector<std::unique_ptr<std::vector<Entity*>>> entityVectorOwner;
+
+
 
   // we need this because unorderedmap access is way too slow, and since we are accessing individual stmts often
   // there is quite a lot of overhead
@@ -38,7 +45,7 @@ class EntityManager {
  public:
   EntityManager();
 
-  void storeEntity(const std::shared_ptr<Entity>& entity);
+  void storeEntity(std::unique_ptr<Entity> entity);
 
   auto getEntity(EntityKey& key) -> Entity*;
 
@@ -52,8 +59,8 @@ class EntityManager {
  private:
   void storeInEntityTypeStore(Entity* entity);
 
-  void initialiseVectorForEntityTypeStoreIfIndexNotExist(
-      const EntityType& entityType);
+    auto getVectorForEntityTypeStore(
+            const EntityType &entityType) -> std::vector<Entity *>*;
 };
 
 #endif  // SPA_ENTITYMANAGER_H

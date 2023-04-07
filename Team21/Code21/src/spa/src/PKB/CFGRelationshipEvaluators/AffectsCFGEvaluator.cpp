@@ -27,7 +27,7 @@ auto AffectsCFGEvaluator::getRelationshipType() const
 
 auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
                                                bool isReverse)
-    -> std::shared_ptr<std::vector<Entity*>> {
+    -> std::unique_ptr<std::vector<Entity *>> {
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
@@ -37,7 +37,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   isReverse ? initializeReverseEvaluation(sourceStatement)
             : initializeForwardsEvaluation(sourceStatement);
 
-  auto results = std::make_shared<std::vector<Entity*>>();
+  auto results = std::make_unique<std::vector<Entity*>>();
 
   // create stack of statements to visit
   auto statementNumbersToVisit = std::stack<int>();
@@ -93,7 +93,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
 auto AffectsCFGEvaluator::createNewRelationship(Entity* leftStatement,
                                                 Entity* rightStatement)
-    -> std::shared_ptr<Relationship> {
+    -> std::unique_ptr<Relationship> {
   auto* leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
   auto* rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);
 
@@ -109,7 +109,7 @@ auto AffectsCFGEvaluator::createNewRelationship(Entity* leftStatement,
         "leftStatement or rightStatement is not an "
         "AssignStatement");
   }
-  return std::make_shared<AffectsRelationship>(leftAssignStatement,
+  return std::make_unique<AffectsRelationship>(leftAssignStatement,
                                                rightAssignStatement);
 }
 
@@ -118,20 +118,20 @@ void AffectsCFGEvaluator::initializeForwardsEvaluation(
   // assign statements only modify one variable, so we can just get the first
   // one
   modifiedEntityFromSource =
-      getRelationshipStorage()
-          ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-              ModifiesRelationship::getRelationshipTypeStatic(),
-              sourceStatement->getEntityKey(), Variable::getEntityTypeStatic())
+          getRelationshipStorage()
+                  ->getEntitiesFromLiteralSynonymStore(
+                          ModifiesRelationship::getRelationshipTypeStatic(),
+                          sourceStatement->getEntityKey(), Variable::getEntityTypeStatic())
           ->at(0);
 }
 
 void AffectsCFGEvaluator::initializeReverseEvaluation(
     Statement* sourceStatement) {
   auto* usedEntitiesFromSourceVector =
-      getRelationshipStorage()
-          ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-              UsesRelationship::getRelationshipTypeStatic(),
-              sourceStatement->getEntityKey(), Variable::getEntityTypeStatic());
+          getRelationshipStorage()
+                  ->getEntitiesFromLiteralSynonymStore(
+                          UsesRelationship::getRelationshipTypeStatic(),
+                          sourceStatement->getEntityKey(), Variable::getEntityTypeStatic());
 
   usedEntitiesFromSource =
       std::make_unique<std::unordered_map<std::string, Entity*>>();
@@ -152,7 +152,7 @@ auto AffectsCFGEvaluator::visitInForwardsEvaluation(
         RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(),
                         &visitedStatement->getEntityKey(),
                         &modifiedEntityFromSource->getEntityKey());
-    if (getRelationshipStorage()->getRelationship(usesRelationshipKey) !=
+    if (getRelationshipStorage()->getRelationshipFromStore(usesRelationshipKey) !=
         nullptr) {
       partialResults->push_back(visitedStatement);
     }
@@ -165,7 +165,7 @@ auto AffectsCFGEvaluator::visitInForwardsEvaluation(
                         &modifiedEntityFromSource->getEntityKey());
 
     // there is a modification, we terminate traversing this path
-    if (getRelationshipStorage()->getRelationship(modifiesRelationshipKey) !=
+    if (getRelationshipStorage()->getRelationshipFromStore(modifiesRelationshipKey) !=
         nullptr) {
       return true;
     }
@@ -187,11 +187,11 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
     return false;
   }
   auto* modifiedVariables =
-      getRelationshipStorage()
-          ->getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-              ModifiesRelationship::getRelationshipTypeStatic(),
-              visitedStatement->getEntityKey(),
-              Variable::getEntityTypeStatic());
+          getRelationshipStorage()
+                  ->getEntitiesFromLiteralSynonymStore(
+                          ModifiesRelationship::getRelationshipTypeStatic(),
+                          visitedStatement->getEntityKey(),
+                          Variable::getEntityTypeStatic());
 
   // early return if statement does not modify any variables or is a container
   // stmt
@@ -226,7 +226,7 @@ auto AffectsCFGEvaluator::visitInReverseEvaluation(
           &ModifiesRelationship::getRelationshipTypeStatic(),
           &visitedStatement->getEntityKey(), &usedVariable->getEntityKey());
 
-      if (getRelationshipStorage()->getRelationship(relationshipKey) !=
+      if (getRelationshipStorage()->getRelationshipFromStore(relationshipKey) !=
           nullptr) {
         usedVariablesToDelete.push_back(usedVariable->getEntityValue());
       }

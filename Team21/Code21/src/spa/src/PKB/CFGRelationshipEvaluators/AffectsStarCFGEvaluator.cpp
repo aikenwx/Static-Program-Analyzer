@@ -25,25 +25,25 @@ auto AffectsStarCFGEvaluator::getRelationshipType() const
 
 auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
                                                    bool isReverse)
-    -> std::shared_ptr<std::vector<Entity*>> {
+    -> std::unique_ptr<std::vector<Entity *>> {
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
   AffectsCFGEvaluator affectsCFGEvaluator(getCFG(), getRelationshipStorage(),
                                           getEntityManager());
 
-  auto results = std::make_shared<std::vector<Entity*>>();
+  auto results = std::make_unique<std::vector<Entity*>>();
 
   // create stack of statements to visit
   auto statementsToVisit = std::stack<Statement*>();
 
   // push all statements from results into stack
 
-  affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-      Statement::getEntityTypeStatic(), sourceStatement, isReverse);
+  auto* directRelations = affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+      Statement::getEntityTypeStatic(), sourceStatement, isReverse).first;
 
-  auto* directRelations = affectsCFGEvaluator.getEntitiesFromStore(
-      isReverse, *sourceStatement, Statement::getEntityTypeStatic());
+  // auto* directRelations = affectsCFGEvaluator.getRelatedStatements(
+  //     sourceStatement, isReverse)
 
   for (const auto& result : *directRelations) {
     statementsToVisit.push(dynamic_cast<Statement*>(result));
@@ -60,10 +60,8 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
     visitedStatementNumbers[nextToVisit->getStatementNumber()] = true;
     results->push_back(nextToVisit);
 
-    affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        Statement::getEntityTypeStatic(), nextToVisit, isReverse);
-    auto* nextResults = affectsCFGEvaluator.getEntitiesFromStore(
-        isReverse, *nextToVisit, Statement::getEntityTypeStatic());
+    auto* nextResults = affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+        Statement::getEntityTypeStatic(), nextToVisit, isReverse).first;
 
     for (const auto& nextResult : *nextResults) {
       statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
@@ -75,7 +73,7 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
 auto AffectsStarCFGEvaluator::createNewRelationship(Entity* leftStatement,
                                                     Entity* rightStatement)
-    -> std::shared_ptr<Relationship> {
+    -> std::unique_ptr<Relationship> {
   auto* leftAssignStatement = dynamic_cast<AssignStatement*>(leftStatement);
   auto* rightAssignStatement = dynamic_cast<AssignStatement*>(rightStatement);
 
@@ -91,6 +89,6 @@ auto AffectsStarCFGEvaluator::createNewRelationship(Entity* leftStatement,
         "leftStatement or rightStatement is not an "
         "AssignStatement");
   }
-  return std::make_shared<AffectsStarRelationship>(leftAssignStatement,
+  return std::make_unique<AffectsStarRelationship>(leftAssignStatement,
                                                    rightAssignStatement);
 }

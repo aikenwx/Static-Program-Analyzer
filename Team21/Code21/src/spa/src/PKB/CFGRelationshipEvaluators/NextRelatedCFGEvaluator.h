@@ -16,9 +16,9 @@ public:
             EntityManager* entityManager);
 
     virtual auto getRelatedStatementNumbers(int sourceStatementNumber, bool isReverse)
-    -> std::shared_ptr<std::vector<int>> = 0;
+    -> std::unique_ptr<std::vector<int>> = 0;
 
-    auto getRelatedStatements(Statement* statement, bool isReverse) -> std::shared_ptr<std::vector<Entity *>> override;
+    auto getRelatedStatements(Statement* statement, bool isReverse) -> std::unique_ptr<std::vector<Entity *>> override;
 };
 
 

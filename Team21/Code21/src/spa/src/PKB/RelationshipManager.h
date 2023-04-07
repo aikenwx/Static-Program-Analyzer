@@ -38,9 +38,9 @@ class RelationshipManager {
 
   void storeCFG(std::shared_ptr<cfg::CFG> givenCfg);
 
-  void storeRelationship(const std::shared_ptr<Relationship> &relationship);
+  void storeRelationship(std::unique_ptr<Relationship> relationship);
 
-  auto getRelationship(RelationshipKey &key) -> Relationship *;
+  auto getRelationship(RelationshipKey &key, Entity *leftEntity, Entity *rightEntity) -> Relationship *;
 
   auto getRelationshipsByTypes(const RelationshipType &relationshipType,
                                const EntityType &leftHandEntityType,

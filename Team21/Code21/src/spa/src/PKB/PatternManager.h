@@ -33,8 +33,8 @@ class PatternManager {
  public:
   PatternManager() = default;
   static void storeAssignStatementPostfixExpression(
-      AssignStatement* assignStatement,
-      std::shared_ptr<std::string> postfixExpression);
+          AssignStatement* assignStatement,
+          std::unique_ptr<std::string> postfixExpression);
 
   void storeWhileStatementConditionVariable(WhileStatement* whileStatement,
                                             Variable* conditionVariable);

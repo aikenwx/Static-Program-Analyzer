@@ -27,8 +27,6 @@ struct RelationshipKey : public StorageKey {
   const RelationshipType *relationshipType;
   EntityKey *leftEntityKey;
   EntityKey *rightEntityKey;
-  std::shared_ptr<EntityKey> leftEntityKeyOwner;
-  std::shared_ptr<EntityKey> rightEntityKeyOwner;
 
  public:
   auto getLeftEntityKey() -> EntityKey *;

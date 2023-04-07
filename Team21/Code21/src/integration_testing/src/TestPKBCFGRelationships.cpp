@@ -1031,9 +1031,12 @@ TEST_CASE("Test AffectsStar worst case") {
       AffectsStarRelationship::getRelationshipTypeStatic(),
       Statement::getEntityTypeStatic(), Statement::getEntityTypeStatic());
 
+
   auto end = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+        REQUIRE(result->size() == 500 * 500);
   std::cout << "Time taken by function: " << duration.count() << " microseconds"
             << std::endl;
 }
@@ -1056,43 +1059,43 @@ TEST_CASE("stress test unorderedmap with entitykey") {
   }
 }
 
-TEST_CASE("stress test  unorderedmap with pointer member") {
-  // make vector of entities
-  std::vector<AssignStatement> entities;
+//TEST_CASE("stress test  unorderedmap with pointer member") {
+//  // make vector of entities
+//  std::vector<AssignStatement> entities;
+//
+//  for (int i = 0; i < 1000000; i++) {
+//    auto entity = AssignStatement(i);
+//
+//    entities.push_back(entity);
+//  }
+//
+//  SECTION("actual test") {
+//    std::unordered_map<EntityKey, Entity *> map;
+//
+//    for (auto &entity : entities) {
+//      map.try_emplace(entity.getEntityKey(), &entity);
+//    }
+//  }
+//}
 
-  for (int i = 0; i < 1000000; i++) {
-    auto entity = AssignStatement(i);
-
-    entities.push_back(entity);
-  }
-
-  SECTION("actual test") {
-    std::unordered_map<EntityKey, Entity *> map;
-
-    for (auto &entity : entities) {
-      map.try_emplace(entity.getEntityKey(), &entity);
-    }
-  }
-}
-
-TEST_CASE("stress test unorderedset with int member") {
-  std::vector<AssignStatement> entities;
-
-  for (int i = 0; i < 1000000; i++) {
-    auto entity = AssignStatement(i);
-
-    entities.push_back(entity);
-  }
-
-  SECTION("actual test") {
-    std::unordered_map<int, Entity*> map;
-
-    for (auto &entity : entities) {
-        map.try_emplace(entity.getStatementNumber(), &entity);
-    }
-  }
-
-}
+//TEST_CASE("stress test unorderedset with int member") {
+//  std::vector<AssignStatement> entities;
+//
+//  for (int i = 0; i < 1000000; i++) {
+//    auto entity = AssignStatement(i);
+//
+//    entities.push_back(entity);
+//  }
+//
+//  SECTION("actual test") {
+//    std::unordered_map<int, Entity*> map;
+//
+//    for (auto &entity : entities) {
+//        map.try_emplace(entity.getStatementNumber(), &entity);
+//    }
+//  }
+//
+//}
 
 TEST_CASE("stress test unordered set for entity keys") {
 
@@ -1144,23 +1147,23 @@ TEST_CASE("stress test unordered set for entity keys") {
 
 
 
-TEST_CASE("stress test unordered_map with int member") {
-  std::vector<AssignStatement> entities;
-
-  for (int i = 0; i < 1000000; i++) {
-    auto entity = AssignStatement(i);
-
-    entities.push_back(entity);
-  }
-
-  SECTION("actual test") {
-    std::unordered_map<int, Entity *> map;
-
-    for (auto &entity : entities) {
-      map.try_emplace(entity.getStatementNumber(), &entity);
-    }
-  }
-}
+//TEST_CASE("stress test unordered_map with int member") {
+//  std::vector<AssignStatement> entities;
+//
+//  for (int i = 0; i < 1000000; i++) {
+//    auto entity = AssignStatement(i);
+//
+//    entities.push_back(entity);
+//  }
+//
+//  SECTION("actual test") {
+//    std::unordered_map<int, Entity *> map;
+//
+//    for (auto &entity : entities) {
+//      map.try_emplace(entity.getStatementNumber(), &entity);
+//    }
+//  }
+//}
 
 
 TEST_CASE("Stress test pass by value string") {

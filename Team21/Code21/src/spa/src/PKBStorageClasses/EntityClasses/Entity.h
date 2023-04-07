@@ -34,7 +34,7 @@ struct EntityKey : public StorageKey {
   std::string *entityValue;
   std::string entityValueStore;
  private:
-    int entityIntValue = -1;
+    int entityIntValue;
 public:
   EntityKey(const EntityType *entityType, std::string *entityValue);
   EntityKey(const EntityType *entityType, int entityIntValue);
@@ -52,6 +52,9 @@ class Entity {
  public:
   Entity(const EntityType *entityType,
          const std::shared_ptr<std::string> &entityValue);
+
+    Entity(const EntityType *entityType,
+           const std::shared_ptr<std::string> &entityValue, int entityIntValue);
 
   virtual ~Entity() = default;
 

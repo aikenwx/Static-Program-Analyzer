@@ -17,8 +17,8 @@ auto NextCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
 
 auto NextCFGEvaluator::getRelatedStatementNumbers(int sourceStatementNumber,
                                                   bool isReverse)
-    -> std::shared_ptr<std::vector<int>> {
-  auto nextStatementsNumbers = std::make_shared<std::vector<int>>();
+    -> std::unique_ptr<std::vector<int>> {
+  auto nextStatementsNumbers = std::make_unique<std::vector<int>>();
 
   auto* currentBlock =
       getCFG()->GetBlockAt(sourceStatementNumber).value().get();
@@ -43,8 +43,8 @@ auto NextCFGEvaluator::getRelatedStatementNumbers(int sourceStatementNumber,
 
 auto NextCFGEvaluator::createNewRelationship(Entity* leftStatement,
                                              Entity* rightStatement)
-    -> std::shared_ptr<Relationship> {
-  return std::make_shared<NextRelationship>(
+    -> std::unique_ptr<Relationship> {
+  return std::make_unique<NextRelationship>(
       dynamic_cast<Statement*>(leftStatement),
       dynamic_cast<Statement*>(rightStatement));
 }

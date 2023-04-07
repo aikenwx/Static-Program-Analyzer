@@ -2,7 +2,7 @@
 
 Constant::Constant(int constantValue)
     : Entity(&Constant::getEntityType(),
-             std::make_shared<std::string>(std::to_string(constantValue)))
+             std::make_shared<std::string>(std::to_string(constantValue)), constantValue)
              {}
 
 auto Constant::getEntityType() const -> const EntityType & {

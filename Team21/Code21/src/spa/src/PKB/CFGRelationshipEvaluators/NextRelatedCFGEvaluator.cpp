@@ -12,11 +12,11 @@ NextRelatedCFGEvaluator::NextRelatedCFGEvaluator(cfg::CFG* cfg,
 
 auto NextRelatedCFGEvaluator::getRelatedStatements(Statement *statement,
                                                     bool isReverse)
--> std::shared_ptr<std::vector<Entity *>> {
+-> std::unique_ptr<std::vector<Entity *>> {
     auto relatedStmtNumbers =
             getRelatedStatementNumbers(statement->getStatementNumber(), isReverse);
 
-    auto relatedStatements = std::make_shared<std::vector<Entity *>>();
+    auto relatedStatements = std::make_unique<std::vector<Entity *>>();
 
     for (auto stmtNumber : *relatedStmtNumbers) {
         relatedStatements->push_back(getEntityManager()->getStmtByNumber(stmtNumber));

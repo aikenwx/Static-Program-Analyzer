@@ -15,12 +15,12 @@ class NextStarCFGEvaluator : public NextRelatedCFGEvaluator {
 
     auto createNewRelationship(Entity *leftStatement,
                                Entity *rightStatement)
-    -> std::shared_ptr<Relationship> override;
+    -> std::unique_ptr<Relationship> override;
 
     auto getRelatedStatementNumbers(
             int sourceStatementNumber,
             bool isReverse)
-    -> std::shared_ptr<std::vector<int>> override;
+    -> std::unique_ptr<std::vector<int>> override;
 };
 
 #endif  // SPA_NEXTSTARCFGEVALUATOR_H

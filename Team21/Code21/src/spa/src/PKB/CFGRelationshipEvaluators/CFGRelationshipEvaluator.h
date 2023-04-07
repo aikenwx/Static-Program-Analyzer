@@ -20,14 +20,11 @@ class CFGRelationshipEvaluator {
 
   virtual auto isValidEntityTypeInput(const EntityType& entityType) -> bool;
 
-  auto generateStatementBlockPair(Statement* statement)
-      -> std::shared_ptr<std::pair<cfg::Block*, Statement*>>;
-
   virtual auto createNewRelationship(Entity* leftStatement,
                                      Entity* rightStatement)
-      -> std::shared_ptr<Relationship> = 0;
+      -> std::unique_ptr<Relationship> = 0;
 
-  virtual auto getRelatedStatements(Statement* statement, bool isReverse) -> std::shared_ptr<std::vector<Entity *>> = 0;
+  virtual auto getRelatedStatements(Statement* statement, bool isReverse) -> std::unique_ptr<std::vector<Entity *>> = 0;
 
   [[nodiscard]] virtual auto getRelationshipType() const
       -> const RelationshipType& = 0;
@@ -77,14 +74,11 @@ class CFGRelationshipEvaluator {
   //   statement,
   //                                                const EntityType&
   //                                                entityType);
-  auto getEntitiesFromStore(bool isReverse, Entity& sourceEntity,
-                            const EntityType& destinationEntityType)
-      -> std::vector<Entity*>*;
 
-  auto getCachedRelationships(
+  auto getCachedEntitiesAndRelationships(
       bool isReverse, Entity& sourceEntity,
       const EntityType& destinationEntityType)
-      -> std::vector<Relationship *> *;
+      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>;
 
  private:
   auto shouldEvaluateRelationshipsByEntityTypesInReverse(

@@ -23,7 +23,7 @@ struct RelationshipDoubleSynonymKey : public StorageKey {
   const EntityType *leftHandEntityType;
   const EntityType *rightHandEntityType;
 
- public:
+public:
   RelationshipDoubleSynonymKey(const RelationshipType *relationshipType,
                                const EntityType *leftHandEntityType,
                                const EntityType *rightHandEntityType);
@@ -83,157 +83,148 @@ struct std::hash<RelationshipLiteralSynonymKey> {
 
 class RelationshipStorage {
  private:
+    std::unique_ptr<std::vector<Entity*>> placeholderEntityVector;
+
+    std::unique_ptr<std::vector<Relationship *>> placeholderRelationshipVector;
+
+    std::vector<std::unique_ptr<std::vector<Relationship *>>>
+      relationshipVectorStoreOwner;
+
+
+  std::vector<std::unique_ptr<std::vector<Entity *>>> entityVectorStoreOwner;
+
+  std::vector<std::unique_ptr<Relationship>> relationshipStoreOwner;
+
   std::unordered_map<RelationshipDoubleSynonymKey,
-                     std::shared_ptr<std::vector<Relationship *>>>
+                     std::vector<Relationship *> *>
       relationshipDoubleSynonymStore;
 
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Entity *>>>
+  std::unordered_map<RelationshipSynonymLiteralKey, std::vector<Entity *> *>
       relationshipSynonymLiteralStore;
 
-  std::unordered_map<RelationshipLiteralSynonymKey,
-                     std::shared_ptr<std::vector<Entity *>>>
+  std::unordered_map<RelationshipLiteralSynonymKey, std::vector<Entity *> *>
       relationshipLiteralSynonymStore;
 
-  std::unordered_map<RelationshipKey, std::shared_ptr<Relationship>>
-      relationshipStore;
+  std::unordered_map<RelationshipKey, Relationship *> relationshipStore;
 
   std::unordered_map<RelationshipDoubleSynonymKey,
-                     std::shared_ptr<std::vector<Relationship *>>>
+                     std::vector<Relationship *> *>
       relationshipDoubleSynonymCache;
 
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Entity *>>>
+  std::unordered_map<
+      RelationshipSynonymLiteralKey,
+      std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>>
       relationshipSynonymLiteralCache;
 
-  std::unordered_map<RelationshipLiteralSynonymKey,
-                     std::shared_ptr<std::vector<Entity *>>>
+  std::unordered_map<
+      RelationshipLiteralSynonymKey,
+      std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>>
       relationshipLiteralSynonymCache;
-
-  std::unordered_map<RelationshipSynonymLiteralKey,
-                     std::shared_ptr<std::vector<Relationship *>>>
-      relationshipVectorSynonymLiteralCache;
-
-  std::unordered_map<RelationshipLiteralSynonymKey,
-                     std::shared_ptr<std::vector<Relationship *>>>
-      relationshipVectorLiteralSynonymCache;
 
   std::unordered_map<RelationshipKey, Relationship *> relationshipCache;
 
-  std::vector<std::shared_ptr<Relationship>> relationshipOwnerCache;
+  std::vector<std::unique_ptr<Relationship>> relationshipCacheOwner;
+
+  std::vector<std::unique_ptr<std::vector<Relationship *>>>
+      relationshipVectorCacheOwner;
+
+  std::vector<std::unique_ptr<std::vector<Entity *>>> entityVectorCacheOwner;
 
  public:
   RelationshipStorage();
 
-  void storeRelationship(const std::shared_ptr<Relationship> &relationship);
-
-  auto tryStoreRelationshipOnlyInRelationshipStore(
-      const std::shared_ptr<Relationship> &relationship, bool useCache) -> bool;
-
-  void storeInSpecifiedRelationshipDoubleSynonymStore(
-      Relationship *relationship, const RelationshipDoubleSynonymKey &key,
-      bool useCache);
+  void storeRelationship(std::unique_ptr<Relationship> relationship);
 
   void storeInRelationshipDoubleSynonymStore(Relationship *relationship);
 
-  void storeInRelationshipSynonymLiteralStore(Relationship *relationship,
-                                              bool useCache);
+  void storeInRelationshipSynonymLiteralStore(Relationship *relationship);
 
-  void storeInRelationshipLiteralSynonymStore(Relationship *relationship,
-                                              bool useCache);
+  void storeInRelationshipLiteralSynonymStore(Relationship *relationship);
 
   void storeInRelationshipOwnerCache(
-      std::shared_ptr<Relationship> relationship);
+      std::unique_ptr<Relationship> relationship);
 
- void storeInRelationshipMapCache(Relationship *relationship);
+  void storeInRelationshipMapCache(Relationship *relationship);
 
-  void storeInRelationshipLiteralSynonymCache(
+  void storeInRelationshipLiteralSynonymCaches(
       const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
       const EntityType &rightHandEntityType,
-      std::shared_ptr<std::vector<Entity *>> relatedEntities);
+      std::unique_ptr<std::vector<Entity *>> relatedEntities,
+      std::unique_ptr<std::vector<Relationship *>> relationships);
 
   void storeInRelationshipSynonymLiteralCache(
       const RelationshipType &relationshipType,
       const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
-      std::shared_ptr<std::vector<Entity *>> relatedEntities);
-
-  void storeInRelationshipLiteralSynonymCache(
-          const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-          const EntityType &rightHandEntityType,
-          std::shared_ptr<std::vector<Relationship *>>
-          relationships);
-
-  void storeInRelationshipSynonymLiteralCache(
-          const RelationshipType &relationshipType,
-          const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey,
-          std::shared_ptr<std::vector<Relationship *>>
-          relationships);
+      std::unique_ptr<std::vector<Entity *>> relatedEntities,
+      std::unique_ptr<std::vector<Relationship *>> relationships);
 
   void storeInRelationshipDoubleSynonymCache(
       const RelationshipType &relationshipType,
       const EntityType &leftHandEntityType,
       const EntityType &rightHandEntityType,
-      std::shared_ptr<std::vector<Relationship *>> relationships);
+      std::unique_ptr<std::vector<Relationship *>> relationships);
+
+  auto getRelationshipFromStore(RelationshipKey &key) -> Relationship *;
+
+  auto getRelationshipsByTypesFromStore(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType,
+      const EntityType &rightHandEntityType) -> std::vector<Relationship *> *;
+
+  auto getEntitiesFromSynonymLiteralStore(
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> std::vector<Entity *> *;
+
+  auto getEntitiesFromLiteralSynonymStore(
+      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
   auto getCachedRelationship(RelationshipKey &key) -> Relationship *;
 
   auto containedInRelationshipCache(RelationshipKey &key) -> bool;
 
-  auto getRelationship(RelationshipKey &key) -> Relationship *;
-
-  auto getCachedEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
+  auto getCachedResultsFromSynonymLiteralCache(
       const RelationshipType &relationshipType,
       const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-      -> std::vector<Entity *> *;
+      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>;
 
-  auto getCachedEntitiesForGivenRelationshipTypeAndRightHandEntityType(
+  auto getCachedResultsFromLiteralSynonymCache(
       const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
+      const EntityType &rightHandEntityType)
+      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>;
 
   auto getCachedRelationshipsByTypes(const RelationshipType &relationshipType,
                                      const EntityType &leftHandEntityType,
                                      const EntityType &rightHandEntityType)
       -> std::vector<Relationship *> *;
 
-  auto getCachedRelationshipsForGivenRelationshipTypeAndRightHandEntityType(
-      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-      const EntityType &rightHandEntityType)
-      -> std::vector<Relationship *> *;
-
-  auto getCachedRelationshipsForGivenRelationshipTypeAndLeftHandEntityType(
-      const RelationshipType &relationshipType,
-      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-      -> std::vector<Relationship *> *;
-
-  auto getRelationshipsByTypes(const RelationshipType &relationshipType,
-                               const EntityType &leftHandEntityType,
-                               const EntityType &rightHandEntityType)
-      -> std::vector<Relationship *> *;
-
-  auto getEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-      const RelationshipType &relationshipType,
-      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-      -> std::vector<Entity *> *;
-  auto getEntitiesForGivenRelationshipTypeAndRightHandEntityType(
-      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
-      const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
-
-  void initialiseVectorForRelationshipDoubleSynonymStoreIfNotExist(
-      const RelationshipDoubleSynonymKey &relationshipSynonymKey,
-      bool useCache);
-
-  void initialiseVectorForRelationshipLiteralSynonymStoreIfNotExist(
-      RelationshipLiteralSynonymKey relationshipLiteralSynonymKey,
-      bool useCache);
-
-  void initialiseVectorForRelationshipSynonymLiteralStoreIfNotExist(
-      const RelationshipSynonymLiteralKey &relationshipSynonymLiteralKey,
-      bool useCache);
+//  auto getCachedRelationshipsForGivenRelationshipTypeAndRightHandEntityType(
+//      const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
+//      const EntityType &rightHandEntityType) -> std::vector<Relationship *> *;
+//
+//  auto getCachedRelationshipsForGivenRelationshipTypeAndLeftHandEntityType(
+//      const RelationshipType &relationshipType,
+//      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+//      -> std::vector<Relationship *> *;
 
   // strictly for testing purposes
   auto getStoreAndCacheSizes() -> std::vector<int>;
 
   void clearCache();
+
+  auto generateRelationshipVector() -> std::vector<Relationship *> *;
+  auto generateEntityVector() -> std::vector<Entity *> *;
+//auto getVectorForSynonymLiteralStore(RelationshipSynonymLiteralKey & relationshipSynonymLiteralKey) -> std::vector<Entity *>*;
+
+// create template for above method, allowing for different types of keys
+// to be passed in
+template <typename T>
+auto getVectorForStore(T & key, std::unordered_map<T, std::vector<Entity *> *> & store) -> std::vector<Entity *>*;
+
+
+auto getVectorForDoubleSynonymStore(RelationshipDoubleSynonymKey relationshipDoubleSynonymKey) -> std::vector<Relationship *>*;
+
 };
 
 #endif  // SPA_RELATIONSHIPSTORAGE_H

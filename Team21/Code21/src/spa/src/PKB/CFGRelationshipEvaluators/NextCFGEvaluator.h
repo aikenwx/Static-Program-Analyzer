@@ -16,7 +16,7 @@ class NextCFGEvaluator : public NextRelatedCFGEvaluator {
 
   auto createNewRelationship(Entity *leftStatement,
                              Entity *rightStatement)
-      -> std::shared_ptr<Relationship> override;
+      -> std::unique_ptr<Relationship> override;
 
   // auto isRelated(std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
   //                Statement& destinationStatement, bool isReverse)
@@ -24,7 +24,7 @@ class NextCFGEvaluator : public NextRelatedCFGEvaluator {
   auto getRelatedStatementNumbers(
           int sourceStatementNumber,
           bool isReverse)
-      -> std::shared_ptr<std::vector<int>> override;
+      -> std::unique_ptr<std::vector<int>> override;
 };
 
 #endif  // SPA_NEXTCFGEVALUATOR_H

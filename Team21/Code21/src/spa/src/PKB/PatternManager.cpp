@@ -7,8 +7,8 @@
 #include <utility>
 
 void PatternManager::storeAssignStatementPostfixExpression(
-    AssignStatement *assignStatement,
-    std::shared_ptr<std::string> postfixExpression) {
+        AssignStatement *assignStatement,
+        std::unique_ptr<std::string> postfixExpression) {
   assignStatement->setPostfixExpression(std::move(postfixExpression));
 }
 

@@ -70,9 +70,7 @@ class QueryFacade {
   auto getParentStarRelationshipsByLeftAndRightEntityTypes(
       const EntityType & leftEntityType, const EntityType & rightEntityType)
       -> std::vector<ParentStarRelationship*>*;
-  auto getFollowsStarRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<FollowsStarRelationship*>*;
+
   auto getAllCallsRelationships() -> std::vector<CallsRelationship*>*;
   auto getAllCallsStarRelationships() -> std::vector<CallsStarRelationship*>*;
 
@@ -87,34 +85,6 @@ class QueryFacade {
   auto getVariablesInIfStatementCondition(int statementNumber)
       -> std::unordered_set<Variable*>*;
 
-  auto getStatementModifiesVariableRelationship(int statementNumber,
-                                                std::string variableName)
-      -> ModifiesRelationship*;
-  auto getProcedureModifiesVariableRelationship(std::string procedureName,
-                                                std::string variableName)
-      -> ModifiesRelationship*;
-  auto getStatementUsesVariableRelationship(int statementNumber,
-                                            std::string variableName)
-      -> UsesRelationship*;
-  auto getProcedureUsesVariableRelationship(std::string procedureName,
-                                            std::string variableName)
-      -> UsesRelationship*;
-  auto getParentRelationship(int parentStatementNumber,
-                             int childStatementNumber) -> ParentRelationship*;
-  auto getFollowsRelationship(int firstStatementNumber,
-                              int secondStatementNumber)
-      -> FollowsRelationship*;
-  auto getParentStarRelationship(int parentStatementNumber,
-                                 int childStatementNumber)
-      -> ParentStarRelationship*;
-  auto getFollowsStarRelationship(int firstStatementNumber,
-                                  int secondStatementNumber)
-      -> FollowsStarRelationship*;
-  auto getCallsRelationship(std::string callerName, std::string calleeName)
-      -> CallsRelationship*;
-  auto getCallsStarRelationship(std::string callerName,
-                                std::string calleeName)
-      -> CallsStarRelationship*;
 
   auto getEntity(const EntityType& entityType, int entityValue) -> Entity*;
 

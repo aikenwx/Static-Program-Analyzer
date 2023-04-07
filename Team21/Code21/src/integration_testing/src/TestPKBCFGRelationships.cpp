@@ -1099,12 +1099,11 @@ TEST_CASE("stress test unorderedmap with entitykey") {
 
 TEST_CASE("stress test unordered set for entity keys") {
 
-  std::unordered_map<EntityKey, Entity*> map;
-
+  std::unordered_map<EntityKey, Entity&> map;
   for (int i = 0; i < 1000000; i++) {
-      AssignStatement* test = new AssignStatement(i);
+      AssignStatement test = AssignStatement(i);
 //
-      auto & key = test->getEntityKey();
+      auto & key = test.getEntityKey();
 //     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
 
     map.try_emplace(key, test);
@@ -1115,15 +1114,15 @@ TEST_CASE("stress test unordered set for entity keys") {
 
     TEST_CASE("stress test unordered map for int and entity") {
 
-        std::unordered_map<int, Entity*> map;
+        std::unordered_map<int, Entity&> map;
 
         for (int i = 0; i < 1000000; i++) {
-            AssignStatement* test = new AssignStatement(i);
+            AssignStatement test = AssignStatement(i);
 //
 //            EntityKey key = test->getEntityKey();
 //     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
 
-            map.try_emplace(test->getStatementNumber(), test);
+            map.try_emplace(test.getStatementNumber(), test);
         }
 
 
@@ -1131,15 +1130,13 @@ TEST_CASE("stress test unordered set for entity keys") {
 
     TEST_CASE("stress test vector for int and entity") {
 
-        std::vector<Entity*> vec = std::vector<Entity*>(1000000);
+        std::vector<std::unique_ptr<Entity>> vec = std::vector<std::unique_ptr<Entity>>(1000000);
 
         for (int i = 0; i < 1000000; i++) {
-            AssignStatement* test = new AssignStatement(i);
 //
 //            EntityKey key = test->getEntityKey();
 //     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
-
-            vec[i] = test;
+            vec[i] = std::make_unique<AssignStatement>(i);
         }
 
 

@@ -195,8 +195,8 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
@@ -219,8 +219,8 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
@@ -242,8 +242,8 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
@@ -264,8 +264,8 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 

@@ -1104,7 +1104,7 @@ TEST_CASE("stress test unordered set for entity keys") {
   for (int i = 0; i < 1000000; i++) {
       AssignStatement* test = new AssignStatement(i);
 //
-      EntityKey key = test->getEntityKey();
+      auto & key = test->getEntityKey();
 //     EntityKey key = EntityKey(&AssignStatement::getEntityTypeStatic(), i);
 
     map.try_emplace(key, test);

@@ -118,7 +118,3 @@ print pr; procedure p; assign a;
 Select <p, pr.stmt#> with p.procName = pr.varName such that Calls*(_,p) pattern a("z","z + 1")
 nguyen 36
 5000
-
-
-
-

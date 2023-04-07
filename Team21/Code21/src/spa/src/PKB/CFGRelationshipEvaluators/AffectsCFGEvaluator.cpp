@@ -136,6 +136,10 @@ void AffectsCFGEvaluator::initializeReverseEvaluation(
   usedEntitiesFromSource =
       std::make_unique<std::unordered_map<std::string, Entity*>>();
 
+  if (usedEntitiesFromSourceVector == nullptr) {
+      return;
+  }
+
   for (const auto& usedEntity : *usedEntitiesFromSourceVector) {
     usedEntitiesFromSource->insert({*usedEntity->getEntityValue(), usedEntity});
   }

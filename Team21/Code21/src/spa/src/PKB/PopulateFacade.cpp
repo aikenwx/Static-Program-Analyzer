@@ -114,14 +114,10 @@ void PopulateFacade::storeStatementUsesVariableRelationship(
 
 void PopulateFacade::storeFollowsRelationship(int firstStatementNumber,
                                               int secondStatementNumber) {
-  auto firstStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
-  auto secondStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-  auto *firstStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(firstStatementKey));
-  auto *secondStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(secondStatementKey));
+  auto *firstStatement =
+      this->entityManager->getStmtByNumber(firstStatementNumber);
+  auto *secondStatement =
+      this->entityManager->getStmtByNumber(secondStatementNumber);
   PopulateFacade::validateEntityExists(firstStatement);
   PopulateFacade::validateEntityExists(secondStatement);
 
@@ -131,14 +127,11 @@ void PopulateFacade::storeFollowsRelationship(int firstStatementNumber,
 
 void PopulateFacade::storeParentRelationship(int parentStatementNumber,
                                              int childStatementNumber) {
-  auto parentStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
-  auto childStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-  auto *parentStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(parentStatementKey));
-  auto *childStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(childStatementKey));
+  auto *parentStatement =
+      this->entityManager->getStmtByNumber(parentStatementNumber);
+  auto *childStatement =
+      this->entityManager->getStmtByNumber(childStatementNumber);
+
   PopulateFacade::validateEntityExists(parentStatement);
   PopulateFacade::validateEntityExists(childStatement);
   this->relationshipManager->storeRelationship(
@@ -177,14 +170,10 @@ void PopulateFacade::storeProcedureUsesVariableRelationship(
 
 void PopulateFacade::storeParentStarRelationship(int parentStatementNumber,
                                                  int childStatementNumber) {
-  auto parentStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
-  auto childStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-  auto *parentStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(parentStatementKey));
-  auto *childStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(childStatementKey));
+  auto *parentStatement =
+      this->entityManager->getStmtByNumber(parentStatementNumber);
+  auto *childStatement =
+      this->entityManager->getStmtByNumber(childStatementNumber);
   PopulateFacade::validateEntityExists(parentStatement);
   PopulateFacade::validateEntityExists(childStatement);
   this->relationshipManager->storeRelationship(
@@ -194,14 +183,10 @@ void PopulateFacade::storeParentStarRelationship(int parentStatementNumber,
 
 void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber,
                                                   int secondStatementNumber) {
-  auto firstStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
-  auto secondStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-  auto *firstStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(firstStatementKey));
-  auto *secondStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(secondStatementKey));
+  auto *firstStatement =
+      this->entityManager->getStmtByNumber(firstStatementNumber);
+  auto *secondStatement =
+      this->entityManager->getStmtByNumber(secondStatementNumber);
   PopulateFacade::validateEntityExists(firstStatement);
   PopulateFacade::validateEntityExists(secondStatement);
   this->relationshipManager->storeRelationship(

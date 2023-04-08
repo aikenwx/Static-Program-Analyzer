@@ -84,10 +84,12 @@ class CFGRelationshipEvaluator {
       const EntityType& destinationEntityType)
       -> std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>&;
 
- private:
-  auto shouldEvaluateRelationshipsByEntityTypesInReverse(
-      const EntityType& leftEntityType, const EntityType& rightEntityType)
-      -> bool;
+ protected:
+  virtual auto shouldEvaluateRelationshipsByEntityTypesInReverse(
+      std::vector<Entity*>* leftEntityVector,
+      std::vector<Entity*>* rightEntityVector) -> bool = 0;
+
+  virtual auto shouldSortForDoubleEnityTypeEvaluation() -> bool;
 };
 
 #endif  // SPA_CFGRELATIONSHIPEVALUATOR_H

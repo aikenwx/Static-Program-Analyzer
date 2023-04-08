@@ -25,7 +25,7 @@ auto AffectsStarCFGEvaluator::getRelationshipType() const
 
 auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
                                                    bool isReverse)
-    -> std::unique_ptr<std::vector<Entity *>> {
+    -> std::unique_ptr<std::vector<Entity*>> {
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
@@ -39,11 +39,11 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
 
   // push all statements from results into stack
 
-  auto* directRelations = affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-      Statement::getEntityTypeStatic(), sourceStatement, isReverse).first;
-
-  // auto* directRelations = affectsCFGEvaluator.getRelatedStatements(
-  //     sourceStatement, isReverse)
+  auto* directRelations =
+      affectsCFGEvaluator
+          .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+              Statement::getEntityTypeStatic(), sourceStatement, isReverse)
+          .first;
 
   for (const auto& result : *directRelations) {
     statementsToVisit.push(dynamic_cast<Statement*>(result));
@@ -57,11 +57,31 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
       continue;
     }
 
-    visitedStatementNumbers[nextToVisit->getStatementNumber()] = true;
+    visitedStatementNumbers.at(nextToVisit->getStatementNumber()) = true;
     results->push_back(nextToVisit);
 
-    auto* nextResults = affectsCFGEvaluator.evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        Statement::getEntityTypeStatic(), nextToVisit, isReverse).first;
+    auto* possibleCachedResults =
+        this->getCachedEntitiesAndRelationships(
+                isReverse, *nextToVisit, Statement::getEntityTypeStatic())
+            .first;
+
+    if (possibleCachedResults != nullptr) {
+      for (const auto& result : *possibleCachedResults) {
+        int stmtNumber = *result->getEntityKey().getOptionalInt();
+
+        if (visitedStatementNumbers.at(stmtNumber) == false) {
+          visitedStatementNumbers.at(stmtNumber) = true;
+          results->push_back(result);
+        }
+      }
+      continue;
+    }
+
+    auto* nextResults =
+        affectsCFGEvaluator
+            .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                Statement::getEntityTypeStatic(), nextToVisit, isReverse)
+            .first;
 
     for (const auto& nextResult : *nextResults) {
       statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
@@ -91,4 +111,8 @@ auto AffectsStarCFGEvaluator::createNewRelationship(Entity* leftStatement,
   }
   return std::make_unique<AffectsStarRelationship>(leftAssignStatement,
                                                    rightAssignStatement);
+}
+
+auto AffectsStarCFGEvaluator::shouldSortForDoubleEnityTypeEvaluation() -> bool {
+  return true;
 }

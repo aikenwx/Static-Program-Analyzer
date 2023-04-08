@@ -43,6 +43,9 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
 
   // already evaluated
 
+  // sort left entity list by statement number, from highest to lowest, into a
+  // new list
+
   auto *possibleCachedRelationships =
       relationshipStorage->getCachedRelationshipsByTypes(
           getRelationshipType(), leftEntityType, rightEntityType);
@@ -52,11 +55,27 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   }
 
   bool isReverse = shouldEvaluateRelationshipsByEntityTypesInReverse(
-      leftEntityType, rightEntityType);
+      leftEntityList, rightEntityList);
 
   auto results = std::make_unique<std::vector<Relationship *>>();
 
-  for (auto *entity : isReverse ? *rightEntityList : *leftEntityList) {
+  auto *sourceEntityList = isReverse ? rightEntityList : leftEntityList;
+  auto sortedList = std::vector<Entity *>();
+
+  if (this->shouldSortForDoubleEnityTypeEvaluation()) {
+    sortedList = std::vector<Entity *>(*sourceEntityList);
+    // sort by statement number from highest to lowest, as typically (but not always), stmts on
+    // top should affect stmts below, this would allow for faster evaluation for
+    // affects* under typical circumstances
+    std::sort(sortedList.begin(), sortedList.end(), [](Entity *a, Entity *b) {
+      return *a->getEntityKey().getOptionalInt() >
+             *b->getEntityKey().getOptionalInt();
+    });
+
+    sourceEntityList = &sortedList;
+  }
+
+  for (auto *entity : *sourceEntityList) {
     auto *partialResults =
         evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
             isReverse ? leftEntityType : rightEntityType, entity, isReverse)
@@ -167,39 +186,9 @@ auto CFGRelationshipEvaluator::
   return cachedPair;
 }
 
-auto CFGRelationshipEvaluator::
-    shouldEvaluateRelationshipsByEntityTypesInReverse(
-        const EntityType &leftEntityType, const EntityType &rightEntityType)
-        -> bool {
+auto CFGRelationshipEvaluator::shouldSortForDoubleEnityTypeEvaluation()
+    -> bool {
   return false;
-  // auto *leftEntityList = getEvaluableEntitiesFromEntityType(leftEntityType);
-  // auto *rightEntityList =
-  // getEvaluableEntitiesFromEntityType(rightEntityType);
-
-  // int numberOfForwardRelationshipEvaluationsRequired = 0;
-
-  // for (auto *leftEntity : *leftEntityList) {
-  //   if (this->relationshipStorage
-  //           ->getCachedResultsFromLiteralSynonymCache(
-  //               this->getRelationshipType(), leftEntity->getEntityKey(),
-  //               rightEntityType) == nullptr) {
-  //     numberOfForwardRelationshipEvaluationsRequired++;
-  //   }
-  // }
-
-  // int numberOfReverseRelationshipEvaluationsRequired = 0;
-
-  // for (auto *rightEntity : *rightEntityList) {
-  //   if (this->relationshipStorage
-  //           ->getCachedEntitiesForGivenRelationshipTypeAndLeftHandEntityType(
-  //               this->getRelationshipType(), leftEntityType,
-  //               rightEntity->getEntityKey()) == nullptr) {
-  //     numberOfReverseRelationshipEvaluationsRequired++;
-  //   }
-  // }
-
-  // return numberOfForwardRelationshipEvaluationsRequired >
-  //        numberOfReverseRelationshipEvaluationsRequired;
 }
 
 auto CFGRelationshipEvaluator::getCachedEntitiesAndRelationships(

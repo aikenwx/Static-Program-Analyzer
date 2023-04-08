@@ -45,11 +45,23 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
       std::stack<std::shared_ptr<std::unordered_map<std::string, Entity*>>>();
 
   // push all statements from results into stack
-  auto directRelations = nextCFGEvaluator.getRelatedStatementNumbers(
-      sourceStatement->getStatementNumber(), isReverse);
+
+  auto* directRelations =
+      nextCFGEvaluator
+          .getCachedEntitiesAndRelationships(isReverse, *sourceStatement,
+                                             Statement::getEntityTypeStatic())
+          .first;
+
+  if (directRelations == nullptr) {
+    directRelations =
+        nextCFGEvaluator
+            .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                Statement::getEntityTypeStatic(), sourceStatement, isReverse)
+            .first;
+  }
 
   for (const auto result : *directRelations) {
-    statementNumbersToVisit.push(result);
+    statementNumbersToVisit.push(*result->getEntityKey().getOptionalInt());
     if (isReverse) {
       unusedVariablesForStatementsYetToVisit.push(this->currentUnusedVariables);
     }
@@ -80,11 +92,22 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
       continue;
     }
 
-    auto neighbours =
-        nextCFGEvaluator.getRelatedStatementNumbers(nextToVisit, isReverse);
+    auto* neighbours =
+        nextCFGEvaluator
+            .getCachedEntitiesAndRelationships(isReverse, *nextToVisitStmt,
+                                               Statement::getEntityTypeStatic())
+            .first;
+
+    if (neighbours == nullptr) {
+      neighbours =
+          nextCFGEvaluator
+              .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                  Statement::getEntityTypeStatic(), nextToVisitStmt, isReverse)
+              .first;
+    }
 
     for (const auto neighbour : *neighbours) {
-      statementNumbersToVisit.push(neighbour);
+      statementNumbersToVisit.push(*neighbour->getEntityKey().getOptionalInt());
       if (isReverse) {
         unusedVariablesForStatementsYetToVisit.push(
             this->currentUnusedVariables);

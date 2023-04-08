@@ -425,9 +425,9 @@ procedure g {
   REQUIRE(result->size() == 2);
 
   REQUIRE(*result->at(0)->getLeftHandEntity()->getEntityValue() == "5");
-  REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "4");
+  REQUIRE(*result->at(0)->getRightHandEntity()->getEntityValue() == "3");
   REQUIRE(*result->at(1)->getLeftHandEntity()->getEntityValue() == "5");
-  REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "3");
+  REQUIRE(*result->at(1)->getRightHandEntity()->getEntityValue() == "4");
 }
 
 TEST_CASE("Retrieve related entities to non existent entity") {

@@ -4,7 +4,7 @@
 #include "Statement.h"
 class CallStatement : public Statement {
    private:
-    static EntityType const callStatementType;
+    static StatementType const callStatementType;
     std::shared_ptr<std::string> procedureName;
 
    public:

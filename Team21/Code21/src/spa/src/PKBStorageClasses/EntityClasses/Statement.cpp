@@ -5,7 +5,7 @@
 
 Statement::Statement(const EntityType *entityType, int statementNumber)
     : Entity(entityType,
-             std::make_shared<std::string>(std::to_string(statementNumber))),
+             std::make_shared<std::string>(std::to_string(statementNumber)), statementNumber),
       statementNumber(statementNumber) {}
 
 auto Statement::getStatementNumber() const -> int {
@@ -20,8 +20,12 @@ auto Statement::getEntityTypeStatic() -> const EntityType & {
   return Statement::statementType;
 }
 
-const EntityType Statement::statementType = EntityType();
+const StatementType Statement::statementType = StatementType();
 
 auto Statement::getEntityType() const -> const EntityType & {
   return Statement::statementType;
+}
+
+auto StatementType::isStatementType(const EntityType &entityType) -> bool {
+  return dynamic_cast<const StatementType *>(&entityType) != nullptr;
 }

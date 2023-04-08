@@ -5,17 +5,17 @@
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 
 TEST_CASE("PatternManager Instantiates") {
-    auto patternManager = std::make_shared<PatternManager>();
+    auto patternManager = std::make_unique<PatternManager>();
 }
 
 TEST_CASE("PatternManager can store assign statement postfix expression") {
-    auto patternManager = std::make_shared<PatternManager>();
+    auto patternManager = std::make_unique<PatternManager>();
 
-    auto assignStatement = std::make_shared<AssignStatement>(1);
+    auto assignStatement = std::make_unique<AssignStatement>(1);
 
-    std::shared_ptr<std::string> postfixExpression = std::make_shared<std::string>("ab-");
+    auto postfixExpression = std::make_unique<std::string>("ab-");
 
-    patternManager->storeAssignStatementPostfixExpression(assignStatement.get(), postfixExpression);
+    patternManager->storeAssignStatementPostfixExpression(assignStatement.get(), std::move(postfixExpression));
 
     REQUIRE(*assignStatement->getPostFixExpression() == "ab-");
 }

@@ -11,4 +11,4 @@ auto ReadStatement::getEntityType() const -> const EntityType & {
   return ReadStatement::getEntityTypeStatic();
 }
 
-const EntityType ReadStatement::readStatementType = EntityType();
+const StatementType ReadStatement::readStatementType = StatementType();

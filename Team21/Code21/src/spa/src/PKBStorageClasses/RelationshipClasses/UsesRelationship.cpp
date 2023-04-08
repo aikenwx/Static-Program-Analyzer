@@ -5,11 +5,12 @@
 
 #include <stdexcept>
 
-UsesRelationship::UsesRelationship(Entity *user, Variable *usedVariable) : Relationship(&UsesRelationship::getRelationshipType(),
-                                                                                        user, usedVariable) {
-    if (!Statement::isStatement(user) && dynamic_cast<Procedure *>(user) == nullptr) {
-        throw std::invalid_argument("user can only be Statement or Procedure");
-    }
+UsesRelationship::UsesRelationship(Statement *user, Variable *usedVariable) : Relationship(&UsesRelationship::getRelationshipType(),
+                                                                                           user, usedVariable) {
+}
+
+UsesRelationship::UsesRelationship(Procedure *user, Variable *usedVariable) : Relationship(&UsesRelationship::getRelationshipType(),
+                                                                                           user, usedVariable) {
 }
 
 auto UsesRelationship::getRelationshipType() const -> const RelationshipType & {

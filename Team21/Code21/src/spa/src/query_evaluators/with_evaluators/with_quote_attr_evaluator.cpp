@@ -24,7 +24,7 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal->synonym);
 
-  EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  const EntityType &entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
   auto* entities = pkb.getEntitiesByType(entType);
   for(auto& entity: *entities) {
@@ -32,7 +32,11 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
       firstResult.push_back(entity);
     }
   }
-  equalResult.push_back(firstResult);
+
+  if (!firstResult.empty())
+  {
+    equalResult.push_back(firstResult);
+  }
 
   return equalResult;
 }

@@ -253,7 +253,9 @@ void RelationshipStorage::storeInRelationshipLiteralSynonymStore(
             &Statement::getEntityTypeStatic());
 
     this->getVectorForStore(rightStatementRelationshipKey,
-                            relationshipLiteralSynonymStore);
+                            relationshipLiteralSynonymStore)->push_back(
+                                    relationship->getRightHandEntity()
+                                    );
   }
 }
 

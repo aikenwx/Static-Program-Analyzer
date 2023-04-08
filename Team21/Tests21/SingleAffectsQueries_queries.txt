@@ -6,7 +6,7 @@ TRUE
 2 - relationship(synonym, literal)
 while w; if i; stmt s1, s2;
 Select <s1, s2> such that Affects(s1, 10) and Affects(s2, 11)
-4 1, 4 2, 4 14
+4 1, 4 2, 4 14, 10 1, 10 2, 10 14
 5000
 3 - relationship(wildcard, literal)
 while w; if i; stmt s1, s2;
@@ -36,7 +36,7 @@ Select i such that Affects(18, _)
 8 - relationship(synonym, wildcard)
 while w; if i; stmt s1, s2;
 Select s1 such that Affects(s1, _)
-1, 2, 3, 4, 6, 8, 21, 22, 23, 25, 26, 27
+1, 2, 3, 4, 6, 8, 10, 14, 21, 22, 23, 24, 25, 26, 27
 5000
 9 - relationship(wildcard, wildcard)
 while w; if i; stmt s1, s2; call c;

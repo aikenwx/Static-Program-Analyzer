@@ -1,20 +1,32 @@
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "util/interval_tree.h"
+#include "util/small_int_key_interval_tree.h"
+
+// SCENARIO analogue for TEMPLATE_TEST_CASE; basically the same as SCENARIO
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define TEMPLATE_SCENARIO(...) TEMPLATE_TEST_CASE("Scenario: " __VA_ARGS__)
+
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 namespace test_util {
-SCENARIO("IntervalTree can be constructed", "[util][util/interval_tree]") {
+TEMPLATE_SCENARIO("IntervalTree can be constructed",
+                  "[util][util/interval_tree]", (util::IntervalTree<int, int>),
+                  (util::SmallIntKeyIntervalTree<int, int>)) {
   GIVEN("An IntervalTree") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     WHEN("The tree is constructed") {
       THEN("The tree is empty") { REQUIRE(tree.Search(0) == std::nullopt); }
     }
   }
 }
 
-SCENARIO("IntervalTree can insert intervals", "[util][util/interval_tree]") {
+TEMPLATE_SCENARIO("IntervalTree can insert intervals",
+                  "[util][util/interval_tree]", (util::IntervalTree<int, int>),
+                  (util::SmallIntKeyIntervalTree<int, int>)) {
   GIVEN("An IntervalTree with no intervals") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     WHEN("An interval is inserted") {
       tree.Insert({0, 1}, 0);
       THEN("The interval can be found") {
@@ -53,7 +65,7 @@ SCENARIO("IntervalTree can insert intervals", "[util][util/interval_tree]") {
   }
 
   GIVEN("An IntervalTree with an interval") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     tree.Insert({0, 1}, 0);
     WHEN("An interval is inserted") {
       tree.Insert({2, 3}, 1);
@@ -74,9 +86,11 @@ SCENARIO("IntervalTree can insert intervals", "[util][util/interval_tree]") {
   }
 }
 
-SCENARIO("IntervalTree can delete intervals", "[util][util/interval_tree]") {
+TEMPLATE_SCENARIO("IntervalTree can delete intervals",
+                  "[util][util/interval_tree]", (util::IntervalTree<int, int>),
+                  (util::SmallIntKeyIntervalTree<int, int>)) {
   GIVEN("An IntervalTree with an interval") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     tree.Insert({0, 1}, 0);
     WHEN("The interval is deleted") {
       tree.Delete({0, 1});
@@ -104,15 +118,14 @@ SCENARIO("IntervalTree can delete intervals", "[util][util/interval_tree]") {
   }
 
   GIVEN("An IntervalTree with multiple intervals") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     tree.Insert({0, 1}, 0);
     tree.Insert({2, 3}, 1);
     tree.Insert({4, 5}, 2);
     WHEN("An interval is deleted") {
       tree.Delete({2, 3});
-      THEN(
-          "The remaining intervals, but not the deleted intervals, can be "
-          "found") {
+      THEN("The remaining intervals, but not the deleted intervals, can be "
+           "found") {
         REQUIRE(tree.Search(0) == 0);
         REQUIRE(tree.Search(1) == 0);
         REQUIRE(tree.Search(2) == std::nullopt);
@@ -125,9 +138,8 @@ SCENARIO("IntervalTree can delete intervals", "[util][util/interval_tree]") {
     WHEN("Multiple intervals are deleted") {
       tree.Delete({0, 1});
       tree.Delete({4, 5});
-      THEN(
-          "The remaining intervals, but not the deleted intervals, can be "
-          "found") {
+      THEN("The remaining intervals, but not the deleted intervals, can be "
+           "found") {
         REQUIRE(tree.Search(0) == std::nullopt);
         REQUIRE(tree.Search(1) == std::nullopt);
         REQUIRE(tree.Search(2) == 1);
@@ -139,17 +151,18 @@ SCENARIO("IntervalTree can delete intervals", "[util][util/interval_tree]") {
   }
 
   GIVEN("An IntervalTree with no intervals") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     WHEN("A deletion is attempted") {
       THEN("Delete() returns false") { REQUIRE(tree.Delete({0, 1}) == false); }
     }
   }
 }
 
-SCENARIO("IntervalTree can search for intervals",
-         "[util][util/interval_tree]") {
+TEMPLATE_SCENARIO("IntervalTree can search for intervals",
+                  "[util][util/interval_tree]", (util::IntervalTree<int, int>),
+                  (util::SmallIntKeyIntervalTree<int, int>)) {
   GIVEN("An IntervalTree with no intervals") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     WHEN("The tree is searched") {
       THEN("The tree returns std::nullopt") {
         REQUIRE(tree.Search(0) == std::nullopt);
@@ -158,7 +171,7 @@ SCENARIO("IntervalTree can search for intervals",
   }
 
   GIVEN("An IntervalTree with an interval") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     tree.Insert({0, 1}, 0);
     WHEN("The tree is searched for an existing value") {
       THEN("Search() returns the correct value") {
@@ -174,7 +187,7 @@ SCENARIO("IntervalTree can search for intervals",
   }
 
   GIVEN("An IntervalTree with multiple intervals") {
-    util::IntervalTree<int, int> tree;
+    TestType tree;
     tree.Insert({0, 1}, 0);
     tree.Insert({2, 3}, 1);
     tree.Insert({4, 5}, 2);
@@ -190,4 +203,6 @@ SCENARIO("IntervalTree can search for intervals",
     }
   }
 }
-}  // namespace test_util
+} // namespace test_util
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

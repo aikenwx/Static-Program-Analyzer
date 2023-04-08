@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <queue>
+#include <string_view>
 #include <unordered_set>
 
 #include "PKBStorageClasses/EntityClasses/IfStatement.h"
@@ -35,6 +36,7 @@
 #include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 #include "util/interval_tree.h"
+#include "util/small_int_key_interval_tree.h"
 
 namespace sp {
 auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
@@ -465,7 +467,7 @@ void PopulateCondVarRels(
   }
 }
 
-auto SP::process(const std::string& program, PKB* pkb) -> bool {
+auto SP::Process(std::string_view program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);
@@ -529,7 +531,7 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
   // procedureRels[stmtNum] = procName that stmtNum belongs to
   std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
       procedureByName;
-  util::IntervalTree<int, std::string> procNameByLine;
+  util::SmallIntKeyIntervalTree<int, std::string> procNameByLine;
   ResolveProcedureInfo(programNode, procedureByName, procNameByLine);
 
   // calls[caller] = std::uset<std::string> of procs called by caller

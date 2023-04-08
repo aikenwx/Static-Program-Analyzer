@@ -4,6 +4,7 @@
 
 #include "../../util/interval_tree.h"
 #include "block.h"
+#include "util/small_int_key_interval_tree.h"
 
 namespace cfg {
 class CFG {
@@ -15,6 +16,6 @@ class CFG {
   [[nodiscard]] auto Size() const -> int;
 
  private:
-  util::IntervalTree<int, std::shared_ptr<Block>> intervals_;
+  util::SmallIntKeyIntervalTree<int, std::shared_ptr<Block>> intervals_;
 };
 }  // namespace cfg

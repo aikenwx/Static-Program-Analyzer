@@ -116,7 +116,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
     WHEN("The program is processed") {
       auto pkb = PKB();
 
-      sp::SP::process(program, &pkb);
+      sp::SP::Process(program, &pkb);
 
       QueryFacade* queryFacade = pkb.getQueryFacade();
       THEN(

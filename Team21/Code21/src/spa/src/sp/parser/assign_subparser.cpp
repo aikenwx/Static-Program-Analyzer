@@ -1,13 +1,12 @@
 #include "sp/ast/astlib.h"
 #include "assign_subparser.h"
-#include "sp/token/semicolon_token.h"
 #include "util/instance_of.h"
 
 namespace parser {
 auto AssignSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
+  if (context->IsLookaheadSymbolValue(";")) {
     // assign: iden '=' expr ';'
     if (stack->size() >= 3
       && util::instance_of<ast::ExpressionNode>(*iter)

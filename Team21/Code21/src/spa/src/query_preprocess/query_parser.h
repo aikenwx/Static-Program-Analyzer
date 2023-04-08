@@ -9,7 +9,9 @@
 
 namespace qps {
 
+// QueryParser represents a Query Parser consuming list of PQL String tokens to produce Query object
 class QueryParser {
+
 	private:
 		std::vector<Declaration> declarations;
 		std::vector<SuchThatClause> suchThatClause;
@@ -55,5 +57,6 @@ class QueryParser {
 	public:
 		explicit QueryParser(std::vector<std::string> tokens_);
 		auto parse() -> Query;
+
 };
 }  // namespace qps

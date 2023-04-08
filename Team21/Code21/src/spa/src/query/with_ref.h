@@ -7,17 +7,20 @@
 
 namespace qps {
 
-	using WithRefType = std::variant<QuotedIdentifier, int, AttrRef>;
+// WithRefType represents With Reference type used in With Clause
+using WithRefType = std::variant<QuotedIdentifier, int, AttrRef>;
 
-	class WithRef {
-		public:
-			WithRefType ref;
-			AttrType attrType;
+// WithRef represents With Reference used in With Clause
+class WithRef {
+ public:
+	WithRefType ref;
+	AttrType attrType;
 
-			explicit WithRef(WithRefType ref_);
+	explicit WithRef(WithRefType ref_);
 
-			auto operator==(const WithRef& other) const -> bool {
-				return ref == other.ref && attrType == other.attrType;
-			}
-	};
+	auto operator==(const WithRef& other) const -> bool {
+		return ref == other.ref && attrType == other.attrType;
+	}
+};
+
 }  // namespace qps

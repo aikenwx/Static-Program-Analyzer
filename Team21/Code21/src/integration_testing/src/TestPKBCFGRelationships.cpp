@@ -255,8 +255,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
   REQUIRE(temp8->size() == 5);
 
-  auto *temp9 =
-      pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+  auto *temp9 = pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
           NextStarRelationship::getRelationshipTypeStatic(),
           CallStatement::getEntityTypeStatic(),
           Statement::getEntityTypeStatic(), 8);

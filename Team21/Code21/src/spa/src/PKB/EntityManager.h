@@ -22,22 +22,21 @@
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
 class EntityManager {
+ public:
+  static const int MAX_NUMBER_OF_STMTS_WITH_BUFFER = 600;
+
  private:
-    static const int MAX_NUMBER_OF_STMTS_WITH_BUFFER = 600;
-  std::unordered_map<EntityKey, Entity *> entityStore;
-  std::unordered_map<EntityType, std::vector<Entity*>*>
-      entityTypeToEntityStore;
+  std::unordered_map<EntityKey, Entity*> entityStore;
+  std::unordered_map<EntityType, std::vector<Entity*>*> entityTypeToEntityStore;
   std::vector<Entity*> emptyEntityVector;
 
   std::unique_ptr<std::vector<Entity*>> placeholderEntityVector;
 
-  std::vector<std::unique_ptr<Entity>>  entitiesOwner;
+  std::vector<std::unique_ptr<Entity>> entitiesOwner;
   std::vector<std::unique_ptr<std::vector<Entity*>>> entityVectorOwner;
 
-
-
-  // we need this because unorderedmap access is way too slow, and since we are accessing individual stmts often
-  // there is quite a lot of overhead
+  // we need this because unorderedmap access is way too slow, and since we are
+  // accessing individual stmts often there is quite a lot of overhead
   std::vector<Statement*> fastAccessStmts;
 
   int numberOfStatements = 0;
@@ -53,14 +52,13 @@ class EntityManager {
 
   auto getNumberOfStatements() const -> int;
 
-  
   auto getStmtByNumber(int stmtNumber) -> Statement*;
 
  private:
   void storeInEntityTypeStore(Entity* entity);
 
-    auto getVectorForEntityTypeStore(
-            const EntityType &entityType) -> std::vector<Entity *>*;
+  auto getVectorForEntityTypeStore(const EntityType& entityType)
+      -> std::vector<Entity*>*;
 };
 
 #endif  // SPA_ENTITYMANAGER_H

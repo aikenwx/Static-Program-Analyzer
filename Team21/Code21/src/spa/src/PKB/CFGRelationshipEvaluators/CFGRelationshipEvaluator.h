@@ -15,6 +15,9 @@ class CFGRelationshipEvaluator {
   RelationshipStorage* relationshipStorage;
   EntityManager* entityManager;
 
+  static std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>
+      emptyEntityVectorRelationshipVectorPair;
+
  protected:
   virtual auto isValidEntityInput(Entity* entity) -> bool;
 
@@ -24,7 +27,8 @@ class CFGRelationshipEvaluator {
                                      Entity* rightStatement)
       -> std::unique_ptr<Relationship> = 0;
 
-  virtual auto getRelatedStatements(Statement* statement, bool isReverse) -> std::unique_ptr<std::vector<Entity *>> = 0;
+  virtual auto getRelatedStatements(Statement* statement, bool isReverse)
+      -> std::unique_ptr<std::vector<Entity*>> = 0;
 
   [[nodiscard]] virtual auto getRelationshipType() const
       -> const RelationshipType& = 0;
@@ -63,7 +67,7 @@ class CFGRelationshipEvaluator {
   std::vector<Relationship*>* evaluateAndCacheRelationshipsByEntityTypes(
       const EntityType& leftEntityType, const EntityType& rightEntityType);
 
-  std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>
+  std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>&
   evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
       const EntityType& givenEntityType, Entity* entity, bool isReverse);
 
@@ -78,7 +82,7 @@ class CFGRelationshipEvaluator {
   auto getCachedEntitiesAndRelationships(
       bool isReverse, Entity& sourceEntity,
       const EntityType& destinationEntityType)
-      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>;
+      -> std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>&;
 
  private:
   auto shouldEvaluateRelationshipsByEntityTypesInReverse(

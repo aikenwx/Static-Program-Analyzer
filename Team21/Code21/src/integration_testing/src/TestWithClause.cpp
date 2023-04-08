@@ -4,6 +4,8 @@
 #include "PopulatePKBHelper.cpp"
 #include "query/design_entity.h"
 #include "QPSUtilities.h"
+#include "sp/sp.h"
+
 
 //Sample program
 //procedure computeCentroid{
@@ -249,5 +251,73 @@ TEST_CASE("With clause queries work with multiple clauses. Only one of each") {
           *pkb_querier) == expected);
     }
   }
+
+  
+}
+
+TEST_CASE("With while statement number") {
+     auto pkb = PKB();
+
+  const auto *program = R"(
+ procedure danh {
+  x = 2;
+  z = 3 + x;
+  i = z * 5;
+  y = 5;
+  while (z!=0) {
+    i = i - 1;
+    if (i==6) then {
+      x = x - 1; }
+    else {
+      while (y > 0) {
+	y = y - 1; }
+      y = z + x; }
+    z = x + i;
+    call duc;
+    z = z + 1; }
+  call nguyen; }
+
+procedure duc {
+  if (x<0) then {
+    while (i>0) {
+      x = z * 4 +  y;
+      call nguyen;
+      if (x <= 15) then {
+	x = y * z;
+	z = 10; }
+      else {
+	x = 1;
+	y = 6 * z; }
+      i = i + 1; }
+    x = x + 1;
+    z = x + z; }
+  else {
+    y = 1; }
+  z = z + i; }
+
+procedure nguyen {
+  if (y==10) then {
+    z = x + 10; }
+  else {
+    y = z + y; }
+  read z;
+  read nguyen;
+  nguyen = nguyen + 19;
+  print nguyen; }
+)";
+
+sp::SP::process(program, &pkb);
+auto eval = qps_test::RunQuery("call c; \n Select c with 4 = 5", *pkb.getQueryFacade());
+REQUIRE(eval == std::unordered_set<std::string>{});
+
+auto evaluation = qps_test::RunQuery("call c; Select BOOLEAN with c.stmt# = 16", *pkb.getQueryFacade());
+
+ std::unordered_set<std::string> FALSE{"FALSE"};
+
+
+REQUIRE(evaluation == FALSE);
+
+REQUIRE(qps_test::RunQuery("call c; Select BOOLEAN with c.stmt# = 16", *pkb.getQueryFacade()) == FALSE);
+
 }
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

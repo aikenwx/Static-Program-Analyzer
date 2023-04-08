@@ -37,7 +37,9 @@ class EntityManager {
 
   // we need this because unorderedmap access is way too slow, and since we are
   // accessing individual stmts often there is quite a lot of overhead
-  std::vector<Statement*> fastAccessStmts;
+
+//   type key -> stmtNumber -> entity
+  std::vector<std::vector<Statement*>> fastAccessStmts;
 
   int numberOfStatements = 0;
 

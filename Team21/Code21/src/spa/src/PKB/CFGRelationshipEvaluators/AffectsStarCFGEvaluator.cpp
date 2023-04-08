@@ -6,10 +6,8 @@
 
 #include <stack>
 #include <stdexcept>
-#include <unordered_map>
 
 #include "AffectsCFGEvaluator.h"
-#include "NextCFGEvaluator.h"
 #include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 
@@ -35,41 +33,50 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   auto results = std::make_unique<std::vector<Entity*>>();
 
   // create stack of statements to visit
-  auto statementsToVisit = std::stack<Statement*>();
+  auto statementNumbersToVisit = std::stack<int>();
 
   // push all statements from results into stack
 
   auto* directRelations =
       affectsCFGEvaluator
-          .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-              Statement::getEntityTypeStatic(), sourceStatement, isReverse)
+          .getCachedEntitiesAndRelationships(isReverse, *sourceStatement,
+                                             Statement::getEntityTypeStatic())
           .first;
 
-  for (const auto& result : *directRelations) {
-    statementsToVisit.push(dynamic_cast<Statement*>(result));
+  if (directRelations == nullptr) {
+    directRelations =
+        affectsCFGEvaluator
+            .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                Statement::getEntityTypeStatic(), sourceStatement, isReverse)
+            .first;
   }
 
-  while (!statementsToVisit.empty()) {
-    auto* nextToVisit = statementsToVisit.top();
-    statementsToVisit.pop();
+  for (auto* result : *directRelations) {
+    statementNumbersToVisit.push(*result->getEntityKey().getOptionalInt());
+  }
 
-    if (visitedStatementNumbers.at(nextToVisit->getStatementNumber())) {
+  while (!statementNumbersToVisit.empty()) {
+    auto nextToVisit = statementNumbersToVisit.top();
+    statementNumbersToVisit.pop();
+
+    if (visitedStatementNumbers.at(nextToVisit)) {
       continue;
     }
 
-    visitedStatementNumbers.at(nextToVisit->getStatementNumber()) = true;
-    results->push_back(nextToVisit);
+    visitedStatementNumbers.at(nextToVisit) = true;
+    auto* nextToVisitStmt = getEntityManager()->getStmtByNumber(nextToVisit);
+    results->push_back(nextToVisitStmt);
 
     auto* possibleCachedResults =
         this->getCachedEntitiesAndRelationships(
-                isReverse, *nextToVisit, Statement::getEntityTypeStatic())
+                isReverse, *nextToVisitStmt, Statement::getEntityTypeStatic())
             .first;
 
     if (possibleCachedResults != nullptr) {
       for (const auto& result : *possibleCachedResults) {
         int stmtNumber = *result->getEntityKey().getOptionalInt();
 
-        if (visitedStatementNumbers.at(stmtNumber) == false) {
+        if (!visitedStatementNumbers.at(stmtNumber)) {
           visitedStatementNumbers.at(stmtNumber) = true;
           results->push_back(result);
         }
@@ -77,14 +84,21 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
       continue;
     }
 
-    auto* nextResults =
+    auto* neighbours =
         affectsCFGEvaluator
-            .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-                Statement::getEntityTypeStatic(), nextToVisit, isReverse)
+            .getCachedEntitiesAndRelationships(isReverse, *nextToVisitStmt,
+                                               Statement::getEntityTypeStatic())
             .first;
 
-    for (const auto& nextResult : *nextResults) {
-      statementsToVisit.push(dynamic_cast<Statement*>(nextResult));
+    if (neighbours == nullptr) {
+      neighbours =
+          affectsCFGEvaluator
+              .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                  Statement::getEntityTypeStatic(), nextToVisitStmt, isReverse)
+              .first;
+    }
+    for (auto* neighbour : *neighbours) {
+      statementNumbersToVisit.push(*neighbour->getEntityKey().getOptionalInt());
     }
   }
 

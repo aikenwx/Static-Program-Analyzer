@@ -9,22 +9,6 @@ NextRelatedCFGEvaluator::NextRelatedCFGEvaluator(
     EntityManager *entityManager)
     : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
 
-auto NextRelatedCFGEvaluator::getRelatedStatements(Statement *statement,
-                                                   bool isReverse)
-    -> std::unique_ptr<std::vector<Entity *>> {
-  auto relatedStmtNumbers =
-      getRelatedStatementNumbers(statement->getStatementNumber(), isReverse);
-
-  auto relatedStatements = std::make_unique<std::vector<Entity *>>();
-
-  for (auto stmtNumber : *relatedStmtNumbers) {
-    relatedStatements->push_back(
-        getEntityManager()->getStmtByNumber(stmtNumber));
-  }
-
-  return relatedStatements;
-}
-
 auto NextRelatedCFGEvaluator::shouldEvaluateRelationshipsByEntityTypesInReverse(
     std::vector<Entity *> *leftEntityVector,
     std::vector<Entity *> *rightEntityVector) -> bool {

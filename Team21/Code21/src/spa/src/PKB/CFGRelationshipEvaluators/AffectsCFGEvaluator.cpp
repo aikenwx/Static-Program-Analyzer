@@ -60,7 +60,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
             .first;
   }
 
-  for (const auto result : *directRelations) {
+  for (auto* result : *directRelations) {
     statementNumbersToVisit.push(*result->getEntityKey().getOptionalInt());
     if (isReverse) {
       unusedVariablesForStatementsYetToVisit.push(this->currentUnusedVariables);
@@ -106,7 +106,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
               .first;
     }
 
-    for (const auto neighbour : *neighbours) {
+    for (auto * neighbour : *neighbours) {
       statementNumbersToVisit.push(*neighbour->getEntityKey().getOptionalInt());
       if (isReverse) {
         unusedVariablesForStatementsYetToVisit.push(

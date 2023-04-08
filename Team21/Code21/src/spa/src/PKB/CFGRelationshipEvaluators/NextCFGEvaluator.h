@@ -18,13 +18,15 @@ class NextCFGEvaluator : public NextRelatedCFGEvaluator {
                              Entity *rightStatement)
       -> std::unique_ptr<Relationship> override;
 
-  // auto isRelated(std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
-  //                Statement& destinationStatement, bool isReverse)
-  //     -> bool override;
+
+
+    auto getRelatedStatements(Statement *statement, bool isReverse)
+    -> std::unique_ptr<std::vector<Entity *>> override;
+
   auto getRelatedStatementNumbers(
           int sourceStatementNumber,
           bool isReverse)
-      -> std::unique_ptr<std::vector<int>> override;
+      -> std::unique_ptr<std::vector<int>> ;
 };
 
 #endif  // SPA_NEXTCFGEVALUATOR_H

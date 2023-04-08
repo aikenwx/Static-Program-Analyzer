@@ -48,3 +48,19 @@ auto NextCFGEvaluator::createNewRelationship(Entity* leftStatement,
       dynamic_cast<Statement*>(leftStatement),
       dynamic_cast<Statement*>(rightStatement));
 }
+
+auto NextCFGEvaluator::getRelatedStatements(Statement *statement,
+                                                   bool isReverse)
+-> std::unique_ptr<std::vector<Entity *>> {
+    auto relatedStmtNumbers =
+            getRelatedStatementNumbers(statement->getStatementNumber(), isReverse);
+
+    auto relatedStatements = std::make_unique<std::vector<Entity *>>();
+
+    for (auto stmtNumber : *relatedStmtNumbers) {
+        relatedStatements->push_back(
+                getEntityManager()->getStmtByNumber(stmtNumber));
+    }
+
+    return relatedStatements;
+}

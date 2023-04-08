@@ -1,0 +1,6 @@
+1 - integer with(literal, literal)
+stmt s, s1;
+Select <s, s1> such that Next*(s,s1)
+
+10000
+2 -

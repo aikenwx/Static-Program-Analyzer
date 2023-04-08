@@ -7,6 +7,7 @@
 #include "tables/row_table.h"
 #include "query/synonym.h"
 #include "query/design_entity.h"
+#include "pkb_result.h"
 #include "PKB/QueryFacade.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 

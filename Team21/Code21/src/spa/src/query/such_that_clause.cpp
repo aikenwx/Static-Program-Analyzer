@@ -4,7 +4,7 @@
 
 namespace qps {
 
-auto SuchThatClause::getRelationship() -> Relationship {
+auto SuchThatClause::getRelationship() const -> Relationship {
   return relationship;
 }
 

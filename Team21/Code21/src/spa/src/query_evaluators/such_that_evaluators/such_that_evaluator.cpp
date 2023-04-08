@@ -6,100 +6,59 @@
 
 namespace qps {
 
+int GetLiteral(const StatementNumber &num) {
+  return num;
+}
+
+std::string GetLiteral(const QuotedIdentifier &id) {
+  return id.getQuotedId();
+}
+
 class ClauseVisitor {
  public:
   ClauseVisitor(QueryFacade &pkb, const RelationshipType &relationship, const EntityType &left, const EntityType &right)
       : pkb_(pkb), relationship_type_(relationship), left_(left), right_(right) {}
 
-  auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
-    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest);
+  template<typename Literal1, typename Literal2>
+  auto operator()(Literal1 from, Literal2 dest) -> ClauseResult {
+    auto *relationship = pkb_.getRelationship(relationship_type_, left_, GetLiteral(from), right_, GetLiteral(dest));
     return relationship != nullptr;
   }
 
-  auto operator()(StatementNumber from, QuotedIdentifier dest) -> ClauseResult {
-    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest.getQuotedId());
-    return relationship != nullptr;
-  }
-
-  auto operator()(QuotedIdentifier from, StatementNumber dest) -> ClauseResult {
-    auto
-        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest);
-    return relationship != nullptr;
-  }
-
-  auto operator()(QuotedIdentifier from, QuotedIdentifier dest) -> ClauseResult {
-    auto
-        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest.getQuotedId());
-    return relationship != nullptr;
-  }
-
-  auto operator()(StatementNumber from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Literal from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_, left_, from, right_);
+        pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_, left_, GetLiteral(from), right_);
     return !(entities->empty());
   }
 
-  auto operator()(QuotedIdentifier from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
-    auto *entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
-                                                                                left_,
-                                                                                from.getQuotedId(),
-                                                                                right_);
-    return !(entities->empty());
-  }
-
-  auto operator()([[maybe_unused]] Underscore underscore, StatementNumber dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()([[maybe_unused]] Underscore underscore, Literal dest) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_, left_, right_, dest);
+        pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_, left_, right_, GetLiteral(dest));
     return !(entities->empty());
   }
 
-  auto operator()([[maybe_unused]] Underscore underscore, QuotedIdentifier dest) -> ClauseResult {
-    auto *entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
-                                                                                left_,
-                                                                                right_,
-                                                                                dest.getQuotedId());
-    return !(entities->empty());
-  }
-
-  auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Literal src, Synonym dest) -> ClauseResult {
     auto *
         entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
                                                                               left_,
-                                                                              src,
-
+                                                                              GetLiteral(src),
                                                                               right_);
     return SynonymTable(std::move(dest), *entities);
   }
 
-  auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Synonym from, Literal dest) -> ClauseResult {
     auto *
         entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
                                                                               left_,
                                                                               right_,
-                                                                              dest);
-
+                                                                              GetLiteral(dest));
     return SynonymTable(std::move(from), *entities);
   }
-
-  auto operator()(QuotedIdentifier src, Synonym dest) -> ClauseResult {
-    auto *
-        entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
-                                                                              left_,
-                                                                              src.getQuotedId(),
-                                                                              right_);
-    return SynonymTable(std::move(dest), *entities);
-  }
-
-  auto operator()(Synonym from, QuotedIdentifier dest) -> ClauseResult {
-    auto *
-        entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
-                                                                              left_,
-                                                                              right_,
-                                                                              dest.getQuotedId());
-
-    return SynonymTable(std::move(from), *entities);
-  }
-
+  
   auto operator()(Synonym src, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *
         relationships = pkb_.getRelationshipsByTypes(relationship_type_, left_, right_);

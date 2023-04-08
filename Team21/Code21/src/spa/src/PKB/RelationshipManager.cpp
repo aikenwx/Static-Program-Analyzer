@@ -22,10 +22,11 @@ void RelationshipManager::storeCFG(std::shared_ptr<cfg::CFG> givenCfg) {
 }
 
 RelationshipManager::RelationshipManager(EntityManager *entityManager)
-    : entityManager(entityManager) {}
+    : entityManager(entityManager), relationshipCache(entityManager) {
+}
 
 void RelationshipManager::storeRelationship(
-        std::unique_ptr<Relationship> relationship) {
+    std::unique_ptr<Relationship> relationship) {
   this->relationshipStorage.storeRelationship(std::move(relationship));
 }
 
@@ -38,10 +39,10 @@ auto RelationshipManager::getRelationship(RelationshipKey &key, Entity *leftEnti
             key.getRelationshipType());
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
-        this->cfg.get(), &this->relationshipStorage, this->entityManager);
+            this->cfg.get(), &this->relationshipStorage, &this->relationshipCache, this->entityManager);
 
     return evaluator->evaluateAndCacheRelationshipsByGivenEntities(leftEntity,
-                                                            rightEntity);
+                                                                   rightEntity);
   }
 
   return this->relationshipStorage.getRelationshipFromStore(key);
@@ -57,14 +58,14 @@ auto RelationshipManager::getRelationshipsByTypes(
         dynamic_cast<const CFGEvaluableRelationshipType *>(&relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
-        this->cfg.get(), &this->relationshipStorage, this->entityManager);
+            this->cfg.get(), &this->relationshipStorage, &this->relationshipCache, this->entityManager);
 
     return evaluator->evaluateAndCacheRelationshipsByEntityTypes(leftHandEntityType,
-                                                          rightHandEntityType);
+                                                                 rightHandEntityType);
   }
 
   auto *result = this->relationshipStorage.getRelationshipsByTypesFromStore(
-          relationshipType, leftHandEntityType, rightHandEntityType);
+      relationshipType, leftHandEntityType, rightHandEntityType);
 
   if (result == nullptr) {
     return &emptyRelationshipVector;
@@ -84,17 +85,18 @@ auto RelationshipManager::
         dynamic_cast<const CFGEvaluableRelationshipType *>(&relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
-        this->cfg.get(), &this->relationshipStorage, this->entityManager);
+            this->cfg.get(), &this->relationshipStorage, &this->relationshipCache, this->entityManager);
 
     auto *rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
     return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        leftHandEntityType, rightHandEntity, true).first;
+                        leftHandEntityType, rightHandEntity, true)
+        .first;
   }
 
   auto *result =
-          this->relationshipStorage
-                  .getEntitiesFromSynonymLiteralStore(
-                          relationshipType, leftHandEntityType, rightHandEntityKey);
+      this->relationshipStorage
+          .getEntitiesFromSynonymLiteralStore(
+              relationshipType, leftHandEntityType, rightHandEntityKey);
 
   if (result == nullptr) {
     return &emptyEntityVector;
@@ -112,18 +114,19 @@ auto RelationshipManager::
         dynamic_cast<const CFGEvaluableRelationshipType *>(&relationshipType);
 
     auto evaluator = cfgRelationshipType->getRelationshipEvaluator(
-        this->cfg.get(), &this->relationshipStorage, this->entityManager);
+            this->cfg.get(), &this->relationshipStorage, &this->relationshipCache, this->entityManager);
 
     auto *leftHandEntity = this->entityManager->getEntity(leftHandEntityKey);
 
     return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-        rightHandEntityType, leftHandEntity, false).first;
+                        rightHandEntityType, leftHandEntity, false)
+        .first;
   }
 
   auto *result =
-          this->relationshipStorage
-                  .getEntitiesFromLiteralSynonymStore(
-                          relationshipType, leftHandEntityKey, rightHandEntityType);
+      this->relationshipStorage
+          .getEntitiesFromLiteralSynonymStore(
+              relationshipType, leftHandEntityKey, rightHandEntityType);
 
   if (result == nullptr) {
     return &emptyEntityVector;
@@ -141,9 +144,9 @@ auto RelationshipManager::getEmptyRelationshipVector()
 }
 
 void RelationshipManager::clearCache() {
-  this->relationshipStorage.clearCache();
+  this->relationshipCache.clearCache();
 }
 
 auto RelationshipManager::getStoreAndCacheSizes() -> std::vector<int> {
-  return this->relationshipStorage.getStoreAndCacheSizes();
+  return this->relationshipCache.getStoreAndCacheSizes();
 }

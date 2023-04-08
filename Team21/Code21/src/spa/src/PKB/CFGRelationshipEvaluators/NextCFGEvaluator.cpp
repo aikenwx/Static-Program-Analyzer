@@ -6,10 +6,9 @@
 
 #include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
 
-NextCFGEvaluator::NextCFGEvaluator(cfg::CFG* cfg,
-                                   RelationshipStorage* relationshipStorage,
-                                   EntityManager* entityManager)
-    : NextRelatedCFGEvaluator(cfg, relationshipStorage, entityManager) {}
+NextCFGEvaluator::NextCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                   RelationshipCache *relationshipCache, EntityManager *entityManager)
+    : NextRelatedCFGEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto NextCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
   return NextRelationship::getRelationshipTypeStatic();

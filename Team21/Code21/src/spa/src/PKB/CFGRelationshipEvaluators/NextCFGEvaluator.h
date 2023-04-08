@@ -9,8 +9,8 @@
 
 class NextCFGEvaluator : public NextRelatedCFGEvaluator {
  public:
-    NextCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-                   EntityManager* entityManager);
+    NextCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                     RelationshipCache *relationshipCache, EntityManager *entityManager);
 
   [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
 

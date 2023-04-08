@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "EntityManager.h"
+#include "PKB/RelationshipCache.h"
 #include "PKB/RelationshipStorage.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
@@ -21,6 +22,8 @@ class RelationshipManager {
 
   RelationshipStorage relationshipStorage;
 
+  RelationshipCache relationshipCache;
+
   std::shared_ptr<cfg::CFG> cfg;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
@@ -30,7 +33,7 @@ class RelationshipManager {
   static std::vector<Entity *> emptyEntityVector;
 
  public:
-  explicit RelationshipManager(EntityManager *entityManager);
+   RelationshipManager(EntityManager *entityManager);
 
   static auto getEmptyEntityVector() -> std::vector<Entity *> *;
 

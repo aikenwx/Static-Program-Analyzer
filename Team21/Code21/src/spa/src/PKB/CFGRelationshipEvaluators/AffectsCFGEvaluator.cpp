@@ -13,10 +13,10 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
-AffectsCFGEvaluator::AffectsCFGEvaluator(
-    cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-    EntityManager* entityManager)
-    : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, entityManager),
+AffectsCFGEvaluator::AffectsCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                         RelationshipCache *relationshipCache,
+                                         EntityManager *entityManager)
+    : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, relationshipCache, entityManager),
       modifiedEntityFromSource(nullptr),
       currentUnusedVariables(nullptr) {}
 
@@ -31,7 +31,7 @@ auto AffectsCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
-  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(),
+  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getRelationshipCache(),
                                     getEntityManager());
 
   isReverse ? initializeReverseEvaluation(sourceStatement)

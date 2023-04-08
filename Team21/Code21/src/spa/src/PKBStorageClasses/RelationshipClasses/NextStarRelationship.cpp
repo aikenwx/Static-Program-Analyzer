@@ -4,8 +4,10 @@
 
 #include "NextStarRelationship.h"
 
-auto NextStarRelationshipType::getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> {
-  return std::make_shared<NextStarCFGEvaluator>(cfg, relationshipStorage, entityManager);
+auto NextStarRelationshipType::getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                        RelationshipCache *relationshipCache,
+                                                        EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const {
+  return std::make_shared<NextStarCFGEvaluator>(cfg, relationshipStorage, relationshipCache, entityManager);
 }
 
 NextStarRelationship::NextStarRelationship(Statement* prevStatement, Statement* nextStatement) : Relationship(&NextStarRelationship::relationshipType, prevStatement, nextStatement) {

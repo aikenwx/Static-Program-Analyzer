@@ -9,8 +9,8 @@
 
 class NextRelatedCFGEvaluator : public CFGRelationshipEvaluator {
  public:
-  NextRelatedCFGEvaluator(cfg::CFG *cfg,
-                          RelationshipStorage *relationshipStorage,
+  NextRelatedCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                          RelationshipCache *relationshipCache,
                           EntityManager *entityManager);
 
  protected:

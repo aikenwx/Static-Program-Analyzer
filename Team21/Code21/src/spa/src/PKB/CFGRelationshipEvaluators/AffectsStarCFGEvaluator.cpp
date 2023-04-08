@@ -11,10 +11,9 @@
 #include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 
-AffectsStarCFGEvaluator::AffectsStarCFGEvaluator(
-    cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-    EntityManager* entityManager)
-    : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, entityManager) {}
+AffectsStarCFGEvaluator::AffectsStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                 RelationshipCache *relationshipCache, EntityManager *entityManager)
+    : AffectsRelatedCFGEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto AffectsStarCFGEvaluator::getRelationshipType() const
     -> const RelationshipType& {
@@ -27,7 +26,7 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
-  AffectsCFGEvaluator affectsCFGEvaluator(getCFG(), getRelationshipStorage(),
+  AffectsCFGEvaluator affectsCFGEvaluator(getCFG(), getRelationshipStorage(), getRelationshipCache(),
                                           getEntityManager());
 
   auto results = std::make_unique<std::vector<Entity*>>();

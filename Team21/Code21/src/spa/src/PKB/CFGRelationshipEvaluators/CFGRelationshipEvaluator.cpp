@@ -11,12 +11,11 @@ std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>
         std::make_pair(RelationshipManager::getEmptyEntityVector(),
                        RelationshipManager::getEmptyRelationshipVector());
 
-CFGRelationshipEvaluator::CFGRelationshipEvaluator(
-    cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
-    EntityManager *entityManager)
+CFGRelationshipEvaluator::CFGRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                   RelationshipCache *relationshipCache, EntityManager *entityManager)
     : cfg(cfg),
       relationshipStorage(relationshipStorage),
-      entityManager(entityManager) {}
+      entityManager(entityManager), relationshipCache(relationshipCache) {}
 
 auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     const EntityType &leftEntityType, const EntityType &rightEntityType)
@@ -47,7 +46,7 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   // new list
 
   auto *possibleCachedRelationships =
-      relationshipStorage->getCachedRelationshipsByTypes(
+      relationshipCache->getCachedRelationshipsByTypes(
           getRelationshipType(), leftEntityType, rightEntityType);
 
   if (possibleCachedRelationships != nullptr) {
@@ -87,7 +86,7 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   }
 
   auto *resultsPtr = results.get();
-  relationshipStorage->storeInRelationshipDoubleSynonymCache(
+  relationshipCache->storeInRelationshipDoubleSynonymCache(
       getRelationshipType(), leftEntityType, rightEntityType,
       std::move(results));
 
@@ -142,16 +141,16 @@ auto CFGRelationshipEvaluator::
                     : createNewRelationship(statement, relatedStatement);
 
       ownerResultRelationships->push_back(relationship.get());
-      relationshipStorage->storeInRelationshipOwnerCache(
+      relationshipCache->storeInRelationshipOwnerCache(
           std::move(relationship));
     }
 
     cachedStmtPair.first = relatedStatements.get();
     cachedStmtPair.second = ownerResultRelationships.get();
 
-    relationshipStorage->storeInEntityVectorOwnerCache(
+    relationshipCache->storeInEntityVectorOwnerCache(
         std::move(relatedStatements));
-    relationshipStorage->storeInRelationshipVectorOwnerCache(
+    relationshipCache->storeInRelationshipVectorOwnerCache(
         std::move(ownerResultRelationships));
   }
 
@@ -178,9 +177,9 @@ auto CFGRelationshipEvaluator::
   cachedPair.first = filteredStatements.get();
   cachedPair.second = filteredResultRelationships.get();
 
-  relationshipStorage->storeInEntityVectorOwnerCache(
+  relationshipCache->storeInEntityVectorOwnerCache(
       std::move(filteredStatements));
-  relationshipStorage->storeInRelationshipVectorOwnerCache(
+  relationshipCache->storeInRelationshipVectorOwnerCache(
       std::move(filteredResultRelationships));
 
   return cachedPair;
@@ -196,10 +195,10 @@ auto CFGRelationshipEvaluator::getCachedEntitiesAndRelationships(
     const EntityType &destinationEntityType)
     -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> & {
   return isReverse
-             ? relationshipStorage->getCachedResultsFromSynonymLiteralCache(
+             ? relationshipCache->getCachedResultsFromSynonymLiteralCache(
                    this->getRelationshipType(), destinationEntityType,
                    sourceEntity.getEntityKey())
-             : relationshipStorage->getCachedResultsFromLiteralSynonymCache(
+             : relationshipCache->getCachedResultsFromLiteralSynonymCache(
                    this->getRelationshipType(), sourceEntity.getEntityKey(),
                    destinationEntityType);
 }
@@ -221,8 +220,8 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
                       &rightEntity->getEntityKey());
 
   // checks if this relationship has already been evaluated
-  if (relationshipStorage->containedInRelationshipCache(relationshipKey)) {
-    return relationshipStorage->getCachedRelationship(relationshipKey);
+  if (relationshipCache->containedInRelationshipCache(relationshipKey)) {
+    return relationshipCache->getCachedRelationship(relationshipKey);
   }
 
   auto *leftStatement = dynamic_cast<Statement *>(leftEntity);
@@ -259,7 +258,7 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
   Relationship *resultRelationship = nullptr;
 
   for (auto *relationship : *relationshipsToCheck) {
-    relationshipStorage->storeInRelationshipMapCache(relationship);
+    relationshipCache->storeInRelationshipMapCache(relationship);
     if (relationship->getRightHandEntity()->equals(rightStatement)) {
       resultRelationship = relationship;
     }
@@ -292,6 +291,11 @@ auto CFGRelationshipEvaluator::getRelationshipStorage()
     -> RelationshipStorage * {
   return this->relationshipStorage;
 }
+
+auto CFGRelationshipEvaluator::getRelationshipCache() -> RelationshipCache * {
+    return this->relationshipCache;
+}
+
 
 auto CFGRelationshipEvaluator::getEntityManager() -> EntityManager * {
   return this->entityManager;

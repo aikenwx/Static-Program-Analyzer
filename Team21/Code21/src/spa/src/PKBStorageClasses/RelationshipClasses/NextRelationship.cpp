@@ -6,8 +6,10 @@
 #include "PKB/CFGRelationshipEvaluators/NextCFGEvaluator.h"
 
 
-auto NextRelationshipType::getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> {
-    return std::make_shared<NextCFGEvaluator>(cfg, relationshipStorage, entityManager);
+auto NextRelationshipType::getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                    RelationshipCache *relationshipCache,
+                                                    EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const {
+    return std::make_shared<NextCFGEvaluator>(cfg, relationshipStorage, relationshipCache, entityManager);
 }
 
 NextRelationship::NextRelationship(Statement* prevStatement, Statement* nextStatement) : Relationship(&NextRelationship::relationshipType, prevStatement, nextStatement) {

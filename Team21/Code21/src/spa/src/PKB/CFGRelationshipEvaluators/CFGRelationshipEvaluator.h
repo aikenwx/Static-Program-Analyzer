@@ -8,12 +8,14 @@
 #include "PKB/RelationshipStorage.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "sp/cfg/cfg.h"
+#include "PKB/RelationshipCache.h"
 
 class CFGRelationshipEvaluator {
  private:
   cfg::CFG* cfg;
   RelationshipStorage* relationshipStorage;
   EntityManager* entityManager;
+  RelationshipCache* relationshipCache;
 
   static std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>
       emptyEntityVectorRelationshipVectorPair;
@@ -42,10 +44,11 @@ class CFGRelationshipEvaluator {
 
   auto getEntityManager() -> EntityManager*;
 
+  auto getRelationshipCache() -> RelationshipCache *;
+
  public:
-  CFGRelationshipEvaluator(cfg::CFG* cfg,
-                           RelationshipStorage* relationshipStorage,
-                           EntityManager* entityManager);
+  CFGRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                           RelationshipCache *relationshipCache, EntityManager *entityManager);
 
   auto operator=(const CFGRelationshipEvaluator& cfgRelationshipEvaluator)
       -> CFGRelationshipEvaluator& = default;

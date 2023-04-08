@@ -9,9 +9,8 @@
 
 class AffectsRelatedCFGEvaluator : public CFGRelationshipEvaluator {
  public:
-  AffectsRelatedCFGEvaluator(cfg::CFG *cfg,
-                             RelationshipStorage *relationshipStorage,
-                             EntityManager *entityManager);
+  AffectsRelatedCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                             RelationshipCache *relationshipCache, EntityManager *entityManager);
   auto isValidEntityInput(Entity *entity) -> bool override;
 
   auto isValidEntityTypeInput(const EntityType &entityType) -> bool override;

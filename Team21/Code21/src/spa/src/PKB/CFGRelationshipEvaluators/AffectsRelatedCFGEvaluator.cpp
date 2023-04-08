@@ -6,10 +6,10 @@
 
 #include "PKB/RelationshipManager.h"
 
-AffectsRelatedCFGEvaluator::AffectsRelatedCFGEvaluator(
-    cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
-    EntityManager *entityManager)
-    : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
+AffectsRelatedCFGEvaluator::AffectsRelatedCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                       RelationshipCache *relationshipCache,
+                                                       EntityManager *entityManager)
+    : CFGRelationshipEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto AffectsRelatedCFGEvaluator::isValidEntityInput(Entity *entity) -> bool {
   return entity->getEntityType() == AssignStatement::getEntityTypeStatic();

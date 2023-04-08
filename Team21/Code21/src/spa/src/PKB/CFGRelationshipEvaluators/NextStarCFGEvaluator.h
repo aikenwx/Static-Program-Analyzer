@@ -8,7 +8,7 @@
 #include "NextRelatedCFGEvaluator.h"
 class NextStarCFGEvaluator : public NextRelatedCFGEvaluator {
  public:
-  NextStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+  NextStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage, RelationshipCache *relationshipCache,
                        EntityManager *entityManager);
 
   [[nodiscard]] auto getRelationshipType() const

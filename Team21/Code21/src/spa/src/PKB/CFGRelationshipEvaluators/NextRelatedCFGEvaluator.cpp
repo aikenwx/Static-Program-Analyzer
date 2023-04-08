@@ -4,10 +4,10 @@
 
 #include "NextRelatedCFGEvaluator.h"
 
-NextRelatedCFGEvaluator::NextRelatedCFGEvaluator(
-    cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
-    EntityManager *entityManager)
-    : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
+NextRelatedCFGEvaluator::NextRelatedCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                 RelationshipCache *relationshipCache,
+                                                 EntityManager *entityManager)
+    : CFGRelationshipEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto NextRelatedCFGEvaluator::shouldEvaluateRelationshipsByEntityTypesInReverse(
     std::vector<Entity *> *leftEntityVector,

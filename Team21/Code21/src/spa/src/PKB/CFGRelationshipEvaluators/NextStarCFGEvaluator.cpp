@@ -9,10 +9,10 @@
 #include "NextCFGEvaluator.h"
 #include "PKBStorageClasses/RelationshipClasses/NextStarRelationship.h"
 
-NextStarCFGEvaluator::NextStarCFGEvaluator(
-    cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-    EntityManager* entityManager)
-    : NextRelatedCFGEvaluator(cfg, relationshipStorage, entityManager) {}
+NextStarCFGEvaluator::NextStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                           RelationshipCache *relationshipCache,
+                                           EntityManager *entityManager)
+    : NextRelatedCFGEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto NextStarCFGEvaluator::getRelationshipType() const
     -> const RelationshipType& {
@@ -25,7 +25,7 @@ auto NextStarCFGEvaluator::getRelatedStatements(Statement* statement,
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
 
-  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(),
+  NextCFGEvaluator nextCFGEvaluator(getCFG(), getRelationshipStorage(), getRelationshipCache(),
                                     getEntityManager());
 
   auto results = std::make_unique<std::vector<Entity*>>();

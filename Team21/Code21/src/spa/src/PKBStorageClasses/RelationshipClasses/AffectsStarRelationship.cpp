@@ -22,6 +22,8 @@ auto AffectsStarRelationship::getRelationshipType() const
   return AffectsStarRelationship::getRelationshipTypeStatic();
 }
 
-auto AffectsStarRelationshipType::getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> {
-  return std::make_shared<AffectsStarCFGEvaluator>(cfg, relationshipStorage, entityManager);
+auto AffectsStarRelationshipType::getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                                           RelationshipCache *relationshipCache,
+                                                           EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const {
+  return std::make_shared<AffectsStarCFGEvaluator>(cfg, relationshipStorage, relationshipCache, entityManager);
 }

@@ -1,205 +1,210 @@
 1 - p calls q (forward) [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "seventh")
+Select BOOLEAN such that Calls*("fifth", "seventh")
 TRUE
 5000
 2 - p calls q (backward) [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "first")
+Select BOOLEAN such that Calls*("fifth", "first")
 TRUE
 5000
 3 - p does not call q [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "tenth")
+Select BOOLEAN such that Calls*("fifth", "tenth")
 FALSE
 5000
 4 - p does not call q which calls p [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "eleventh")
+Select BOOLEAN such that Calls*("fifth", "eleventh")
 FALSE
 5000
 5 - p does not call q which is not in program [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "hundredth")
+Select BOOLEAN such that Calls*("fifth", "hundredth")
 FALSE
 5000
-6 - p does not call q transitively [normal]
+6 - p calls q transitively [normal]
 procedure p, q;
-Select BOOLEAN such that Calls("fifth", "sixth")
-FALSE
+Select BOOLEAN such that Calls*("fifth", "sixth")
+TRUE
 5000
 7 - all procedures q called from p [normal]
 procedure p, q;
-Select q such that Calls("fifth", q)
-first, seventh
+Select q such that Calls*("fifth", q)
+first, sixth, seventh, eighth, ninth
 5000
 8 - p calls q (forward) [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "seventh")
+Select BOOLEAN such that Calls*("second", "seventh")
 TRUE
 5000
 9 - p calls q (backward) [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "first")
+Select BOOLEAN such that Calls*("second", "first")
 TRUE
 5000
 10 - p does not call q [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "tenth")
+Select BOOLEAN such that Calls*("second", "tenth")
 FALSE
 5000
 11 - p does not call q which calls p [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "eleventh")
+Select BOOLEAN such that Calls*("second", "eleventh")
 FALSE
 5000
 12 - p does not call q which is not in program [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "hundredth")
+Select BOOLEAN such that Calls*("second", "hundredth")
 FALSE
 5000
-13 - p does not call q transitively [if-then]
+13 - p calls q transitively [if-then]
 procedure p, q;
-Select BOOLEAN such that Calls("second", "sixth")
-FALSE
+Select BOOLEAN such that Calls*("second", "sixth")
+TRUE
 5000
 14 - all procedures q called from p [if-then]
 procedure p, q;
-Select q such that Calls("second", q)
-first, seventh
+Select q such that Calls*("second", q)
+first, sixth, seventh, eighth, ninth
 5000
 15 - p calls q (forward) [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "seventh")
+Select BOOLEAN such that Calls*("third", "seventh")
 TRUE
 5000
 16 - p calls q (backward) [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "first")
+Select BOOLEAN such that Calls*("third", "first")
 TRUE
 5000
 17 - p does not call q [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "tenth")
+Select BOOLEAN such that Calls*("third", "tenth")
 FALSE
 5000
 18 - p does not call q which calls p [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "eleventh")
+Select BOOLEAN such that Calls*("third", "eleventh")
 FALSE
 5000
 19 - p does not call q which is not in program [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "hundredth")
+Select BOOLEAN such that Calls*("third", "hundredth")
 FALSE
 5000
-20 - p does not call q transitively [if-else]
+20 - p calls q transitively [if-else]
 procedure p, q;
-Select BOOLEAN such that Calls("third", "sixth")
-FALSE
+Select BOOLEAN such that Calls*("third", "sixth")
+TRUE
 5000
 21 - all procedures q called from p [if-else]
 procedure p, q;
-Select q such that Calls("third", q)
-first, seventh
+Select q such that Calls*("third", q)
+first, sixth, seventh, eighth, ninth
 5000
 22 - p calls q (forward) [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "seventh")
+Select BOOLEAN such that Calls*("fourth", "seventh")
 TRUE
 5000
 23 - p calls q (backward) [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "first")
+Select BOOLEAN such that Calls*("fourth", "first")
 TRUE
 5000
 24 - p does not call q [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "tenth")
+Select BOOLEAN such that Calls*("fourth", "tenth")
 FALSE
 5000
 25 - p does not call q which calls p [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "eleventh")
+Select BOOLEAN such that Calls*("fourth", "eleventh")
 FALSE
 5000
 26 - p does not call q which is not in program [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "hundredth")
+Select BOOLEAN such that Calls*("fourth", "hundredth")
 FALSE
 5000
-27 - p does not call q transitively [while]
+27 - p calls q transitively [while]
 procedure p, q;
-Select BOOLEAN such that Calls("fourth", "sixth")
-FALSE
+Select BOOLEAN such that Calls*("fourth", "sixth")
+TRUE
 5000
 28 - all procedures q called from p [while]
 procedure p, q;
-Select q such that Calls("fourth", q)
-first, seventh
+Select q such that Calls*("fourth", q)
+first, sixth, seventh, eighth, ninth
 5000
 29 - all procedures p that calls q which is called
 procedure p, q;
-Select p such that Calls(p, "first")
-second, third, fourth, fifth
+Select p such that Calls*(p, "eighth")
+first, second, third, fourth, fifth, sixth, seventh, eleventh
 5000
 30 - all procedures p that calls q which is not called
 procedure p, q;
-Select p such that Calls(p, "tenth")
+Select p such that Calls*(p, "tenth")
 
 5000
 31 - all procedures q called by procedure not in program
 procedure p, q;
-Select q such that Calls("hundredth", q)
+Select q such that Calls*("hundredth", q)
 
 5000
 32 - all procedures q not called by p
 procedure p, q;
-Select q such that Calls("tenth", q)
+Select q such that Calls*("tenth", q)
 
 5000
 33 - all procedures p that calls
 procedure p, q;
-Select p such that Calls(p, _)
+Select p such that Calls*(p, _)
 first, second, third, fourth, fifth, sixth, seventh, eleventh
 5000
 34 - all procedures q that are called
 procedure p, q;
-Select q such that Calls(_, q)
+Select q such that Calls*(_, q)
 first, second, third, fourth, fifth, sixth, seventh, eighth, ninth
 5000
-35 - all procedures (literal, literal)
+35 - p does not call q if p and q are called by r
 procedure p, q;
-Select p such that Calls("sixth", "eighth")
+Select BOOLEAN such that Calls*("eighth", "ninth")
+FALSE
+5000
+36 - all procedures (literal, literal)
+procedure p, q;
+Select p such that Calls*("first", "eighth")
 first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh
 5000
-36 - all procedures (wildcard, literal)
+37 - all procedures (wildcard, literal)
 procedure p, q;
-Select p such that Calls(_, "eighth")
+Select p such that Calls*(_, "eighth")
 first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh
 5000
-37 - all procedures (literal, wildcard)
+38 - all procedures (literal, wildcard)
 procedure p, q;
-Select p such that Calls("sixth", _)
+Select p such that Calls*("sixth", _)
 first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh
 5000
-38 - all procedures (wildcard, wildcard)
+39 - all procedures (wildcard, wildcard)
 procedure p, q;
-Select p such that Calls(_, _)
+Select p such that Calls*(_, _)
 first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh
 5000
-39 - no procedures (literal, literal)
+40 - no procedures (literal, literal)
 procedure p, q;
-Select p such that Calls("tenth", "eleventh")
+Select p such that Calls*("tenth", "eleventh")
 
 5000
-40 - no procedures (wildcard, literal)
+41 - no procedures (wildcard, literal)
 procedure p, q;
-Select p such that Calls(_, "eleventh")
+Select p such that Calls*(_, "eleventh")
 
 5000
-41 - no procedures (literal, wildcard)
+42 - no procedures (literal, wildcard)
 procedure p, q;
-Select p such that Calls("tenth", _)
+Select p such that Calls*("tenth", _)
 
 5000

@@ -28,10 +28,10 @@ TRUE
 Select BOOLEAN such that Affects(2, 5)
 TRUE
 5000
-7 - s1 and s2 are the same statement, which uses and modifies v
+7 - Affects* - s1 and s2 are the same statement, and are not in a while loop -- negative
 
-Select BOOLEAN such that Affects(9, 9)
-TRUE
+Select BOOLEAN such that Affects*(9, 9)
+FALSE
 5000
 8 - Affects* - Affects(s1, sX), Affects(sX, sY), and Affects(sY, s2) hold
 

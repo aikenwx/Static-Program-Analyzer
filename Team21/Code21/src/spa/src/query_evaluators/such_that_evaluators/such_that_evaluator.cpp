@@ -95,10 +95,10 @@ class ClauseVisitor {
   const EntityType &left_;
   const EntityType &right_;
 
-  auto ExtractEntities(const std::vector<::Relationship *> &relationships,
-                       bool left,
-                       bool right,
-                       bool require_equal = false) -> std::vector<std::vector<Entity *>> {
+  static auto ExtractEntities(const std::vector<::Relationship *> &relationships,
+                              bool left,
+                              bool right,
+                              bool require_equal = false) -> std::vector<std::vector<Entity *>> {
     std::vector<std::vector<Entity *>> rows;
     rows.reserve(relationships.size());
     for (const auto &relationship : relationships) {

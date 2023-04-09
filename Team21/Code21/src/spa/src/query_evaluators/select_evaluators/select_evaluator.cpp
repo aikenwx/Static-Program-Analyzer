@@ -28,7 +28,7 @@ class SelectVisitor {
   }
 
  private:
-  bool GetBooleanValue(const ClauseResults &result) {
+  static auto GetBooleanValue(const ClauseResults &result) -> bool {
     if (std::holds_alternative<bool>(result)) {
       return std::get<bool>(result);
     }

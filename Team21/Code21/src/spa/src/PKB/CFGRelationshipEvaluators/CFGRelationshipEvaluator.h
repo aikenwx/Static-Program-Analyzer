@@ -52,7 +52,7 @@ class CFGRelationshipEvaluator {
 
   virtual auto shouldSortForDoubleEnityTypeEvaluation() -> bool;
 
-  auto solveTransitiveRelationship(Statement* statement, bool isReverse, CFGRelationshipEvaluator& baseEvaluator) -> std::unique_ptr<std::vector<Entity*>>;
+  auto solveTransitiveRelationship(Statement* sourceStatement, bool isReverse, CFGRelationshipEvaluator& baseEvaluator) -> std::unique_ptr<std::vector<Entity*>>;
 
  public:
   CFGRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,

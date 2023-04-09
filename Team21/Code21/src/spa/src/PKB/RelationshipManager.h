@@ -33,7 +33,7 @@ class RelationshipManager {
   static std::vector<Entity *> emptyEntityVector;
 
  public:
-   RelationshipManager(EntityManager *entityManager);
+   explicit RelationshipManager(EntityManager *entityManager);
 
   static auto getEmptyEntityVector() -> std::vector<Entity *> *;
 

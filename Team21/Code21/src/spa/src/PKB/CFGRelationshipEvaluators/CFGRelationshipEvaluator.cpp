@@ -304,7 +304,7 @@ auto CFGRelationshipEvaluator::getEntityManager() -> EntityManager * {
 }
 
 auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStatement,
-                                                           bool isReverse, CFGRelationshipEvaluator &cfgRelationshipEvaluator)
+                                                           bool isReverse, CFGRelationshipEvaluator &baseEvaluator)
     -> std::unique_ptr<std::vector<Entity *>> {
   auto visitedStatementNumbers =
       std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
@@ -317,14 +317,14 @@ auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStat
   // push all statements from results into stack
 
   auto *directRelations =
-      cfgRelationshipEvaluator
+      baseEvaluator
           .getCachedEntitiesAndRelationships(isReverse, *sourceStatement,
                                              Statement::getEntityTypeStatic())
           .first;
 
   if (directRelations == nullptr) {
     directRelations =
-        cfgRelationshipEvaluator
+        baseEvaluator
             .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                 Statement::getEntityTypeStatic(), sourceStatement, isReverse)
             .first;
@@ -364,14 +364,14 @@ auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStat
     }
 
     auto *neighbours =
-        cfgRelationshipEvaluator
+        baseEvaluator
             .getCachedEntitiesAndRelationships(isReverse, *nextToVisitStmt,
                                                Statement::getEntityTypeStatic())
             .first;
 
     if (neighbours == nullptr) {
       neighbours =
-          cfgRelationshipEvaluator
+          baseEvaluator
               .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                   Statement::getEntityTypeStatic(), nextToVisitStmt, isReverse)
               .first;

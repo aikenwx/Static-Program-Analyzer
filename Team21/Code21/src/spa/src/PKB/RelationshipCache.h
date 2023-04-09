@@ -8,7 +8,7 @@
 #include "RelationshipStorage.h"
 struct CacheResult {
   CacheResult();
-  CacheResult(std::vector<Entity *> *first, std::vector<Relationship *> *second, bool areResultsIndividuallyCached);
+  CacheResult(std::vector<Entity *> *entityVector, std::vector<Relationship *> *relationshipVector, bool areResultsIndividuallyCached);
 
   std::vector<Entity *> *first;
   std::vector<Relationship *> *second;

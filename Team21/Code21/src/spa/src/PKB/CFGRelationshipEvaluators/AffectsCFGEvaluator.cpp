@@ -142,7 +142,7 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
     visitedStatementNumbers[nextToVisit] = true;
 
-    auto* nextToVisitStmt = getEntityManager()->getStmtByNumber(nextToVisit);
+    auto* nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
 
     if (
         visitInForwardsEvaluation(

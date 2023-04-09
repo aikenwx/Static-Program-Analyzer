@@ -29,8 +29,8 @@ TEST_CASE("QueryFacade can retrieve read statement") {
 
   entityManager->storeEntity(std::make_unique<ReadStatement>(1));
 
-  std::vector<ReadStatement *> *readStatements =
-      queryFacade->getAllReadStatements();
+  std::vector<Entity *> *readStatements =
+          queryFacade->getEntitiesByType(ReadStatement::getEntityTypeStatic());
 
   REQUIRE(readStatements->size() == 1);
   REQUIRE(readStatements->at(0)->equals(readStatement.get()));
@@ -49,8 +49,8 @@ TEST_CASE("QueryFacade can retrieve print statement") {
       std::make_shared<PrintStatement>(1);
   entityManager->storeEntity(std::make_unique<PrintStatement>(1));
 
-  std::vector<PrintStatement *> *printStatements =
-      queryFacade->getAllPrintStatements();
+  std::vector<Entity *> *printStatements =
+          queryFacade->getEntitiesByType(PrintStatement::getEntityTypeStatic());
 
   REQUIRE(printStatements->size() == 1);
   REQUIRE(printStatements->at(0)->equals(printStatement.get()));
@@ -65,12 +65,11 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
       entityManager.get(), relationshipManager.get(), patternManager.get(),
       cfgManager.get());
 
-  std::shared_ptr<AssignStatement> assignStatement =
+  std::shared_ptr<Entity> assignStatement =
       std::make_shared<AssignStatement>(1);
   entityManager->storeEntity(std::make_unique<AssignStatement>(1));
 
-  std::vector<AssignStatement *> *assignStatements =
-      queryFacade->getAllAssignStatements();
+  auto *assignStatements = queryFacade->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 
   REQUIRE(assignStatements->size() == 1);
   REQUIRE(assignStatements->at(0)->equals(assignStatement.get()));
@@ -89,8 +88,8 @@ TEST_CASE("QueryFacade can retrieve call statement") {
       std::make_shared<CallStatement>(1);
   entityManager->storeEntity(std::make_unique<CallStatement>(1));
 
-  std::vector<CallStatement *> *callStatements =
-      queryFacade->getAllCallStatements();
+  std::vector<Entity *> *callStatements =
+          queryFacade->getEntitiesByType(CallStatement::getEntityTypeStatic());
 
   REQUIRE(callStatements->size() == 1);
   REQUIRE(callStatements->at(0)->equals(callStatement.get()));
@@ -110,8 +109,8 @@ TEST_CASE("QueryFacade can retrieve while statement") {
 
   entityManager->storeEntity(std::make_unique<WhileStatement>(1));
 
-  std::vector<WhileStatement *> *whileStatements =
-      queryFacade->getAllWhileStatements();
+  auto *whileStatements =
+      queryFacade->getEntitiesByType(WhileStatement::getEntityTypeStatic());
 
   REQUIRE(whileStatements->size() == 1);
   REQUIRE(whileStatements->at(0)->equals(whileStatement.get()));
@@ -129,7 +128,7 @@ TEST_CASE("QueryFacade can retrieve if statement") {
   std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
   entityManager->storeEntity(std::make_unique<IfStatement>(1));
 
-  std::vector<IfStatement *> *ifStatements = queryFacade->getAllIfStatements();
+  auto *ifStatements = queryFacade->getEntitiesByType(IfStatement::getEntityTypeStatic());
 
   REQUIRE(ifStatements->size() == 1);
   REQUIRE(ifStatements->at(0)->equals(ifStatement.get()));
@@ -149,7 +148,7 @@ TEST_CASE("QueryFacade can retrieve procedure") {
   entityManager->storeEntity(
       std::make_unique<Procedure>(std::make_unique<std::string>("procedure")));
 
-  std::vector<Procedure *> *procedures = queryFacade->getAllProcedures();
+  std::vector<Entity *> *procedures = queryFacade->getEntitiesByType(Procedure::getEntityTypeStatic());
   REQUIRE(procedures->size() == 1);
   REQUIRE(procedures->at(0)->equals(procedure.get()));
 }
@@ -168,7 +167,7 @@ TEST_CASE("QueryFacade can retrieve variable") {
   entityManager->storeEntity(
       std::make_unique<Variable>(std::make_unique<std::string>("variable")));
 
-  std::vector<Variable *> *variables = queryFacade->getAllVariables();
+  std::vector<Entity *> *variables = queryFacade->getEntitiesByType(Variable::getEntityTypeStatic());
   REQUIRE(variables->size() == 1);
   REQUIRE(variables->at(0)->equals(variable.get()));
 }
@@ -185,7 +184,7 @@ TEST_CASE("QueryFacade can retrieve constant") {
   std::shared_ptr<Constant> constant = std::make_shared<Constant>(1);
   entityManager->storeEntity(std::make_unique<Constant>(1));
 
-  std::vector<Constant *> *constants = queryFacade->getAllConstants();
+  std::vector<Entity *> *constants = queryFacade->getEntitiesByType(Constant::getEntityTypeStatic());
   REQUIRE(constants->size() == 1);
   REQUIRE(constants->at(0)->equals(constant.get()));
 }
@@ -214,7 +213,7 @@ TEST_CASE("QueryFace can retrieve all statements") {
   entityManager->storeEntity(
       std::make_unique<Variable>(std::make_unique<std::string>("variable")));
 
-  std::vector<Statement *> *statements = queryFacade->getAllStatements();
+  std::vector<Entity *> *statements = queryFacade->getEntitiesByType(Statement::getEntityTypeStatic());
   REQUIRE(statements->size() == 3);
   REQUIRE(Statement::isStatement(statements->at(0)));
   REQUIRE(Statement::isStatement(statements->at(1)));
@@ -242,13 +241,13 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     relationshipManager->storeRelationship(followsRelationship2);
 
 //     std::vector<FollowsRelationship *> *followsRelationships =
-//     queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(IF_STATEMENT,
 //     WHILE_STATEMENT); REQUIRE(followsRelationships->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(followsRelationships->at(0),
 //     followsRelationship.get()));
 
 //     std::vector<FollowsRelationship *> *followsRelationships2 =
-//     queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(WHILE_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(WHILE_STATEMENT,
 //     READ_STATEMENT); REQUIRE(followsRelationships2->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(followsRelationships2->at(0),
 //     followsRelationship2.get()));
@@ -283,13 +282,13 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     relationshipManager->storeRelationship(parentRelationship2);
 
 //     std::vector<ParentRelationship *> *parentRelationships =
-//     queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(IF_STATEMENT,
 //     WHILE_STATEMENT); REQUIRE(parentRelationships->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(parentRelationships->at(0),
 //     parentRelationship.get()));
 
 //     std::vector<ParentRelationship *> *parentRelationships2 =
-//     queryFacade->getParentRelationshipsByLeftAndRightEntityTypes(WHILE_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(WHILE_STATEMENT,
 //     READ_STATEMENT); REQUIRE(parentRelationships2->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(parentRelationships2->at(0),
 //     parentRelationship2.get()));
@@ -403,13 +402,13 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     relationshipManager->storeRelationship(modifiesRelationship2);
 
 //     std::vector<ModifiesRelationship *> *modifiesRelationships =
-//     queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(IF_STATEMENT,
 //     VARIABLE); REQUIRE(modifiesRelationships->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(modifiesRelationships->at(0),
 //     modifiesRelationship.get()));
 
 //     std::vector<ModifiesRelationship *> *modifiesRelationships2 =
-//     queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(WHILE_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(WHILE_STATEMENT,
 //     VARIABLE); REQUIRE(modifiesRelationships2->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(modifiesRelationships2->at(0),
 //     modifiesRelationship2.get()));
@@ -443,13 +442,13 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     relationshipManager->storeRelationship(usesRelationship2);
 
 //     std::vector<UsesRelationship *> *usesRelationships =
-//     queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(IF_STATEMENT,
 //     VARIABLE); REQUIRE(usesRelationships->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(usesRelationships->at(0),
 //     usesRelationship.get()));
 
 //     std::vector<UsesRelationship *> *usesRelationships2 =
-//     queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(WHILE_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(WHILE_STATEMENT,
 //     VARIABLE); REQUIRE(usesRelationships2->size() == 1);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(usesRelationships2->at(0),
 //     usesRelationship2.get()));
@@ -471,11 +470,11 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //    relationshipManagecfgManagerr, );
 
 //     std::vector<ModifiesRelationship *> *modifiesRelationships =
-//     queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(IF_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(IF_STATEMENT,
 //     VARIABLE); REQUIRE(modifiesRelationships->size() == 0);
 
 //     std::vector<ModifiesRelationship *> *modifiesRelationships2 =
-//     queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(WHILE_STATEMENT,
+//     queryFacade->getRelationshipsByTypes(WHILE_STATEMENT,
 //     VARIABLE); REQUIRE(modifiesRelationships2->size() == 0);
 
 //     delete queryFacade;
@@ -506,7 +505,7 @@ TEST_CASE("QueryFace can retrieve all statements") {
 //     relationshipManager->storeRelationship(followsRelationship2);
 
 //     std::vector<FollowsRelationship *> *followsRelationships =
-//     queryFacade->getFollowsRelationshipsByLeftAndRightEntityTypes(STATEMENT,
+//     queryFacade->getRelationshipsByTypes(STATEMENT,
 //     STATEMENT);
 //     REQUIRE(PKBtestHelpers::relationshipEqualsRelationship(followsRelationships->at(0),
 //     followsRelationship.get()));

@@ -54,7 +54,7 @@ class EntityManager {
 
   auto getNumberOfStatements() const -> int;
 
-  auto getStmtByNumber(int stmtNumber) -> Statement*;
+  auto getStatementByNumber(int stmtNumber) -> Statement*;
 
  private:
   void storeInEntityTypeStore(Entity* entity);

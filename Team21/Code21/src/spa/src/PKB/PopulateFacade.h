@@ -49,8 +49,7 @@ class PopulateFacade {
     void storeAssignStatementPostfixExpression(int statementNumber, const std::string& postfixExpression);
     void storeCallStatementProcedureName(int statementNumber, const std::string& procedureName);
 
-    void storeWhileStatementConditionVariable(int statementNumber, std::string variableName);
-    void storeIfStatementConditionVariable(int statementNumber, std::string variableName);
+    void storeUsesInParentConditionRelationship(int statementNumber, std::string variableName);
 
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 

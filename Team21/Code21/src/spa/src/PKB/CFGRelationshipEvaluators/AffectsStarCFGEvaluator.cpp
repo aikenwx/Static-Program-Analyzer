@@ -63,7 +63,7 @@ auto AffectsStarCFGEvaluator::getRelatedStatements(Statement* sourceStatement,
     }
 
     visitedStatementNumbers.at(nextToVisit) = true;
-    auto* nextToVisitStmt = getEntityManager()->getStmtByNumber(nextToVisit);
+    auto* nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
     results->push_back(nextToVisitStmt);
 
     auto* possibleCachedResults =

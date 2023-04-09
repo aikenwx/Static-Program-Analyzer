@@ -35,67 +35,67 @@ class ClauseVisitor {
 
   auto operator()(StatementNumber from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_, left_, from, right_);
+            pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_, left_, from, right_);
     return !(entities->empty());
   }
 
   auto operator()(QuotedIdentifier from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
-    auto *entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
-                                                                                left_,
-                                                                                from.getQuotedId(),
-                                                                                right_);
+    auto *entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
+                                                                   left_,
+                                                                   from.getQuotedId(),
+                                                                   right_);
     return !(entities->empty());
   }
 
   auto operator()([[maybe_unused]] Underscore underscore, StatementNumber dest) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_, left_, right_, dest);
+            pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_, left_, right_, dest);
     return !(entities->empty());
   }
 
   auto operator()([[maybe_unused]] Underscore underscore, QuotedIdentifier dest) -> ClauseResult {
-    auto *entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
-                                                                                left_,
-                                                                                right_,
-                                                                                dest.getQuotedId());
+    auto *entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
+                                                                   left_,
+                                                                   right_,
+                                                                   dest.getQuotedId());
     return !(entities->empty());
   }
 
   auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
-                                                                              left_,
-                                                                              src,
+        entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
+                                                                 left_,
+                                                                 src,
 
-                                                                              right_);
+                                                                 right_);
     return SynonymTable(std::move(dest), *entities);
   }
 
   auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
-                                                                              left_,
-                                                                              right_,
-                                                                              dest);
+        entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
+                                                                 left_,
+                                                                 right_,
+                                                                 dest);
 
     return SynonymTable(std::move(from), *entities);
   }
 
   auto operator()(QuotedIdentifier src, Synonym dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
-                                                                              left_,
-                                                                              src.getQuotedId(),
-                                                                              right_);
+        entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
+                                                                 left_,
+                                                                 src.getQuotedId(),
+                                                                 right_);
     return SynonymTable(std::move(dest), *entities);
   }
 
   auto operator()(Synonym from, QuotedIdentifier dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
-                                                                              left_,
-                                                                              right_,
-                                                                              dest.getQuotedId());
+        entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
+                                                                 left_,
+                                                                 right_,
+                                                                 dest.getQuotedId());
 
     return SynonymTable(std::move(from), *entities);
   }

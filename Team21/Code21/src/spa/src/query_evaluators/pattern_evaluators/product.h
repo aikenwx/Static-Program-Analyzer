@@ -11,5 +11,5 @@
 
 namespace qps {
 
-using Product = std::variant<IfStatement *, WhileStatement *, UsesRelationship *, ModifiesRelationship *>;
+using Product = std::variant<Relationship *, Entity *>;
 }

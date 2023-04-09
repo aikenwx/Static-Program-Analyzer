@@ -116,7 +116,7 @@ auto EntityManager::getNumberOfStatements() const -> int {
   return this->numberOfStatements;
 }
 
-auto EntityManager::getStmtByNumber(int stmtNumber) -> Statement * {
+auto EntityManager::getStatementByNumber(int stmtNumber) -> Statement * {
   return fastAccessStmts.at(Statement::getEntityTypeStatic().getKey())
       .at(stmtNumber);
 }

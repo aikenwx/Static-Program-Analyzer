@@ -28,23 +28,14 @@ auto PatternEvaluator::ConstructResult(const std::vector<Product> &statements) -
 
   SynonymTable table(syns);
   for (auto prod : statements) {
-    if (std::holds_alternative<ModifiesRelationship *>(prod)) {
-      auto *mod = std::get<ModifiesRelationship *>(prod);
-      SynonymTable::Row row = {mod->getLeftHandEntity()};
-      if (lhs_syn) { row.push_back(mod->getRightHandEntity()); }
+    if (std::holds_alternative<Relationship *>(prod)) {
+      auto *relationship = std::get<Relationship *>(prod);
+      SynonymTable::Row row = {relationship->getLeftHandEntity()};
+      if (lhs_syn) { row.push_back(relationship->getRightHandEntity()); }
       table.AddRow(row);
-    } else if (std::holds_alternative<UsesRelationship *>(prod)) {
-      auto *use = std::get<UsesRelationship *>(prod);
-      SynonymTable::Row row = {use->getLeftHandEntity()};
-      if (lhs_syn) { row.push_back(use->getRightHandEntity()); }
-      table.AddRow(row);
-    } else if (std::holds_alternative<IfStatement *>(prod)) {
-      auto *ifs = std::get<IfStatement *>(prod);
-      SynonymTable::Row row = {ifs};
-      table.AddRow(row);
-    } else if (std::holds_alternative<WhileStatement *>(prod)) {
-      auto *whiles = std::get<WhileStatement *>(prod);
-      SynonymTable::Row row = {whiles};
+    } else if (std::holds_alternative<Entity *>(prod)) {
+      auto *entity = std::get<Entity *>(prod);
+      SynonymTable::Row row = {entity};
       table.AddRow(row);
     }
   }

@@ -58,7 +58,7 @@ auto NextCFGEvaluator::getRelatedStatements(Statement *statement,
 
     for (auto stmtNumber : *relatedStmtNumbers) {
         relatedStatements->push_back(
-                getEntityManager()->getStmtByNumber(stmtNumber));
+                getEntityManager()->getStatementByNumber(stmtNumber));
     }
 
     return relatedStatements;

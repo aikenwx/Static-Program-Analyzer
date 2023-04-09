@@ -12,12 +12,9 @@ class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
  private:
   Entity* modifiedEntityFromSource;
 
-  std::shared_ptr<std::unordered_map<std::string, Entity*>>
-      currentUnusedVariables;
-
  public:
-  AffectsCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage, RelationshipCache *relationshipCache,
-                      EntityManager *entityManager);
+  AffectsCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, RelationshipCache* relationshipCache,
+                      EntityManager* entityManager);
 
   [[nodiscard]] auto getRelationshipType() const
       -> const RelationshipType& override;
@@ -29,17 +26,16 @@ class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
       -> std::unique_ptr<std::vector<Entity*>> override;
 
  private:
+  auto getRelatedStatementsInForwardsEvaluation(Statement* sourceStatement)
+      -> std::unique_ptr<std::vector<Entity*>>;
+
+  auto getRelatedStatementsInReverseEvaluation(Statement* sourceStatement)
+      -> std::unique_ptr<std::vector<Entity*>>;
+
   void initializeForwardsEvaluation(Statement* sourceStatement);
 
-  void initializeReverseEvaluation(Statement* sourceStatement);
-
-  // returns true if evaluation results in early termination of path traversal
   auto visitInForwardsEvaluation(Statement* statement,
                                  std::vector<Statement*>* partialResults)
-      -> bool;
-
-  auto visitInReverseEvaluation(Statement* visitedStatement,
-                                std::vector<Statement*>* partialResults)
       -> bool;
 };
 

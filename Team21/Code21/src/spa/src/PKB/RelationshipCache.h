@@ -6,6 +6,15 @@
 #define SPA_RELATIONSHIPCACHE_H
 
 #include "RelationshipStorage.h"
+struct CacheResult {
+    CacheResult();
+    CacheResult(std::vector<Entity *> *first, std::vector<Relationship *> *second, bool areResultsIndividuallyCached);
+    
+    std::vector<Entity *> * first;
+    std::vector<Relationship *> * second;
+    bool areResultsIndividuallyCached;
+};
+
 
 class RelationshipCache {
  private:
@@ -24,18 +33,24 @@ class RelationshipCache {
 
   std::vector<std::unique_ptr<std::vector<Entity *>>> entityVectorCacheOwner;
 
-  // relationshipType -> stmttype -> stmt -> vector
-  std::vector<std::vector<std::vector<
-      std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>>>>
+  // relationshipType -> stmttype -> stmt
+  std::vector<std::vector<std::vector<CacheResult>>>
       relationshipLiteralSynonymCache;
 
-  // relationshipType -> stmttype -> stmt -> vector
-  std::vector<std::vector<std::vector<
-      std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>>>>
+  // relationshipType -> stmttype -> stmt
+  std::vector<std::vector<std::vector<CacheResult>>>
       relationshipSynonymLiteralCache;
 
+  // relationshipType -> stmt -> stmt -> relationship
+
+  std::vector<std::vector<std::vector<Relationship *>>>
+      relationshipMapCache;
+
+  //
+
+
  public:
-  RelationshipCache(EntityManager *entityManager);
+  explicit RelationshipCache(EntityManager *entityManager);
 
   void storeInRelationshipOwnerCache(
       std::unique_ptr<Relationship> relationship);
@@ -56,17 +71,16 @@ class RelationshipCache {
 
   auto getCachedRelationship(RelationshipKey &key) -> Relationship *;
 
-  auto containedInRelationshipCache(RelationshipKey &key) -> bool;
 
   auto getCachedResultsFromSynonymLiteralCache(
       const RelationshipType &relationshipType,
       const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> &;
+      -> CacheResult &;
 
   auto getCachedResultsFromLiteralSynonymCache(
       const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
       const EntityType &rightHandEntityType)
-      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> &;
+      -> CacheResult &;
 
   auto getCachedRelationshipsByTypes(const RelationshipType &relationshipType,
                                      const EntityType &leftHandEntityType,
@@ -79,12 +93,11 @@ class RelationshipCache {
 
  private:
   auto getCachedEntitiesAndRelationships(
-      std::vector<std::vector<std::vector<
-          std::pair<std::vector<Entity *> *, std::vector<Relationship *> *>>>>
+          std::vector<std::vector<std::vector<CacheResult>>>
           &store,
-      const RelationshipType &relationshipType,
-      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
-      -> std::pair<std::vector<Entity *> *, std::vector<Relationship *> *> &;
+          const RelationshipType &relationshipType,
+          const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      -> CacheResult &;
 };
 
 #endif  // SPA_RELATIONSHIPCACHE_H

@@ -2030,6 +2030,61 @@ procedure funcY {
   REQUIRE(eval == std::unordered_set<std::string>{"7", "12"});
 }
 
+TEST_CASE("Test reverse affects evaluation") {
+  auto pkb = PKB();
+
+  const auto *program = R"(
+procedure hello {
+            read a;
+            read b;
+            read c;
+            read d;
+    }
+    procedure main {
+            a = x + y;
+            b = a + y;
+            c = 1;
+            while (x == 1) {
+                z = b + a;
+                x = a;
+                if (x == 2) then {
+                            c = d + a;
+                    } else {
+                    d = d + a;
+                    while (x == 1) {
+                        print x;
+                        print y;
+                        while (y == 2) {
+                            c = a + x;
+                            if (x == 2) then {
+                                        d = c;
+                                } else {
+                                a = 2 * a + x;
+                                b = 2 * b;
+                            }
+                        }
+                    }
+                    c = 2 * a;
+                    a = b + a;
+                    x = a;
+                }
+                call hello;
+                y = z + x + a;
+            }
+            c = a;
+            a = 2 * a;
+            d = b;
+    }
+)";
+
+  sp::SP::process(program, &pkb);
+  auto eval = qps_test::RunQuery(
+      "assign a; stmt s;\n"
+      "Select s such that Affects(s,27)",
+      *pkb.getQueryFacade());
+  REQUIRE(eval == std::unordered_set<std::string>{"9", "10", "25"});
+}
+
 }  // namespace qps
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

@@ -5,10 +5,10 @@
 #ifndef SPA_CFGRELATIONSHIPEVALUATOR_H
 #define SPA_CFGRELATIONSHIPEVALUATOR_H
 
+#include "PKB/RelationshipCache.h"
 #include "PKB/RelationshipStorage.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 #include "sp/cfg/cfg.h"
-#include "PKB/RelationshipCache.h"
 
 class CFGRelationshipEvaluator {
  private:
@@ -17,8 +17,7 @@ class CFGRelationshipEvaluator {
   EntityManager* entityManager;
   RelationshipCache* relationshipCache;
 
-  static std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>
-      emptyEntityVectorRelationshipVectorPair;
+  static CacheResult emptyCacheResult;
 
  protected:
   virtual auto isValidEntityInput(Entity* entity) -> bool;
@@ -44,11 +43,11 @@ class CFGRelationshipEvaluator {
 
   auto getEntityManager() -> EntityManager*;
 
-  auto getRelationshipCache() -> RelationshipCache *;
+  auto getRelationshipCache() -> RelationshipCache*;
 
  public:
-  CFGRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
-                           RelationshipCache *relationshipCache, EntityManager *entityManager);
+  CFGRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
+                           RelationshipCache* relationshipCache, EntityManager* entityManager);
 
   auto operator=(const CFGRelationshipEvaluator& cfgRelationshipEvaluator)
       -> CFGRelationshipEvaluator& = default;
@@ -70,22 +69,13 @@ class CFGRelationshipEvaluator {
   std::vector<Relationship*>* evaluateAndCacheRelationshipsByEntityTypes(
       const EntityType& leftEntityType, const EntityType& rightEntityType);
 
-  std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>&
-  evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+  CacheResult& evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
       const EntityType& givenEntityType, Entity* entity, bool isReverse);
-
-  //   void populateCache(bool isReverse,
-  //                      const std::shared_ptr<Relationship>& relationship);
-
-  //   void initializeCacheGivenEntityAndEntityType(bool isReverse, Entity&
-  //   statement,
-  //                                                const EntityType&
-  //                                                entityType);
 
   auto getCachedEntitiesAndRelationships(
       bool isReverse, Entity& sourceEntity,
       const EntityType& destinationEntityType)
-      -> std::pair<std::vector<Entity*>*, std::vector<Relationship*>*>&;
+      -> CacheResult&;
 
  protected:
   virtual auto shouldEvaluateRelationshipsByEntityTypesInReverse(

@@ -1,0 +1,30 @@
+1 - s2 is right after s1
+
+Select BOOLEAN such that Affects(3, 4)
+TRUE
+5000
+2 - s1 is after s2 -- negative
+
+Select BOOLEAN such that Affects(4, 3)
+FALSE
+5000
+3 - s1 and s2 are separated with an unrelated assign statement with const value
+
+Select BOOLEAN such that Affects(1, 3)
+TRUE
+5000
+4 - s1 and s2 are separated by another assignment to v -- negative
+
+Select BOOLEAN such that Affects(1, 6)
+FALSE
+5000
+5 - s1 and s2 are separated with an unrelated assignment statement (that uses another var)
+
+Select BOOLEAN such that Affects(4, 6)
+TRUE
+5000
+6 - s1 and s2 are separated with multiple unrelated assignment statements (that use vars)
+
+Select BOOLEAN such that Affects(2, 5)
+TRUE
+5000

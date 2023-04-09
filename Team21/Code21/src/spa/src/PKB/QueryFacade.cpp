@@ -12,13 +12,9 @@
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "PKBStorageClasses/RelationshipClasses/Relationship.h"
 
-QueryFacade::QueryFacade(EntityManager *entityManager,
-                         RelationshipManager *relationshipManager,
-                         PatternManager *patternManager, CFGStorage *cfgManager)
+QueryFacade::QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager)
     : entityManager(entityManager),
-      relationshipManager(relationshipManager),
-      cfgManager(cfgManager),
-      patternManager(patternManager) {}
+      relationshipManager(relationshipManager) {}
 
 auto QueryFacade::getEntity(const EntityType &entityType, int entityValue)
     -> Entity * {

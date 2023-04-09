@@ -8,21 +8,15 @@
 TEST_CASE("QueryFacade Instantiates") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 }
 
 TEST_CASE("QueryFacade can retrieve read statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<ReadStatement> readStatement =
       std::make_shared<ReadStatement>(1);
@@ -39,11 +33,8 @@ TEST_CASE("QueryFacade can retrieve read statement") {
 TEST_CASE("QueryFacade can retrieve print statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<PrintStatement> printStatement =
       std::make_shared<PrintStatement>(1);
@@ -59,11 +50,8 @@ TEST_CASE("QueryFacade can retrieve print statement") {
 TEST_CASE("QueryFacade can retrieve assign statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<Entity> assignStatement =
       std::make_shared<AssignStatement>(1);
@@ -78,11 +66,8 @@ TEST_CASE("QueryFacade can retrieve assign statement") {
 TEST_CASE("QueryFacade can retrieve call statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<CallStatement> callStatement =
       std::make_shared<CallStatement>(1);
@@ -98,11 +83,8 @@ TEST_CASE("QueryFacade can retrieve call statement") {
 TEST_CASE("QueryFacade can retrieve while statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<WhileStatement> whileStatement =
       std::make_shared<WhileStatement>(1);
@@ -119,11 +101,8 @@ TEST_CASE("QueryFacade can retrieve while statement") {
 TEST_CASE("QueryFacade can retrieve if statement") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(1);
   entityManager->storeEntity(std::make_unique<IfStatement>(1));
@@ -137,11 +116,8 @@ TEST_CASE("QueryFacade can retrieve if statement") {
 TEST_CASE("QueryFacade can retrieve procedure") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<Procedure> procedure =
       std::make_unique<Procedure>(std::make_unique<std::string>("procedure"));
@@ -156,11 +132,8 @@ TEST_CASE("QueryFacade can retrieve procedure") {
 TEST_CASE("QueryFacade can retrieve variable") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<Variable> variable =
       std::make_unique<Variable>(std::make_unique<std::string>("variable"));
@@ -175,11 +148,8 @@ TEST_CASE("QueryFacade can retrieve variable") {
 TEST_CASE("QueryFacade can retrieve constant") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<Constant> constant = std::make_shared<Constant>(1);
   entityManager->storeEntity(std::make_unique<Constant>(1));
@@ -192,11 +162,8 @@ TEST_CASE("QueryFacade can retrieve constant") {
 TEST_CASE("QueryFace can retrieve all statements") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager = std::make_shared<RelationshipManager>(entityManager.get());
-  auto cfgManager = std::make_shared<CFGStorage>();
-  auto patternManager = std::make_shared<PatternManager>();
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
   std::shared_ptr<IfStatement> ifStatement = std::make_shared<IfStatement>(5);
   std::shared_ptr<WhileStatement> whileStatement =

@@ -8,9 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKB/CFGStorage.h"
 #include "PKB/EntityManager.h"
-#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -38,11 +36,9 @@ class QueryFacade {
  private:
   EntityManager* entityManager;
   RelationshipManager* relationshipManager;
-  CFGStorage* cfgManager;
-  PatternManager* patternManager;
 
  public:
-  QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGStorage* cfgManager);
+  QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager);
 
   auto getEntity(const EntityType& entityType, int entityValue) -> Entity*;
 

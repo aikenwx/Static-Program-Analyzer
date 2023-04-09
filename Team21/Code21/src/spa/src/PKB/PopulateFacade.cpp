@@ -30,14 +30,9 @@
 #include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesInParentConditionRelationship.h"
 
-PopulateFacade::PopulateFacade(EntityManager *entityManager,
-                               RelationshipManager *relationshipManager,
-                               PatternManager *patternManager,
-                               CFGStorage *cfgManager)
+PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager)
     : entityManager(entityManager),
-      relationshipManager(relationshipManager),
-      patternManager(patternManager),
-      cfgManager(cfgManager) {}
+      relationshipManager(relationshipManager) {}
 
 void PopulateFacade::storeAssignmentStatement(int statementNumber) {
   this->entityManager->storeEntity(
@@ -199,12 +194,11 @@ void PopulateFacade::storeAssignStatementPostfixExpression(
     int statementNumber, const std::string &postfixExpression) {
   auto assignStatementKey =
       EntityKey(&AssignStatement::getEntityTypeStatic(), statementNumber);
-  auto *statement = dynamic_cast<AssignStatement *>(
+  auto *assignStatement = dynamic_cast<AssignStatement *>(
       this->entityManager->getEntity(assignStatementKey));
 
-  PopulateFacade::validateEntityExists(statement);
-  PatternManager::storeAssignStatementPostfixExpression(
-      statement, std::make_unique<std::string>(postfixExpression));
+  PopulateFacade::validateEntityExists(assignStatement);
+  assignStatement->setPostfixExpression(std::make_unique<std::string>(postfixExpression));
 }
 
 void PopulateFacade::storeCallStatementProcedureName(
@@ -276,5 +270,4 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
   this->relationshipManager->storeCFG(cfg);
-  this->cfgManager->storeCFG(cfg);
 }

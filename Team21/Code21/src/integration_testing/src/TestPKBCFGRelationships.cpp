@@ -1699,16 +1699,12 @@ TEST_CASE("Test CFG relationship cache") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager =
       std::make_shared<RelationshipManager>(entityManager.get());
-  auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
-  PKB pkb(entityManager, relationshipManager, patternManager, cfgManager);
+  PKB pkb(entityManager, relationshipManager);
 
   const auto *program = R"(
     procedure main {

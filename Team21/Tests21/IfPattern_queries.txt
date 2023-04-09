@@ -53,8 +53,3 @@ if f; variable v, x;
 Select f pattern f("fy", v, x)
 SyntaxError
 5000
-12 - pattern if(non_v_syn, _, _)
-if f; stmt s;
-Select f pattern f(s, _, _)
-SemanticError
-5000

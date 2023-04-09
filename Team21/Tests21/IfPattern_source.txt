@@ -8,7 +8,7 @@ procedure one {
          if(((fd / fe) + (fc%fy)) >= 0) then {
          	z = z/5+c/3;
          } else {
-            Px = (z%1000)*50+c; 
+            Px = (z%1000)*50+c;
          }
       }
       Dx = (a+5)*(b-c)*p;

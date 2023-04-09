@@ -13,7 +13,7 @@ class AffectsRelationshipType : public CFGEvaluableRelationshipType {
  public:
   auto getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
                                 RelationshipCache *relationshipCache,
-                                EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const override;
+                                EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> override;
 };
 
 class AffectsRelationship : public Relationship {

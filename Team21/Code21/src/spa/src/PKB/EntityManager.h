@@ -41,10 +41,12 @@ class EntityManager {
 //   type key -> stmtNumber -> entity
   std::vector<std::vector<Statement*>> fastAccessStmts;
 
-  int numberOfStatements = 0;
+  int numberOfStatements = MAX_NUMBER_OF_STMTS_WITH_BUFFER; // default to 600
 
  public:
   EntityManager();
+
+  void storeTotalNumberOfStatements(int numberOfStatements);
 
   void storeEntity(std::unique_ptr<Entity> entity);
 
@@ -54,7 +56,7 @@ class EntityManager {
 
   auto getNumberOfStatements() const -> int;
 
-  auto getStmtByNumber(int stmtNumber) -> Statement*;
+  auto getStatementByNumber(int stmtNumber) -> Statement*;
 
  private:
   void storeInEntityTypeStore(Entity* entity);

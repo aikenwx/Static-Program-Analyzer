@@ -5,9 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "PKB/CFGStorage.h"
 #include "PKB/EntityManager.h"
-#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
 #include "sp/cfg/cfg.h"
@@ -19,11 +17,9 @@ class PopulateFacade {
    private:
     RelationshipManager *relationshipManager;
     EntityManager *entityManager;
-    PatternManager *patternManager;
-    CFGStorage *cfgManager;
 
    public:
-    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager, PatternManager *patternManager, CFGStorage *cfgManager);
+    PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager);
 
     void storeAssignmentStatement(int statementNumber);
     void storeCallStatement(int statementNumber);
@@ -34,6 +30,7 @@ class PopulateFacade {
     void storeConstant(int constantValue);
     void storeVariable(const std::string& variableName);
     void storeProcedure(const std::string& procedureName);
+    void storeTotalStatementCount(int totalStatementCount);
 
     void storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     void storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);
@@ -49,8 +46,7 @@ class PopulateFacade {
     void storeAssignStatementPostfixExpression(int statementNumber, const std::string& postfixExpression);
     void storeCallStatementProcedureName(int statementNumber, const std::string& procedureName);
 
-    void storeWhileStatementConditionVariable(int statementNumber, std::string variableName);
-    void storeIfStatementConditionVariable(int statementNumber, std::string variableName);
+    void storeUsesInParentConditionRelationship(int statementNumber, std::string variableName);
 
     void storeCFG(std::shared_ptr<cfg::CFG> cfg);
 

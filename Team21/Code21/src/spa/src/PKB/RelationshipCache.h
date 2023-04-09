@@ -7,14 +7,13 @@
 
 #include "RelationshipStorage.h"
 struct CacheResult {
-    CacheResult();
-    CacheResult(std::vector<Entity *> *first, std::vector<Relationship *> *second, bool areResultsIndividuallyCached);
-    
-    std::vector<Entity *> * first;
-    std::vector<Relationship *> * second;
-    bool areResultsIndividuallyCached;
-};
+  CacheResult();
+  CacheResult(std::vector<Entity *> *first, std::vector<Relationship *> *second, bool areResultsIndividuallyCached);
 
+  std::vector<Entity *> *first;
+  std::vector<Relationship *> *second;
+  bool areRelationshipsIndividuallyCached;
+};
 
 class RelationshipCache {
  private:
@@ -23,8 +22,6 @@ class RelationshipCache {
   std::unordered_map<RelationshipDoubleSynonymKey,
                      std::vector<Relationship *> *>
       relationshipDoubleSynonymCache;
-
-  std::unordered_map<RelationshipKey, Relationship *> relationshipCache;
 
   std::vector<std::unique_ptr<Relationship>> relationshipCacheOwner;
 
@@ -42,12 +39,8 @@ class RelationshipCache {
       relationshipSynonymLiteralCache;
 
   // relationshipType -> stmt -> stmt -> relationship
-
   std::vector<std::vector<std::vector<Relationship *>>>
       relationshipMapCache;
-
-  //
-
 
  public:
   explicit RelationshipCache(EntityManager *entityManager);
@@ -71,7 +64,6 @@ class RelationshipCache {
 
   auto getCachedRelationship(RelationshipKey &key) -> Relationship *;
 
-
   auto getCachedResultsFromSynonymLiteralCache(
       const RelationshipType &relationshipType,
       const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
@@ -93,10 +85,10 @@ class RelationshipCache {
 
  private:
   auto getCachedEntitiesAndRelationships(
-          std::vector<std::vector<std::vector<CacheResult>>>
+      std::vector<std::vector<std::vector<CacheResult>>>
           &store,
-          const RelationshipType &relationshipType,
-          const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
+      const RelationshipType &relationshipType,
+      const EntityType &leftHandEntityType, EntityKey &rightHandEntityKey)
       -> CacheResult &;
 };
 

@@ -45,13 +45,13 @@ class PopulatePKBHelper {
   }
   void AddWhileStatementConditionVariable(const std::vector<std::pair<int, std::string>> &whiles) {
     for (const auto &[stmt, var_name] : whiles) {
-      pkb_.getPopulateFacade()->storeWhileStatementConditionVariable(stmt, var_name);
+        pkb_.getPopulateFacade()->storeUsesInParentConditionRelationship(stmt, var_name);
     }
   }
 
   void AddIfStatementConditionVariable(const std::vector<std::pair<int, std::string>> &ifs) {
     for (const auto &[stmt, var_name] : ifs) {
-      pkb_.getPopulateFacade()->storeIfStatementConditionVariable(stmt, var_name);
+        pkb_.getPopulateFacade()->storeUsesInParentConditionRelationship(stmt, var_name);
     }
   }
 

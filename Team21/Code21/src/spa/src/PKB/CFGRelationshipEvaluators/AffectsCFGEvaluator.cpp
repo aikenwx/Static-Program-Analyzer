@@ -62,7 +62,7 @@ void AffectsCFGEvaluator::initializeForwardsEvaluation(
 }
 
 auto AffectsCFGEvaluator::visitInForwardsEvaluation(
-    Statement* visitedStatement, std::vector<Statement*>* partialResults)
+    Entity* visitedStatement, std::vector<Entity*>* partialResults)
     -> bool {
   // we check uses first, as we don't want to skip case where assign statement
   // uses and modifies same variable that was modified by source statement
@@ -106,7 +106,6 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
   auto results = std::make_unique<std::vector<Entity*>>();
 
-
   // create stack of statements to visit
   auto statementNumbersToVisit = std::stack<int>();
   auto unusedVariablesForStatementsYetToVisit =
@@ -142,12 +141,11 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
     visitedStatementNumbers[nextToVisit] = true;
 
-    auto* nextToVisitStmt = getEntityManager()->getStmtByNumber(nextToVisit);
+    auto* nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
 
-    if (
-        visitInForwardsEvaluation(
+    if (visitInForwardsEvaluation(
             nextToVisitStmt,
-            reinterpret_cast<std::vector<Statement*>*>(results.get()))) {
+            results.get())) {
       continue;
     }
 
@@ -173,9 +171,10 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
   return results;
 }
 
+// this is a naive algorithm, by completing all forwards evaluation first, then working backwards
 auto AffectsCFGEvaluator::getRelatedStatementsInReverseEvaluation(Statement* sourceStatement)
     -> std::unique_ptr<std::vector<Entity*>> {
-  auto allAssignStatements = getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  auto* allAssignStatements = getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 
   auto results = std::make_unique<std::vector<Entity*>>();
 

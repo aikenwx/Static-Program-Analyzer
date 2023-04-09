@@ -9,7 +9,7 @@ Select <p,s1,s2> such that Calls(p, "nguyen") such that Follows(s1, s2) such tha
 danh 1 2,danh 12 13,danh 13 14,danh 16 29,danh 17 26,danh 18 19,danh 19 20,danh 2 3,danh 20 25,danh 21 22,danh 23 24,danh 26 27,danh 3 4,danh 30 33,danh 33 34,danh 34 35,danh 4 5,danh 5 15,danh 6 7,danh 7 12,danh 9 11,duc 1 2,duc 12 13,duc 13 14,duc 16 29,duc 17 26,duc 18 19,duc 19 20,duc 2 3,duc 20 25,duc 21 22,duc 23 24,duc 26 27,duc 3 4,duc 30 33,duc 33 34,duc 34 35,duc 4 5,duc 5 15,duc 6 7,duc 7 12,duc 9 11
 5000
 3 - Such That with 4 relationships
-procedure p; stmt s1, s2; if i; 
+procedure p; stmt s1, s2; if i;
 Select <p,s1,s2, i> such that Calls(p, "nguyen") such that Follows(s1, s2) such that Modifies(s2,_) such that Next*(i, s2)
 danh 12 13 7,danh 13 14 7,danh 16 29 16,danh 16 29 20,danh 17 26 16,danh 17 26 20,danh 18 19 16,danh 18 19 20,danh 19 20 16,danh 19 20 20,danh 20 25 16,danh 20 25 20,danh 21 22 16,danh 21 22 20,danh 23 24 16,danh 23 24 20,danh 26 27 16,danh 26 27 20,danh 30 33 30,danh 33 34 30,danh 34 35 30,danh 4 5 7,danh 5 15 7,danh 6 7 7,danh 7 12 7,danh 9 11 7,duc 12 13 7,duc 13 14 7,duc 16 29 16,duc 16 29 20,duc 17 26 16,duc 17 26 20,duc 18 19 16,duc 18 19 20,duc 19 20 16,duc 19 20 20,duc 20 25 16,duc 20 25 20,duc 21 22 16,duc 21 22 20,duc 23 24 16,duc 23 24 20,duc 26 27 16,duc 26 27 20,duc 30 33 30,duc 33 34 30,duc 34 35 30,duc 4 5 7,duc 5 15 7,duc 6 7 7,duc 7 12 7,duc 9 11 7
 5000

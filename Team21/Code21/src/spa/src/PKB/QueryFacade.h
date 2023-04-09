@@ -8,9 +8,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKB/CFGStorage.h"
 #include "PKB/EntityManager.h"
-#include "PKB/PatternManager.h"
 #include "PKB/RelationshipManager.h"
 #include "PKBStorageClasses/EntityClasses/AssignStatement.h"
 #include "PKBStorageClasses/EntityClasses/CallStatement.h"
@@ -38,53 +36,9 @@ class QueryFacade {
  private:
   EntityManager* entityManager;
   RelationshipManager* relationshipManager;
-  CFGStorage* cfgManager;
-  PatternManager* patternManager;
 
  public:
-  QueryFacade(EntityManager* entityManager, RelationshipManager* relationshipManager, PatternManager* patternManager, CFGStorage* cfgManager);
-
-  auto getAllAssignStatements() -> std::vector<AssignStatement*>*;
-  auto getAllIfStatements() -> std::vector<IfStatement*>*;
-  auto getAllWhileStatements() -> std::vector<WhileStatement*>*;
-  auto getAllCallStatements() -> std::vector<CallStatement*>*;
-  auto getAllReadStatements() -> std::vector<ReadStatement*>*;
-  auto getAllPrintStatements() -> std::vector<PrintStatement*>*;
-  auto getAllProcedures() -> std::vector<Procedure*>*;
-  auto getAllVariables() -> std::vector<Variable*>*;
-  auto getAllConstants() -> std::vector<Constant*>*;
-  auto getAllStatements() -> std::vector<Statement*>*;
-
-  auto getParentRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<ParentRelationship*>*;
-  auto getFollowsRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<FollowsRelationship*>*;
-  auto getModifiesRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<ModifiesRelationship*>*;
-  auto getUsesRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<UsesRelationship*>*;
-  auto getParentStarRelationshipsByLeftAndRightEntityTypes(
-      const EntityType & leftEntityType, const EntityType & rightEntityType)
-      -> std::vector<ParentStarRelationship*>*;
-
-  auto getAllCallsRelationships() -> std::vector<CallsRelationship*>*;
-  auto getAllCallsStarRelationships() -> std::vector<CallsStarRelationship*>*;
-
-  auto getWhileStatementsUsingVariableInCondition(std::string variableName)
-      -> std::unordered_set<WhileStatement*>*;
-  auto getIfStatementsUsingVariableInCondition(std::string variableName)
-      -> std::unordered_set<IfStatement*>*;
-
-  auto getVariablesInWhileStatementCondition(int statementNumber)
-      -> std::unordered_set<Variable*>*;
-
-  auto getVariablesInIfStatementCondition(int statementNumber)
-      -> std::unordered_set<Variable*>*;
-
+  QueryFacade(EntityManager *entityManager, RelationshipManager *relationshipManager);
 
   auto getEntity(const EntityType& entityType, int entityValue) -> Entity*;
 
@@ -117,27 +71,25 @@ class QueryFacade {
                                const EntityType & rightEntityType)
       -> std::vector<Relationship*>*;
 
-  auto getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+  auto getLeftEntitiesRelatedToGivenRightEntity(
       const RelationshipType & relationshipType, const EntityType & leftEntityType,
       const EntityType & rightEntityType, int rightEntityValue)
       -> std::vector<Entity*>*;
 
-  auto getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+  auto getLeftEntitiesRelatedToGivenRightEntity(
       const RelationshipType & relationshipType, const EntityType & leftEntityType,
       const EntityType & rightEntityType, std::string rightEntityValue)
       -> std::vector<Entity*>*;
 
-  auto getRelationshipsByLeftEntityLiteralAndRightEntityType(
-      const RelationshipType & relationshipType, const EntityType & leftEntityType,
-      int leftEntityValue, const EntityType & rightEntityType)
+  auto getRightEntitiesRelatedToGivenLeftEntity(
+          const RelationshipType & relationshipType, const EntityType & leftEntityType,
+          int statementNumber, const EntityType & rightEntityType)
       -> std::vector<Entity*>*;
 
-  auto getRelationshipsByLeftEntityLiteralAndRightEntityType(
+  auto getRightEntitiesRelatedToGivenLeftEntity(
       const RelationshipType & relationshipType, const EntityType & leftEntityType,
       std::string leftEntityValue, const EntityType & rightEntityType)
       -> std::vector<Entity*>*;
-
-  auto getCFG() -> cfg::CFG*;
 
   void clearCache();
 };

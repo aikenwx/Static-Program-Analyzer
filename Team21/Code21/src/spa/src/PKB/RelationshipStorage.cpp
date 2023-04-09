@@ -164,20 +164,6 @@ auto RelationshipStorage::getEntitiesFromLiteralSynonymStore(
   return nullptr;
 }
 
-auto RelationshipStorage::generateRelationshipVector()
-    -> std::vector<Relationship *> * {
-  auto owner = std::make_unique<std::vector<Relationship *>>();
-  auto *ptr = owner.get();
-  this->relationshipVectorStoreOwner.push_back(std::move(owner));
-  return ptr;
-}
-auto RelationshipStorage::generateEntityVector() -> std::vector<Entity *> * {
-  auto owner = std::make_unique<std::vector<Entity *>>();
-  auto *ptr = owner.get();
-  this->entityVectorStoreOwner.push_back(std::move(owner));
-  return ptr;
-}
-
 void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
     Relationship *relationship) {
   RelationshipDoubleSynonymKey relationshipSynonymKey =
@@ -186,7 +172,7 @@ void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
           &relationship->getLeftHandEntity()->getEntityType(),
           &relationship->getRightHandEntity()->getEntityType());
 
-  getVectorForDoubleSynonymStore(relationshipSynonymKey)
+    getVectorForDoubleSynonymStoreForStoring(relationshipSynonymKey)
       ->push_back(relationship);
 
   if (Statement::isStatement(relationship->getLeftHandEntity())) {
@@ -195,7 +181,7 @@ void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
             &relationship->getRelationshipType(),
             &Statement::getEntityTypeStatic(),
             &relationship->getRightHandEntity()->getEntityType());
-    getVectorForDoubleSynonymStore(leftStatementRelationshipKey)
+      getVectorForDoubleSynonymStoreForStoring(leftStatementRelationshipKey)
         ->push_back(relationship);
   }
 
@@ -205,7 +191,7 @@ void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
             &relationship->getRelationshipType(),
             &relationship->getLeftHandEntity()->getEntityType(),
             &Statement::getEntityTypeStatic());
-    getVectorForDoubleSynonymStore(rightStatementRelationshipKey)
+      getVectorForDoubleSynonymStoreForStoring(rightStatementRelationshipKey)
         ->push_back(relationship);
   }
   if (Statement::isStatement(relationship->getLeftHandEntity()) &&
@@ -214,7 +200,7 @@ void RelationshipStorage::storeInRelationshipDoubleSynonymStore(
         RelationshipDoubleSynonymKey(&relationship->getRelationshipType(),
                                      &Statement::getEntityTypeStatic(),
                                      &Statement::getEntityTypeStatic());
-    getVectorForDoubleSynonymStore(bothStatementRelationshipKey)
+      getVectorForDoubleSynonymStoreForStoring(bothStatementRelationshipKey)
         ->push_back(relationship);
   }
 }
@@ -227,8 +213,8 @@ void RelationshipStorage::storeInRelationshipLiteralSynonymStore(
           &relationship->getLeftHandEntity()->getEntityKey(),
           &relationship->getRightHandEntity()->getEntityType());
 
-  this->getVectorForStore(relationshipLiteralSynonymKey,
-                          relationshipLiteralSynonymStore)
+    this->getVectorForStoring(relationshipLiteralSynonymKey,
+                              relationshipLiteralSynonymStore)
       ->push_back(relationship->getRightHandEntity());
 
   if (Statement::isStatement(relationship->getRightHandEntity())) {
@@ -238,8 +224,8 @@ void RelationshipStorage::storeInRelationshipLiteralSynonymStore(
             &relationship->getLeftHandEntity()->getEntityKey(),
             &Statement::getEntityTypeStatic());
 
-    this->getVectorForStore(rightStatementRelationshipKey,
-                            relationshipLiteralSynonymStore)
+      this->getVectorForStoring(rightStatementRelationshipKey,
+                                relationshipLiteralSynonymStore)
         ->push_back(
             relationship->getRightHandEntity());
   }
@@ -252,8 +238,8 @@ void RelationshipStorage::storeInRelationshipSynonymLiteralStore(
           &relationship->getRelationshipType(),
           &relationship->getLeftHandEntity()->getEntityType(),
           &relationship->getRightHandEntity()->getEntityKey());
-  this->getVectorForStore(relationshipSynonymLiteralKey,
-                          relationshipSynonymLiteralStore)
+    this->getVectorForStoring(relationshipSynonymLiteralKey,
+                              relationshipSynonymLiteralStore)
       ->push_back(relationship->getLeftHandEntity());
 
   if (Statement::isStatement(relationship->getLeftHandEntity())) {
@@ -262,14 +248,14 @@ void RelationshipStorage::storeInRelationshipSynonymLiteralStore(
             &relationship->getRelationshipType(),
             &Statement::getEntityTypeStatic(),
             &relationship->getRightHandEntity()->getEntityKey());
-    this->getVectorForStore(leftStatementRelationshipKey,
-                            relationshipSynonymLiteralStore)
+      this->getVectorForStoring(leftStatementRelationshipKey,
+                                relationshipSynonymLiteralStore)
         ->push_back(relationship->getLeftHandEntity());
   }
 }
 
 template <typename T>
-auto RelationshipStorage::getVectorForStore(
+auto RelationshipStorage::getVectorForStoring(
     T &key, std::unordered_map<T, std::vector<Entity *> *> &store)
     -> std::vector<Entity *> * {
   auto *placeholderEntityVectorPtr = placeholderEntityVector.get();
@@ -287,8 +273,8 @@ auto RelationshipStorage::getVectorForStore(
   return emplaceResult.first->second;
 }
 
-auto RelationshipStorage::getVectorForDoubleSynonymStore(
-    RelationshipDoubleSynonymKey relationshipDoubleSynonymKey)
+auto RelationshipStorage::getVectorForDoubleSynonymStoreForStoring(
+    const RelationshipDoubleSynonymKey& relationshipDoubleSynonymKey)
     -> std::vector<Relationship *> * {
   auto *placeholderRelationshipVectorPtr = placeholderRelationshipVector.get();
 

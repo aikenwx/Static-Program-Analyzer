@@ -34,8 +34,8 @@ class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
 
   void initializeForwardsEvaluation(Statement* sourceStatement);
 
-  auto visitInForwardsEvaluation(Statement* statement,
-                                 std::vector<Statement*>* partialResults)
+  auto visitInForwardsEvaluation(Entity *visitedStatement,
+                                 std::vector<Entity *> *partialResults)
       -> bool;
 };
 

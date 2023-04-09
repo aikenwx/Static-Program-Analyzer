@@ -1,0 +1,107 @@
+procedure fun {
+1    read clown;
+2    read mugger;
+3    print dead;
+4    print laugh;
+
+5    if(sleep > 8) then {
+6        sleep = 0;
+     } else {
+7        sleep = 8;
+8        call bob;
+     }
+
+9     ctf = 0;
+10    print security;
+11    hack = secure + flag;
+12    flag = found;
+
+13    while(clown < 100) {
+14        clown = killerclown;
+      }
+
+15    value = 10;
+16    while(pennywise > ronald) {
+17        wendy = happy;
+18        while(wendy == happy) {
+19            ronald = value;
+20            while(value > 10) {
+21                print happy;
+22                read ronald;
+              }
+23            value = value - 1;
+24            wendy = value;
+          }
+      }
+
+25    if (wendy + 1 == ronald + 3) then {
+26        happy = 9999;
+      } else {
+27        if (happy == 0) then {
+28            happy = 100;
+29            happy = 99;
+30            happy = 98;
+31            happy = 97;
+32            wendy = 9000;
+          } else {
+33            clown = 12 * 12 + 4 % pennywise;
+34            call bob;
+35			  if (happy != 0) then {
+36			   	happy = 1;
+37				happy = 2;
+38				happy = 3;
+39				happy = 4;
+			  } else {
+40				happy = 10;
+41				happy = 11;
+			  }
+          }
+      }
+
+42    if (mugger == dead % 2) then {
+43        mugger = dead + sleep * laugh;
+      } else {
+44      while (mugger > 0) {
+45        if (dead < 0) then {
+46            mugger = mugger + 1;
+47            laugh = laugh * laugh;
+48            dead = mugger;
+          } else {
+49            print mugger;
+50            read laugh;
+51            mugger = 12 * 12 * 12;
+          }
+        }
+      }
+
+52    while (ctf != 0) {
+53        security = secure + 1234567 % 20;
+54	      flag = security / 6 - secure * 2;
+55        if (found == 0) then {
+56            read hack;
+57            print ctf;
+58            hack = hack + 1;
+59		      while (hack > 20) {
+60                found = found + 100 - secure;
+61                print found;
+62                read security;
+		      }
+          } else {
+63            print cs2107;
+64            found = 0;
+65            print found;
+66            print security;
+          }
+      }
+67    print flag;
+68    print clown;
+69    print mugger;
+70    read happy;
+  }
+
+procedure bob {
+71    bob1 = bob1;
+72    print IamBob;
+73    bob1 = sad * 10 / 9;
+74    print helpBOB;
+  }

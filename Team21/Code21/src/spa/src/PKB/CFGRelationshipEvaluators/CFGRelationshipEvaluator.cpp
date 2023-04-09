@@ -4,16 +4,20 @@
 
 #include "CFGRelationshipEvaluator.h"
 
+#include <stack>
+
 #include "PKB/RelationshipManager.h"
 
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 CacheResult CFGRelationshipEvaluator::emptyCacheResult = CacheResult(RelationshipManager::getEmptyEntityVector(),
-                    RelationshipManager::getEmptyRelationshipVector(), false);
+                                                                     RelationshipManager::getEmptyRelationshipVector(), false);
 
 CFGRelationshipEvaluator::CFGRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
                                                    RelationshipCache *relationshipCache, EntityManager *entityManager)
     : cfg(cfg),
       relationshipStorage(relationshipStorage),
-      entityManager(entityManager), relationshipCache(relationshipCache) {}
+      entityManager(entityManager),
+      relationshipCache(relationshipCache) {}
 
 auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     const EntityType &leftEntityType, const EntityType &rightEntityType)
@@ -63,7 +67,7 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
     sortedList = std::vector<Entity *>(*sourceEntityList);
     // sort by statement number from highest to lowest, as typically (but not always), stmts on
     // top should affect stmts below, this would allow for faster evaluation for
-    // affects* under typical circumstances
+    // affects* and next* under typical circumstances
     std::sort(sortedList.begin(), sortedList.end(), [](Entity *currEntity, Entity *nextEntity) {
       return *currEntity->getEntityKey().getOptionalInt() >
              *nextEntity->getEntityKey().getOptionalInt();
@@ -198,9 +202,9 @@ auto CFGRelationshipEvaluator::getCachedEntitiesAndRelationships(
                    destinationEntityType);
 }
 
-Relationship *
+auto
 CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
-    Entity *leftEntity, Entity *rightEntity) {
+    Entity *leftEntity, Entity *rightEntity) -> Relationship * {
   if (!Statement::isStatement(leftEntity) ||
       !Statement::isStatement(rightEntity)) {
     return nullptr;
@@ -216,7 +220,7 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
 
   // checks if this relationship has already been evaluated
 
-  auto * possibleCachedRelationship = relationshipCache->getCachedRelationship(relationshipKey);
+  auto *possibleCachedRelationship = relationshipCache->getCachedRelationship(relationshipKey);
 
   if (possibleCachedRelationship != nullptr) {
     return possibleCachedRelationship;
@@ -231,15 +235,15 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
   auto *cachedResultsForForwardEvaluation = &getCachedEntitiesAndRelationships(false, *leftStatement,
                                                                                rightStatement->getEntityType());
 
-  if (cachedResultsForReverseEvaluation->areResultsIndividuallyCached || cachedResultsForReverseEvaluation->areResultsIndividuallyCached) {
+  if (cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached || cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached) {
     return nullptr;
   }
 
-  CacheResult *cachedResultToUpdate;
+  CacheResult *cachedResultToUpdate = nullptr;
   if (cachedResultsForReverseEvaluation->second != nullptr &&
       cachedResultsForForwardEvaluation->second != nullptr) {
     cachedResultToUpdate = cachedResultsForForwardEvaluation->second->size() <=
-                                   cachedResultsForReverseEvaluation->second->size()
+                           cachedResultsForReverseEvaluation->second->size()
                                ? cachedResultsForForwardEvaluation
                                : cachedResultsForForwardEvaluation;
   } else if (cachedResultsForReverseEvaluation->second != nullptr) {
@@ -252,7 +256,7 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
             rightEntity->getEntityType(), leftEntity, false);
   }
 
-  cachedResultToUpdate->areResultsIndividuallyCached = true;
+  cachedResultToUpdate->areRelationshipsIndividuallyCached = true;
 
   Relationship *resultRelationship = nullptr;
 
@@ -292,10 +296,90 @@ auto CFGRelationshipEvaluator::getRelationshipStorage()
 }
 
 auto CFGRelationshipEvaluator::getRelationshipCache() -> RelationshipCache * {
-    return this->relationshipCache;
+  return this->relationshipCache;
 }
-
 
 auto CFGRelationshipEvaluator::getEntityManager() -> EntityManager * {
   return this->entityManager;
+}
+
+auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStatement,
+                                                           bool isReverse, CFGRelationshipEvaluator &cfgRelationshipEvaluator)
+    -> std::unique_ptr<std::vector<Entity *>> {
+  auto visitedStatementNumbers =
+      std::vector<bool>(getEntityManager()->getNumberOfStatements() + 1, false);
+
+  auto results = std::make_unique<std::vector<Entity *>>();
+
+  // create stack of statements to visit
+  auto statementNumbersToVisit = std::stack<int>();
+
+  // push all statements from results into stack
+
+  auto *directRelations =
+      cfgRelationshipEvaluator
+          .getCachedEntitiesAndRelationships(isReverse, *sourceStatement,
+                                             Statement::getEntityTypeStatic())
+          .first;
+
+  if (directRelations == nullptr) {
+    directRelations =
+        cfgRelationshipEvaluator
+            .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                Statement::getEntityTypeStatic(), sourceStatement, isReverse)
+            .first;
+  }
+
+  for (auto *result : *directRelations) {
+    statementNumbersToVisit.push(*result->getEntityKey().getOptionalInt());
+  }
+
+  while (!statementNumbersToVisit.empty()) {
+    auto nextToVisit = statementNumbersToVisit.top();
+    statementNumbersToVisit.pop();
+
+    if (visitedStatementNumbers.at(nextToVisit)) {
+      continue;
+    }
+
+    visitedStatementNumbers.at(nextToVisit) = true;
+    auto *nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
+    results->push_back(nextToVisitStmt);
+
+    auto *possibleCachedResults =
+        this->getCachedEntitiesAndRelationships(
+                isReverse, *nextToVisitStmt, Statement::getEntityTypeStatic())
+            .first;
+
+    if (possibleCachedResults != nullptr) {
+      for (const auto &result : *possibleCachedResults) {
+        int stmtNumber = *result->getEntityKey().getOptionalInt();
+
+        if (!visitedStatementNumbers.at(stmtNumber)) {
+          visitedStatementNumbers.at(stmtNumber) = true;
+          results->push_back(result);
+        }
+      }
+      continue;
+    }
+
+    auto *neighbours =
+        cfgRelationshipEvaluator
+            .getCachedEntitiesAndRelationships(isReverse, *nextToVisitStmt,
+                                               Statement::getEntityTypeStatic())
+            .first;
+
+    if (neighbours == nullptr) {
+      neighbours =
+          cfgRelationshipEvaluator
+              .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+                  Statement::getEntityTypeStatic(), nextToVisitStmt, isReverse)
+              .first;
+    }
+    for (auto *neighbour : *neighbours) {
+      statementNumbersToVisit.push(*neighbour->getEntityKey().getOptionalInt());
+    }
+  }
+
+  return results;
 }

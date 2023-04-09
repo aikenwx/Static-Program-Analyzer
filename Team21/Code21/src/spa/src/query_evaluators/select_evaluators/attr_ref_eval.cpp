@@ -8,18 +8,18 @@
 namespace qps {
 auto AttributeReferenceEvaluator::GetVarName(ReadStatement *read, QueryFacade &pkb) -> std::string {
   auto *entities =
-      pkb.getRelationshipsByLeftEntityLiteralAndRightEntityType(ModifiesRelationship::getRelationshipTypeStatic(),
-                                                                read->getEntityType(), read->getStatementNumber(),
-                                                                Variable::getEntityTypeStatic());
+          pkb.getRightEntitiesRelatedToGivenLeftEntity(ModifiesRelationship::getRelationshipTypeStatic(),
+                                                       read->getEntityType(), read->getStatementNumber(),
+                                                       Variable::getEntityTypeStatic());
   assert(entities->size() == 1);
   return *(*entities)[0]->getEntityValue();
 }
 
 auto AttributeReferenceEvaluator::GetVarName(PrintStatement *print, QueryFacade &pkb) -> std::string {
   auto *entities =
-      pkb.getRelationshipsByLeftEntityLiteralAndRightEntityType(UsesRelationship::getRelationshipTypeStatic(),
-                                                                print->getEntityType(), print->getStatementNumber(),
-                                                                Variable::getEntityTypeStatic());
+          pkb.getRightEntitiesRelatedToGivenLeftEntity(UsesRelationship::getRelationshipTypeStatic(),
+                                                       print->getEntityType(), print->getStatementNumber(),
+                                                       Variable::getEntityTypeStatic());
   assert(entities->size() == 1);
   return *(*entities)[0]->getEntityValue();
 }

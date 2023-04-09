@@ -243,7 +243,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
   REQUIRE(temp7->size() == 18);
   auto *temp8 =
-      pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
           AffectsStarRelationship::getRelationshipTypeStatic(),
           Statement::getEntityTypeStatic(), 1,
           Statement::getEntityTypeStatic());
@@ -251,7 +251,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
   REQUIRE(temp8->size() == 5);
 
   auto *temp9 =
-      pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
           NextStarRelationship::getRelationshipTypeStatic(),
           CallStatement::getEntityTypeStatic(),
           Statement::getEntityTypeStatic(), 8);
@@ -265,7 +265,7 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
   REQUIRE(temp10->size() == 12);
 
   auto *temp11 =
-      pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
           NextStarRelationship::getRelationshipTypeStatic(),
           CallStatement::getEntityTypeStatic(),
           Statement::getEntityTypeStatic(), 8);
@@ -430,7 +430,7 @@ TEST_CASE("Retrieve related entities to non existent entity") {
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
   auto *relationship =
-      pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
           CallsRelationship::getRelationshipTypeStatic(),
           Procedure::getEntityTypeStatic(), "fail",
           Procedure::getEntityTypeStatic());
@@ -462,7 +462,7 @@ TEST_CASE("Test Affects/Affects*") {
   sp::SP::process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
-                     ->getRelationshipsByLeftEntityLiteralAndRightEntityType(
+                     ->getRightEntitiesRelatedToGivenLeftEntity(
                          AffectsRelationship::getRelationshipTypeStatic(),
                          Statement::getEntityTypeStatic(), 6,
                          Statement::getEntityTypeStatic());
@@ -497,7 +497,7 @@ TEST_CASE("Test reverse Affects") {
   sp::SP::process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
-                     ->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+                     ->getLeftEntitiesRelatedToGivenRightEntity(
                          AffectsRelationship::getRelationshipTypeStatic(),
                          Statement::getEntityTypeStatic(),
                          Statement::getEntityTypeStatic(), 8);
@@ -1013,7 +1013,7 @@ TEST_CASE("Test AffectsStar worst case") {
       v497 = v496;
       v498 = v497;
       v499 = v498;
-      v500 = v499; 
+      v500 = v499;
     }
    })";
 
@@ -1699,16 +1699,12 @@ TEST_CASE("Test CFG relationship cache") {
   auto entityManager = std::make_shared<EntityManager>();
   auto relationshipManager =
       std::make_shared<RelationshipManager>(entityManager.get());
-  auto patternManager = std::make_shared<PatternManager>();
-  auto cfgManager = std::make_shared<CFGStorage>();
   auto populateFacade = std::make_shared<PopulateFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
   auto queryFacade = std::make_shared<QueryFacade>(
-      entityManager.get(), relationshipManager.get(), patternManager.get(),
-      cfgManager.get());
+      entityManager.get(), relationshipManager.get());
 
-  PKB pkb(entityManager, relationshipManager, patternManager, cfgManager);
+  PKB pkb(entityManager, relationshipManager);
 
   const auto *program = R"(
     procedure main {
@@ -1916,7 +1912,7 @@ TEST_CASE("Test CFG relationship cache") {
 
   REQUIRE(temp7->size() == 18);
   auto *temp8 =
-      pkb_querier->getRelationshipsByLeftEntityLiteralAndRightEntityType(
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
           AffectsStarRelationship::getRelationshipTypeStatic(),
           Statement::getEntityTypeStatic(), 1,
           Statement::getEntityTypeStatic());
@@ -1934,7 +1930,7 @@ TEST_CASE("Test CFG relationship cache") {
   }
 
   auto *temp9 =
-      pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
           NextStarRelationship::getRelationshipTypeStatic(),
           CallStatement::getEntityTypeStatic(),
           Statement::getEntityTypeStatic(), 8);
@@ -1948,7 +1944,7 @@ TEST_CASE("Test CFG relationship cache") {
   REQUIRE(temp10->size() == 12);
 
   auto *temp11 =
-      pkb_querier->getRelationshipsByLeftEntityTypeAndRightEntityLiteral(
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
           NextStarRelationship::getRelationshipTypeStatic(),
           CallStatement::getEntityTypeStatic(),
           Statement::getEntityTypeStatic(), 8);

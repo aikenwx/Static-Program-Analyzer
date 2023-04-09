@@ -1,0 +1,804 @@
+procedure fun {
+	if(sleep > 8) then {
+		sleep = 0;
+	} else {
+		sleep = 8;
+		read clown;
+		read mugger;
+		print dead;
+		print laugh;
+		call bob;
+	}
+
+	ctf = 0;
+	print security;
+	hack = secure + flag;
+	flag = found;
+
+	while(clown < 100) {
+		clown = killerclown;
+		scarecrow = fun;
+		clown = clown + 100;
+	}
+
+	value = 10;
+	while(pennywise > ronald) {
+		wendy = happy;
+		wendy = wendy + 1;
+		while(wendy == happy) {
+			ronald = value;
+			value = 1999;
+			while(value > 10) {
+				print happy;
+				read ronald;
+				wendy = 10 + 12 % 12;
+			}
+			value = value - 1;
+			wendy = value;
+		}
+	}
+
+	if (wendy + 1 == ronald + 3) then {
+		happy = 9999;
+		macs = happy;
+	} else {
+		if (happy == 0) then {
+			happy = 100;
+			happy = 99;
+			happy = 98;
+			happy = 97;
+			wendy = 9000;
+		} else {
+			clown = 12 * 12 + 4 % pennywise;
+			call bob;
+			if (happy != 0) then {
+				happy = 1;
+				happy = 2;
+				happy = 3;
+				happy = 4;
+			} else {
+				happy = 10;
+				happy = 11;
+			}
+		}
+	}
+
+	if (wendy + 1 == ronald + 3) then {
+		happy = 9999;
+		macs = happy;
+		if (happy == 0) then {
+			happy = 100;
+			happy = 99;
+			happy = 98;
+			happy = 97;
+			wendy = 9000;
+			if (happy != 0) then {
+				happy = 1;
+				happy = 2;
+				happy = 3;
+				happy = 4;
+			} else {
+				happy = 10;
+				happy = 11;
+			}
+		} else {
+			clown = 12 * 12 + 4 % pennywise;
+			call bob;
+		}
+	} else {
+		read happy;
+		print happy;
+		read macs;
+	}
+
+	if (mugger == dead % 2) then {
+		mugger = dead + sleep * laugh;
+	} else {
+		while (mugger > 0) {
+			if (dead < 0) then {
+				mugger = mugger + 1;
+				laugh = laugh * laugh;
+				dead = mugger;
+			} else {
+				print mugger;
+				read laugh;
+				mugger = 12 * 12 * 12;
+			}
+		}
+	}
+
+	while (ctf != 0) {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		if (found == 0) then {
+			read hack;
+			print ctf;
+			hack = hack + 1;
+			while (hack > 20) {
+				found = found + 100 - secure;
+				print found;
+				read security;
+			}
+		} else {
+			print cs2107;
+			found = 0;
+			print found;
+			print security;
+		}
+	}
+	print flag;
+	print clown;
+	print mugger;
+	read happy;
+}
+
+procedure bob {
+	bob1 = bob1;
+	print IamBob;
+	bob1 = sad * 10 / 9;
+	print helpBOB;
+	while (ctf != 0) {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		security2 = secure + 1234567 % 20;
+		flag2 = security / 6 - secure * 2;
+		while (hack > 20) {
+			found = found + 100 - secure;
+			print found;
+			read security;
+			if (found == 0) then {
+				read hack;
+				print ctf;
+				hack = hack + 1;
+			} else {
+				print cs2107;
+				found = 0;
+				print found;
+				print security;
+			}
+		}
+	}
+}
+
+procedure cat {
+	cat = cat;
+	cat = cat + 10;
+	print cat;
+	read cat;
+	call bob;
+	if ((ctf != 0) && (ctf > 0)) then {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		if (found == 0) then {
+			read hack;
+			print ctf;
+			hack = hack + 1;
+			while (hack > 20) {
+				found = found + 100 - secure;
+				print found;
+				read security;
+			}
+		} else {
+			print cs2107;
+			found = 0;
+			print found;
+			print security;
+		}
+	} else {
+		found = 112123;
+		security = 123123;
+		call fun;
+		call bob;
+	}
+}
+
+procedure nestedDeep {
+	while(x > 12) {
+		while(x > 13) {
+			while(x > 14) {
+				while(x > 15) {
+					while(x > 16) {
+						while(x > 17) {
+							helpMe = 10 + 12 + 5567 * 76 / 12;
+							print helpMe;
+							read helpMe;
+							call bob;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+procedure ifWhileWhile {
+	if (x == 1) then {
+		print helpMe;
+		read helpMe;
+		while (x % 12 == 0) {
+			print helpMe;
+			read helpMe;
+			while (x > 13) {
+				print helpMe;
+				read helpMe;
+			}
+		}
+	} else {
+		print helpMe;
+		read helpMe;
+		while (y > 1000) {
+			print helpMe;
+			read helpMe;
+			while (y + x == 14141414) {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure whileIfIf {
+	while (x == 34) {
+		print helpMe;
+		read helpMe;
+		if (x * y > 12) then {
+			print helpMe;
+			read helpMe;
+		} else {
+			print helpMe;
+			read helpMe;
+			if (x + 12 == 141414) then {
+				print helpMe;
+				read helpMe;
+			} else {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure danh1 {
+  x = 2;
+  z = 3 + x;
+  i = z * 5;
+  y = 5;
+  while (z!=0) {
+    i = i - 1;
+    if (i==6) then {
+      x = x - 1; }
+    else {
+      while (y > 0) {
+	y = y - 1; }
+      y = z + x; }
+    z = x + i;
+    call duc1;
+    z = z + 1; }
+  call nguyen1; }
+
+procedure duc1 {
+  if (x<0) then {
+    while (i>0) {
+      x = z * 4 + y;
+      call nguyen1;
+      if (x <= 15) then {
+	x = y * z;
+	z = 10; }
+      else {
+	x = 1;
+	y = 6 * z; }
+      i = i + 1; }
+    x = x + 1;
+    z = x + z; }
+  else {
+    y = 1; }
+  z = z + i; }
+
+procedure nguyen1 {
+  call a;
+  if (y==10) then {
+    z = x + 10; }
+  else {
+    y = z + y; }
+  a = 4;
+  b = a + 5;
+  call d; }
+
+procedure a {
+  call d;
+  call e;
+  a = 5; }
+
+procedure d {
+  a = 10;
+  b = b / 4;
+  call f; }
+
+procedure e {
+  x = 10;
+  y = x + 6; }
+
+procedure f {
+  y =  15;
+  z = y * 6; }
+
+procedure program1 {
+    read count;
+    x = 0;
+    y = 1+2;
+    z = 1*2+4*5;
+    print x;
+
+    if(count != 0) then {
+      count = 1;
+    } else {
+      count = 2;
+    }
+
+    while(count < 10) {
+       count = 11;
+    }
+
+    while (x != 1000) {
+        x = x+y%20;
+	  z = z/6-x*2;
+        if (z == 2000) then {
+            read a;
+            print z;
+		while (y > 20) {
+                print y;
+                x = x * 2;
+		}
+  } else {
+	print x;
+	a = x + 1;
+	y = 2;
+  }
+    }
+    read i;
+    y=x-1;
+    i=x-1;
+}
+
+procedure danh {
+  x = 2;
+  z = 3 + x;
+  i = z * 5;
+  y = 5;
+  while (z!=0) {
+    i = i - 1;
+    if (i==6) then {
+      x = x - 1; }
+    else {
+      while (y > 0) {
+	y = y - 1; }
+      y = z + x; }
+    z = x + i;
+    call duc;
+    z = z + 1; }
+  call nguyen; }
+
+procedure duc {
+  if (x<0) then {
+    while (i>0) {
+      x = z * 4 +  y;
+      call nguyen;
+      if (x <= 15) then {
+	x = y * z;
+	z = 10; }
+      else {
+	x = 1;
+	y = 6 * z; }
+      i = i + 1; }
+    x = x + 1;
+    z = x + z; }
+  else {
+    y = 1; }
+  z = z + i; }
+
+procedure nguyen {
+  if (y==10) then {
+    z = x + 10; }
+  else {
+    y = z + y; } }
+
+procedure call1 {
+  call call2;
+}
+
+procedure call2 {
+  call nguyen;
+  call fun;
+  call call3;
+}
+
+procedure call3 {
+  call call4;
+}
+
+procedure call4 {
+  call call5;
+}
+
+procedure call5 {
+  call call6;
+}
+
+procedure call6 {
+  call call7;
+}
+
+procedure call7 {
+  call call8;
+}
+
+procedure call8 {
+  call call9;
+}
+
+procedure call9 {
+  call call10;
+}
+
+procedure call10 {
+  call call11;
+}
+
+procedure call11 {
+  call call12;
+}
+
+procedure call12 {
+  call call13;
+}
+
+procedure call13 {
+  call call14;
+}
+
+procedure call14 {
+  call call15;
+}
+
+procedure call15 {
+  call call16;
+}
+
+procedure call16 {
+  call call17;
+}
+
+procedure call17 {
+  call call18;
+}
+
+procedure call18 {
+  call call19;
+}
+
+procedure call19 {
+  call call20;
+}
+
+procedure call20 {
+  call call21;
+}
+
+procedure call21 {
+  call call22;
+}
+
+procedure call22 {
+  call call23;
+}
+
+procedure call23 {
+  call call24;
+}
+
+procedure call24 {
+  call call25;
+}
+
+procedure call25 {
+  call main;
+}
+
+procedure main {
+  print x;
+  print y;
+  if (x == 1) then {
+    x = x + 1;
+    print x;
+    while (x + y == f + 1) {
+      x = x + 1;
+      print x;
+      while (x + y == f + 1) {
+        call funcx;
+      }
+      if (f == 1) then {
+        read x;
+      } else {
+        print f;
+      }
+    }
+  } else {
+    print f;
+  }
+  y = x + 1;
+  print y;
+}
+
+procedure funcx {
+  read x;
+  while (1 == 1) {
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+      read x;
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}
+
+procedure funcx2 {
+  read x;
+  while (1 == 1) {
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+      read x;
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}
+
+procedure funcx233 {
+  read x;
+  while (1 == 1) {
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+      read x;
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}
+
+procedure funcx3 {
+  read x;
+  while (1 == 1) {
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+      read x;
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}
+
+procedure funcx4 {
+  read x;
+  while (1 == 1) {
+    x = x + 1;
+    if (x == 1) then {
+      x = x + 1;
+      print x;
+      while (x + y == x * y) {
+        read x;
+      }
+
+      if (x == 1) then {
+        x = x + 1;
+        print x;
+      } else {
+        print f;
+      }
+    } else {
+      read x;
+    }
+  }
+  y = x + 1;
+  x = y;
+  y = x + y + f;
+}
+
+procedure nestedDeep2 {
+	while(x > 12) {
+		while(x > 13) {
+			while(x > 14) {
+				while(x > 15) {
+					while(x > 16) {
+						while(x > 17) {
+							helpMe = 10 + 12 + 5567 * 76 / 12;
+							print helpMe;
+							read helpMe;
+							call bob;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+procedure ifWhileWhile2 {
+	if (x == 1) then {
+		print helpMe;
+		read helpMe;
+		while (x % 12 == 0) {
+			print helpMe;
+			read helpMe;
+			while (x > 13) {
+				print helpMe;
+				read helpMe;
+			}
+		}
+	} else {
+		print helpMe;
+		read helpMe;
+		while (y > 1000) {
+			print helpMe;
+			read helpMe;
+			while (y + x == 14141414) {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure whileIfIf2 {
+	while (x == 34) {
+		print helpMe;
+		read helpMe;
+		if (x * y > 12) then {
+			print helpMe;
+			read helpMe;
+		} else {
+			print helpMe;
+			read helpMe;
+			if (x + 12 == 141414) then {
+				print helpMe;
+				read helpMe;
+			} else {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure nestedDeepxsxsxsx {
+	while(x > 12) {
+		while(x > 13) {
+			while(x > 14) {
+				while(x > 15) {
+					while(x > 16) {
+						while(x > 17) {
+							helpMe = 10 + 12 + 5567 * 76 / 12;
+							print helpMe;
+							read helpMe;
+							call bob;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+procedure ifWhileWhilexsxsxsx {
+	if (x == 1) then {
+		print helpMe;
+		read helpMe;
+		while (x % 12 == 0) {
+			print helpMe;
+			read helpMe;
+			while (x > 13) {
+				print helpMe;
+				read helpMe;
+			}
+		}
+	} else {
+		print helpMe;
+		read helpMe;
+		while (y > 1000) {
+			print helpMe;
+			read helpMe;
+			while (y + x == 14141414) {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure whileIfIfsxsxs {
+	while (x == 34) {
+		print helpMe;
+		read helpMe;
+		if (x * y > 12) then {
+			print helpMe;
+			read helpMe;
+		} else {
+			print helpMe;
+			read helpMe;
+			if (x + 12 == 141414) then {
+				print helpMe;
+				read helpMe;
+			} else {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}

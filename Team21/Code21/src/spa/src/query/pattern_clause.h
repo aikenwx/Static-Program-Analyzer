@@ -23,9 +23,9 @@ class PatternClause {
   PatternClause(Synonym synonym_, Ref arg1_, ExpressionSpec arg2);
   [[maybe_unused]] [[nodiscard]] auto clauseGotExpression() const -> bool;
   [[maybe_unused]] [[nodiscard]] auto isExpressionPartial() const -> bool;
-  auto getArg1() const -> const Ref &;
-  auto getArg2() const -> const ExpressionSpec &;
-  auto getStmtSynonym() const -> const Synonym &;
+  [[nodiscard]] auto getArg1() const -> const Ref &;
+  [[nodiscard]] auto getArg2() const -> const ExpressionSpec &;
+  [[nodiscard]] auto getStmtSynonym() const -> const Synonym &;
 
   auto operator==(const PatternClause &clause) const -> bool {
     return stmtSynonym == clause.stmtSynonym && arg1 == clause.arg1 &&

@@ -13,8 +13,8 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
   const auto &ref1 = getClause().getRef1();
   const auto &ref2 = getClause().getRef2();
 
-  auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
-  auto *quoteVal = std::get_if<QuotedIdentifier>(&ref2.ref);
+  const auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
+  const auto *quoteVal = std::get_if<QuotedIdentifier>(&ref2.ref);
 
   // Swap if ref1 is not an AttrRef since it will be an QuotedIdentifier, vice versa
   if (atrVal == nullptr) {

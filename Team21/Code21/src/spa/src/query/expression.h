@@ -12,7 +12,7 @@ class Expression {
  public:
   Expression(bool isPartial_, std::string expression_);
   [[nodiscard]] auto isExpressionPartial() const -> bool;
-  auto getExpression() const -> const std::string &;
+  [[nodiscard]] auto getExpression() const -> const std::string &;
 
   auto operator==(const Expression &expr) const -> bool {
     return isPartial == expr.isPartial && expression == expr.expression;

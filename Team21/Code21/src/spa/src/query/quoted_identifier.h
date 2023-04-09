@@ -11,7 +11,7 @@ class QuotedIdentifier {
 
  public:
   explicit QuotedIdentifier(const std::string &id_);
-  auto getQuotedId() const -> const std::string &;
+  [[nodiscard]] auto getQuotedId() const -> const std::string &;
 
   static auto isValidId(const std::string &iden) -> bool;
 

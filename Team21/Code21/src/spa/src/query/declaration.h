@@ -17,8 +17,8 @@ class Declaration {
   Synonym synonym;
 
  public:
-  auto getDesignEntity() const -> DesignEntity;
-  auto getSynonym() const -> const Synonym &;
+  [[nodiscard]] auto getDesignEntity() const -> DesignEntity;
+  [[nodiscard]] auto getSynonym() const -> const Synonym &;
   Declaration(DesignEntity design_entity_, Synonym synonym_);
 
   auto operator==(const Declaration &declaration2) const -> bool {

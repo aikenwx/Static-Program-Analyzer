@@ -14,8 +14,8 @@ class WithClause {
 
  public:
   WithClause(WithRef ref1_, WithRef ref2_);
-  auto getRef1() const -> const WithRef &;
-  auto getRef2() const -> const WithRef &;
+  [[nodiscard]] auto getRef1() const -> const WithRef &;
+  [[nodiscard]] auto getRef2() const -> const WithRef &;
 
   auto operator==(const WithClause &clause) const -> bool {
     return ref1 == clause.ref1 && ref2 == clause.ref2;

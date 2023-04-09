@@ -13,8 +13,8 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
   const auto &ref1 = getClause().getRef1();
   const auto &ref2 = getClause().getRef2();
 
-  auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
-  auto *numberVal = std::get_if<int>(&ref2.ref);
+  const auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
+  const auto *numberVal = std::get_if<int>(&ref2.ref);
 
   // Swap if ref1 is not an AttrRef since it will be an int, vice versa
   if (atrVal == nullptr) {

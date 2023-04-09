@@ -1,7 +1,5 @@
 #include "with_double_int_evaluator.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "query/query_exceptions.h"
-#include <unordered_set>
 #include <vector>
 
 namespace qps {

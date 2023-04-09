@@ -1,8 +1,6 @@
 #include "with_double_quote_evaluator.h"
 #include "PKBStorageClasses/EntityClasses/Entity.h"
-#include "query/query_exceptions.h"
 #include "query/quoted_identifier.h"
-#include <unordered_set>
 #include <vector>
 
 namespace qps {

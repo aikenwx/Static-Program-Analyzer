@@ -1,18 +1,17 @@
 #include "such_that_evaluator.h"
 
 #include "query/ref.h"
-#include "query/query_exceptions.h"
 #include "query_evaluators/pkb_qps_type_mapping.h"
 
 #include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 namespace qps {
 
-int GetLiteral(const StatementNumber &num) {
+auto GetLiteral(const StatementNumber &num) -> int {
   return num;
 }
 
-auto GetLiteral(const QuotedIdentifier &id) -> std::string {
-  return id.getQuotedId();
+auto GetLiteral(const QuotedIdentifier &iden) -> std::string {
+  return iden.getQuotedId();
 }
 
 class ClauseVisitor {

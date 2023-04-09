@@ -24,7 +24,7 @@ class ConstraintsSolver {
   QueryFacade &pkb_;
   std::unordered_map<Synonym, int> syn_grp;
   std::unordered_map<int, SynonymTable> grp_table;
-  int num_grps;
+  int num_grps{};
 
   auto MergeTableWithGrps(SynonymTable table) -> SynonymTable;
   auto GetNei(const SynonymTable &table) -> std::unordered_set<int>;

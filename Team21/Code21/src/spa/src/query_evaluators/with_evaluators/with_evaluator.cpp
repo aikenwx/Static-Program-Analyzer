@@ -2,7 +2,6 @@
 #include "query/attr_ref.h"
 #include "query/ref.h"
 #include "query/query_exceptions.h"
-#include "query_evaluators/with_evaluators/with_evaluator.h"
 
 namespace qps {
 

@@ -9,7 +9,7 @@
 
 namespace qps {
 // Rough Heuristic to rank relative num of each design entity
-int DesignEntityScore(DesignEntity entity) {
+auto DesignEntityScore(DesignEntity entity) -> int {
   switch (entity) {
     case DesignEntity::PROCEDURE:return 2;
     case DesignEntity::WHILE:return 5;
@@ -26,7 +26,7 @@ int DesignEntityScore(DesignEntity entity) {
 
 // Rough Heuristic to rank each clause in terms of number of results it might return
 // Not relative because we are never comparing clauses in aggregate
-int RelationshipSizeScore(Relationship relationship) {
+auto RelationshipSizeScore(Relationship relationship) -> int {
   switch (relationship) {
     case Relationship::Next:return 1;
     case Relationship::Parent:return 2;
@@ -49,7 +49,7 @@ int RelationshipSizeScore(Relationship relationship) {
 
 // Rough Heuristic to rank each clause in terms of time needed to calculate results
 // Except for NextT, Affects, AffectsT everything is precomputed.
-int RelationshipCalculationScore(Relationship relationship) {
+auto RelationshipCalculationScore(Relationship relationship) -> int {
   switch (relationship) {
     case Relationship::Parent:
     case Relationship::Follows:
@@ -168,6 +168,6 @@ void ClauseRanker::SortQuery(Query &query) {
   SortPatternClause(query.getPatternClause());
   SortSuchThatClause(query.getSuchThatClause());
 }
-} // qps
+}  // namespace qps
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

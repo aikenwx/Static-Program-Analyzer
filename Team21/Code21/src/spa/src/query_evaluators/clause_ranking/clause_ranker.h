@@ -8,7 +8,7 @@ namespace qps {
 
 class ClauseRanker {
  public:
-  ClauseRanker(const std::vector<Declaration> &decl_lst) : decl_lst_(decl_lst) {}
+  explicit ClauseRanker(const std::vector<Declaration> &decl_lst) : decl_lst_(decl_lst) {}
   void SortQuery(Query &);
   void SortSuchThatClause(std::vector<SuchThatClause> &);
   void SortPatternClause(std::vector<PatternClause> &);
@@ -18,4 +18,4 @@ class ClauseRanker {
   const std::vector<Declaration> &decl_lst_;
 };
 
-} // qps
+}  // namespace qps

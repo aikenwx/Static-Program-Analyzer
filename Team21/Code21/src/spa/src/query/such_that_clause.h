@@ -47,9 +47,9 @@ class SuchThatClause {
   }
 
  public:
-  auto getRelationship() const -> Relationship;
-  auto getArg1() const -> const Ref &;
-  auto getArg2() const -> const Ref &;
+  [[nodiscard]] auto getRelationship() const -> Relationship;
+  [[nodiscard]] auto getArg1() const -> const Ref &;
+  [[nodiscard]] auto getArg2() const -> const Ref &;
   SuchThatClause(Relationship relationship_, Ref arg1_, Ref arg2_,
                  std::vector<Declaration> &declarations);
 

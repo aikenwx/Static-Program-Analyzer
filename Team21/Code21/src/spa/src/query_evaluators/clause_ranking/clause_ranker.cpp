@@ -3,6 +3,8 @@
 #include "query/ref.h"
 #include "query/with_ref.h"
 
+#include "algorithm"
+
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 namespace qps {

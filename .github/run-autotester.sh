@@ -15,7 +15,7 @@ mkdir /tmp/autotester_test_outputs
 
 test_names="$(find . -name "*_queries.txt" | sed -e "s|_queries.txt$||" -e  "s|^\./||")"
 
-test_dir_names="$({ echo "$test_names" | grep '/' | cut -d"/" -f 1 || test $? = 1; })"
+test_dir_names="$({ echo "$test_names" | grep '/' | cut -d"/" -f 1 | sort | uniq || test $? = 1; })"
 IFS=$'\n'; for i in $test_dir_names; do mkdir "/tmp/autotester_test_outputs/$i"; done
 
 # because asan will cause autotester to exit with exit code 1

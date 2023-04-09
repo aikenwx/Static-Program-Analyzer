@@ -1,0 +1,105 @@
+procedure first {
+    call sixth;
+}
+
+procedure second {
+    if (x == 3) then {
+        while (x <= 10) {
+            read x;
+        }
+    } else {
+        if (y > 3) then {
+            read y;
+        } else {
+            if (x < 20) then {
+                print y;
+                call first;
+                call seventh;
+            } else {
+                print x;
+            }
+        }
+    }
+}
+
+procedure third {
+    if (x == 3) then {
+        while (x <= 10) {
+            read x;
+        }
+    } else {
+        if (y > 3) then {
+            read y;
+        } else {
+            if (x < 20) then {
+                print y;
+            } else {
+                call first;
+                call seventh;
+                print x;
+            }
+        }
+    }
+}
+
+procedure fourth {
+    if (x == 3) then {
+        while (x <= 10) {
+            read x;
+        }
+    } else {
+        if (y > 3) then {
+            read y;
+        } else {
+            while (x < 20) {
+                x = x + 1;
+                call first;
+                call seventh;
+                x = x / 2;
+            }
+        }
+    }
+}
+
+procedure fifth {
+    if (x < 15) then {
+        print x;
+    } else {
+        read y;
+        if (y > 10) then {
+            x = k * (2 % n);
+        } else {
+            x = k * (3 / n);
+        }
+    }
+    call first;
+    call seventh;
+}
+
+procedure sixth {
+    call ninth;
+    call eighth;
+}
+
+procedure seventh {
+    call sixth;
+}
+
+procedure eighth {
+    x = 40;
+}
+
+procedure ninth {
+    x = 30;
+}
+
+procedure tenth {
+    read y;
+}
+
+procedure eleventh {
+    call second;
+    call third;
+    call fourth;
+    call fifth;
+}

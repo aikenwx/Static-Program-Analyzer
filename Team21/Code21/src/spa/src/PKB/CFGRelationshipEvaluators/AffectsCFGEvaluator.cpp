@@ -106,7 +106,6 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
   auto results = std::make_unique<std::vector<Entity*>>();
 
-
   // create stack of statements to visit
   auto statementNumbersToVisit = std::stack<int>();
   auto unusedVariablesForStatementsYetToVisit =
@@ -144,8 +143,7 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
     auto* nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
 
-    if (
-        visitInForwardsEvaluation(
+    if (visitInForwardsEvaluation(
             nextToVisitStmt,
             reinterpret_cast<std::vector<Statement*>*>(results.get()))) {
       continue;
@@ -173,6 +171,7 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
   return results;
 }
 
+// this is a naive algorithm, by completing all forwards evaluation first, then working backwards
 auto AffectsCFGEvaluator::getRelatedStatementsInReverseEvaluation(Statement* sourceStatement)
     -> std::unique_ptr<std::vector<Entity*>> {
   auto allAssignStatements = getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());

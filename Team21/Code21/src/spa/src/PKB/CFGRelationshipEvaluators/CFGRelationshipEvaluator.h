@@ -45,6 +45,14 @@ class CFGRelationshipEvaluator {
 
   auto getRelationshipCache() -> RelationshipCache*;
 
+  virtual auto shouldEvaluateRelationshipsByEntityTypesInReverse(
+      std::vector<Entity*>* leftEntityVector,
+      std::vector<Entity*>* rightEntityVector) -> bool = 0;
+
+  virtual auto shouldSortForDoubleEnityTypeEvaluation() -> bool;
+
+  auto solveTransitiveRelationship(Statement* statement, bool isReverse, CFGRelationshipEvaluator& baseEvaluator) -> std::unique_ptr<std::vector<Entity*>>;
+
  public:
   CFGRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
                            RelationshipCache* relationshipCache, EntityManager* entityManager);
@@ -76,13 +84,6 @@ class CFGRelationshipEvaluator {
       bool isReverse, Entity& sourceEntity,
       const EntityType& destinationEntityType)
       -> CacheResult&;
-
- protected:
-  virtual auto shouldEvaluateRelationshipsByEntityTypesInReverse(
-      std::vector<Entity*>* leftEntityVector,
-      std::vector<Entity*>* rightEntityVector) -> bool = 0;
-
-  virtual auto shouldSortForDoubleEnityTypeEvaluation() -> bool;
 };
 
 #endif  // SPA_CFGRELATIONSHIPEVALUATOR_H

@@ -43,7 +43,6 @@ auto AffectsRelatedCFGEvaluator::
         std::vector<Entity *> *leftEntityVector,
         std::vector<Entity *> *rightEntityVector) -> bool {
   // reverse evaluation for affects, is always slower than non-reverse
-  // evaluation, due to having to maintain and copy a set of used variables from
-  // the source statement
+  // evaluation, as it requires solving all forward affects relationships first
   return false;
 }

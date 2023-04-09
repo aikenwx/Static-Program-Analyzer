@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include "query_evaluators/string_helpers.h"
+#include "query_evaluators/string_conversion_helpers.h"
 
 template<typename Table>
 auto CombinedKeys(const Table &table1, const Table &table2) -> typename Table::Header {

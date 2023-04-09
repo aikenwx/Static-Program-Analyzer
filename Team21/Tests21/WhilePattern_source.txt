@@ -1,0 +1,53 @@
+procedure one {
+   x = 50+y-60;
+   if((fy > 10) && (fz < 5)) then {
+      a = a+520-b*10;
+      b = v*100-c*5;
+      while (!((wc - 50) != (wd+500))) {
+         e = 50/5 + a/y+c;
+         if(((fd / fe) + (fc%fy)) >= 0) then {
+         	z = z/5+c/3;
+         } else {
+            Px = (z%1000)*50+c; 
+         }
+      }
+      Dx = (a+5)*(b-c)*p;
+   } else {
+   	g = (((Dx+Px)%5)/10)*50;
+   	while(((wx <= 0) || (wa < 0)) && (!(wp%2 == 1)))  {
+      	print g;
+      	read x;
+      	e = l*m-p%o/n;
+      }
+      h = (h*7)-(r*1000);
+   }
+   z = (a*b-c)*(d+r+e-q);
+}
+
+procedure two {
+   read k;
+	while(((wa+wb+wc) != 500) && (!(wp+wyz+wqc == wac+wbc))) {
+		call one;
+	   print q;
+		if((fuym-fodebs*fqwn) != 0) then {
+		  if((fvs/fqsk-fes) > (fqy*fadj+fwes))  then {
+		  	read l;
+		  	r = (abc-bcd)*(qad%65);
+		  } else {
+		  	print r;
+		  	i = (q+5)%(e+rwy);
+		  }
+		} else {
+		  if(((50 >= 323) && (950/2 <= 950)) || (!(1==1))) then {
+		  	u = (l+q)+((q+60)+1000);
+		  } else {
+		    t = (t*567-1000)+(t/r/s+63);
+		  	while(50+5/2 == 43%6*5) {
+		  	   print f;
+		  	}
+		  	call one;
+		  }
+		  a = ((q+p)-(b/5))+(r+5/g);
+		}
+	}
+}

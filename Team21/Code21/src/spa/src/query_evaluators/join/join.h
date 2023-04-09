@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "query_evaluators/tables/table_helpers.h"
-#include "query_evaluators/string_helpers.h"
+#include "query_evaluators/string_conversion_helpers.h"
 
 namespace std {
 template<typename T1, typename T2>

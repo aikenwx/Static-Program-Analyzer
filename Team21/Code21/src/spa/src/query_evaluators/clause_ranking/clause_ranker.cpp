@@ -8,47 +8,53 @@
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
 namespace qps {
-// Rough Heuristic to rank relative num of each design entity
+// Rough Heuristic to rank relative number of each design entity
+// This will depend on the source so this is just an estimation based on some general principles
+// Generally Assign Statements exceed other type of statements (while and if will tend to be the least)
+// (here we estimate they are 4 times more than read or print statements for example)
+// Variable & Constants don't have any limit so they can potentially be much more than number of statements
+// (estimated to be slightly more than 4 times more than stmts).
 auto DesignEntityScore(DesignEntity entity) -> int {
   switch (entity) {
-    case DesignEntity::PROCEDURE:return 2;
-    case DesignEntity::WHILE:return 5;
-    case DesignEntity::IF:return 5;
-    case DesignEntity::READ:return 20;
-    case DesignEntity::PRINT:return 20;
-    case DesignEntity::CALL:return 20;
-    case DesignEntity::ASSIGN:return 40;
-    case DesignEntity::STMT: return 100;
-    case DesignEntity::VARIABLE: return 200;
-    case DesignEntity::CONSTANT: return 200;
+    case DesignEntity::PROCEDURE:return 1;
+    case DesignEntity::WHILE:return 25;
+    case DesignEntity::IF:return 25;
+    case DesignEntity::READ:return 50;
+    case DesignEntity::PRINT:return 50;
+    case DesignEntity::CALL:return 50;
+    case DesignEntity::ASSIGN:return 200;
+    case DesignEntity::STMT: return 400;
+    case DesignEntity::VARIABLE: return 5000;
+    case DesignEntity::CONSTANT: return 5000;
   }
 }
 
 // Rough Heuristic to rank each clause in terms of number of results it might return
-// Not relative because we are never comparing clauses in aggregate
+// These numbers are not relative because we are never comparing clauses in aggregate
+// (our grouping is one on the fly as we evaluate the clauses one by one)
 auto RelationshipSizeScore(Relationship relationship) -> int {
   switch (relationship) {
     case Relationship::Next:return 1;
     case Relationship::Parent:return 2;
-    case Relationship::Follows:return 3;
-    case Relationship::Calls:return 4;
-    case Relationship::Uses:return 5;
-    case Relationship::UsesS:return 6;
-    case Relationship::UsesP:return 7;
-    case Relationship::Modifies:return 8;
-    case Relationship::ModifiesS:return 9;
-    case Relationship::ModifiesP:return 10;
+    case Relationship::Calls:return 3;
+    case Relationship::Follows:return 4;
+    case Relationship::Modifies:return 5;
+    case Relationship::ModifiesS:return 6;
+    case Relationship::ModifiesP:return 7;
+    case Relationship::Uses:return 8;
+    case Relationship::UsesS:return 9;
+    case Relationship::UsesP:return 10;
     case Relationship::ParentT:return 11;
-    case Relationship::FollowsT:return 12;
-    case Relationship::CallsT:return 13;
-    case Relationship::NextT:return 14;
-    case Relationship::Affects:return 15;
+    case Relationship::CallsT:return 12;
+    case Relationship::FollowsT:return 13;
+    case Relationship::Affects:return 14;
+    case Relationship::NextT:return 15;
     case Relationship::AffectsT:return 16;
   }
 }
 
 // Rough Heuristic to rank each clause in terms of time needed to calculate results
-// Except for NextT, Affects, AffectsT everything is precomputed.
+// Except for NextT, Affects, AffectsT everything is precomputed (so they are all given the same score)
 auto RelationshipCalculationScore(Relationship relationship) -> int {
   switch (relationship) {
     case Relationship::Parent:
@@ -86,7 +92,9 @@ struct RefScorer {
   }
 
   auto operator()(const Underscore &underscore) -> int {
-    return 100;
+    // Underscore might actually represent an entity lesser than this or more than this
+    // depending on the clause. STMT is just chosen as an average as a heuristic.
+    return DesignEntityScore(DesignEntity::STMT);
   }
 
   const std::vector<Declaration> &decl_lst;
@@ -118,7 +126,7 @@ const std::vector<Relationship> NotPrecomputed = {Relationship::Next, Relationsh
 
 // Compare time needed to calculate first. Push any relationship that takes time to calculate to the back
 // If calculation time is the same, then compare, number of literals or synonyms in clause. Clause with more literals
-// or more restrive synonyms should be done first
+// or more restrictive synonyms should be done first
 // If the number of literals and synonyms is the same then compare rough size expected based on relationship
 void ClauseRanker::SortSuchThatClause(std::vector<SuchThatClause> &clauses) {
   std::sort(std::begin(clauses), std::end(clauses),

@@ -1,7 +1,7 @@
 #include <string>
 #include <string_view>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
+#include <set>
 #include <vector>
 
 #include "../token/identifier_token.h"
@@ -16,8 +16,8 @@ class SimpleTokenFactory : public TokenFactory {
   auto checkSymbol(std::string_view value) -> CheckSymbolResult override;
 
  private:
-  static const std::unordered_map<char, std::vector<std::string>> kSymbolTokens;
-  static const std::unordered_set<std::string> kValidSymbols;
-  static const std::unordered_set<char> kWhitespaceTokens;
+  static const std::map<char, std::vector<std::string>> kSymbolTokens;
+  static const std::set<std::string, std::less<>> kValidSymbols;
+  static const std::set<char> kWhitespaceTokens;
 };
 }  // namespace token_factory

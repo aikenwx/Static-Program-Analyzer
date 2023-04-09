@@ -3,6 +3,7 @@
 #include "attr_ref_eval.h"
 #include "query_evaluators/pkb_qps_type_mapping.h"
 #include "query_evaluators/string_helpers.h"
+#include "query_evaluators/tables/table_helpers.h"
 
 namespace qps {
 
@@ -35,7 +36,7 @@ class SelectVisitor {
   }
 
   void EvaluateFinalResult() {
-    auto final_result = ConstraintsSolver::solve(tables_);
+    auto final_result = ConstraintsSolver::solve(std::move(tables_));
     if (!final_result) {
       return;
     }
@@ -53,7 +54,7 @@ class SelectVisitor {
           row.push_back(*val->getEntityValue());
         }
       }
-      results_.push_back(Join(std::move(row), " "));
+      results_.push_back(Join(row, " "));
     }
   }
 
@@ -73,17 +74,18 @@ class SelectVisitor {
   }
 
   void EvaluateSelectSyns(ClauseGrps clause_grps) {
-    std::unordered_set<int> filtered_grps;
+    std::unordered_map<int, std::vector<Synonym>> filtered_grps;
     for (auto &syn : syns_) {
       auto grp = clause_grps.syn_grp.find(syn);
       if (grp == clause_grps.syn_grp.end()) {
         EvaluateSingleSelect(syn);
       } else {
-        filtered_grps.insert(grp->second);
+        filtered_grps[grp->second].push_back(syn);
       }
     }
-    for (int grp : filtered_grps) {
-      tables_.push_back(std::move(clause_grps.grp_table[grp]));
+    for (const auto &iter : filtered_grps) {
+      auto projected_table = Project(clause_grps.grp_table[iter.first], iter.second);
+      tables_.push_back(std::move(projected_table));
     }
   }
 

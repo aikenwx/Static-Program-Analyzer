@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <unordered_set>
 
+#include "query_evaluators/string_helpers.h"
+
 template<typename Table>
 auto CombinedKeys(const Table &table1, const Table &table2) -> typename Table::Header {
   auto all_keys = table1.GetHeader();
@@ -37,18 +39,18 @@ auto ExtractRow(const Table &table, size_t row_idx, const typename Table::Header
   return row;
 }
 
-template<typename Table, typename Container, typename TransformFunc>
-void Extract(const Table &table, const Container &container, TransformFunc func) {
-  const auto &rows = table.GetResults();
-  std::transform(std::begin(rows), std::end(rows), std::back_inserter(container), func);
-}
-
 template<typename Table>
-auto ExtractCol(const Table &table,
-                const typename Table::Key &key) -> std::unordered_set<typename Table::Value> {
-  std::unordered_set<typename Table::Value> col_vals;
-  for (size_t row_idx = 0; row_idx < table.ResultSize(); ++row_idx) {
-    col_vals.insert(table.GetCell(row_idx, key));
+auto Project(const Table &table, const typename Table::Header &header) -> Table {
+  std::unordered_set<std::string> rows;
+  Table projected_table(header);
+  for (int row_idx = 0; row_idx < table.ResultSize(); ++row_idx) {
+    auto extracted_row = ExtractRow(table, row_idx, header);
+    auto hash_key = qps::Join(extracted_row, "/");
+    if (rows.find(hash_key) != rows.end()) {
+      continue;
+    }
+    rows.insert(std::move(hash_key));
+    projected_table.AddRow(std::move(extracted_row));
   }
-  return col_vals;
+  return projected_table;
 }

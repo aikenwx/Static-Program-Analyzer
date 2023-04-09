@@ -1,0 +1,55 @@
+1 - pattern if(_, _, _)
+if f;
+Select f pattern f(_, _, _)
+2, 7, 22, 23
+5000
+2 - pattern if(lit, _, _)
+if f;
+Select f pattern f("fy", _, _)
+2, 7
+5000
+3 - pattern if(lit, _, _)
+if f;
+Select f pattern f("fqsk", _, _)
+23
+5000
+4 - pattern if(syn, _, _)
+if f; variable v;
+Select <f,v> pattern f(v, _, _)
+2 fy, 2 fz, 7 fd, 7 fe, 7 fc, 7 fy, 22 fuym, 22 fodebs, 22 fqwn, 23 fqy, 23 fadj, 23 fwes, 23 fvs, 23 fqsk, 23 fes
+5000
+5 - pattern if(num, _, _)
+if f;
+Select f pattern f(1, _, _)
+SyntaxError
+5000
+6 - pattern if(lit, _, syn)
+if f; variable v, x;
+Select f pattern f("fy", _, x)
+SyntaxError
+5000
+7 - pattern if(lit, _, lit)
+if f;
+Select f pattern f("fy", _, "x")
+SyntaxError
+5000
+8 - pattern if(lit, syn, _)
+if f; variable v;
+Select f pattern f("fy", v, _)
+SyntaxError
+5000
+9 - pattern if(lit, lit, _)
+if f;
+Select f pattern f("fy", "a", _)
+SyntaxError
+5000
+10 - pattern if(lit, lit, lit)
+if f;
+Select f pattern f("fy", "a", "b")
+SyntaxError
+5000
+11 - pattern if(lit, syn, syn)
+if f; variable v, x;
+Select f pattern f("fy", v, x)
+SyntaxError
+5000

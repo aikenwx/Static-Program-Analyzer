@@ -2,7 +2,7 @@
 #include "query_evaluators/join/constraints_solver.h"
 #include "attr_ref_eval.h"
 #include "query_evaluators/pkb_qps_type_mapping.h"
-#include "query_evaluators/string_helpers.h"
+#include "query_evaluators/string_conversion_helpers.h"
 #include "query_evaluators/tables/table_helpers.h"
 
 namespace qps {

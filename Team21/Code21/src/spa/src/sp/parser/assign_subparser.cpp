@@ -1,6 +1,7 @@
 #include "sp/ast/astlib.h"
 #include "assign_subparser.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 auto AssignSubparser::Parse(std::shared_ptr<Context> context) -> bool {
@@ -10,7 +11,7 @@ auto AssignSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     // assign: iden '=' expr ';'
     if (stack->size() >= 3
       && util::instance_of<ast::ExpressionNode>(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))->GetType() == ast::SymbolType::kAssign
+      && IsSymbolNodeValue(*std::next(iter, 1), "=")
       && util::instance_of<ast::IdentifierNode>(*std::next(iter, 2))) {
       // References expression node
       std::shared_ptr<ast::ExpressionNode> exp =

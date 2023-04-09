@@ -1,6 +1,7 @@
 #include "sp/ast/astlib.h"
 #include "while_subparser.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -9,12 +10,12 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto iter = stack->rbegin();
   // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
   if (stack->size() >= 7
-    && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightBrace
+    && IsSymbolNodeValue(*iter, "}")
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftBrace
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kRightParen
+    && IsSymbolNodeValue(*std::next(iter, 2), "{")
+    && IsSymbolNodeValue(*std::next(iter, 3), ")")
     && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 5)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 5)))->GetType() == ast::SymbolType::kLeftParen
+    && IsSymbolNodeValue(*std::next(iter, 5), "(")
     && util::instance_of<ast::IdentifierNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 6)))->GetValue() == "while") {
     // Pops right brace symbol node
     stack->pop_back();

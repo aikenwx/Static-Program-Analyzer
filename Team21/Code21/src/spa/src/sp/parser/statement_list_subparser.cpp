@@ -3,8 +3,10 @@
 #include "sp/ast/astlib.h"
 #include "sp/ast/container_statement_node.h"
 #include "sp/ast/statement_list_node.h"
+#include "sp/parser/util/is_symbol_node_value.h"
 #include "sp/token/identifier_token.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
@@ -47,7 +49,7 @@ auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     }
     // stmtLst: stmt+ (adds statement to statement list)
     if (stack->size() >= 3
-      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kSemicolon
+      && IsSymbolNodeValue(*iter, ";")
       && util::instance_of<ast::StatementNode>(*std::next(iter, 1))
       && util::instance_of<ast::StatementListNode>(*std::next(iter, 2))) {
       // Pops semicolon symbol node
@@ -69,7 +71,7 @@ auto StatementListSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     }
     // stmtLst: stmt+ (creates a one statement statement list)
     if (stack->size() >= 2
-      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kSemicolon
+      && IsSymbolNodeValue(*iter, ";")
       && util::instance_of<ast::StatementNode>(*std::next(iter, 1))) {
       // Pops semicolon symbol node
       stack->pop_back();

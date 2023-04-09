@@ -7,7 +7,7 @@ class ComparisonOperationNode : public BinaryOperationNode {
 public:
   explicit ComparisonOperationNode(std::shared_ptr<INode> left,
                       std::shared_ptr<INode> right,
-                      SymbolType type);
+                      std::string_view type);
 
   [[nodiscard]] auto GetSymbolType() const -> std::string;
   [[nodiscard]] auto ToString() const -> std::string override;

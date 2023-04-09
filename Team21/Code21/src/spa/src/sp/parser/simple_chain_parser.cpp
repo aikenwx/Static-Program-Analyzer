@@ -81,14 +81,7 @@ void SimpleChainParser::Shift() {
         std::stoi((**(context->GetLookahead()))->GetValue()));
     context->GetStack()->push_back(con);
   } else if (context->IsLookaheadTypeOf<token::SymbolToken>()) {
-    auto symbol_type =
-        kSymbolToSymbolTypeMap.find((**(context->GetLookahead()))->GetValue());
-    if (symbol_type == kSymbolToSymbolTypeMap.end()) {
-      // Default implementation but should not reach here
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-      assert(false);
-    }
-    auto sym = std::make_shared<ast::SymbolNode>(symbol_type->second);
+    auto sym = std::make_shared<ast::SymbolNode>((**(context->GetLookahead()))->GetValue());
     context->GetStack()->push_back(sym);
   } else if (context->IsLookaheadTypeOf<token::EndToken>()) {
     // No need to include end token in AST

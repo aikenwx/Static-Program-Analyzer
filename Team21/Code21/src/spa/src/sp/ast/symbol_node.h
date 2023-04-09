@@ -1,38 +1,16 @@
 #pragma once
+
 #include "i_node.h"
 
 namespace ast {
-enum class SymbolType {
-  kAnd,
-  kAssign,
-  kDivide,
-  kEqual,
-  kGreater,
-  kGreaterEqual,
-  kLeftBrace,
-  kLeftParen,
-  kLesser,
-  kLesserEqual,
-  kMinus,
-  kModulo,
-  kMultiply,
-  kNotEqual,
-  kNot,
-  kOr,
-  kPlus,
-  kRightBrace,
-  kRightParen,
-  kSemicolon
-};
-
 class SymbolNode : public INode {
 public:
- explicit SymbolNode(SymbolType type);
+ explicit SymbolNode(std::string_view type);
 
- auto GetType() -> SymbolType;
+ auto GetType() -> std::string;
  [[nodiscard]] auto ToString() const -> std::string override;
 
 private:
-  SymbolType type;
+  std::string type_;
 };
 }  // namespace ast

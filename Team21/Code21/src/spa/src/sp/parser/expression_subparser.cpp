@@ -2,6 +2,7 @@
 #include "sp/ast/additive_operation_node.h"
 #include "sp/ast/astlib.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
@@ -9,8 +10,8 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto iter = stack->rbegin();
   auto is_correct_symbol =
       [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return symbol_node->GetType() == ast::SymbolType::kPlus ||
-               symbol_node->GetType() == ast::SymbolType::kMinus;
+        return IsSymbolNodeValue(symbol_node, "+") ||
+               IsSymbolNodeValue(symbol_node, "-");
       };
   if (context->IsLookaheadSymbolValueAnyOf(
           {")", ";", "+", "-", "<", ">", "==", "<=", ">=", "!="})) {
@@ -26,7 +27,7 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops term node
       stack->pop_back();
       // References additive symbol type
-      ast::SymbolType sym =
+      std::string sym =
           std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
       // Pops additive symbol node
       stack->pop_back();

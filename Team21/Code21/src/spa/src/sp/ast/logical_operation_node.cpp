@@ -6,20 +6,8 @@
 namespace ast {
 
 LogicalOperationNode::LogicalOperationNode(
-    std::shared_ptr<INode> left, std::shared_ptr<INode> right, SymbolType type)
-    : BinaryOperationNode::BinaryOperationNode(std::move(left), std::move(right)) {
-  switch (type) {
-  case SymbolType::kAnd:
-    operator_ = "&&";
-    break;
-  case SymbolType::kOr:
-    operator_ = "||";
-    break;
-  default:
-    operator_ = "";
-    break;
-  }
-}
+    std::shared_ptr<INode> left, std::shared_ptr<INode> right, std::string_view type)
+    : BinaryOperationNode::BinaryOperationNode(std::move(left), std::move(right)), operator_(type) {}
 
 auto LogicalOperationNode::GetSymbolType() const -> std::string {
   return operator_;

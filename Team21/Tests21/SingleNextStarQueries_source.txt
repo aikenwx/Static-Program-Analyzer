@@ -1,0 +1,263 @@
+procedure fun {
+	if(sleep > 8) then {
+		sleep = 0;
+	} else {
+		sleep = 8;
+		read clown;
+		read mugger;
+		print dead;
+		print laugh;
+		call bob;
+	}
+
+	ctf = 0;
+	print security;
+	hack = secure + flag;
+	flag = found;
+
+	while(clown < 100) {
+		clown = killerclown;
+		scarecrow = fun;
+		clown = clown + 100;
+	}
+
+	value = 10;
+	while(pennywise > ronald) {
+		wendy = happy;
+		wendy = wendy + 1;
+		while(wendy == happy) {
+			ronald = value;
+			value = 1999;
+			while(value > 10) {
+				print happy;
+				read ronald;
+				wendy = 10 + 12 % 12;
+			}
+			value = value - 1;
+			wendy = value;
+		}
+	}
+
+	if (wendy + 1 == ronald + 3) then {
+		happy = 9999;
+		macs = happy;
+	} else {
+		if (happy == 0) then {
+			happy = 100;
+			happy = 99;
+			happy = 98;
+			happy = 97;
+			wendy = 9000;
+		} else {
+			clown = 12 * 12 + 4 % pennywise;
+			call bob;
+			if (happy != 0) then {
+				happy = 1;
+				happy = 2;
+				happy = 3;
+				happy = 4;
+			} else {
+				happy = 10;
+				happy = 11;
+			}
+		}
+	}
+
+	if (wendy + 1 == ronald + 3) then {
+		happy = 9999;
+		macs = happy;
+		if (happy == 0) then {
+			happy = 100;
+			happy = 99;
+			happy = 98;
+			happy = 97;
+			wendy = 9000;
+			if (happy != 0) then {
+				happy = 1;
+				happy = 2;
+				happy = 3;
+				happy = 4;
+			} else {
+				happy = 10;
+				happy = 11;
+			}
+		} else {
+			clown = 12 * 12 + 4 % pennywise;
+			call bob;
+		}
+	} else {
+		read happy;
+		print happy;
+		read macs;
+	}
+
+	if (mugger == dead % 2) then {
+		mugger = dead + sleep * laugh;
+	} else {
+		while (mugger > 0) {
+			if (dead < 0) then {
+				mugger = mugger + 1;
+				laugh = laugh * laugh;
+				dead = mugger;
+			} else {
+				print mugger;
+				read laugh;
+				mugger = 12 * 12 * 12;
+			}
+		}
+	}
+
+	while (ctf != 0) {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		if (found == 0) then {
+			read hack;
+			print ctf;
+			hack = hack + 1;
+			while (hack > 20) {
+				found = found + 100 - secure;
+				print found;
+				read security;
+			}
+		} else {
+			print cs2107;
+			found = 0;
+			print found;
+			print security;
+		}
+	}
+	print flag;
+	print clown;
+	print mugger;
+	read happy;
+}
+
+procedure bob {
+	bob1 = bob1;
+	print IamBob;
+	bob1 = sad * 10 / 9;
+	print helpBOB;
+	while (ctf != 0) {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		security2 = secure + 1234567 % 20;
+		flag2 = security / 6 - secure * 2;
+		while (hack > 20) {
+			found = found + 100 - secure;
+			print found;
+			read security;
+			if (found == 0) then {
+				read hack;
+				print ctf;
+				hack = hack + 1;
+			} else {
+				print cs2107;
+				found = 0;
+				print found;
+				print security;
+			}
+		}
+	}
+}
+
+procedure cat {
+	cat = cat;
+	cat = cat + 10;
+	print cat;
+	read cat;
+	call bob;
+	if ((ctf != 0) && (ctf > 0)) then {
+		security = secure + 1234567 % 20;
+		flag = security / 6 - secure * 2;
+		if (found == 0) then {
+			read hack;
+			print ctf;
+			hack = hack + 1;
+			while (hack > 20) {
+				found = found + 100 - secure;
+				print found;
+				read security;
+			}
+		} else {
+			print cs2107;
+			found = 0;
+			print found;
+			print security;
+		}
+	} else {
+		found = 112123;
+		security = 123123;
+		call fun;
+		call bob;
+	}
+}
+
+procedure nestedDeep {
+	while(x > 12) {
+		while(x > 13) {
+			while(x > 14) {
+				while(x > 15) {
+					while(x > 16) {
+						while(x > 17) {
+							helpMe = 10 + 12 + 5567 * 76 / 12;
+							print helpMe;
+							read helpMe;
+							call bob;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+procedure ifWhileWhile {
+	if (x == 1) then {
+		print helpMe;
+		read helpMe;
+		while (x % 12 == 0) {
+			print helpMe;
+			read helpMe;
+			while (x > 13) {
+				print helpMe;
+				read helpMe;
+			}
+		}
+	} else {
+		print helpMe;
+		read helpMe;
+		while (y > 1000) {
+			print helpMe;
+			read helpMe;
+			while (y + x == 14141414) {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}
+
+procedure whileIfIf {
+	while (x == 34) {
+		print helpMe;
+		read helpMe;
+		if (x * y > 12) then {
+			print helpMe;
+			read helpMe;
+		} else {
+			print helpMe;
+			read helpMe;
+			if (x + 12 == 141414) then {
+				print helpMe;
+				read helpMe;
+			} else {
+				print helpMe;
+				read helpMe;
+			}
+			print helpMe;
+			read helpMe;
+		}
+	}
+}

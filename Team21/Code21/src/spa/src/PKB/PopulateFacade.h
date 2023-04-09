@@ -30,6 +30,7 @@ class PopulateFacade {
     void storeConstant(int constantValue);
     void storeVariable(const std::string& variableName);
     void storeProcedure(const std::string& procedureName);
+    void storeTotalStatementCount(int totalStatementCount);
 
     void storeStatementModifiesVariableRelationship(int statementNumber, std::string variableName);
     void storeProcedureModifiesVariableRelationship(std::string procedureName, std::string variableName);

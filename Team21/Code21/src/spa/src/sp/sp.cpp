@@ -13,8 +13,8 @@
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/call_validator.h"
-#include "sp/design_extractor/cond_var_extractor.h"
 #include "sp/design_extractor/cfg_extractor.h"
+#include "sp/design_extractor/cond_var_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -448,20 +448,18 @@ void PopulateAssignPostfixExpr(
 }
 
 void PopulateCondVarRels(
-    const std::unordered_map<int, std::unordered_set<std::string>>
-        &ifCondVarRels,
-    const std::unordered_map<int, std::unordered_set<std::string>>
-        &whileCondVarRels,
-    PopulateFacade *popFacade) {
-  for (const auto &[stmtNum, varNames] : ifCondVarRels) {
-    for (const auto &varName : varNames) {
-        popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
+    const std::unordered_map<int, std::unordered_set<std::string>>& ifCondVarRels,
+    const std::unordered_map<int, std::unordered_set<std::string>>& whileCondVarRels,
+    PopulateFacade* popFacade) {
+  for (const auto& [stmtNum, varNames] : ifCondVarRels) {
+    for (const auto& varName : varNames) {
+      popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 
-  for (const auto &[stmtNum, varNames] : whileCondVarRels) {
-    for (const auto &varName : varNames) {
-        popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
+  for (const auto& [stmtNum, varNames] : whileCondVarRels) {
+    for (const auto& varName : varNames) {
+      popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 }
@@ -557,6 +555,8 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
 
   // populate
   PopulateFacade* popFacade = pkb->getPopulateFacade();
+
+  popFacade->storeTotalStatementCount(totalStatementCount);
 
   // put AST entities into PKB
   // and populate procedureByName, procNameByLine, callStmtRels

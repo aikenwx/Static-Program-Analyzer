@@ -7,10 +7,19 @@
 EntityManager::EntityManager() {
   this->fastAccessStmts = std::vector<std::vector<Statement *>>(
       Statement::getEntityTypeStatic().getKey() + 1,
-      std::vector<Statement *>(EntityManager::MAX_NUMBER_OF_STMTS_WITH_BUFFER,
+      std::vector<Statement *>(numberOfStatements + 1,
                                nullptr));
 
   placeholderEntityVector = std::make_unique<std::vector<Entity *>>();
+}
+
+void EntityManager::storeTotalNumberOfStatements(int numberOfStatements) {
+  this->numberOfStatements = numberOfStatements;
+
+  fastAccessStmts = std::vector<std::vector<Statement *>>(
+      Statement::getEntityTypeStatic().getKey() + 1,
+      std::vector<Statement *>(numberOfStatements + 1,
+                               nullptr));
 }
 
 void EntityManager::storeEntity(std::unique_ptr<Entity> entity) {
@@ -25,7 +34,7 @@ void EntityManager::storeEntity(std::unique_ptr<Entity> entity) {
 
     if (this->fastAccessStmts.at(entity->getEntityType().getKey()).empty()) {
       this->fastAccessStmts.at(entity->getEntityType().getKey())
-          .resize(EntityManager::MAX_NUMBER_OF_STMTS_WITH_BUFFER);
+          .resize(numberOfStatements + 1);
     }
 
     if (this->fastAccessStmts.at(entity->getEntityType().getKey())
@@ -38,8 +47,6 @@ void EntityManager::storeEntity(std::unique_ptr<Entity> entity) {
 
     this->fastAccessStmts.at(Statement::getEntityTypeStatic().getKey())
         .at(stmt->getStatementNumber()) = stmt;
-    numberOfStatements++;
-
   }
 
   else if (!this->entityStore.try_emplace(entity->getEntityKey(), entityPtr)

@@ -27,8 +27,8 @@
 #include "PKBStorageClasses/RelationshipClasses/ModifiesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/ParentStarRelationship.h"
-#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 #include "PKBStorageClasses/RelationshipClasses/UsesInParentConditionRelationship.h"
+#include "PKBStorageClasses/RelationshipClasses/UsesRelationship.h"
 
 PopulateFacade::PopulateFacade(EntityManager *entityManager, RelationshipManager *relationshipManager)
     : entityManager(entityManager),
@@ -111,9 +111,9 @@ void PopulateFacade::storeStatementUsesVariableRelationship(
 void PopulateFacade::storeFollowsRelationship(int firstStatementNumber,
                                               int secondStatementNumber) {
   auto *firstStatement =
-          this->entityManager->getStatementByNumber(firstStatementNumber);
+      this->entityManager->getStatementByNumber(firstStatementNumber);
   auto *secondStatement =
-          this->entityManager->getStatementByNumber(secondStatementNumber);
+      this->entityManager->getStatementByNumber(secondStatementNumber);
   PopulateFacade::validateEntityExists(firstStatement);
   PopulateFacade::validateEntityExists(secondStatement);
 
@@ -124,9 +124,9 @@ void PopulateFacade::storeFollowsRelationship(int firstStatementNumber,
 void PopulateFacade::storeParentRelationship(int parentStatementNumber,
                                              int childStatementNumber) {
   auto *parentStatement =
-          this->entityManager->getStatementByNumber(parentStatementNumber);
+      this->entityManager->getStatementByNumber(parentStatementNumber);
   auto *childStatement =
-          this->entityManager->getStatementByNumber(childStatementNumber);
+      this->entityManager->getStatementByNumber(childStatementNumber);
 
   PopulateFacade::validateEntityExists(parentStatement);
   PopulateFacade::validateEntityExists(childStatement);
@@ -167,9 +167,9 @@ void PopulateFacade::storeProcedureUsesVariableRelationship(
 void PopulateFacade::storeParentStarRelationship(int parentStatementNumber,
                                                  int childStatementNumber) {
   auto *parentStatement =
-          this->entityManager->getStatementByNumber(parentStatementNumber);
+      this->entityManager->getStatementByNumber(parentStatementNumber);
   auto *childStatement =
-          this->entityManager->getStatementByNumber(childStatementNumber);
+      this->entityManager->getStatementByNumber(childStatementNumber);
   PopulateFacade::validateEntityExists(parentStatement);
   PopulateFacade::validateEntityExists(childStatement);
   this->relationshipManager->storeRelationship(
@@ -180,9 +180,9 @@ void PopulateFacade::storeParentStarRelationship(int parentStatementNumber,
 void PopulateFacade::storeFollowsStarRelationship(int firstStatementNumber,
                                                   int secondStatementNumber) {
   auto *firstStatement =
-          this->entityManager->getStatementByNumber(firstStatementNumber);
+      this->entityManager->getStatementByNumber(firstStatementNumber);
   auto *secondStatement =
-          this->entityManager->getStatementByNumber(secondStatementNumber);
+      this->entityManager->getStatementByNumber(secondStatementNumber);
   PopulateFacade::validateEntityExists(firstStatement);
   PopulateFacade::validateEntityExists(secondStatement);
   this->relationshipManager->storeRelationship(
@@ -214,18 +214,16 @@ void PopulateFacade::storeCallStatementProcedureName(
 
 void PopulateFacade::storeUsesInParentConditionRelationship(
     int statementNumber, std::string variableName) {
+  auto *parentStatement = dynamic_cast<ParentStatement *>(entityManager->getStatementByNumber(statementNumber));
+  auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
 
-    auto * parentStatement = dynamic_cast<ParentStatement *>(entityManager->getStatementByNumber(statementNumber));
-    auto variableKey = EntityKey(&Variable::getEntityTypeStatic(), &variableName);
+  auto *variable =
+      dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
 
-    auto *variable =
-            dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
-
-    PopulateFacade::validateEntityExists(parentStatement);
-    PopulateFacade::validateEntityExists(variable);
-    this->relationshipManager->storeRelationship(
-            std::make_unique<UsesInParentConditionRelationship>(parentStatement, variable));
-
+  PopulateFacade::validateEntityExists(parentStatement);
+  PopulateFacade::validateEntityExists(variable);
+  this->relationshipManager->storeRelationship(
+      std::make_unique<UsesInParentConditionRelationship>(parentStatement, variable));
 }
 
 void PopulateFacade::storeCallsRelationship(std::string caller,
@@ -270,4 +268,8 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
   this->relationshipManager->storeCFG(cfg);
+}
+
+void PopulateFacade::storeTotalStatementCount(int statementCount) {
+  this->entityManager->storeTotalNumberOfStatements(statementCount);
 }

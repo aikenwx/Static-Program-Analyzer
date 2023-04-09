@@ -235,12 +235,18 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
   auto *cachedResultsForForwardEvaluation = &getCachedEntitiesAndRelationships(false, *leftStatement,
                                                                                rightStatement->getEntityType());
 
-  if (cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached) {
+  if (cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached || cachedResultsForForwardEvaluation->areRelationshipsIndividuallyCached) {
     return nullptr;
   }
 
   CacheResult *cachedResultToUpdate = nullptr;
-  if (cachedResultsForForwardEvaluation->second != nullptr) {
+  if (cachedResultsForReverseEvaluation->second != nullptr &&
+      cachedResultsForForwardEvaluation->second != nullptr) {
+    cachedResultToUpdate = cachedResultsForForwardEvaluation->second->size() <=
+                            cachedResultsForReverseEvaluation->second->size()
+                                ? cachedResultsForForwardEvaluation
+                                : cachedResultsForReverseEvaluation;
+  } else if (cachedResultsForForwardEvaluation->second != nullptr) {
     cachedResultToUpdate = cachedResultsForForwardEvaluation;
   } else if (cachedResultsForReverseEvaluation->second != nullptr) {
     cachedResultToUpdate = cachedResultsForReverseEvaluation;

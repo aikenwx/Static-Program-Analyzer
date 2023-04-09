@@ -1,0 +1,130 @@
+procedure SingleLevelWithContainerStmt {
+    v1 = 5153;
+    v1 = v1 % v1 / v1 * v1 + v1;
+    while (v1 % 7 * 2 == 1317 * v1 / 3) {
+        read foobar;
+        foo = 4;
+        v1 = 61;
+    }
+    v1 = 3 * v1 / v1 + v1;
+
+    v1 = v1 + v1 - v1 / v1 - 1;
+    print v1;
+    if (1 == 2) then {
+        foo = 7;
+        call DummyProcedure1;
+        v1 = 56;
+    } else {
+        print v1;
+    }
+    v1 = v1 - v1 + 5;
+
+    v1 = 513;
+    if (1 == 3) then {
+        print v1;
+    } else {
+        v1 = 51;
+    }
+    v1 = v1 - v1 + 5;
+
+    v1 = 3174;
+    if (2 == 3) then {
+        while (5 == 1) {
+            print v1;
+            v1 = 161;
+        }
+    } else {
+        while (7 == 6) {
+            print v1;
+            v1 = 671;
+        }
+    }
+    v1 = 5 + v1 / (v1 + 5);
+
+    v1 = 151;
+    if (2 == 5) then {
+        if (3 == 7) then {
+            v1 = 54;
+            print v1;
+        } else {
+            read v1;
+            v1 = 431;
+        }
+    } else {
+        if (5 % 6 == 4) then {
+            v1 = 83342;
+            read v1;
+        } else {
+            call DummyProcedure1;
+            v1 = 4 % 4 % 4;
+        }
+    }
+    v1 = v1 * 13 % 3441;
+
+    v1 = 441;
+    while (1 == 7) {
+        while (2 == 8) {
+            print v1;
+            v1 = 6;
+        }
+        v1 = 11;
+    }
+    read v1;
+    call DummyProcedure2;
+    v1 = v1 / v1 / v1 / v1;
+
+    v1 = 41 / 43;
+    while (1 == v1) {
+        if (41 % 41 == v1 % v1) then {
+            print v1;
+            v1 = 55;
+        } else {
+            while ((51 == 51) && (616 != 617)) {
+                print v1;
+                v1 = 272;
+            }
+        }
+        v1 = 61;
+    }
+    v1 = v1 + v1;
+}
+
+procedure DummyProcedure1 {
+    v1 = 5;
+    v1 = 7;
+    if ((v1 >= 5) && (v1 % 5 == 8)) then {
+        while (5 <= v1) {
+            v1 = v1 % v1;
+            if (v1 + v1 == v1) then {
+                read v1;
+                print v1;
+                call DummyProcedure2;
+                v1 = v1;
+            } else {
+                print v1;
+            }
+            v1 = v1 / v1;
+        }
+        v1 = v1 + 5 + v1;
+    } else {
+        v1 = 5 * v1;
+        read v1;
+        if (7 * 5 == 36) then {
+            while (5 * 7 == v1 * 37) {
+                read v1;
+                print v1;
+            }
+        } else {
+            while (1 == 1) {
+                print v1;
+                v1 = v1;
+            }
+            v1 = 511 % 512;
+        }
+    }
+}
+
+procedure DummyProcedure2 {
+    v1 = 5;
+    v1 = 7;
+}

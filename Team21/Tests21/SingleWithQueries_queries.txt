@@ -203,7 +203,3 @@ constant c; assign a;
 Select a with c.value = a.stmt#
 1, 2, 3, 4, 6, 10
 5000
-
-
-
-

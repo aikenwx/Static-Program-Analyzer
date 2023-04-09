@@ -38,4 +38,3 @@ while w; stmt s;
 Select w pattern f(s, _)
 SemanticError
 5000
-

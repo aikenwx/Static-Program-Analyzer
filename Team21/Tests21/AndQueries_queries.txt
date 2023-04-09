@@ -58,8 +58,3 @@ assign a; constant c, c1; variable v; call cl; stmt s; read r;
 Select <a,c,cl,r,c1> with a.stmt# = c.value and c.value = s.stmt# and cl.procName = v.varName and r.varName = v.varName and r.stmt# = c1.value
 
 5000
-
-
-
-
-

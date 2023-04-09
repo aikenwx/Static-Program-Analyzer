@@ -51,24 +51,7 @@ void ConstraintsSolver::UpdateSynGrp(SynonymTable table) {
   num_grps++;
 }
 
-auto ConstraintsSolver::MergeDisjointGrps() -> ClauseResult {
-  if (grp_table.empty()) {
-    return true;
-  }
-  std::vector<SynonymTable> tables;
-  tables.reserve(grp_table.size());
-  for (auto &iter : grp_table) {
-    tables.push_back(std::move(iter.second));
-  }
-  auto table = ConstraintsSolver::solve(std::move(tables));
-  if (!table) {
-    return false;
-  }
-  auto res = std::move(table.value());
-  return res;
-}
-
-auto ConstraintsSolver::solve(std::vector<std::unique_ptr<ClauseEvaluator>> &evaluators) -> ClauseResult {
+auto ConstraintsSolver::solve(std::vector<std::unique_ptr<ClauseEvaluator>> &evaluators) -> ClauseResults {
   for (const auto &evaluator : evaluators) {
     auto result = evaluator->Evaluate(pkb_);
     if (std::holds_alternative<bool>(result)) {
@@ -87,6 +70,6 @@ auto ConstraintsSolver::solve(std::vector<std::unique_ptr<ClauseEvaluator>> &eva
   if (grp_table.empty()) {
     return true;
   }
-  return MergeDisjointGrps();
+  return ClauseGrps{std::move(syn_grp), std::move(grp_table)};
 }
 }  // namespace qps

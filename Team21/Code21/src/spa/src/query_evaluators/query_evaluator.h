@@ -20,7 +20,7 @@ class QueryEvaluator {
   Query query_;
   std::vector<std::unique_ptr<ClauseEvaluator>> clause_evaluators_;
   void CreateClauseEvaluators();
-  void EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result, std::list<std::string> &results);
+  void EvaluateSelect(QueryFacade &pkb, ClauseResults clause_result, std::list<std::string> &results);
 
 };
 }  // namespace qps

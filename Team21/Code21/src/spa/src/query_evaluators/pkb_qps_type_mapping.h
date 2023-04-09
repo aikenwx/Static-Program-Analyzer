@@ -12,4 +12,5 @@ namespace qps {
 auto DesignEntityToEntityType(DesignEntity entity) -> const EntityType &;
 auto RelationshipToRelationshipType(Relationship relationship) -> const RelationshipType &;
 
+extern const std::vector<RelationshipType> TypesWithPossibleSelfRelation;
 } // qps

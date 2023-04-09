@@ -11,16 +11,14 @@ class SelectVisitor {
   SelectVisitor(QueryFacade &pkb, std::vector<Declaration> &declarations, std::list<std::string> &results)
       : pkb_(pkb), declarations_(declarations), results_(results) {}
 
-//  void operator()([[maybe_unused]] Boolean &&boolean, bool &&current_result) {
-//    results_.emplace_back(to_string(current_result));
-//  }
   template<typename ClauseResult>
   void operator()([[maybe_unused]] Boolean &&boolean, ClauseResult current_result) {
-    results_.emplace_back(to_string(static_cast<bool>(current_result)));
+    results_.emplace_back(to_string(GetBooleanValue(current_result)));
   }
+
   template<typename ClauseResult>
   void operator()(std::vector<Element> &&elements, ClauseResult current_result) {
-    if (!current_result) {
+    if (!GetBooleanValue(current_result)) {
       return;
     }
     UnpackElements(elements);
@@ -29,10 +27,16 @@ class SelectVisitor {
   }
 
  private:
+  bool GetBooleanValue(const ClauseResults &result) {
+    if (std::holds_alternative<bool>(result)) {
+      return std::get<bool>(result);
+    }
+    return !std::get<ClauseGrps>(result).grp_table.empty();
+  }
+
   void EvaluateFinalResult() {
     auto final_result = ConstraintsSolver::solve(tables_);
     if (!final_result) {
-      results_.emplace_back(to_string(false));
       return;
     }
     auto final_table = std::move(final_result.value());
@@ -59,27 +63,28 @@ class SelectVisitor {
       if (std::holds_alternative<AttrRef>(element)) {
         auto attr_ref = std::get<AttrRef>(element);
         syns_.push_back(attr_ref.synonym);
+        seen_syns_.insert(attr_ref.synonym);
         attr_refs_[i] = attr_ref.attrName;
       } else {
         syns_.push_back(std::get<Synonym>(element));
+        seen_syns_.insert(std::get<Synonym>(element));
       }
     }
   }
 
-  void EvaluateSelectSyns(bool current_result) {
+  void EvaluateSelectSyns(ClauseGrps clause_grps) {
+    std::unordered_set<int> filtered_grps;
     for (auto &syn : syns_) {
-      EvaluateSingleSelect(syn);
-    }
-  }
-
-  void EvaluateSelectSyns(SynonymTable current_table) {
-    for (auto &syn : syns_) {
-      if (current_table.HasKey(syn)) {
-        continue;
+      auto grp = clause_grps.syn_grp.find(syn);
+      if (grp == clause_grps.syn_grp.end()) {
+        EvaluateSingleSelect(syn);
+      } else {
+        filtered_grps.insert(grp->second);
       }
-      EvaluateSingleSelect(syn);
     }
-    tables_.push_back(std::move(current_table));
+    for (int grp : filtered_grps) {
+      tables_.push_back(std::move(clause_grps.grp_table[grp]));
+    }
   }
 
   void EvaluateSingleSelect(Synonym &syn) {
@@ -98,15 +103,23 @@ class SelectVisitor {
 
   }
 
+  void EvaluateSelectSyns(bool current_result) {
+    for (auto &syn : syns_) {
+      EvaluateSingleSelect(syn);
+    }
+  }
+
   QueryFacade &pkb_;
   std::vector<Declaration> &declarations_;
+  std::list<std::string> &results_;
+
   std::unordered_map<size_t, AttrName> attr_refs_;
+  std::unordered_set<Synonym> seen_syns_;
   std::vector<Synonym> syns_;
   std::vector<SynonymTable> tables_;
-  std::list<std::string> &results_;
 };
 
-void SelectEvaluator::Evaluate(QueryFacade &pkb, ClauseResult current_result, std::list<std::string> &results) {
+void SelectEvaluator::Evaluate(QueryFacade &pkb, ClauseResults current_result, std::list<std::string> &results) {
   SelectVisitor visitor{pkb, declarations_, results};
   std::visit(visitor, std::move(result_), std::move(current_result));
 }

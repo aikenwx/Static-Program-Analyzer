@@ -25,7 +25,7 @@ void QueryEvaluator::CreateClauseEvaluators() {
   }
 }
 
-void QueryEvaluator::EvaluateSelect(QueryFacade &pkb, ClauseResult clause_result, std::list<std::string> &results) {
+void QueryEvaluator::EvaluateSelect(QueryFacade &pkb, ClauseResults clause_result, std::list<std::string> &results) {
   SelectEvaluator select_evaluator{query_.getSelectClause(), query_.getDeclarations()};
   select_evaluator.Evaluate(pkb, std::move(clause_result), results);
 }

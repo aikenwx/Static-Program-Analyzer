@@ -4,6 +4,7 @@
 #include "query/query_exceptions.h"
 #include "query_evaluators/pkb_qps_type_mapping.h"
 
+#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 namespace qps {
 
 int GetLiteral(const StatementNumber &num) {
@@ -77,6 +78,11 @@ class ClauseVisitor {
         relationships = pkb_.getRelationshipsByTypes(relationship_type_, left_, right_);
     bool require_equal = false;
     if (src == dest) {
+      if (std::find(TypesWithPossibleSelfRelation.begin(),
+                    TypesWithPossibleSelfRelation.end(),
+                    relationship_type_) == TypesWithPossibleSelfRelation.end()) {
+        return false;
+      }
       require_equal = true;
     }
     return SynonymTable({std::move(src), std::move(dest)}, ExtractEntities(*relationships, true, true, require_equal));

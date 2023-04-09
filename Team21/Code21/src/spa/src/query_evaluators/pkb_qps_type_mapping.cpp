@@ -61,4 +61,10 @@ auto RelationshipToRelationshipType(Relationship relationship) -> const Relation
   }
 }
 
+const std::vector<RelationshipType> TypesWithPossibleSelfRelation = {
+    NextStarRelationship::getRelationshipTypeStatic(),
+    AffectsRelationship::getRelationshipTypeStatic(),
+    AffectsStarRelationship::getRelationshipTypeStatic()
+};
+
 }  // namespace qps

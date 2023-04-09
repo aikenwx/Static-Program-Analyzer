@@ -9,8 +9,10 @@
 
 namespace qps {
 
+// ExpressionSpec represents Expression Spec type used as pattern clause 2nd argument
 using ExpressionSpec = std::variant<Underscore, Expression>;
 
+// PatternClause represents a pattern in query Pattern clause.
 class PatternClause {
  private:
   Synonym stmtSynonym;

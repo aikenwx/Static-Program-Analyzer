@@ -4,12 +4,14 @@
 #include <cctype>
 #include <algorithm>
 #include <utility>
+#include <ostream>
 
 namespace qps {
 
 QueryParser::QueryParser(std::vector<std::string> tokens_)
     : tokens{std::move(tokens_)}, currentIndex{0}, selectClause{Boolean()} {}
 
+// See next PQL string token
 auto QueryParser::peek() -> std::string {
   if (currentIndex < tokens.size()) {
     return tokens[currentIndex];
@@ -17,15 +19,19 @@ auto QueryParser::peek() -> std::string {
   return "";
 }
 
+// Consume next PQL string token
 auto QueryParser::next() -> std::string {
   std::string currentToken{peek()};
   currentIndex++;
   return currentToken;
 }
+
+// Check list of tokens reaching end
 auto QueryParser::isEnd() -> bool {
   return (peek().empty());
 }
 
+// Helper function to check whether interger token is valid
 auto QueryParser::isTokenValidInteger(std::string str) -> bool {
   for (char digit : str) {
     if (std::isdigit(digit) == 0) {
@@ -38,10 +44,12 @@ auto QueryParser::isTokenValidInteger(std::string str) -> bool {
   return str.length() != 0;
 }
 
+// Check whether next token is identical
 auto QueryParser::isSameToken(const std::string& str) -> bool {
   return (peek() == str);
 }
 
+// Assert that the next token should be the specified string
 auto QueryParser::assertNextToken(const std::string& str) -> bool {
   if (isSameToken(str)) {
     return true;
@@ -73,7 +81,7 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
 
   if (isSameToken("\"")) {
     next();
-    expression = validateExpressionHelper(next());
+    expression = validateExpression(next());
     expression = makePostfix(expression);
     isPartial = false;
     assertNextToken("\"");
@@ -83,7 +91,7 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
     next();
     if (isSameToken("\"")) {
       next();
-      expression = validateExpressionHelper(next());
+      expression = validateExpression(next());
       expression = makePostfix(expression);
       isPartial = true;
       assertNextToken("\"");
@@ -97,90 +105,111 @@ auto QueryParser::parseExpressionSpec() -> ExpressionSpec {
   return Expression(isPartial, expression);
 }
 
-// NOLINTNEXTLINE(readability-function-cognitive-complexity)
-auto QueryParser::validateExpressionHelper(std::string str) -> std::string {
+// check for syntax error in expression together with helper functions
+auto QueryParser::validateExpression(std::string str) -> std::string {
   str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
   int idx = 0;
-  auto last = str.length() - 1;
+  int firstidx = idx;
+  int last = static_cast<int>(str.length()) - 1;
   int openBracketCount = 0;
   int closeBracketCount = 0;
   while (idx < str.length()) {
     int next = idx + 1;
     int prev = idx - 1;
-    //check alphanumeric
-    if (isalpha(str[idx]) != 0) {
-      idx++;
-      while (idx < str.length() && (isalnum(str[idx]) != 0)) {
-        idx++;
-      }
+    checkAlphanumericHelper(str, idx, next, prev);
+    checkNumberHelper(str, idx, last, next, prev);
+    checkLeftBracketHelper(str, idx, last, prev, next, openBracketCount);
+    checkRightBracketHelper(str, idx, last, prev, next, closeBracketCount, openBracketCount);
+    checkOperatorHelper(str, idx, last, next, prev);
+    if (firstidx == idx) {
+      throw QueryException(ErrorType::Syntactic,
+        "Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character");
     }
-    //check for number
-    else if (isdigit(str[idx]) != 0) {
-      idx++;
+    firstidx = idx;
+  }
+  if (openBracketCount != closeBracketCount) {
+    throw QueryException(ErrorType::Syntactic, "Syntactic error. Closing brackets are insufficient");
+  }
+  return str;
+}
+
+void QueryParser::checkAlphanumericHelper(std::string str, int &idx, int &next, int &prev) {
+  if (isalpha(str[idx]) != 0) {
+    ++idx;
+    while (idx < str.length() && (isalnum(str[idx]) != 0)) {
+      ++idx;
+    }
+  }
+  next = idx + 1;
+  prev = idx - 1;
+}
+
+void QueryParser::checkNumberHelper(std::string str, int &idx, int last, int &next, int &prev) {
+    if (isdigit(str[idx]) != 0) {
+      ++idx;
       prev = idx - 1;
-      if (str[prev] == '0') {
-        if (idx < str.length() && (isdigit(str[idx]) != 0)) {
-          throw QueryException(ErrorType::Syntactic, "Syntactic error. Expression spec contains leading zero");
-        }
+      if (str[prev] == '0' && idx < str.length() && (isdigit(str[idx]) != 0)) {
+        throw QueryException(ErrorType::Syntactic, "Syntactic error. Expression spec contains leading zero");
       }
       while (idx < str.length() && (isdigit(str[idx]) != 0)) {
-        idx++;
+        ++idx;
       }
       if (idx <= last && (isalpha(str[idx]) != 0)) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Integer has a letter in it");
       }
     }
-    //check for '('
-    else if (str[idx] == '(' && idx < last) {
-      if (idx > 0) {
-        if (operatorHelper(str[prev]) < 0 && str[prev] != '(') {
-          throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is preceded by neither an operator or (");
-        }
+    next = idx + 1;
+    prev = idx - 1;
+}
+
+void QueryParser::checkLeftBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &openBracketCount) {
+    if (str[idx] == '(' && idx < last) {
+      if (idx > 0 && operatorHelper(str[prev]) < 0 && str[prev] != '(') {
+        throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is preceded by neither an operator or (");
       }
       if ((isalnum(str[next]) == 0) && str[next] != '(') {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. ( is followed by neither an alphanumeric char or (");
       }
       openBracketCount += 1;
-      idx++;
+      ++idx;
     }
-    //check for ')'
-    else if (str[idx] == ')') {
-      if (idx == 0) {
-        throw QueryException(ErrorType::Syntactic, "Syntactic error. ) cannot be first char");
-      }
-      if ((isalnum(str[prev]) == 0) && str[prev] != ')') {
-        throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is preceded by neither an alphanumeric char or )");
-      }
-      if (idx != last) {
-        if (operatorHelper(str[next]) < 0 && str[next] != ')') {
+    next = idx + 1;
+    prev = idx - 1;
+}
+
+void QueryParser::checkRightBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &closeBracketCount, int &openBracketCount) {
+      if (str[idx] == ')') {
+        if (idx == 0) {
+          throw QueryException(ErrorType::Syntactic, "Syntactic error. ) cannot be first char");
+        }
+        if ((isalnum(str[prev]) == 0) && str[prev] != ')') {
+          throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is preceded by neither an alphanumeric char or )");
+        }
+        if (idx != last && operatorHelper(str[next]) < 0 && str[next] != ')') {
           throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is followed by neither an operator or )");
         }
-      }
-      closeBracketCount += 1;
-      if (closeBracketCount > openBracketCount) {
-        throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is not supposed to be allowed without a opening bracket");
-      }
-      idx++;
+        closeBracketCount += 1;
+        if (closeBracketCount > openBracketCount) {
+          throw QueryException(ErrorType::Syntactic, "Syntactic error. ) is not supposed to be allowed without a opening bracket");
+        }
+      ++idx;
     }
-    //check for operators
-    else if (operatorHelper(str[idx]) >= 0 && idx < last) {
+    next = idx + 1;
+    prev = idx - 1;
+}
+
+void QueryParser::checkOperatorHelper(std::string str, int &idx, int last, int &next, int& prev) {
+    if (operatorHelper(str[idx]) >= 0 && idx < last) {
       if (idx == 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. Operator cannot be first char");
       }
       if (operatorHelper(str[next]) >= 0) {
         throw QueryException(ErrorType::Syntactic, "Syntactic error. operator cannot be followed by operator");
       }
-      idx++;
+      ++idx;
     }
-    else {
-      throw QueryException(ErrorType::Syntactic,
-        "Syntactic error. Expression spec contains unallowed characters inside or ends with wrong character");
-    }
-  }
-  if (openBracketCount != closeBracketCount) {
-    throw QueryException(ErrorType::Syntactic, "Syntactic error. Closing brackets are insufficient");
-  }
-  return str;
+    next = idx + 1;
+    prev = idx - 1;
 }
 
 auto QueryParser::parseElement() -> Element {
@@ -363,6 +392,7 @@ auto QueryParser::parseWithClause() -> bool {
   return true;
 }
 
+// Parse the list of string tokens and generate the Query object
 auto QueryParser::parse() -> Query {
   while (!isEnd()) {
     if (!parseDeclaration()) {
@@ -395,6 +425,7 @@ auto QueryParser::operatorHelper(char character) -> int {
   }
 }
 
+// Helper function to translate Expression string to post-fix form
 auto QueryParser::makePostfix(std::string str) -> std::string {
   std::stack<char> stck;
   std::string postfixed;
@@ -453,4 +484,5 @@ auto QueryParser::makePostfix(std::string str) -> std::string {
   }
   return postfixed;
 }
+
 }  // namespace qps

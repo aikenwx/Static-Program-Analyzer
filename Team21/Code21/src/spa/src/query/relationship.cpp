@@ -6,6 +6,7 @@
 
 namespace qps {
 
+// Lookup table from Relationship to String representation
 const std::unordered_map<Relationship, std::string>
     relationshipStringMap{{
                               {Relationship::Follows, "Follows"},
@@ -26,6 +27,7 @@ const std::unordered_map<Relationship, std::string>
                               {Relationship::AffectsT, "Affects*"}
                           }};
 
+// Lookup table from PQL substring to Relationship
 const std::unordered_map<std::string, Relationship>
     relationshipMap{{
                         {"Follows", Relationship::Follows},
@@ -80,6 +82,7 @@ const std::unordered_map<Relationship, DesignEntity>
                                   {Relationship::AffectsT, DesignEntity::STMT}
 };
 
+// Get corresponding relationship of given string when parsing
 auto getRelationshipFromString(const std::string &reString) -> Relationship {
   try {
     return relationshipMap.at(reString);
@@ -88,6 +91,8 @@ auto getRelationshipFromString(const std::string &reString) -> Relationship {
     throw QueryException(ErrorType::Syntactic, "Invalid Relationship" + reString);
   }
 }
+
+// Get corresponding string representation of a relationship
 auto getStringFromRelationship(Relationship relationship) -> std::string {
   return relationshipStringMap.at(relationship);
 }

@@ -13,13 +13,13 @@ class QuotedIdentifier {
   explicit QuotedIdentifier(const std::string &id_);
   [[nodiscard]] auto getQuotedId() const -> const std::string &;
 
-  static auto isValidId(const std::string &iden) -> bool;
+  static auto isValidId(const std::string& iden) -> bool;
 
-  auto operator==(QuotedIdentifier const &quote_id2) const -> bool {
+  auto operator==(QuotedIdentifier const& quote_id2) const -> bool {
     return id == quote_id2.id;
   }
 
-  friend auto operator<<(std::ostream &osstream, QuotedIdentifier const &quote_id) -> std::ostream & {
+  friend auto operator<<(std::ostream& osstream, QuotedIdentifier const& quote_id) -> std::ostream& {
     osstream << quote_id.id;
     return osstream;
   }

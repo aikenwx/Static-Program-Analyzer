@@ -22,7 +22,7 @@ class AstElemExtractor : public Extractor {
   void HandleProcedureNode(const std::shared_ptr<ast::ProcedureNode>& node,
                            int depth) override;
   void HandleReadNode(const std::shared_ptr<ast::ReadNode>& node, int depth) override;
-  void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
+  void HandleVariableNode(const std::shared_ptr<ast::IdentifierNode>& node,
                           int depth) override;
 
   [[nodiscard]] auto GetRelationships() const

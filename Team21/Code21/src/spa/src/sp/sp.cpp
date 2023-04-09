@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <queue>
+#include <string_view>
 #include <unordered_set>
 
 #include "PKBStorageClasses/EntityClasses/IfStatement.h"
@@ -464,14 +465,20 @@ void PopulateCondVarRels(
   }
 }
 
-auto SP::process(const std::string& program, PKB* pkb) -> bool {
+auto SP::Process(std::string_view program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);
 
   // parse tokens into AST
   auto parser = parser::SimpleChainParser();
-  auto ast = parser.Parse(std::move(tokens));
+  auto pair = parser.Parse(std::move(tokens));
+
+  if (!pair.first) {
+    throw exceptions::SyntaxError("Invalid program");
+  }
+
+  auto ast = std::move(pair.second);
 
   auto programNode = ToProgramNode(ast->GetRoot());
 

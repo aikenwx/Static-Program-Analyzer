@@ -17,13 +17,13 @@ void FollowsExtractor::HandleStatementListNode(
     return;
   };
 
-  // nb: `StatementListNode` stores statements in reverse order
-  auto it = statements.crbegin();
-  std::shared_ptr<ast::StatementNode> first = *it;
-  it++;
+  // nb: `StatementListNode` stores statements in forward order
+  auto iter = statements.cbegin();
+  std::shared_ptr<ast::StatementNode> first = *iter;
+  iter++;
 
-  for (; it != statements.crend(); it++) {
-    const std::shared_ptr<ast::StatementNode>& second = *it;
+  for (; iter != statements.cend(); iter++) {
+    const std::shared_ptr<ast::StatementNode>& second = *iter;
     relns_.push_back(
         rel::FollowsStmtStmtRelationship::CreateRelationship(first, second));
     first = second;

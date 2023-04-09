@@ -4,7 +4,7 @@
 
 namespace qps {
 
-// Enum class DesignEntity represents all possible design entity in PQL
+// Enum class DesignEntity represents all valid design entity in PQL
 enum class DesignEntity {
 	STMT,
 	READ,

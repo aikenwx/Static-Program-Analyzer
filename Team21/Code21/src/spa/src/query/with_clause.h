@@ -7,6 +7,7 @@
 
 namespace qps {
 
+// WithClause represents Attribute Comparision in With Clause
 class WithClause {
  private:
   WithRef ref1;

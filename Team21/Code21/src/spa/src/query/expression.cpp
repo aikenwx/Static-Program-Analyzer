@@ -5,7 +5,7 @@
 namespace qps {
 
 Expression::Expression(bool isPartial_, std::string expression_)
-    : isPartial{isPartial_}, expression{std::move(std::move(expression_))} {}
+	: isPartial{ isPartial_ }, expression{std::move(expression_)} {}
 
 auto Expression::isExpressionPartial() const -> bool {
   return isPartial;

@@ -10,7 +10,6 @@
 #include "../ast/statement_list_node.h"
 #include "../ast/statement_node.h"
 #include "../ast/read_node.h"
-#include "../ast/variable_node.h"
 #include "../ast/while_node.h"
 #include "../rel/uses_stmt_var_relationship.h"
 #include "extractor.h"
@@ -76,7 +75,7 @@ class StmtUsesExtractor : public Extractor {
                            int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);
   };
-  void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
+  void HandleVariableNode(const std::shared_ptr<ast::IdentifierNode>& node,
                           int depth) override;
   void HandleOtherNode(const std::shared_ptr<ast::INode>& node, int depth) override {
     UpdateParents(std::static_pointer_cast<ast::INode>(node), depth);

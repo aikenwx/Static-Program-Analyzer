@@ -15,7 +15,7 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kRightParen
     && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
     && util::instance_of<ast::SymbolNode>(*std::next(iter, 5)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 5)))->GetType() == ast::SymbolType::kLeftParen
-    && util::instance_of<ast::NameNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::NameNode>(*std::next(iter, 6)))->GetName() == "while") {
+    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 6)))->GetValue() == "while") {
     // Pops right brace symbol node
     stack->pop_back();
     // References statement list node
@@ -34,7 +34,7 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left paren symbol node
     stack->pop_back();
-    // Pops 'while' name node
+    // Pops 'while' identifier node
     stack->pop_back();
     // Creates while node
     std::shared_ptr<ast::WhileNode> sta =

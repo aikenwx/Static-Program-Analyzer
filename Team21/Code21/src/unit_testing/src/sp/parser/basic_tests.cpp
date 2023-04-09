@@ -5,6 +5,7 @@
 
 #include "exceptions/syntax_error.h"
 #include "sp/ast/astlib.h"
+#include "sp/ast/program_node.h"
 #include "sp/parser/simple_chain_parser.h"
 #include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
@@ -16,21 +17,27 @@ tokenizer::SimpleTokenizer tokenizer = tokenizer::SimpleTokenizer();
 SimpleChainParser parser = SimpleChainParser();
 
 template<typename T>
-bool CheckRootIsNodeType(std::string input) {
+auto CheckRootIsNodeType(std::string const &input) -> bool {
   std::vector<std::unique_ptr<token::Token>> tokens =
     tokenizer.tokenize(input);
-  std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
-  return util::instance_of<T>(root);
+  auto pair = parser.Parse(std::move(tokens));
+  return util::instance_of<T>(pair.second->GetRoot());
 }
 
-bool CheckRootIsProgram(std::string program) {
-  return CheckRootIsNodeType<ast::ProgramNode>(program);
-}
-
-bool CheckStatementCount(std::string program, int count) {
+auto CheckRootIsValidProgram(std::string const &program) -> bool {
   std::vector<std::unique_ptr<token::Token>> tokens =
     tokenizer.tokenize(program);
-  std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens))->GetRoot();
+  auto pair = parser.Parse(std::move(tokens));
+  if (!pair.first) {
+    return false;
+  }
+  return util::instance_of<ast::ProgramNode>(pair.second->GetRoot());
+}
+
+auto CheckStatementCount(std::string const &program, int count) -> bool {
+  std::vector<std::unique_ptr<token::Token>> tokens =
+    tokenizer.tokenize(program);
+  std::shared_ptr<ast::INode> root = parser.Parse(std::move(tokens)).second->GetRoot();
   return std::static_pointer_cast<ast::ProgramNode>(root)->GetTotalStatementCount() == count;
 }
 
@@ -40,7 +47,7 @@ bool CheckStatementCount(std::string program, int count) {
 TEST_CASE("Parser throws a SyntaxError with an empty program",
   "[Parser]") {
   std::string program = "";
-  REQUIRE_THROWS_MATCHES(CheckRootIsProgram(program), exceptions::SyntaxError,
+  REQUIRE_THROWS_MATCHES(CheckRootIsValidProgram(program), exceptions::SyntaxError,
     Message("Syntax error: Empty program"));
 };
 
@@ -50,7 +57,7 @@ TEST_CASE(
   std::string program = R"(procedure hello {
     read x;
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -59,7 +66,7 @@ TEST_CASE(
   std::string program = R"(procedure hello {
     print x;
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -68,7 +75,7 @@ TEST_CASE(
   std::string program = R"(procedure hello {
     x = 2;
   })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -77,7 +84,7 @@ TEST_CASE(
   std::string program = R"(procedure hello {
     call hello;
   })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -89,7 +96,7 @@ TEST_CASE(
   procedure world {
     read x;
   })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -102,7 +109,7 @@ TEST_CASE(
       read x;
     }
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -113,7 +120,7 @@ TEST_CASE(
       read x;
     }
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -138,7 +145,7 @@ TEST_CASE(
       }
     }
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
@@ -155,21 +162,101 @@ TEST_CASE(
       }
     }
 })";
-  REQUIRE(CheckRootIsProgram(program));
+  REQUIRE(CheckRootIsValidProgram(program));
+};
+
+TEST_CASE(
+  "Parser correctly parses a valid program with one procedure",
+  "[Parser]") {
+  std::string program = R"(
+      procedure main {
+        a = 1;
+        b = 2;
+        print x;
+        read y;
+      })";
+  REQUIRE(CheckRootIsValidProgram(program));
 };
 
 TEST_CASE(
   "Parser correctly parses a valid program with multiple procedures",
   "[Parser]") {
+  std::string program = R"(procedure main {
+      x = 1;
+      read y;
+      print z;
+      call foo;
+    }
+    procedure foo {
+      z = 2;
+      call bar;
+    }
+    procedure bar {
+      x = 1;
+      if (x == 1) then {
+        call baz;
+      } else {
+        call qux;
+      }
+    }
+    procedure baz {
+      x = 4;
+    }
+    procedure qux {
+      print w;
+    }
+    procedure quux {
+      call main;
+    })";
+  REQUIRE(CheckRootIsValidProgram(program));
+};
+
+TEST_CASE(
+  "Parser doesn't parse a valid ProgramNode when parsing a program with one procedure with invalid if-statement syntax",
+  "[Parser]") {
   std::string program = R"(procedure hello {
+    if (x > 0) {
+      print positive;
+    } else {
+      read nonpositive;
+    }
+  })";
+  REQUIRE_FALSE(CheckRootIsValidProgram(program));
+}
+
+TEST_CASE(
+  "Parser doesn't parse a valid ProgramNode when parsing a program with one valid procedure, followed by one procedure with invalid if-statement syntax",
+  "[Parser]") {
+  std::string program = R"(procedure dummy {
     read x;
   }
-  procedure world {
-    read y;
-  })";
 
-  REQUIRE(CheckRootIsProgram(program));
-};
+  procedure hello {
+    if (x > 0) {
+      print positive;
+    } else {
+      read nonpositive;
+    }
+  })";
+  REQUIRE_FALSE(CheckRootIsValidProgram(program));
+}
+
+TEST_CASE(
+  "Parser doesn't parse a valid ProgramNode when parsing a program with one valid procedure, followed by one procedure with invalid cond-expr syntax",
+  "[Parser]") {
+  std::string program = R"(procedure dummy {
+    read x;
+  }
+
+  procedure hello {
+    if (x == 1 && true) then {
+      print positive;
+    } else {
+      read nonpositive;
+    }
+  })";
+  REQUIRE_FALSE(CheckRootIsValidProgram(program));
+}
 
 /*
 * Grammar test cases
@@ -185,7 +272,7 @@ TEST_CASE(
   "Parser correctly parses identifiers",
   "[Parser]") {
   std::string input = R"(hello)";
-  REQUIRE(CheckRootIsNodeType<ast::NameNode>(input));
+  REQUIRE(CheckRootIsNodeType<ast::IdentifierNode>(input));
 };
 
 /*

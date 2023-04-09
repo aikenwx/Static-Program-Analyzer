@@ -9,7 +9,9 @@
 
 namespace qps {
 
+// QueryParser represents a Query Parser consuming list of PQL String tokens to produce Query object
 class QueryParser {
+
 	private:
 		std::vector<Declaration> declarations;
 		std::vector<SuchThatClause> suchThatClause;
@@ -29,7 +31,12 @@ class QueryParser {
 
 		auto parseRef() -> Ref;
 		auto parseExpressionSpec() -> ExpressionSpec;
-		static auto validateExpressionHelper(std::string str) -> std::string;
+		static auto validateExpression(std::string str) -> std::string;
+		static void checkAlphanumericHelper(std::string str, int &idx, int &next, int &prev);
+		static void checkNumberHelper(std::string str, int &idx, int last, int &next, int &prev);
+		static void checkLeftBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &openBracketCount);
+		static void checkRightBracketHelper(std::string str, int &idx, int last, int &prev, int &next, int &closeBracketCount, int &openBracketCount);
+		static void checkOperatorHelper(std::string str, int &idx, int last, int &next, int &prev);
 		auto parseElement() -> Element;
 		auto parseWithRef() -> WithRef;
 		auto parseTupleSelect() -> std::vector<Element>;
@@ -50,5 +57,6 @@ class QueryParser {
 	public:
 		explicit QueryParser(std::vector<std::string> tokens_);
 		auto parse() -> Query;
+
 };
 }  // namespace qps

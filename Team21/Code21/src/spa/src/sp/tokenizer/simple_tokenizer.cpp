@@ -29,7 +29,7 @@ auto SimpleTokenizer::tokenize(std::string_view program)
     // then shifts the iterator towards the front as required,
     // i.e. if len != -1 or len < buffer.size()
     if (!buffer.empty()) {
-      std::string_view value(buffer.data(), len != -1 ? len : buffer.size());
+      std::string value(buffer.data(), len != -1 ? len : buffer.size());
       tokens.push_back(factory.CreateToken(value));
 
       iter =

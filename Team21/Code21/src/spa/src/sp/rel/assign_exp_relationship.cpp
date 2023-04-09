@@ -9,7 +9,7 @@ auto AssignExpRelationship::CreateRelationship(std::shared_ptr<ast::AssignNode> 
 
 auto AssignExpRelationship::assignNode() const -> std::shared_ptr<ast::AssignNode> { return assignNode_; }
 
-auto AssignExpRelationship::varName() const -> std::string { return assignNode_->GetVariable()->GetName(); }
+auto AssignExpRelationship::varName() const -> std::string { return assignNode_->GetVariable()->GetValue(); }
 
 auto AssignExpRelationship::statementNumber() const -> int { return assignNode_->GetStatementNumber(); }
 

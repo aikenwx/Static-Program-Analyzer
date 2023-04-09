@@ -10,8 +10,8 @@
 
 namespace qps {
 
+// Declaration represents the declaration of a synonym with design entity
 class Declaration {
-
  private:
   DesignEntity design_entity;
   Synonym synonym;
@@ -33,12 +33,14 @@ class Declaration {
     return ostream;
   }
 
+  // Find Declaration of a synonym from the list of declarations
   static auto findDeclarationWithSynonym(const std::vector<Declaration> &decl_list,
                                          const Synonym &synonym)
   -> std::optional<Declaration> {
     return findDeclarationWithString(decl_list, synonym.getSynonym());
   }
 
+  // Find Declaration of a synonym from the list of declarations (String form)
   static auto findDeclarationWithString(const std::vector<Declaration> &decl_list,
                                         const std::string &syn_string)
   -> std::optional<Declaration> {
@@ -50,4 +52,5 @@ class Declaration {
     return std::nullopt;
   }
 };
+
 } // namespace qps

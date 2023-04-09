@@ -3,7 +3,6 @@
 #include "query/such_that_clause.h"
 
 namespace qps {
-
 auto SuchThatClause::getRelationship() const -> Relationship {
   return relationship;
 }

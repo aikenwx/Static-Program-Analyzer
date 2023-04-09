@@ -22,14 +22,17 @@ auto QueryTokenizer::peek() -> char {
   }
   return nextChar;
 }
+
 auto QueryTokenizer::next() -> char {
   char nextChar{peek()};
   currentIndex++;
   return nextChar;
 }
+
 auto QueryTokenizer::isEnd() -> bool {
   return currentIndex == queryString.length();
 }
+
 void QueryTokenizer::readPhrase() {
   while (isalnum(peek()) != 0) {
     currentString += next();
@@ -43,6 +46,7 @@ void QueryTokenizer::readPhrase() {
     currentString += next();
   }
 }
+
 void QueryTokenizer::readNumber() {
   while (isdigit(peek()) != 0) {
     currentString += next();
@@ -83,4 +87,5 @@ auto QueryTokenizer::tokenize() -> std::vector<std::string> {
   }
   return tokens;
 }
+
 }  // namespace qps

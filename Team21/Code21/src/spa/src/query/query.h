@@ -11,9 +11,10 @@
 
 namespace qps {
 
-using Clause = std::variant<qps::SuchThatClause, qps::PatternClause>;
+// Result represents return type of Select Clause: either a list of Element or a BOOLEAN
 using Result = std::variant<std::vector<Element>, Boolean>;
 
+// Query represents all query information translated from PQL query
 class Query {
  private:
   std::vector<Declaration> declarations;

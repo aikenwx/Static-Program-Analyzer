@@ -5,9 +5,9 @@
 namespace qps {
 
 PatternClause::PatternClause(Synonym synonym_, Ref arg1_, ExpressionSpec arg2_)
-    : stmtSynonym{std::move(synonym_)},
+: stmtSynonym{std::move(synonym_)},
       arg1{std::move(arg1_)},
-      arg2{std::move(std::move(arg2_))},
+      arg2{std::move(arg2_)},
       gotExpression(std::holds_alternative<Expression>(arg2)),
       isPartial{false} {
 

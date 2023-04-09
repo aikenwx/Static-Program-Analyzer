@@ -8,6 +8,7 @@ class INode;
 class AssignNode;
 class CallNode;
 class ConditionalNode;
+class IdentifierNode;
 class IfNode;
 class WhileNode;
 class ConstantNode;
@@ -17,7 +18,6 @@ class ProgramNode;
 class ReadNode;
 class StatementListNode;
 class StatementNode;
-class VariableNode;
 }  // namespace ast
 
 namespace design_extractor {
@@ -52,7 +52,7 @@ class Extractor {
       const std::shared_ptr<ast::StatementListNode>& node, int depth){};
   virtual void HandleStatementNode(const std::shared_ptr<ast::StatementNode>& node,
                                    int depth){};
-  virtual void HandleVariableNode(const std::shared_ptr<ast::VariableNode>& node,
+  virtual void HandleVariableNode(const std::shared_ptr<ast::IdentifierNode>& node,
                                   int depth){};
   virtual void HandleOtherNode(const std::shared_ptr<ast::INode>& node, int depth){};
 };

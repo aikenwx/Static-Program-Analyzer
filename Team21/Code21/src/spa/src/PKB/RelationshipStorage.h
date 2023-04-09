@@ -133,17 +133,14 @@ class RelationshipStorage {
       const RelationshipType &relationshipType, EntityKey &leftHandEntityKey,
       const EntityType &rightHandEntityType) -> std::vector<Entity *> *;
 
-  auto generateRelationshipVector() -> std::vector<Relationship *> *;
-  auto generateEntityVector() -> std::vector<Entity *> *;
-
  private:
   template <typename T>
-  auto getVectorForStore(T &key,
-                         std::unordered_map<T, std::vector<Entity *> *> &store)
+  auto getVectorForStoring(T &key,
+                           std::unordered_map<T, std::vector<Entity *> *> &store)
       -> std::vector<Entity *> *;
 
-  auto getVectorForDoubleSynonymStore(
-      RelationshipDoubleSynonymKey relationshipDoubleSynonymKey)
+  auto getVectorForDoubleSynonymStoreForStoring(
+      const RelationshipDoubleSynonymKey& relationshipDoubleSynonymKey)
       -> std::vector<Relationship *> *;
 
 };

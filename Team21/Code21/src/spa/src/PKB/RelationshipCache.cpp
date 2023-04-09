@@ -4,14 +4,14 @@
 
 #include "RelationshipCache.h"
 
-CacheResult::CacheResult() : first(nullptr), second(nullptr), areResultsIndividuallyCached(false) {}
-CacheResult::CacheResult(std::vector<Entity *> *entityVector, std::vector<Relationship *> *relationshipVector, bool areResultsIndividuallyCached) : first(entityVector), second(relationshipVector), areResultsIndividuallyCached(areResultsIndividuallyCached) {}
+CacheResult::CacheResult() : cachedRelatedEntities(nullptr), cachedRelationships(nullptr), areRelationshipsIndividuallyCached(false) {}
+CacheResult::CacheResult(std::vector<Entity *> *entityVector, std::vector<Relationship *> *relationshipVector, bool areResultsIndividuallyCached) : cachedRelatedEntities(entityVector), cachedRelationships(relationshipVector), areRelationshipsIndividuallyCached(areResultsIndividuallyCached) {}
 
 RelationshipCache::RelationshipCache(EntityManager *entityManager) : entityManager(entityManager) {}
 
 auto RelationshipCache::getCachedRelationship(RelationshipKey &key)
     -> Relationship * {
-  int relationshipTypeKey = key.getRelationshipType()->getKey();
+  int relationshipTypeKey = static_cast<int>(key.getRelationshipType()->getKey());
 
   if (relationshipMapCache.size() <= relationshipTypeKey) {
     return nullptr;
@@ -33,10 +33,10 @@ auto RelationshipCache::getCachedRelationship(RelationshipKey &key)
 
   const auto *leftEntityType = key.getLeftEntityKey()->entityType;
 
-  bool isCorrectLeftEntityType = leftEntityType || cachedRelationhip->getLeftHandEntity()->getEntityType() == *leftEntityType;
+  bool isCorrectLeftEntityType = *leftEntityType == Statement::getEntityTypeStatic() || cachedRelationhip->getLeftHandEntity()->getEntityType() == *leftEntityType;
 
   const auto *rightEntityType = key.getRightEntityKey()->entityType;
-  bool isCorrectRightEntityType = rightEntityType || cachedRelationhip->getRightHandEntity()->getEntityType() == *rightEntityType;
+  bool isCorrectRightEntityType = *rightEntityType == Statement::getEntityTypeStatic() || cachedRelationhip->getRightHandEntity()->getEntityType() == *rightEntityType;
 
   if (!isCorrectLeftEntityType || !isCorrectRightEntityType) {
     return nullptr;
@@ -45,16 +45,11 @@ auto RelationshipCache::getCachedRelationship(RelationshipKey &key)
   return cachedRelationhip;
 }
 
-// auto RelationshipCache::containedInRelationshipCache(RelationshipKey &key)
-//     -> bool {
-//   return this->relationshipCache.find(key) != this->relationshipCache.end();
-// }
-
 void RelationshipCache::clearCache() {
   this->relationshipDoubleSynonymCache.clear();
   this->relationshipLiteralSynonymCache.clear();
   this->relationshipSynonymLiteralCache.clear();
-  this->relationshipCache.clear();
+  this->relationshipMapCache.clear();
   this->relationshipVectorCacheOwner.clear();
   this->entityVectorCacheOwner.clear();
   this->relationshipCacheOwner.clear();
@@ -103,7 +98,7 @@ auto RelationshipCache::getStoreAndCacheSizes() -> std::vector<int> {
   return {static_cast<int>(this->relationshipDoubleSynonymCache.size()),
           static_cast<int>(this->relationshipLiteralSynonymCache.size()),
           static_cast<int>(this->relationshipSynonymLiteralCache.size()),
-          static_cast<int>(this->relationshipCache.size()),
+          static_cast<int>(this->relationshipMapCache.size()),
           static_cast<int>(this->relationshipVectorCacheOwner.size()),
           static_cast<int>(this->entityVectorCacheOwner.size()),
           static_cast<int>(this->relationshipCacheOwner.size())};

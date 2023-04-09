@@ -90,7 +90,7 @@ auto RelationshipManager::
     auto *rightHandEntity = this->entityManager->getEntity(rightHandEntityKey);
     return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                         leftHandEntityType, rightHandEntity, true)
-        .first;
+        .cachedRelatedEntities;
   }
 
   auto *result =
@@ -120,7 +120,7 @@ auto RelationshipManager::
 
     return evaluator->evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                         rightHandEntityType, leftHandEntity, false)
-        .first;
+        .cachedRelatedEntities;
   }
 
   auto *result =

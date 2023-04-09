@@ -15,7 +15,7 @@ class CFGEvaluableRelationshipType : public RelationshipType {
 
   virtual auto getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
                                         RelationshipCache *relationshipCache,
-                                        EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const = 0;
+                                        EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> = 0;
 };
 
 #endif  // SPA_CFGEVALUATABLERELATIONSHIPTYPE_H

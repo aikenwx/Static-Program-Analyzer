@@ -23,7 +23,7 @@ auto SemanticValidator::validateQuery() -> bool {
 void SemanticValidator::checkForDuplicateDeclarations() {
   //create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
   std::unordered_set<std::string> seen;
-  for (Declaration declr : getQuery().getDeclarations()) {
+  for (const Declaration& declr : getQuery().getDeclarations()) {
     std::string syn = declr.getSynonym().getSynonym();
     if (seen.find(syn) == seen.end()) {
       seen.insert(syn);
@@ -224,7 +224,7 @@ void SemanticValidator::checkAttrRefValidAttrName() {
   }
 }
 
-void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr) {
+void SemanticValidator::checkAttrRefValidAttrNameHelper(const AttrRef& attr, std::vector<Declaration>& declr) {
   if (Declaration::findDeclarationWithSynonym(declr, attr.synonym).has_value()) {
     Declaration decl = Declaration::findDeclarationWithSynonym(declr, attr.synonym).value();
     std::set<AttrName> validAttrNameSet = getValidAttrNameSet(decl);

@@ -58,7 +58,7 @@ class RowTable {
   auto KeyIndex(const Key &key) const -> std::size_t {
     auto iterator = header_idx_.find(key);
     if (iterator != header_idx_.end()) {
-      return iterator->second;
+      return iterator->cachedRelationships;
     }
     return -1;
   }

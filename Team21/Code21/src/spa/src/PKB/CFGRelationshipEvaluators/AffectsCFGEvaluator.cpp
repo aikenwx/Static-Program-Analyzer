@@ -62,7 +62,7 @@ void AffectsCFGEvaluator::initializeForwardsEvaluation(
 }
 
 auto AffectsCFGEvaluator::visitInForwardsEvaluation(
-    Statement* visitedStatement, std::vector<Statement*>* partialResults)
+    Entity* visitedStatement, std::vector<Entity*>* partialResults)
     -> bool {
   // we check uses first, as we don't want to skip case where assign statement
   // uses and modifies same variable that was modified by source statement
@@ -117,14 +117,14 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
       nextCFGEvaluator
           .getCachedEntitiesAndRelationships(false, *sourceStatement,
                                              Statement::getEntityTypeStatic())
-          .first;
+          .cachedRelatedEntities;
 
   if (directRelations == nullptr) {
     directRelations =
         nextCFGEvaluator
             .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                 Statement::getEntityTypeStatic(), sourceStatement, false)
-            .first;
+            .cachedRelatedEntities;
   }
 
   for (auto* result : *directRelations) {
@@ -145,7 +145,7 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 
     if (visitInForwardsEvaluation(
             nextToVisitStmt,
-            reinterpret_cast<std::vector<Statement*>*>(results.get()))) {
+            results.get())) {
       continue;
     }
 
@@ -153,14 +153,14 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
         nextCFGEvaluator
             .getCachedEntitiesAndRelationships(false, *nextToVisitStmt,
                                                Statement::getEntityTypeStatic())
-            .first;
+            .cachedRelatedEntities;
 
     if (neighbours == nullptr) {
       neighbours =
           nextCFGEvaluator
               .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                   Statement::getEntityTypeStatic(), nextToVisitStmt, false)
-              .first;
+              .cachedRelatedEntities;
     }
 
     for (auto* neighbour : *neighbours) {
@@ -174,7 +174,7 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
 // this is a naive algorithm, by completing all forwards evaluation first, then working backwards
 auto AffectsCFGEvaluator::getRelatedStatementsInReverseEvaluation(Statement* sourceStatement)
     -> std::unique_ptr<std::vector<Entity*>> {
-  auto allAssignStatements = getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
+  auto* allAssignStatements = getEntityManager()->getEntitiesByType(AssignStatement::getEntityTypeStatic());
 
   auto results = std::make_unique<std::vector<Entity*>>();
 

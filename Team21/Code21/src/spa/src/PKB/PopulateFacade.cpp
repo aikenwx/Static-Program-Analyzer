@@ -267,7 +267,7 @@ void PopulateFacade::validateEntityExists(Entity *entity) {
 }
 
 void PopulateFacade::storeCFG(std::shared_ptr<cfg::CFG> cfg) {
-  this->relationshipManager->storeCFG(cfg);
+  this->relationshipManager->storeCFG(std::move(cfg));
 }
 
 void PopulateFacade::storeTotalStatementCount(int statementCount) {

@@ -243,18 +243,18 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
 
   REQUIRE(temp7->size() == 18);
   auto *temp8 =
-          pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
-                  AffectsStarRelationship::getRelationshipTypeStatic(),
-                  Statement::getEntityTypeStatic(), 1,
-                  Statement::getEntityTypeStatic());
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
+          AffectsStarRelationship::getRelationshipTypeStatic(),
+          Statement::getEntityTypeStatic(), 1,
+          Statement::getEntityTypeStatic());
 
   REQUIRE(temp8->size() == 5);
 
   auto *temp9 =
-          pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
-                  NextStarRelationship::getRelationshipTypeStatic(),
-                  CallStatement::getEntityTypeStatic(),
-                  Statement::getEntityTypeStatic(), 8);
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
+          NextStarRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          Statement::getEntityTypeStatic(), 8);
 
   REQUIRE(temp9->size() == 1);
   REQUIRE(*temp9->at(0)->getEntityValue() == "5");
@@ -265,10 +265,10 @@ TEST_CASE("Next/Affect/Affect* Clauses PKB") {
   REQUIRE(temp10->size() == 12);
 
   auto *temp11 =
-          pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
-                  NextStarRelationship::getRelationshipTypeStatic(),
-                  CallStatement::getEntityTypeStatic(),
-                  Statement::getEntityTypeStatic(), 8);
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
+          NextStarRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          Statement::getEntityTypeStatic(), 8);
 
   auto *temp12 = pkb_querier->getRelationship(
       NextStarRelationship::getRelationshipTypeStatic(),
@@ -430,10 +430,10 @@ TEST_CASE("Retrieve related entities to non existent entity") {
   QueryFacade *pkb_querier = pkb_helper.GetQuerier();
 
   auto *relationship =
-          pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
-                  CallsRelationship::getRelationshipTypeStatic(),
-                  Procedure::getEntityTypeStatic(), "fail",
-                  Procedure::getEntityTypeStatic());
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
+          CallsRelationship::getRelationshipTypeStatic(),
+          Procedure::getEntityTypeStatic(), "fail",
+          Procedure::getEntityTypeStatic());
   REQUIRE(relationship == RelationshipManager::getEmptyEntityVector());
 }
 
@@ -462,10 +462,10 @@ TEST_CASE("Test Affects/Affects*") {
   sp::SP::process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
-          ->getRightEntitiesRelatedToGivenLeftEntity(
-                  AffectsRelationship::getRelationshipTypeStatic(),
-                  Statement::getEntityTypeStatic(), 6,
-                  Statement::getEntityTypeStatic());
+                     ->getRightEntitiesRelatedToGivenLeftEntity(
+                         AffectsRelationship::getRelationshipTypeStatic(),
+                         Statement::getEntityTypeStatic(), 6,
+                         Statement::getEntityTypeStatic());
 
   REQUIRE(result->size() == 4);
 }
@@ -497,10 +497,10 @@ TEST_CASE("Test reverse Affects") {
   sp::SP::process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
-          ->getLeftEntitiesRelatedToGivenRightEntity(
-                  AffectsRelationship::getRelationshipTypeStatic(),
-                  Statement::getEntityTypeStatic(),
-                  Statement::getEntityTypeStatic(), 8);
+                     ->getLeftEntitiesRelatedToGivenRightEntity(
+                         AffectsRelationship::getRelationshipTypeStatic(),
+                         Statement::getEntityTypeStatic(),
+                         Statement::getEntityTypeStatic(), 8);
 
   REQUIRE(result->size() == 2);
   REQUIRE(*result->at(0)->getEntityValue() == "6");
@@ -1912,10 +1912,10 @@ TEST_CASE("Test CFG relationship cache") {
 
   REQUIRE(temp7->size() == 18);
   auto *temp8 =
-          pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
-                  AffectsStarRelationship::getRelationshipTypeStatic(),
-                  Statement::getEntityTypeStatic(), 1,
-                  Statement::getEntityTypeStatic());
+      pkb_querier->getRightEntitiesRelatedToGivenLeftEntity(
+          AffectsStarRelationship::getRelationshipTypeStatic(),
+          Statement::getEntityTypeStatic(), 1,
+          Statement::getEntityTypeStatic());
 
   REQUIRE(temp8->size() == 5);
 
@@ -1930,10 +1930,10 @@ TEST_CASE("Test CFG relationship cache") {
   }
 
   auto *temp9 =
-          pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
-                  NextStarRelationship::getRelationshipTypeStatic(),
-                  CallStatement::getEntityTypeStatic(),
-                  Statement::getEntityTypeStatic(), 8);
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
+          NextStarRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          Statement::getEntityTypeStatic(), 8);
 
   REQUIRE(temp9->size() == 1);
   REQUIRE(*temp9->at(0)->getEntityValue() == "5");
@@ -1944,10 +1944,10 @@ TEST_CASE("Test CFG relationship cache") {
   REQUIRE(temp10->size() == 12);
 
   auto *temp11 =
-          pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
-                  NextStarRelationship::getRelationshipTypeStatic(),
-                  CallStatement::getEntityTypeStatic(),
-                  Statement::getEntityTypeStatic(), 8);
+      pkb_querier->getLeftEntitiesRelatedToGivenRightEntity(
+          NextStarRelationship::getRelationshipTypeStatic(),
+          CallStatement::getEntityTypeStatic(),
+          Statement::getEntityTypeStatic(), 8);
 
   auto *temp12 = pkb_querier->getRelationship(
       NextStarRelationship::getRelationshipTypeStatic(),

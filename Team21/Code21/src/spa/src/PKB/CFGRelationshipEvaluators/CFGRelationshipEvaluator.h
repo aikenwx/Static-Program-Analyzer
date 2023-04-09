@@ -71,14 +71,14 @@ class CFGRelationshipEvaluator {
 
   virtual ~CFGRelationshipEvaluator() = default;
 
-  Relationship* evaluateAndCacheRelationshipsByGivenEntities(
-      Entity* leftEntity, Entity* rightEntity);
+  auto evaluateAndCacheRelationshipsByGivenEntities(
+      Entity* leftEntity, Entity* rightEntity) -> Relationship*;
 
-  std::vector<Relationship*>* evaluateAndCacheRelationshipsByEntityTypes(
-      const EntityType& leftEntityType, const EntityType& rightEntityType);
+  auto evaluateAndCacheRelationshipsByEntityTypes(
+      const EntityType& leftEntityType, const EntityType& rightEntityType) -> std::vector<Relationship*>*;
 
-  CacheResult& evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
-      const EntityType& givenEntityType, Entity* entity, bool isReverse);
+  auto evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
+      const EntityType& givenEntityType, Entity* entity, bool isReverse) -> CacheResult&;
 
   auto getCachedEntitiesAndRelationships(
       bool isReverse, Entity& sourceEntity,

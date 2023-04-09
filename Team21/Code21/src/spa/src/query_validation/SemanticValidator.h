@@ -49,6 +49,6 @@ namespace qps {
 
 		static void checkSecondSynonymHelper(DesignEntity des, const std::string &relStr, Relationship rel);
 
-		static void checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr);
+		static void checkAttrRefValidAttrNameHelper(const AttrRef& attr, std::vector<Declaration>& declr);
 	};
 }  // namespace qps

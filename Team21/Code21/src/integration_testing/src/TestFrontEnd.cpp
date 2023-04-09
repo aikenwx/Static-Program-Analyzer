@@ -122,16 +122,16 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN(
           "The PKB should contain the correct information about assign "
           "statements") {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<AssignStatement*> const* assigns =
-            reinterpret_cast<std::vector<AssignStatement*> const*>(queryFacade->getEntitiesByType(AssignStatement::getEntityTypeStatic()));
+          // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+          auto const* assigns = reinterpret_cast<std::vector<AssignStatement*> const*>(queryFacade->getEntitiesByType(AssignStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(assigns, {1, 5, 7, 11});
       }
 
       THEN(
           "The PKB should contain the correct information about call "
           "statements") {
-        std::vector<CallStatement*> const* calls = reinterpret_cast<std::vector<CallStatement*> const*>(queryFacade->getEntitiesByType(CallStatement::getEntityTypeStatic()));
+          // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+          auto const* calls = reinterpret_cast<std::vector<CallStatement*> const*>(queryFacade->getEntitiesByType(CallStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
@@ -139,7 +139,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about if "
           "statements") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<IfStatement*> const* ifs = reinterpret_cast<std::vector<IfStatement*> const*>(queryFacade->getEntitiesByType(IfStatement::getEntityTypeStatic()));
+        auto const* ifs = reinterpret_cast<std::vector<IfStatement*> const*>(queryFacade->getEntitiesByType(IfStatement::getEntityTypeStatic()));
 
         RequireStmtNumsMatch(ifs, {8});
       }
@@ -148,7 +148,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about while "
           "statements") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<WhileStatement*> const* whiles = reinterpret_cast<std::vector<WhileStatement*> const*>(queryFacade->getEntitiesByType(WhileStatement::getEntityTypeStatic()));
+        auto const* whiles = reinterpret_cast<std::vector<WhileStatement*> const*>(queryFacade->getEntitiesByType(WhileStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(whiles, {});
       }
 
@@ -156,9 +156,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about print "
           "statements") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-
-        std::vector<PrintStatement*> const* prints =
-            reinterpret_cast<std::vector<PrintStatement*> const*>(queryFacade->getEntitiesByType(PrintStatement::getEntityTypeStatic()));
+        auto const* prints = reinterpret_cast<std::vector<PrintStatement*> const*>(queryFacade->getEntitiesByType(PrintStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(prints, {3, 12});
       }
 
@@ -166,15 +164,14 @@ SCENARIO("SP can process and store a simple program into PKB") {
           "The PKB should contain the correct information about read "
           "statements") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-
-        std::vector<ReadStatement*> const* reads = reinterpret_cast<std::vector<ReadStatement*> const*>(queryFacade->getEntitiesByType(
+        auto const* reads = reinterpret_cast<std::vector<ReadStatement*> const*>(queryFacade->getEntitiesByType(
             ReadStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(reads, {2});
       }
 
       THEN("The PKB should contain the correct information about procedures") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<Procedure*> const* procs = reinterpret_cast<std::vector<Procedure*> const*>(
+        auto const* procs = reinterpret_cast<std::vector<Procedure*> const*>(
             queryFacade->getEntitiesByType(Procedure::getEntityTypeStatic()));
         RequireEntityValuesMatch(procs,
                                  {"main", "foo", "bar", "baz", "qux", "quux"});
@@ -182,22 +179,21 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain the correct information about variables") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<Variable*> const* vars = reinterpret_cast<std::vector<Variable*> const*>(
+        auto const* vars = reinterpret_cast<std::vector<Variable*> const*>(
             queryFacade->getEntitiesByType(Variable::getEntityTypeStatic()));
         RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<Constant*> const* consts = reinterpret_cast<std::vector<Constant*> const*>(
+        auto const* consts = reinterpret_cast<std::vector<Constant*> const*>(
             queryFacade->getEntitiesByType(Constant::getEntityTypeStatic()));
         RequireEntityValuesMatch(consts, {"1", "2", "4"});
       }
 
       THEN("The PKB should contain the correct information about statements") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<Statement*> const* stmts =
-            reinterpret_cast<std::vector<Statement*> const*>(
+        auto const* stmts = reinterpret_cast<std::vector<Statement*> const*>(
                 queryFacade->getEntitiesByType(Statement::getEntityTypeStatic()));
         RequireStmtNumsMatch(stmts,
                              {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
@@ -278,8 +274,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all proc-var Modifies relationships") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<ModifiesRelationship*> const* modifiesRels =
-            reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
+        auto const* modifiesRels = reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
                 queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
                                                      Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic()));
 
@@ -320,8 +315,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
 
       THEN("The PKB should contain all stmt-var Modifies relationships") {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        std::vector<ModifiesRelationship*> const* modifiesRels =
-            reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
+        auto const* modifiesRels = reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
                 queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
                                                      Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic()));
 

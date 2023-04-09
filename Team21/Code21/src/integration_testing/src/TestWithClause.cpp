@@ -354,7 +354,7 @@ procedure nguyen {
   sp::SP::process(program, &pkb);
   auto eval = qps_test::RunQuery("call c; \n Select c with 4 = 5",
                                  *pkb.getQueryFacade());
-  REQUIRE(eval == std::unordered_set<std::string>{});
+  REQUIRE(eval.empty());
 
   auto evaluation = qps_test::RunQuery(
       "call c; Select BOOLEAN with c.stmt# = 16", *pkb.getQueryFacade());

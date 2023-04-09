@@ -1,40 +1,60 @@
 1 - s1, s2 are separated by a while statement that modifies v
 
-Select BOOLEAN such that Affects(2, 7)
+Select BOOLEAN such that Affects(2, 8)
 TRUE
 5000
 2 - s1, s2 are separated by a while statement that doesn't modify v
 
-Select BOOLEAN such that Affects(1, 7)
+Select BOOLEAN such that Affects(1, 8)
 TRUE
 5000
 3 - s1, s2 are separated by an if statement that modifies v in only the then branch
 
-Select BOOLEAN such that Affects(8, 15)
+Select BOOLEAN such that Affects(9, 16)
 TRUE
 5000
 4 - s1, s2 are separated by an if statement that modifies v in only the else branch
 
-Select BOOLEAN such that Affects(16, 20)
+Select BOOLEAN such that Affects(17, 21)
 TRUE
 5000
 5 - s1, s2 are separated by an if statement with both branches containing while loops that modify v
 
-Select BOOLEAN such that Affects(21, 29)
+Select BOOLEAN such that Affects(22, 30)
 TRUE
 5000
 6 - s1, s2 are separated by an if statement with both branches containing if statements that don't modify v
 
-Select BOOLEAN such that Affects(30, 42)
+Select BOOLEAN such that Affects(31, 43)
 TRUE
 5000
 7 - s1, s2 are separated by a while statement containing another while statement, both of which modify v0
 
-Select BOOLEAN such that Affects(43, 51)
+Select BOOLEAN such that Affects(44, 52)
 TRUE
 5000
 8 - s1, s2 are separated by a while statement containing an if statement, where at least one branch doesn't modify v
 
-Select BOOLEAN such that Affects(52, 61)
+Select BOOLEAN such that Affects(53, 63)
 TRUE
+5000
+9 - s2 precedes s1, but they're in a while-loop at the same level
+
+Select BOOLEAN such that Affects(7, 6)
+TRUE
+5000
+10 - s2 is in a preceding while-statement and s1 is in a parent while statement
+
+Select BOOLEAN such that Affects(49, 48)
+TRUE
+5000
+11 - s2 is in a nested while-stmt in a preceding else-block, and s1 is in a parent while statement
+
+Select BOOLEAN such that Affects(62, 60)
+TRUE
+5000
+12 - Affects* - s1 modifies v, s2 uses v, but otherwise not related at all
+
+Select BOOLEAN such that Affects*(2, 63)
+FALSE
 5000

@@ -28,3 +28,18 @@ TRUE
 Select BOOLEAN such that Affects(2, 5)
 TRUE
 5000
+7 - s1 and s2 are the same statement, which uses and modifies v
+
+Select BOOLEAN such that Affects(9, 9)
+TRUE
+5000
+8 - Affects* - Affects(s1, sX), Affects(sX, sY), and Affects(sY, s2) hold
+
+Select BOOLEAN such that Affects*(1, 6)
+TRUE
+5000
+9 - Affects* - no s exists such that Affects(s1, s), Affects(s, s2) even though s1 modifies v and s2 uses v
+
+Select BOOLEAN such that Affects*(2, 8)
+FALSE
+5000

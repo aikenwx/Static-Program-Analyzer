@@ -1,0 +1,266 @@
+procedure MultiStatementBetween {
+    v1 = 0;
+    v1 = 352;
+    v8000 = v9000 + 3;
+    print v9501;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v2 = 8 / v1;
+
+    v3 = 51;
+    read v3;
+    print v9915;
+    call ProcedureThatModifiesV7AssignInIfStmt;
+    v8000 = v9000 + 3;
+    print v9501;
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v4 = 2 * v3 * v3;
+
+    v5 = 95;
+    call ProcedureThatModifiesV5TopLevelAssign;
+    v8000 = v9000 + 3;
+    print v9501;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v6 = v5 % v5 % v5 % v5;
+
+    v7 = 61;
+    call ProcedureThatModifiesV7AssignInIfStmt;
+    v8000 = v9000 + 3;
+    print v9501;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV5TopLevelAssign;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v8 = v7 * v7 / v7;
+
+    v9 = 11 + v2005;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    v8000 = v9000 + 3;
+    print v9501;
+    call ProcedureThatModifiesV5TopLevelAssign;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    v10 = v2006 + v2007 + v9;
+
+    v11 = 5161;
+    call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+    v8000 = v9000 + 3;
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    print v9501;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV5TopLevelAssign;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v12 = v11 - v11;
+
+    v13 = 52;
+    if (5 == 151) then {
+        v13 = 5;
+    } else {
+        v13 = 1;
+    }
+    call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+    v8000 = v9000 + 3;
+    if (v9966 == 41) then {
+        v8481 = 431;
+    } else {
+        read v8455;
+    }
+    print v9501;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    while (v9712 == v9517 % v9131) {
+        v1 = 242;
+    }
+    if (v9595 == 51) then {
+        call ProcedureThatModifiesV5TopLevelAssign;
+        while (v9941 * v9231 == 412) {
+            v1 = 443;
+        }
+    } else {
+        v8421 = 51;
+        if (v9577 == 85315 * v9813) then {
+            v8547 = 21;
+            call ProcedureThatModifiesV7AssignInIfStmt;
+        } else {
+            v8518 = 43;
+            read v8715;
+        }
+    }
+    v14 = v13 * 51;
+}
+
+procedure ProcedureThatModifiesV5TopLevelAssign {
+    v5 = 371;
+}
+
+procedure ProcedureThatModifiesV7AssignInIfStmt {
+    if (x == 3) then {
+        v7 = 5;
+    } else {
+        v7 = 1;
+    }
+}
+
+procedure ProcedureThatModifiesV9AssignInWhileStmt {
+    while (x == 3) {
+        v9 = 5;
+    }
+}
+
+procedure ProcedureThatModifiesV11AssignInManyNestedContainerStmt {
+    if (x == 3) then {
+        v1000 = 5;
+        if (y == 4) then {
+            v11 = 151;
+        } else {
+            v11 = 16;
+        }
+    } else {
+        if (x == 4) then {
+            if (y == 5) then {
+                if (z == 1) then {
+                    v11 = 151;
+                } else {
+                    v11 = 117;
+                }
+            } else {
+                v11 = 612;
+            }
+        } else {
+            if (z == 1611) then {
+                v11 = 66;
+            } else {
+                v11 = 1611;
+            }
+        }
+        v11 = 5;
+    }
+}

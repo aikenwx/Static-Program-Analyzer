@@ -1,0 +1,83 @@
+procedure AffectedInParentLevel {
+    if (1 == v1) then {
+        v1 = v1 * 7;
+        if ((v1 == v1 / 51) || (2 == 1)) then {
+            v1 = 5 + v1;
+        } else {
+            v1 = 6 + v1;
+        }
+        while (((5 == 1) || (5 - 4 == 2)) || ((5 == 3) || (5 == v1))) {
+            v1 = 51 % v1;
+        }
+    } else {
+        if ((7 + 5 == 12) || ((5 * 5 == 5) && (1 == 2))) then {
+            v1 = v1 + 5;
+        } else {
+            v1 = v1 * 7;
+        }
+        v1 = 51 % (v1 * 7);
+        while (2 == 51) {
+            v1 = v1 % v1;
+        }
+    }
+    while (5 == 5) {
+        if (4 == 1) then {
+            v1 = v1 + 89;
+        } else {
+            v1 = 1 * v1;
+        }
+        while (3 == 7) {
+            v1 = 35 * 30 + v1;
+            if (34 == 15) then {
+                v1 = v1 * 5;
+                v1 = v1 % v1;
+            } else {
+                v1 = 14 * v1;
+                v1 = 51 - v1;
+            }
+        }
+        v1 = 15 * 51 + v1;
+        v1 = 4 * v1;
+    }
+    v1 = v1;
+}
+
+procedure DummyProcedure1 {
+    v1 = 5;
+    v1 = 7;
+    if ((v1 >= 5) && (v1 % 5 == 8)) then {
+        while (5 <= v1) {
+            v1 = v1 % v1;
+            if (v1 + v1 == v1) then {
+                read v1;
+                print v1;
+                call DummyProcedure2;
+                v1 = v1;
+            } else {
+                print v1;
+            }
+            v1 = v1 / v1;
+        }
+        v1 = v1 + 5 + v1;
+    } else {
+        v1 = 5 * v1;
+        read v1;
+        if (7 * 5 == 36) then {
+            while (5 * 7 == v1 * 37) {
+                read v1;
+                print v1;
+            }
+        } else {
+            while (1 == 1) {
+                print v1;
+                v1 = v1;
+            }
+            v1 = 511 % 512;
+        }
+    }
+}
+
+procedure DummyProcedure2 {
+    v1 = 5;
+    v1 = 7;
+}

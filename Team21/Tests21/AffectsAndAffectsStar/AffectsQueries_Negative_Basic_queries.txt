@@ -1,0 +1,25 @@
+1 - s1 doesn't modify any variables used in s2 (1)
+
+Select BOOLEAN such that Affects(1, 2)
+FALSE
+5000
+2 - s2 does not use any variables at all
+stmt s1;
+Select s1 such that Affects(s1, 3)
+none
+5000
+3 - s1 is not an assignment statement
+
+Select BOOLEAN such that Affects(4, 5)
+FALSE
+5000
+4 - s2 is not an assignment statement
+
+Select BOOLEAN such that Affects(5, 6)
+FALSE
+5000
+5 - s1 and s2 are not in the same procedure
+
+Select BOOLEAN such that Affects(5, 8)
+FALSE
+5000

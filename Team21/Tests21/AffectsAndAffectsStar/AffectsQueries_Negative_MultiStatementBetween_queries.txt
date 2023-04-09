@@ -1,0 +1,35 @@
+1 - s1, s2 has an assign statement that modifies v, and other unrelated statements between
+
+Select BOOLEAN such that Affects(1, 21)
+FALSE
+5000
+2 - s1, s2 has a read statement that modifies v, and other unrelated statements between
+
+Select BOOLEAN such that Affects(22, 44)
+FALSE
+5000
+3 - s1, s2 has a call statement that modifies v in a top-level non-container statement, and other unrelated statements between
+
+Select BOOLEAN such that Affects(45, 65)
+FALSE
+5000
+4 - s1, s2 has a call statement that modifies v in a top-level if statement, and other unrelated statements between
+
+Select BOOLEAN such that Affects(66, 86)
+FALSE
+5000
+5 - s1, s2 has a call statement that modifies v in a top-level while statement, and other unrelated statements between
+
+Select BOOLEAN such that Affects(87, 107)
+FALSE
+5000
+6 - s1, s2 has a call statement that modifies v in a multi-level container statement, and other unrelated statements between
+
+Select BOOLEAN such that Affects(108, 128)
+FALSE
+5000
+7 - s1, s2 has a call statement that modifies v in an if statement, and other unrelated statements between
+
+Select BOOLEAN such that Affects(129, 152)
+FALSE
+5000

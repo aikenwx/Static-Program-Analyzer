@@ -1013,7 +1013,7 @@ TEST_CASE("Test AffectsStar worst case") {
       v497 = v496;
       v498 = v497;
       v499 = v498;
-      v500 = v499; 
+      v500 = v499;
     }
    })";
 

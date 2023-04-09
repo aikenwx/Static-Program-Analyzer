@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
+#include <set>
 #include <vector>
 
 #include "../token/identifier_token.h"
@@ -57,7 +57,7 @@ auto SimpleTokenFactory::checkSymbol(std::string_view value)
   return {isValidPrefix, false};
 }
 
-const std::unordered_map<char, std::vector<std::string>>
+const std::map<char, std::vector<std::string>>
     SimpleTokenFactory::kSymbolTokens{
         {'+', {"+"}},       {'-', {"-"}},       {'*', {"*"}},
         {'/', {"/"}},       {'%', {"%"}},       {'(', {"("}},
@@ -67,10 +67,10 @@ const std::unordered_map<char, std::vector<std::string>>
         {'|', {"||"}},
     };
 
-const std::unordered_set<std::string> SimpleTokenFactory::kValidSymbols{
+const std::set<std::string, std::less<>> SimpleTokenFactory::kValidSymbols{
     "+",  "-", "*",  "/", "%",  "(", ")",  "{", "}",  ";",
     "==", "=", "!=", "!", "<=", "<", ">=", ">", "&&", "||"};
 
-const std::unordered_set<char> SimpleTokenFactory::kWhitespaceTokens{
+const std::set<char> SimpleTokenFactory::kWhitespaceTokens{
     ' ', '\t', '\n', '\r'};
 } // namespace token_factory

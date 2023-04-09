@@ -6,11 +6,11 @@
 
 namespace qps {
 
-  class WithDoubleIntEvaluator : public WithEvaluator {
-  public:
-    WithDoubleIntEvaluator(WithClause clause, std::vector<Declaration> declarations)
-      : WithEvaluator(std::move(clause), std::move(declarations)) {}
-    auto CallPkb(QueryFacade& pkb) -> std::vector<std::vector<Entity *>> override;
-  };
+class WithDoubleIntEvaluator : public WithEvaluator {
+ public:
+  WithDoubleIntEvaluator(const WithClause &clause, const std::vector<Declaration> &declarations)
+      : WithEvaluator(clause, declarations) {}
+  auto CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> override;
+};
 
 } // namespace qps

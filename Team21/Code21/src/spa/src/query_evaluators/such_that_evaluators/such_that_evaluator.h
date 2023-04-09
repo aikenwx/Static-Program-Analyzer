@@ -7,12 +7,12 @@ namespace qps {
 
 class SuchThatEvaluator : public ClauseEvaluator {
  public:
-  SuchThatEvaluator(SuchThatClause clause, std::vector<Declaration> declarations)
-      : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
+  SuchThatEvaluator(const SuchThatClause &clause, const std::vector<Declaration> &declarations)
+      : clause_(clause), declarations_(declarations) {}
 
   auto Evaluate(QueryFacade &pkb) -> ClauseResult override;
  private:
-  SuchThatClause clause_;
-  std::vector<Declaration> declarations_;
+  const SuchThatClause &clause_;
+  const std::vector<Declaration> &declarations_;
 };
 } // namespace qps

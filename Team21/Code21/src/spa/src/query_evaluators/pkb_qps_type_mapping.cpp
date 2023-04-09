@@ -1,4 +1,4 @@
-#include "pkb_helpers.h"
+#include "pkb_qps_type_mapping.h"
 
 #include "PKBStorageClasses/EntityClasses/Statement.h"
 #include "PKBStorageClasses/EntityClasses/ReadStatement.h"
@@ -61,28 +61,4 @@ auto RelationshipToRelationshipType(Relationship relationship) -> const Relation
   }
 }
 
-auto ExtractEntities(const std::vector<::Relationship *> &relationships,
-                     bool left,
-                     bool right,
-                     bool require_equal) -> std::vector<std::vector<Entity *>> {
-  std::vector<std::vector<Entity *>> rows;
-  rows.reserve(relationships.size());
-  for (const auto &relationship : relationships) {
-    if (require_equal && relationship->getLeftHandEntity() != relationship->getRightHandEntity()) {
-      continue;
-    }
-
-    std::vector<Entity *> row;
-    if (left) {
-      row.push_back(relationship->getLeftHandEntity());
-    }
-
-    if (right) {
-      row.push_back(relationship->getRightHandEntity());
-    }
-
-    rows.push_back(std::move(row));
-  }
-  return rows;
-}
 }  // namespace qps

@@ -59,7 +59,7 @@ auto NextStarCFGEvaluator::getRelatedStatements(Statement* statement,
     }
 
     visitedStatementNumbers[nextToVisit] = true;
-    auto* nextToVisitStmt = getEntityManager()->getStmtByNumber(nextToVisit);
+    auto* nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
     results->push_back(nextToVisitStmt);
 
     auto* possibleCachedResults =

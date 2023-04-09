@@ -1,8 +1,64 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Tests21</name><parsing_time_taken>20.932000</parsing_time_taken>
+<name>Tests21</name><parsing_time_taken>29.058000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="backwards affects evaluation">1</id><querystr><![CDATA[assign a; stmt s; Select s such that Affects(s,27)]]></querystr>
+<stuans>25,10,9</stuans>
+<correct>9,10,25</correct>
+<time_taken>4.426000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="backwards affects evaluation">2</id><querystr><![CDATA[assign a; stmt s; Select a such that Affects(a,27)]]></querystr>
+<stuans>25,10,9</stuans>
+<correct>9,10,25</correct>
+<time_taken>2.198000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="backwards affects* evaluation">2</id><querystr><![CDATA[assign a; stmt s; Select s such that Affects*(s,21)]]></querystr>
+<stuans>5,10,21</stuans>
+<correct>5,10,21</correct>
+<time_taken>2.732000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="backwards affects* evaluation">2</id><querystr><![CDATA[assign a; stmt s; Select a such that Affects*(a,31)]]></querystr>
+<stuans>9,21,22,24,27,28,29,5,6,10,25,30</stuans>
+<correct>9,21,22,24,27,28,29,5,6,10,25,30</correct>
+<time_taken>2.492000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="forwards affects evaluation sanity check">3</id><querystr><![CDATA[assign a; stmt s; Select s such that Affects(9,s)]]></querystr>
+<stuans>31,27</stuans>
+<correct>31,27</correct>
+<time_taken>2.363000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="forwards affects evaluation sanity check">4</id><querystr><![CDATA[assign a; stmt s; Select s such that Affects(10,s)]]></querystr>
+<stuans>31,27,21,18</stuans>
+<correct>18,21,27,31</correct>
+<time_taken>1.702000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="forwards affects evaluation sanity check">5</id><querystr><![CDATA[assign a; stmt s; Select s such that Affects(25,s)]]></querystr>
+<stuans>31,27</stuans>
+<correct>31,27</correct>
+<time_taken>1.710000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="non assign statemt">6</id><querystr><![CDATA[assign a; stmt s; Select a such that Affects*(a,26)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>1.325000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

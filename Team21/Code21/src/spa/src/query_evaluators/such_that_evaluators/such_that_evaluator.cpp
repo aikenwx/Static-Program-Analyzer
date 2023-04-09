@@ -28,21 +28,21 @@ class ClauseVisitor {
   template<typename Literal>
   auto operator()(Literal from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_, left_, GetLiteral(from), right_);
+        pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_, left_, GetLiteral(from), right_);
     return !(entities->empty());
   }
 
   template<typename Literal>
   auto operator()([[maybe_unused]] Underscore underscore, Literal dest) -> ClauseResult {
     auto *entities =
-        pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_, left_, right_, GetLiteral(dest));
+        pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_, left_, right_, GetLiteral(dest));
     return !(entities->empty());
   }
 
   template<typename Literal>
   auto operator()(Literal src, Synonym dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityLiteralAndRightEntityType(relationship_type_,
+        entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
                                                                               left_,
                                                                               GetLiteral(src),
                                                                               right_);
@@ -52,7 +52,7 @@ class ClauseVisitor {
   template<typename Literal>
   auto operator()(Synonym from, Literal dest) -> ClauseResult {
     auto *
-        entities = pkb_.getRelationshipsByLeftEntityTypeAndRightEntityLiteral(relationship_type_,
+        entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
                                                                               left_,
                                                                               right_,
                                                                               GetLiteral(dest));

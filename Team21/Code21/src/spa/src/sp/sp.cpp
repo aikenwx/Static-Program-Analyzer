@@ -455,13 +455,13 @@ void PopulateCondVarRels(
     PopulateFacade *popFacade) {
   for (const auto &[stmtNum, varNames] : ifCondVarRels) {
     for (const auto &varName : varNames) {
-      popFacade->storeIfStatementConditionVariable(stmtNum, varName);
+        popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 
   for (const auto &[stmtNum, varNames] : whileCondVarRels) {
     for (const auto &varName : varNames) {
-      popFacade->storeWhileStatementConditionVariable(stmtNum, varName);
+        popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 }

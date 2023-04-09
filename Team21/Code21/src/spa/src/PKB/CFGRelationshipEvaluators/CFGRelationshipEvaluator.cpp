@@ -60,7 +60,7 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
 
   auto results = std::make_unique<std::vector<Relationship *>>();
 
-  auto *sourceEntityList = isReverse ? rightEntityList : leftEntityList;
+  auto const *sourceEntityList = isReverse ? rightEntityList : leftEntityList;
   auto sortedList = std::vector<Entity *>();
 
   if (this->shouldSortForDoubleEnityTypeEvaluation()) {
@@ -77,7 +77,7 @@ auto CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByEntityTypes(
   }
 
   for (auto *entity : *sourceEntityList) {
-    auto *partialResults =
+    auto const *partialResults =
         evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
             isReverse ? leftEntityType : rightEntityType, entity, isReverse)
             .second;
@@ -235,21 +235,15 @@ CFGRelationshipEvaluator::evaluateAndCacheRelationshipsByGivenEntities(
   auto *cachedResultsForForwardEvaluation = &getCachedEntitiesAndRelationships(false, *leftStatement,
                                                                                rightStatement->getEntityType());
 
-  if (cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached || cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached) {
+  if (cachedResultsForReverseEvaluation->areRelationshipsIndividuallyCached) {
     return nullptr;
   }
 
   CacheResult *cachedResultToUpdate = nullptr;
-  if (cachedResultsForReverseEvaluation->second != nullptr &&
-      cachedResultsForForwardEvaluation->second != nullptr) {
-    cachedResultToUpdate = cachedResultsForForwardEvaluation->second->size() <=
-                           cachedResultsForReverseEvaluation->second->size()
-                               ? cachedResultsForForwardEvaluation
-                               : cachedResultsForForwardEvaluation;
+  if (cachedResultsForForwardEvaluation->second != nullptr) {
+    cachedResultToUpdate = cachedResultsForForwardEvaluation;
   } else if (cachedResultsForReverseEvaluation->second != nullptr) {
     cachedResultToUpdate = cachedResultsForReverseEvaluation;
-  } else if (cachedResultsForForwardEvaluation->second != nullptr) {
-    cachedResultToUpdate = cachedResultsForForwardEvaluation;
   } else {
     cachedResultToUpdate =
         &evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
@@ -316,7 +310,7 @@ auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStat
 
   // push all statements from results into stack
 
-  auto *directRelations =
+  auto const *directRelations =
       baseEvaluator
           .getCachedEntitiesAndRelationships(isReverse, *sourceStatement,
                                              Statement::getEntityTypeStatic())
@@ -346,7 +340,7 @@ auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStat
     auto *nextToVisitStmt = getEntityManager()->getStatementByNumber(nextToVisit);
     results->push_back(nextToVisitStmt);
 
-    auto *possibleCachedResults =
+    auto const *possibleCachedResults =
         this->getCachedEntitiesAndRelationships(
                 isReverse, *nextToVisitStmt, Statement::getEntityTypeStatic())
             .first;
@@ -363,7 +357,7 @@ auto CFGRelationshipEvaluator::solveTransitiveRelationship(Statement *sourceStat
       continue;
     }
 
-    auto *neighbours =
+    auto const *neighbours =
         baseEvaluator
             .getCachedEntitiesAndRelationships(isReverse, *nextToVisitStmt,
                                                Statement::getEntityTypeStatic())

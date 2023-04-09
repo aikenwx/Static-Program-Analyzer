@@ -1,0 +1,17 @@
+procedure Basic {
+    v1 = 51;
+    v1 = v1000;
+    v3 = v1;
+    v4 = 5;
+
+    read v4;
+    v5 = v4;
+    print v5;
+    v5 = 52;
+    call DummyProcedure1;
+    v7 = v6;
+}
+
+procedure DummyProcedure1 {
+    v6 = v5;
+}

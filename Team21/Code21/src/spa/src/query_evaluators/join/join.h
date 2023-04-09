@@ -2,6 +2,7 @@
 
 #include <set>
 #include <unordered_map>
+#include <iostream>
 
 #include "query_evaluators/tables/table_helpers.h"
 #include "query_evaluators/string_helpers.h"
@@ -24,10 +25,12 @@ class HashJoin {
   HashJoin() = default;
 
   auto operator()(const Table &hash_table, const Table &probe_table) -> Table {
+    if (hash_table.ResultSize() > probe_table.ResultSize()) {
+      return this->operator()(probe_table, hash_table);
+    }
     const auto common_keys = CommonKeys(hash_table, probe_table);
     const auto combined_keys = CombinedKeys(hash_table, probe_table);
     const auto hashed_records = ConstructHashedTable(hash_table, common_keys);
-
     Table joined_table(combined_keys);
     const auto &hash_table_rows = hash_table.GetRows();
     for (std::size_t probe_row_idx = 0; probe_row_idx < probe_table.ResultSize(); ++probe_row_idx) {

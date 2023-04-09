@@ -1,102 +1,61 @@
 #include "such_that_evaluator.h"
 
 #include "query/ref.h"
-#include "query/query_exceptions.h"
-#include "query_evaluators/pkb_helpers.h"
+#include "query_evaluators/pkb_qps_type_mapping.h"
 
+#include "PKBStorageClasses/RelationshipClasses/AffectsStarRelationship.h"
 namespace qps {
+
+auto GetLiteral(const StatementNumber &num) -> int {
+  return num;
+}
+
+auto GetLiteral(const QuotedIdentifier &iden) -> std::string {
+  return iden.getQuotedId();
+}
 
 class ClauseVisitor {
  public:
   ClauseVisitor(QueryFacade &pkb, const RelationshipType &relationship, const EntityType &left, const EntityType &right)
       : pkb_(pkb), relationship_type_(relationship), left_(left), right_(right) {}
 
-  auto operator()(StatementNumber from, StatementNumber dest) -> ClauseResult {
-    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest);
+  template<typename Literal1, typename Literal2>
+  auto operator()(Literal1 from, Literal2 dest) -> ClauseResult {
+    auto *relationship = pkb_.getRelationship(relationship_type_, left_, GetLiteral(from), right_, GetLiteral(dest));
     return relationship != nullptr;
   }
 
-  auto operator()(StatementNumber from, QuotedIdentifier dest) -> ClauseResult {
-    auto *relationship = pkb_.getRelationship(relationship_type_, left_, from, right_, dest.getQuotedId());
-    return relationship != nullptr;
-  }
-
-  auto operator()(QuotedIdentifier from, StatementNumber dest) -> ClauseResult {
-    auto
-        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest);
-    return relationship != nullptr;
-  }
-
-  auto operator()(QuotedIdentifier from, QuotedIdentifier dest) -> ClauseResult {
-    auto
-        *relationship = pkb_.getRelationship(relationship_type_, left_, from.getQuotedId(), right_, dest.getQuotedId());
-    return relationship != nullptr;
-  }
-
-  auto operator()(StatementNumber from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Literal from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *entities =
-            pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_, left_, from, right_);
+        pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_, left_, GetLiteral(from), right_);
     return !(entities->empty());
   }
 
-  auto operator()(QuotedIdentifier from, [[maybe_unused]] Underscore underscore) -> ClauseResult {
-    auto *entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
-                                                                   left_,
-                                                                   from.getQuotedId(),
-                                                                   right_);
-    return !(entities->empty());
-  }
-
-  auto operator()([[maybe_unused]] Underscore underscore, StatementNumber dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()([[maybe_unused]] Underscore underscore, Literal dest) -> ClauseResult {
     auto *entities =
-            pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_, left_, right_, dest);
+        pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_, left_, right_, GetLiteral(dest));
     return !(entities->empty());
   }
 
-  auto operator()([[maybe_unused]] Underscore underscore, QuotedIdentifier dest) -> ClauseResult {
-    auto *entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
-                                                                   left_,
-                                                                   right_,
-                                                                   dest.getQuotedId());
-    return !(entities->empty());
-  }
-
-  auto operator()(StatementNumber src, Synonym dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Literal src, Synonym dest) -> ClauseResult {
     auto *
         entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
-                                                                 left_,
-                                                                 src,
-
-                                                                 right_);
+                                                                              left_,
+                                                                              GetLiteral(src),
+                                                                              right_);
     return SynonymTable(std::move(dest), *entities);
   }
 
-  auto operator()(Synonym from, StatementNumber dest) -> ClauseResult {
+  template<typename Literal>
+  auto operator()(Synonym from, Literal dest) -> ClauseResult {
     auto *
         entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
-                                                                 left_,
-                                                                 right_,
-                                                                 dest);
-
-    return SynonymTable(std::move(from), *entities);
-  }
-
-  auto operator()(QuotedIdentifier src, Synonym dest) -> ClauseResult {
-    auto *
-        entities = pkb_.getRightEntitiesRelatedToGivenLeftEntity(relationship_type_,
-                                                                 left_,
-                                                                 src.getQuotedId(),
-                                                                 right_);
-    return SynonymTable(std::move(dest), *entities);
-  }
-
-  auto operator()(Synonym from, QuotedIdentifier dest) -> ClauseResult {
-    auto *
-        entities = pkb_.getLeftEntitiesRelatedToGivenRightEntity(relationship_type_,
-                                                                 left_,
-                                                                 right_,
-                                                                 dest.getQuotedId());
-
+                                                                              left_,
+                                                                              right_,
+                                                                              GetLiteral(dest));
     return SynonymTable(std::move(from), *entities);
   }
 
@@ -136,9 +95,33 @@ class ClauseVisitor {
   const EntityType &left_;
   const EntityType &right_;
 
+  static auto ExtractEntities(const std::vector<::Relationship *> &relationships,
+                              bool left,
+                              bool right,
+                              bool require_equal = false) -> std::vector<std::vector<Entity *>> {
+    std::vector<std::vector<Entity *>> rows;
+    rows.reserve(relationships.size());
+    for (const auto &relationship : relationships) {
+      if (require_equal && relationship->getLeftHandEntity() != relationship->getRightHandEntity()) {
+        continue;
+      }
+
+      std::vector<Entity *> row;
+      if (left) {
+        row.push_back(relationship->getLeftHandEntity());
+      }
+
+      if (right) {
+        row.push_back(relationship->getRightHandEntity());
+      }
+
+      rows.push_back(std::move(row));
+    }
+    return rows;
+  }
 };
 
-auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> const EntityType & {
+auto GetEntityType(const Synonym &syn, const std::vector<Declaration> &declarations) -> const EntityType & {
   auto decl = Declaration::findDeclarationWithSynonym(declarations, syn);
   if (!decl) {
     throw std::invalid_argument("Synonym in clause not in query declaration");
@@ -148,8 +131,8 @@ auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> cons
 
 auto SuchThatEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
   const auto &relationship_type = RelationshipToRelationshipType(clause_.getRelationship());
-  auto left = clause_.getArg1();
-  auto right = clause_.getArg2();
+  const auto &left = clause_.getArg1();
+  const auto &right = clause_.getArg2();
 
   const auto
       &left_entity_type = std::holds_alternative<Synonym>(left) ? GetEntityType(std::get<Synonym>(left), declarations_)

@@ -7,7 +7,7 @@
 namespace qps {
 auto WhileEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
   std::vector<Product> while_products;
-  Ref ref1 = getClause().getArg1();
+  const auto &ref1 = getClause().getArg1();
 
   if (std::holds_alternative<QuotedIdentifier>(ref1)) {
     auto *whileStatementsContainingPattern = pkb.getLeftEntitiesRelatedToGivenRightEntity(

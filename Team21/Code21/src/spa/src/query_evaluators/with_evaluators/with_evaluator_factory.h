@@ -7,9 +7,10 @@
 
 namespace qps {
 
-	class WithEvaluatorFactory {
-	public:
-		static auto Create(WithClause& clause, std::vector<Declaration>& decl_lst) -> std::unique_ptr<WithEvaluator>;
-	};
+class WithEvaluatorFactory {
+ public:
+  static auto Create(const WithClause &clause, const std::vector<Declaration> &decl_lst) -> std::unique_ptr<
+      WithEvaluator>;
+};
 
 } // namespace qps

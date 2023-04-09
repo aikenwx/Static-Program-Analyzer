@@ -4,10 +4,10 @@
 
 namespace qps {
 
-PatternEvaluator::PatternEvaluator(PatternClause clause, std::vector<Declaration> declarations)
-    : clause_(std::move(clause)), declarations_(std::move(declarations)) {}
+PatternEvaluator::PatternEvaluator(const PatternClause &clause, const std::vector<Declaration> &declarations)
+    : clause_(clause), declarations_(declarations) {}
 
-auto PatternEvaluator::getClause() -> PatternClause {
+auto PatternEvaluator::getClause() -> const PatternClause & {
   return clause_;
 }
 

@@ -6,7 +6,7 @@
 
 namespace qps {
 
-const std::map<Relationship, std::string>
+const std::unordered_map<Relationship, std::string>
     relationshipStringMap{{
                               {Relationship::Follows, "Follows"},
                               {Relationship::FollowsT, "Follows*"},
@@ -26,7 +26,7 @@ const std::map<Relationship, std::string>
                               {Relationship::AffectsT, "Affects*"}
                           }};
 
-const std::map<std::string, Relationship>
+const std::unordered_map<std::string, Relationship>
     relationshipMap{{
                         {"Follows", Relationship::Follows},
                         {"Follows*", Relationship::FollowsT},

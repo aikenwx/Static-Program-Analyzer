@@ -5,8 +5,8 @@
 #include "query/query_exceptions.h"
 
 namespace qps {
-auto PatternEvaluatorFactory::Create(PatternClause &clause,
-                                      std::vector<Declaration> &decl_lst) -> std::unique_ptr<PatternEvaluator> {
+auto PatternEvaluatorFactory::Create(const PatternClause &clause,
+                                     const std::vector<Declaration> &decl_lst) -> std::unique_ptr<PatternEvaluator> {
   auto syn = clause.getStmtSynonym();
   DesignEntity des = Declaration::findDeclarationWithSynonym(decl_lst, syn).value().getDesignEntity();
   switch (des) {

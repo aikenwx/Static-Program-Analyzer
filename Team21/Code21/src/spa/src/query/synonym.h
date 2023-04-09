@@ -11,9 +11,9 @@ class Synonym {
   std::string synonym;
 
  public:
-  explicit Synonym(const std::string& syn);
-  [[nodiscard]] auto getSynonym() const -> std::string;
-  static auto isValidSynonym(const std::string& syn) -> bool;
+  explicit Synonym(const std::string &syn);
+  [[nodiscard]] auto getSynonym() const -> const std::string &;
+  static auto isValidSynonym(const std::string &syn) -> bool;
 
   auto operator==(const Synonym &anotherSyn) const -> bool {
     return synonym == anotherSyn.synonym;

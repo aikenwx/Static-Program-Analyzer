@@ -10,7 +10,7 @@
 namespace qps {
 auto IfEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
   std::vector<Product> if_products;
-  Ref ref1 = getClause().getArg1();
+  const auto &ref1 = getClause().getArg1();
 
   if (std::holds_alternative<QuotedIdentifier>(ref1)) {
     auto

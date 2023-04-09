@@ -75,6 +75,10 @@ class RowTable {
     return ResultSize() == 0;
   }
 
+  explicit operator bool() const {
+    return !IsEmpty();
+  }
+
   auto HasKey(const Key &key) const -> bool {
     return KeyIndex(key) != -1;
   }

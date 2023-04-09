@@ -62,7 +62,12 @@ void EntityManager::storeEntity(std::unique_ptr<Entity> entity) {
 auto EntityManager::getEntity(EntityKey &key) -> Entity * {
   if (StatementType::isStatementType(*key.entityType) &&
       key.getOptionalInt() != nullptr) {
-    if (numberOfStatements < key.entityType->getKey()) {
+
+    if (*key.getOptionalInt() > this->numberOfStatements) {
+       return nullptr;
+    }
+
+    if (this->fastAccessStmts.size() <= key.entityType->getKey()) {
       return nullptr;
     }
 

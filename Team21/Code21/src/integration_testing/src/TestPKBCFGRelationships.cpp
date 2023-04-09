@@ -410,7 +410,7 @@ procedure g {
   }
 })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()->getRelationshipsByTypes(
       NextStarRelationship::getRelationshipTypeStatic(),
@@ -459,7 +459,7 @@ TEST_CASE("Test Affects/Affects*") {
  y = v + x;
 })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
                      ->getRightEntitiesRelatedToGivenLeftEntity(
@@ -494,7 +494,7 @@ TEST_CASE("Test reverse Affects") {
     }
 })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   auto *result = pkb.getQueryFacade()
                      ->getLeftEntitiesRelatedToGivenRightEntity(
@@ -1017,7 +1017,7 @@ TEST_CASE("Test AffectsStar worst case") {
     }
    })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   // Time query
   auto start = std::chrono::high_resolution_clock::now();
@@ -1545,7 +1545,7 @@ TEST_CASE("Test NextStar worst case") {
     }
    })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   // Time query
   auto start = std::chrono::high_resolution_clock::now();
@@ -1730,7 +1730,7 @@ TEST_CASE("Test CFG relationship cache") {
         print x;
     })";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
 
   auto *pkb_querier = pkb.getQueryFacade();
 
@@ -2020,7 +2020,7 @@ procedure funcY {
 }
 )";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
   auto eval = qps_test::RunQuery(
       "while w; Select <w> such that Follows*(13, _)", *pkb.getQueryFacade());
   REQUIRE(eval == std::unordered_set<std::string>{"7", "12"});
@@ -2073,7 +2073,7 @@ procedure hello {
     }
 )";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
   auto eval = qps_test::RunQuery(
       "assign a; stmt s;\n"
       "Select s such that Affects(s,27)",

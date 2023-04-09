@@ -11,7 +11,7 @@ RelationshipCache::RelationshipCache(EntityManager *entityManager) : entityManag
 
 auto RelationshipCache::getCachedRelationship(RelationshipKey &key)
     -> Relationship * {
-  int relationshipTypeKey = static_cast<int>(key.getRelationshipType()->getKey());
+  auto relationshipTypeKey = static_cast<int>(key.getRelationshipType()->getKey());
 
   if (relationshipMapCache.size() <= relationshipTypeKey) {
     return nullptr;

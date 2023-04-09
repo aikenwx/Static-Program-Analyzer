@@ -351,7 +351,7 @@ procedure nguyen {
   print nguyen; }
 )";
 
-  sp::SP::process(program, &pkb);
+  sp::SP::Process(program, &pkb);
   auto eval = qps_test::RunQuery("call c; \n Select c with 4 = 5",
                                  *pkb.getQueryFacade());
   REQUIRE(eval.empty());

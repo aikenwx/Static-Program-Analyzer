@@ -3,8 +3,10 @@
 #include "query/ref.h"
 #include "query/with_ref.h"
 
-namespace qps {
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
+namespace qps {
+// Rough Heuristic to rank relative num of each design entity
 int DesignEntityScore(DesignEntity entity) {
   switch (entity) {
     case DesignEntity::PROCEDURE:return 2;
@@ -20,7 +22,9 @@ int DesignEntityScore(DesignEntity entity) {
   }
 }
 
-int RelationshipScore(Relationship relationship) {
+// Rough Heuristic to rank each clause in terms of number of results it might return
+// Not relative because we are never comparing clauses in aggregate
+int RelationshipSizeScore(Relationship relationship) {
   switch (relationship) {
     case Relationship::Next:return 1;
     case Relationship::Parent:return 2;
@@ -38,6 +42,29 @@ int RelationshipScore(Relationship relationship) {
     case Relationship::NextT:return 14;
     case Relationship::Affects:return 15;
     case Relationship::AffectsT:return 16;
+  }
+}
+
+// Rough Heuristic to rank each clause in terms of time needed to calculate results
+// Except for NextT, Affects, AffectsT everything is precomputed.
+int RelationshipCalculationScore(Relationship relationship) {
+  switch (relationship) {
+    case Relationship::Parent:
+    case Relationship::Follows:
+    case Relationship::Calls:
+    case Relationship::Uses:
+    case Relationship::UsesS:
+    case Relationship::UsesP:
+    case Relationship::Modifies:
+    case Relationship::ModifiesS:
+    case Relationship::ModifiesP:
+    case Relationship::ParentT:
+    case Relationship::FollowsT:
+    case Relationship::CallsT:return 1;
+    case Relationship::Next:return 2;
+    case Relationship::NextT:return 3;
+    case Relationship::Affects:return 4;
+    case Relationship::AffectsT:return 5;
   }
 }
 
@@ -85,18 +112,31 @@ auto RefScore(const WithClause &clause, const std::vector<Declaration> &decl_lst
   return std::visit(scorer, clause.getRef1().ref) * std::visit(scorer, clause.getRef2().ref);
 }
 
+const std::vector<Relationship> NotPrecomputed = {Relationship::Next, Relationship::Affects, Relationship::AffectsT};
+
+// Compare time needed to calculate first. Push any relationship that takes time to calculate to the back
+// If calculation time is the same, then compare, number of literals or synonyms in clause. Clause with more literals
+// or more restrive synonyms should be done first
+// If the number of literals and synonyms is the same then compare rough size expected based on relationship
 void ClauseRanker::SortSuchThatClause(std::vector<SuchThatClause> &clauses) {
   std::sort(std::begin(clauses), std::end(clauses),
             [&](const SuchThatClause &clause1, const SuchThatClause &clause2) {
+              auto clause1_calc_score = RelationshipCalculationScore(clause1.getRelationship());
+              auto clause2_calc_score = RelationshipCalculationScore(clause2.getRelationship());
+              if (clause1_calc_score != clause2_calc_score) {
+                return clause1_calc_score < clause2_calc_score;
+              }
               auto clause1_score = RefScore(clause1, decl_lst_);
               auto clause2_score = RefScore(clause2, decl_lst_);
               if (clause1_score == clause2_score) {
-                return RelationshipScore(clause1.getRelationship()) < RelationshipScore(clause2.getRelationship());
+                return RelationshipSizeScore(clause1.getRelationship())
+                    < RelationshipSizeScore(clause2.getRelationship());
               }
               return clause1_score < clause2_score;
             });
 }
 
+// Compare solely based on number and type of synonym present in the with clause
 void ClauseRanker::SortWithClause(std::vector<WithClause> &clauses) {
   std::sort(std::begin(clauses), std::end(clauses),
             [&](const WithClause &clause1, const WithClause &clause2) {
@@ -106,6 +146,8 @@ void ClauseRanker::SortWithClause(std::vector<WithClause> &clauses) {
             });
 }
 
+// Compare solely based on pattern synonym first (num of if and while statements should generally be less than assign)
+// In the case the pattern synonym is same then compare based on presence of synonyms in clause
 void ClauseRanker::SortPatternClause(std::vector<PatternClause> &clauses) {
   std::sort(std::begin(clauses), std::end(clauses),
             [&](const PatternClause &clause1, const PatternClause &clause2) {
@@ -124,5 +166,6 @@ void ClauseRanker::SortQuery(Query &query) {
   SortPatternClause(query.getPatternClause());
   SortSuchThatClause(query.getSuchThatClause());
 }
-
 } // qps
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

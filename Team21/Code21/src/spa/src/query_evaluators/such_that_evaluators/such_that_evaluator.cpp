@@ -2,7 +2,7 @@
 
 #include "query/ref.h"
 #include "query/query_exceptions.h"
-#include "query_evaluators/pkb_helpers.h"
+#include "query_evaluators/pkb_qps_type_mapping.h"
 
 namespace qps {
 
@@ -10,7 +10,7 @@ int GetLiteral(const StatementNumber &num) {
   return num;
 }
 
-std::string GetLiteral(const QuotedIdentifier &id) {
+auto GetLiteral(const QuotedIdentifier &id) -> std::string {
   return id.getQuotedId();
 }
 
@@ -58,7 +58,7 @@ class ClauseVisitor {
                                                                               GetLiteral(dest));
     return SynonymTable(std::move(from), *entities);
   }
-  
+
   auto operator()(Synonym src, [[maybe_unused]] Underscore underscore) -> ClauseResult {
     auto *
         relationships = pkb_.getRelationshipsByTypes(relationship_type_, left_, right_);
@@ -95,9 +95,33 @@ class ClauseVisitor {
   const EntityType &left_;
   const EntityType &right_;
 
+  auto ExtractEntities(const std::vector<::Relationship *> &relationships,
+                       bool left,
+                       bool right,
+                       bool require_equal = false) -> std::vector<std::vector<Entity *>> {
+    std::vector<std::vector<Entity *>> rows;
+    rows.reserve(relationships.size());
+    for (const auto &relationship : relationships) {
+      if (require_equal && relationship->getLeftHandEntity() != relationship->getRightHandEntity()) {
+        continue;
+      }
+
+      std::vector<Entity *> row;
+      if (left) {
+        row.push_back(relationship->getLeftHandEntity());
+      }
+
+      if (right) {
+        row.push_back(relationship->getRightHandEntity());
+      }
+
+      rows.push_back(std::move(row));
+    }
+    return rows;
+  }
 };
 
-auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> const EntityType & {
+auto GetEntityType(const Synonym &syn, const std::vector<Declaration> &declarations) -> const EntityType & {
   auto decl = Declaration::findDeclarationWithSynonym(declarations, syn);
   if (!decl) {
     throw std::invalid_argument("Synonym in clause not in query declaration");
@@ -107,8 +131,8 @@ auto GetEntityType(Synonym &syn, std::vector<Declaration> &declarations) -> cons
 
 auto SuchThatEvaluator::Evaluate(QueryFacade &pkb) -> ClauseResult {
   const auto &relationship_type = RelationshipToRelationshipType(clause_.getRelationship());
-  auto left = clause_.getArg1();
-  auto right = clause_.getArg2();
+  const auto &left = clause_.getArg1();
+  const auto &right = clause_.getArg2();
 
   const auto
       &left_entity_type = std::holds_alternative<Synonym>(left) ? GetEntityType(std::get<Synonym>(left), declarations_)

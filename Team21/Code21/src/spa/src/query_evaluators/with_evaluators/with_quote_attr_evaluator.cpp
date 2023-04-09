@@ -1,7 +1,7 @@
 #include "with_quote_attr_evaluator.h"
 #include <vector>
 
-#include "query_evaluators/pkb_helpers.h"
+#include "query_evaluators/pkb_qps_type_mapping.h"
 
 namespace qps {
 auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
@@ -10,11 +10,11 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
 
   std::vector<Declaration> decl = getDeclarations();
 
-  WithRef ref1 = getClause().getRef1();
-  WithRef ref2 = getClause().getRef2();
+  const auto &ref1 = getClause().getRef1();
+  const auto &ref2 = getClause().getRef2();
 
-  auto* atrVal = std::get_if<AttrRef>(&ref1.ref);
-  auto* quoteVal = std::get_if<QuotedIdentifier>(&ref2.ref);
+  auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
+  auto *quoteVal = std::get_if<QuotedIdentifier>(&ref2.ref);
 
   // Swap if ref1 is not an AttrRef since it will be an QuotedIdentifier, vice versa
   if (atrVal == nullptr) {
@@ -24,11 +24,11 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal->synonym);
 
-  EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  const auto &entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
-  auto* entities = pkb.getEntitiesByType(entType);
-  for(auto& entity: *entities) {
-    if(AttributeReferenceEvaluator::EvaluateAttrRef(entity, atrVal->attrName, pkb) == quoteVal->getQuotedId()) {
+  auto *entities = pkb.getEntitiesByType(entType);
+  for (auto &entity : *entities) {
+    if (AttributeReferenceEvaluator::EvaluateAttrRef(entity, atrVal->attrName, pkb) == quoteVal->getQuotedId()) {
       firstResult.push_back(entity);
     }
   }

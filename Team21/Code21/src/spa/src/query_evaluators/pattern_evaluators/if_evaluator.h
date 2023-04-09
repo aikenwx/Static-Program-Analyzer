@@ -6,11 +6,11 @@
 
 namespace qps {
 
-  class IfEvaluator : public PatternEvaluator {
-  public:
-    IfEvaluator(PatternClause clause, std::vector<Declaration> declarations)
-      : PatternEvaluator(std::move(clause), std::move(declarations)) {}
-    auto CallPkb(QueryFacade& pkb) -> std::vector<Product> override;
-  };
+class IfEvaluator : public PatternEvaluator {
+ public:
+  IfEvaluator(const PatternClause &clause, const std::vector<Declaration> &declarations)
+      : PatternEvaluator(clause, declarations) {}
+  auto CallPkb(QueryFacade &pkb) -> std::vector<Product> override;
+};
 
 } // namespace qps

@@ -131,6 +131,12 @@ auto QueryFacade::getModifiesRelationshipsByLeftAndRightEntityTypes(
           rightEntityType));
 }
 
+auto QueryFacade::getWhileStatementsUsingVariableInCondition(
+    std::string variableName) -> std::unordered_set<WhileStatement *> * {
+  return this->patternManager->getWhileStatementsByConditionVariable(
+      &variableName);
+}
+
 auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
     const EntityType &leftEntityType, const EntityType &rightEntityType)
     -> std::vector<UsesRelationship *> * {
@@ -140,302 +146,6 @@ auto QueryFacade::getUsesRelationshipsByLeftAndRightEntityTypes(
 
           UsesRelationship::getRelationshipTypeStatic(), leftEntityType,
           rightEntityType));
-}
-
-auto QueryFacade::getParentStarRelationshipsByLeftAndRightEntityTypes(
-    const EntityType &leftEntityType, const EntityType &rightEntityType)
-    -> std::vector<ParentStarRelationship *> * {
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  return reinterpret_cast<std::vector<ParentStarRelationship *> *>(
-      this->relationshipManager->getRelationshipsByTypes(
-
-          ParentStarRelationship::getRelationshipTypeStatic(), leftEntityType,
-          rightEntityType));
-}
-
-auto QueryFacade::getFollowsStarRelationshipsByLeftAndRightEntityTypes(
-    const EntityType &leftEntityType, const EntityType &rightEntityType)
-    -> std::vector<FollowsStarRelationship *> * {
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  return reinterpret_cast<std::vector<FollowsStarRelationship *> *>(
-      this->relationshipManager->getRelationshipsByTypes(
-
-          FollowsStarRelationship::getRelationshipTypeStatic(), leftEntityType,
-          rightEntityType));
-}
-
-auto QueryFacade::getAllCallsRelationships()
-    -> std::vector<CallsRelationship *> * {
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  return reinterpret_cast<std::vector<CallsRelationship *> *>(
-      this->relationshipManager->getRelationshipsByTypes(
-
-          CallsRelationship::getRelationshipTypeStatic(),
-          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic()));
-}
-
-auto QueryFacade::getAllCallsStarRelationships()
-    -> std::vector<CallsStarRelationship *> * {
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  return reinterpret_cast<std::vector<CallsStarRelationship *> *>(
-      this->relationshipManager->getRelationshipsByTypes(
-
-          CallsStarRelationship::getRelationshipTypeStatic(),
-          Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic()));
-}
-
-auto QueryFacade::getStatementModifiesVariableRelationship(
-    int statementNumber, std::string variableName) -> ModifiesRelationship * {
-  EntityKey statementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
-  EntityKey variableKey =
-      EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-
-  auto *statement =
-      dynamic_cast<Statement *>(this->entityManager->getEntity(statementKey));
-  auto *variable =
-      dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
-
-  if (statement == nullptr || variable == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&ModifiesRelationship::getRelationshipTypeStatic(),
-                      &statementKey, &variableKey);
-
-  return dynamic_cast<ModifiesRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getProcedureModifiesVariableRelationship(
-    std::string procedureName, std::string variableName)
-    -> ModifiesRelationship * {
-  EntityKey procedureKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
-  EntityKey variableKey =
-      EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-
-  auto *procedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(procedureKey));
-  auto *variable =
-      dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
-
-  if (procedure == nullptr || variable == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&ModifiesRelationship::getRelationshipTypeStatic(),
-                      &procedureKey, &variableKey);
-
-  return dynamic_cast<ModifiesRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getStatementUsesVariableRelationship(int statementNumber,
-                                                       std::string variableName)
-    -> UsesRelationship * {
-  EntityKey statementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), statementNumber);
-  EntityKey variableKey =
-      EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-
-  auto *statement =
-      dynamic_cast<Statement *>(this->entityManager->getEntity(statementKey));
-  auto *variable =
-      dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
-
-  if (statement == nullptr || variable == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(),
-                      &statementKey, &variableKey);
-
-  return dynamic_cast<UsesRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getProcedureUsesVariableRelationship(
-    std::string procedureName, std::string variableName) -> UsesRelationship * {
-  EntityKey procedureKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &procedureName);
-  EntityKey variableKey =
-      EntityKey(&Variable::getEntityTypeStatic(), &variableName);
-
-  auto *procedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(procedureKey));
-  auto *variable =
-      dynamic_cast<Variable *>(this->entityManager->getEntity(variableKey));
-
-  if (procedure == nullptr || variable == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&UsesRelationship::getRelationshipTypeStatic(),
-                      &procedureKey, &variableKey);
-
-  return dynamic_cast<UsesRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-auto QueryFacade::getParentRelationship(int parentStatementNumber,
-                                        int childStatementNumber)
-    -> ParentRelationship * {
-  EntityKey parentStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
-  EntityKey childStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-
-  auto *parentStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(parentStatementKey));
-  auto *childStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(childStatementKey));
-
-  if (parentStatement == nullptr || childStatement == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&ParentRelationship::getRelationshipTypeStatic(),
-                      &parentStatementKey, &childStatementKey);
-
-  return dynamic_cast<ParentRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getFollowsRelationship(int firstStatementNumber,
-                                         int secondStatementNumber)
-    -> FollowsRelationship * {
-  EntityKey firstStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
-  EntityKey secondStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-
-  auto *firstStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(firstStatementKey));
-  auto *secondStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(secondStatementKey));
-
-  if (firstStatement == nullptr || secondStatement == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&FollowsRelationship::getRelationshipTypeStatic(),
-                      &firstStatementKey, &secondStatementKey);
-
-  return dynamic_cast<FollowsRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getParentStarRelationship(int parentStatementNumber,
-                                            int childStatementNumber)
-    -> ParentStarRelationship * {
-  EntityKey parentStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), parentStatementNumber);
-  EntityKey childStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), childStatementNumber);
-
-  auto *parentStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(parentStatementKey));
-  auto *childStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(childStatementKey));
-
-  if (parentStatement == nullptr || childStatement == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&ParentStarRelationship::getRelationshipTypeStatic(),
-                      &parentStatementKey, &childStatementKey);
-
-  return dynamic_cast<ParentStarRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getFollowsStarRelationship(int firstStatementNumber,
-                                             int secondStatementNumber)
-    -> FollowsStarRelationship * {
-  EntityKey firstStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), firstStatementNumber);
-  EntityKey secondStatementKey =
-      EntityKey(&Statement::getEntityTypeStatic(), secondStatementNumber);
-
-  auto *firstStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(firstStatementKey));
-  auto *secondStatement = dynamic_cast<Statement *>(
-      this->entityManager->getEntity(secondStatementKey));
-
-  if (firstStatement == nullptr || secondStatement == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&FollowsStarRelationship::getRelationshipTypeStatic(),
-                      &firstStatementKey, &secondStatementKey);
-
-  return dynamic_cast<FollowsStarRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getCallsRelationship(std::string callerName,
-                                       std::string calleeName)
-    -> CallsRelationship * {
-  EntityKey callerKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &callerName);
-  EntityKey calleeKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &calleeName);
-
-  auto *callerProcedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(callerKey));
-  auto *calleeProcedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(calleeKey));
-
-  if (callerProcedure == nullptr || calleeProcedure == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey = RelationshipKey(
-      &CallsRelationship::getRelationshipTypeStatic(), &callerKey, &calleeKey);
-
-  return dynamic_cast<CallsRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getCallsStarRelationship(std::string callerName,
-                                           std::string calleeName)
-    -> CallsStarRelationship * {
-  EntityKey callerKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &callerName);
-  EntityKey calleeKey =
-      EntityKey(&Procedure::getEntityTypeStatic(), &calleeName);
-
-  auto *callerProcedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(callerKey));
-  auto *calleeProcedure =
-      dynamic_cast<Procedure *>(this->entityManager->getEntity(calleeKey));
-
-  if (callerProcedure == nullptr || calleeProcedure == nullptr) {
-    return nullptr;
-  }
-
-  RelationshipKey relationshipKey =
-      RelationshipKey(&CallsStarRelationship::getRelationshipTypeStatic(),
-                      &callerKey, &calleeKey);
-
-  return dynamic_cast<CallsStarRelationship *>(
-      this->relationshipManager->getRelationship(relationshipKey));
-}
-
-auto QueryFacade::getCFG() -> cfg::CFG * { return this->cfgManager->getCFG(); }
-
-auto QueryFacade::getWhileStatementsUsingVariableInCondition(
-    std::string variableName) -> std::unordered_set<WhileStatement *> * {
-  return this->patternManager->getWhileStatementsByConditionVariable(
-      &variableName);
 }
 
 auto QueryFacade::getIfStatementsUsingVariableInCondition(
@@ -485,13 +195,13 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
-  return this->relationshipManager->getRelationship(relationshipKey);
+  return this->relationshipManager->getRelationship(relationshipKey, leftEntity, rightEntity);
 }
 
 auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
@@ -509,13 +219,13 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
-  return this->relationshipManager->getRelationship(relationshipKey);
+  return this->relationshipManager->getRelationship(relationshipKey, leftEntity, rightEntity);
 }
 
 auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
@@ -532,13 +242,13 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
 
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
-  return this->relationshipManager->getRelationship(relationshipKey);
+  return this->relationshipManager->getRelationship(relationshipKey, leftEntity, rightEntity);
 }
 
 auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
@@ -554,12 +264,12 @@ auto QueryFacade::getRelationship(const RelationshipType &relationshipType,
     return nullptr;
   }
 
-  auto leftEntityKey = leftEntity->getEntityKey();
-  auto rightEntityKey = rightEntity->getEntityKey();
+  auto & leftEntityKey = leftEntity->getEntityKey();
+  auto & rightEntityKey = rightEntity->getEntityKey();
   RelationshipKey relationshipKey =
       RelationshipKey(&relationshipType, &leftEntityKey, &rightEntityKey);
 
-  return this->relationshipManager->getRelationship(relationshipKey);
+  return this->relationshipManager->getRelationship(relationshipKey, leftEntity, rightEntity);
 }
 
 auto QueryFacade::getRelationshipsByTypes(

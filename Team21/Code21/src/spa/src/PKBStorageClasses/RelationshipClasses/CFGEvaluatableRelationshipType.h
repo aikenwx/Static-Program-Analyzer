@@ -7,12 +7,15 @@
 
 #include "PKB/CFGRelationshipEvaluators/CFGRelationshipEvaluator.h"
 #include "Relationship.h"
+#include "PKB/RelationshipCache.h"
 
 class CFGEvaluableRelationshipType : public RelationshipType {
  public:
   static auto isCFGEvaluableRelationship(const RelationshipType& relationshipType) -> bool;
 
-  virtual auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> = 0;
+  virtual auto getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                        RelationshipCache *relationshipCache,
+                                        EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const = 0;
 };
 
 #endif  // SPA_CFGEVALUATABLERELATIONSHIPTYPE_H

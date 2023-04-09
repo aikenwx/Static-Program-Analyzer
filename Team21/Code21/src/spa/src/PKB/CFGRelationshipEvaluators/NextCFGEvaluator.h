@@ -5,26 +5,28 @@
 #ifndef SPA_NEXTCFGEVALUATOR_H
 #define SPA_NEXTCFGEVALUATOR_H
 
-#include "CFGRelationshipEvaluator.h"
+#include "NextRelatedCFGEvaluator.h"
 
-class NextCFGEvaluator : public CFGRelationshipEvaluator {
+class NextCFGEvaluator : public NextRelatedCFGEvaluator {
  public:
-    NextCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-                   EntityManager* entityManager);
+    NextCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                     RelationshipCache *relationshipCache, EntityManager *entityManager);
 
   [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
 
-  auto createNewRelationship(Statement* leftStatement,
-                             Statement* rightStatement)
-      -> std::shared_ptr<Relationship> override;
+  auto createNewRelationship(Entity *leftStatement,
+                             Entity *rightStatement)
+      -> std::unique_ptr<Relationship> override;
 
-  // auto isRelated(std::pair<cfg::Block*, Statement*>& sourceBlockStatementPair,
-  //                Statement& destinationStatement, bool isReverse)
-  //     -> bool override;
-  auto getRelatedStatements(
-          Statement *sourceStatement,
+
+
+    auto getRelatedStatements(Statement *statement, bool isReverse)
+    -> std::unique_ptr<std::vector<Entity *>> override;
+
+  auto getRelatedStatementNumbers(
+          int sourceStatementNumber,
           bool isReverse)
-      -> std::shared_ptr<std::vector<Statement *>> override;
+      -> std::unique_ptr<std::vector<int>> ;
 };
 
 #endif  // SPA_NEXTCFGEVALUATOR_H

@@ -8,19 +8,20 @@
 #include "AffectsRelatedCFGEvaluator.h"
 class AffectsStarCFGEvaluator : public AffectsRelatedCFGEvaluator {
  public:
-  AffectsStarCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-                          EntityManager* entityManager);
+  AffectsStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                          RelationshipCache *relationshipCache, EntityManager *entityManager);
 
-  [[nodiscard]] auto getRelationshipType() const -> const RelationshipType& override;
+  [[nodiscard]] auto getRelationshipType() const
+      -> const RelationshipType& override;
 
-  auto createNewRelationship(Statement* leftStatement,
-                             Statement* rightStatement)
-      -> std::shared_ptr<Relationship> override;
+  auto createNewRelationship(Entity* leftStatement, Entity* rightStatement)
+      -> std::unique_ptr<Relationship> override;
 
-  auto getRelatedStatements(
-          Statement *sourceStatement,
-          bool isReverse)
-      -> std::shared_ptr<std::vector<Statement *>> override;
+  auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
+      -> std::unique_ptr<std::vector<Entity*>> override;
+
+ protected:
+  auto shouldSortForDoubleEnityTypeEvaluation() -> bool override;
 };
 
 #endif  // SPA_AFFECTSSTARCFGEVALUATOR_H

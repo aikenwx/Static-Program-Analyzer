@@ -32,7 +32,10 @@ auto WithQuoteAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vecto
       firstResult.push_back(entity);
     }
   }
-  equalResult.push_back(firstResult);
+
+  if (!firstResult.empty()) {
+    equalResult.push_back(firstResult);
+  }
 
   return equalResult;
 }

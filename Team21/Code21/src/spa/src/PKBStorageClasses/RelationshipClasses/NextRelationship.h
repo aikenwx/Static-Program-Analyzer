@@ -12,7 +12,9 @@
 
 class NextRelationshipType : public CFGEvaluableRelationshipType {
   public:
-    auto getRelationshipEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> override;
+    auto getRelationshipEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                  RelationshipCache *relationshipCache,
+                                  EntityManager *entityManager) const -> std::shared_ptr<CFGRelationshipEvaluator> const override;
 };
 
 class NextRelationship : public Relationship {

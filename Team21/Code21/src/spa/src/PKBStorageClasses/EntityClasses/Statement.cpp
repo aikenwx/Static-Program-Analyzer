@@ -5,7 +5,7 @@
 
 Statement::Statement(const EntityType *entityType, int statementNumber)
     : Entity(entityType,
-             std::make_shared<std::string>(std::to_string(statementNumber))),
+             std::make_shared<std::string>(std::to_string(statementNumber)), statementNumber),
       statementNumber(statementNumber) {}
 
 auto Statement::getStatementNumber() const -> int {

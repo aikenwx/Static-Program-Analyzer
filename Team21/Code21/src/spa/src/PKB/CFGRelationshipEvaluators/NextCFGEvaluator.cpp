@@ -6,53 +6,60 @@
 
 #include "PKBStorageClasses/RelationshipClasses/NextRelationship.h"
 
-NextCFGEvaluator::NextCFGEvaluator(cfg::CFG* cfg,
-                                   RelationshipStorage* relationshipStorage,
-                                   EntityManager* entityManager)
-    : CFGRelationshipEvaluator(cfg, relationshipStorage, entityManager) {}
+NextCFGEvaluator::NextCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage,
+                                   RelationshipCache *relationshipCache, EntityManager *entityManager)
+    : NextRelatedCFGEvaluator(cfg, relationshipStorage, relationshipCache, entityManager) {}
 
 auto NextCFGEvaluator::getRelationshipType() const -> const RelationshipType& {
   return NextRelationship::getRelationshipTypeStatic();
 }
 
-auto NextCFGEvaluator::getRelatedStatements(
-    Statement* sourceStatement,
-    bool isReverse)
-    -> std::shared_ptr<std::vector<Statement*>> {
-  auto nextStatements = std::make_shared<
-      std::vector<Statement*>>();
+auto NextCFGEvaluator::getRelatedStatementNumbers(int sourceStatementNumber,
+                                                  bool isReverse)
+    -> std::unique_ptr<std::vector<int>> {
+  auto nextStatementsNumbers = std::make_unique<std::vector<int>>();
 
-  auto* currentBlock = getCFG()->GetBlockAt(sourceStatement->getStatementNumber()).value().get();
+  auto* currentBlock =
+      getCFG()->GetBlockAt(sourceStatementNumber).value().get();
 
   int possibleNextStatementNumber =
-      isReverse ? sourceStatement->getStatementNumber() - 1
-                : sourceStatement->getStatementNumber() + 1;
+      isReverse ? sourceStatementNumber - 1 : sourceStatementNumber + 1;
 
   if (currentBlock->IsInBlock(possibleNextStatementNumber)) {
-    auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
-                               possibleNextStatementNumber);
-
-    auto* statement = dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
-
-    nextStatements->push_back(statement);
+    nextStatementsNumbers->push_back(possibleNextStatementNumber);
 
   } else {
-    auto neighbours = isReverse ? currentBlock->parents() : currentBlock->children();
+    auto neighbours =
+        isReverse ? currentBlock->parents() : currentBlock->children();
     for (const auto& neighbour : neighbours) {
-      auto entityKey = EntityKey(&Statement::getEntityTypeStatic(),
-                                 isReverse ? neighbour.lock()->end() : neighbour.lock()->start());
-
-      auto* statement = dynamic_cast<Statement*>(getEntityManager()->getEntity(entityKey));
-
-      nextStatements->push_back(statement);
+      nextStatementsNumbers->push_back(isReverse ? neighbour.lock()->end()
+                                                 : neighbour.lock()->start());
     }
   }
 
-  return nextStatements;
+  return nextStatementsNumbers;
 }
 
-auto NextCFGEvaluator::createNewRelationship(Statement* leftStatement,
-                                             Statement* rightStatement)
-    -> std::shared_ptr<Relationship> {
-  return std::make_shared<NextRelationship>(leftStatement, rightStatement);
+auto NextCFGEvaluator::createNewRelationship(Entity* leftStatement,
+                                             Entity* rightStatement)
+    -> std::unique_ptr<Relationship> {
+  return std::make_unique<NextRelationship>(
+      dynamic_cast<Statement*>(leftStatement),
+      dynamic_cast<Statement*>(rightStatement));
+}
+
+auto NextCFGEvaluator::getRelatedStatements(Statement *statement,
+                                                   bool isReverse)
+-> std::unique_ptr<std::vector<Entity *>> {
+    auto relatedStmtNumbers =
+            getRelatedStatementNumbers(statement->getStatementNumber(), isReverse);
+
+    auto relatedStatements = std::make_unique<std::vector<Entity *>>();
+
+    for (auto stmtNumber : *relatedStmtNumbers) {
+        relatedStatements->push_back(
+                getEntityManager()->getStmtByNumber(stmtNumber));
+    }
+
+    return relatedStatements;
 }

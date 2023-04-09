@@ -187,10 +187,10 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all Calls relationships") {
-        std::vector<CallsRelationship*> const* callsRels =
-            queryFacade->getAllCallsRelationships();
+        auto * callsRels = queryFacade->getRelationshipsByTypes(CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 
-        std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
+
+                    std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsRelationship::getRelationshipTypeStatic(),
                     {Procedure::getEntityTypeStatic(), "main"},
                     {Procedure::getEntityTypeStatic(), "foo"}},
@@ -211,8 +211,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all Calls* relationships") {
-        std::vector<CallsStarRelationship*> const* callsStarRels =
-            queryFacade->getAllCallsStarRelationships();
+        auto * callsStarRels = (
+            queryFacade->getRelationshipsByTypes(CallsStarRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic()));
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
@@ -351,9 +351,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all proc-var Uses relationships") {
-        std::vector<UsesRelationship*> const* usesRels =
-            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        auto * usesRels =
+            queryFacade->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
@@ -394,9 +393,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all stmt-var Uses relationships") {
-        std::vector<UsesRelationship*> const* usesRels =
-            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        auto * usesRels =
+            queryFacade-> getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),

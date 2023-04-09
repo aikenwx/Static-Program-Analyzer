@@ -5,22 +5,22 @@
 #ifndef SPA_NEXTSTARCFGEVALUATOR_H
 #define SPA_NEXTSTARCFGEVALUATOR_H
 
-#include "CFGRelationshipEvaluator.h"
-class NextStarCFGEvaluator : public CFGRelationshipEvaluator {
+#include "NextRelatedCFGEvaluator.h"
+class NextStarCFGEvaluator : public NextRelatedCFGEvaluator {
  public:
+  NextStarCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage, RelationshipCache *relationshipCache,
+                       EntityManager *entityManager);
 
-  NextStarCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage, EntityManager* entityManager);
+  [[nodiscard]] auto getRelationshipType() const
+      -> const RelationshipType & override;
 
-    [[nodiscard]] auto getRelationshipType() const -> const RelationshipType & override;
+  auto createNewRelationship(Entity *leftStatement, Entity *rightStatement)
+      -> std::unique_ptr<Relationship> override;
 
-    auto createNewRelationship(Statement* leftStatement,
-                               Statement* rightStatement)
-    -> std::shared_ptr<Relationship> override;
+  auto getRelatedStatements(Statement *statement, bool isReverse)
+      -> std::unique_ptr<std::vector<Entity *>> override;
 
-    auto getRelatedStatements(
-            Statement *sourceStatement,
-            bool isReverse)
-    -> std::shared_ptr<std::vector<Statement *>> override;
+  auto shouldSortForDoubleEnityTypeEvaluation() -> bool override;
 };
 
 #endif  // SPA_NEXTSTARCFGEVALUATOR_H

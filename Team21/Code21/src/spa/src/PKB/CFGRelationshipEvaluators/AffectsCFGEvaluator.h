@@ -9,25 +9,24 @@
 #include "CFGRelationshipEvaluator.h"
 
 class AffectsCFGEvaluator : public AffectsRelatedCFGEvaluator {
-private:
+ private:
   Entity* modifiedEntityFromSource;
 
-  std::unique_ptr<std::unordered_map<EntityKey, Entity*>> usedEntitiesFromSource;
-
+  std::shared_ptr<std::unordered_map<std::string, Entity*>>
+      currentUnusedVariables;
 
  public:
-  AffectsCFGEvaluator(cfg::CFG* cfg, RelationshipStorage* relationshipStorage,
-                      EntityManager* entityManager);
+  AffectsCFGEvaluator(cfg::CFG *cfg, RelationshipStorage *relationshipStorage, RelationshipCache *relationshipCache,
+                      EntityManager *entityManager);
 
   [[nodiscard]] auto getRelationshipType() const
       -> const RelationshipType& override;
 
-  auto createNewRelationship(Statement* leftStatement,
-                             Statement* rightStatement)
-      -> std::shared_ptr<Relationship> override;
+  auto createNewRelationship(Entity* leftStatement, Entity* rightStatement)
+      -> std::unique_ptr<Relationship> override;
 
   auto getRelatedStatements(Statement* sourceStatement, bool isReverse)
-      -> std::shared_ptr<std::vector<Statement*>> override;
+      -> std::unique_ptr<std::vector<Entity*>> override;
 
  private:
   void initializeForwardsEvaluation(Statement* sourceStatement);
@@ -39,7 +38,7 @@ private:
                                  std::vector<Statement*>* partialResults)
       -> bool;
 
-  auto visitInReverseEvaluation(Statement* statement,
+  auto visitInReverseEvaluation(Statement* visitedStatement,
                                 std::vector<Statement*>* partialResults)
       -> bool;
 };

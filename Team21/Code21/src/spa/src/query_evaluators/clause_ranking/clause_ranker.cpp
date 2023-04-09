@@ -16,7 +16,7 @@ namespace qps {
 // (estimated to be slightly more than 4 times more than stmts).
 auto DesignEntityScore(DesignEntity entity) -> int {
   switch (entity) {
-    case DesignEntity::PROCEDURE:return 1;
+    case DesignEntity::PROCEDURE:return 5;
     case DesignEntity::WHILE:return 25;
     case DesignEntity::IF:return 25;
     case DesignEntity::READ:return 50;

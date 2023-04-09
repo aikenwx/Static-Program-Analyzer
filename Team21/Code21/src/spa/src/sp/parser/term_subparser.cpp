@@ -13,19 +13,17 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto is_correct_symbol =
-      [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return IsSymbolNodeValue(symbol_node, "*") ||
-               IsSymbolNodeValue(symbol_node, "/") ||
-               IsSymbolNodeValue(symbol_node, "%");
+      [&](const std::shared_ptr<ast::INode> &node) {
+        return IsSymbolNodeValue(node, "*") ||
+               IsSymbolNodeValue(node, "/") ||
+               IsSymbolNodeValue(node, "%");
       };
   if (context->IsLookaheadSymbolValueAnyOf({")", ";", "+", "-", "*", "/", "%",
                                             "<", ">",
                                             "==", "<=", ">=", "!="})) {
     // term: term ['*', '/', '%'] factor
     if (stack->size() >= 3 && util::instance_of<ast::IdentifierNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
       // References identifier node
       std::shared_ptr<ast::IdentifierNode> var =
@@ -54,9 +52,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       return true;
     }
     if (stack->size() >= 3 && util::instance_of<ast::ConstantNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
       // References constant node
       std::shared_ptr<ast::ConstantNode> con =
@@ -87,9 +83,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     if (IsSymbolNodeValue(*iter, ")") &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 1)) &&
         IsSymbolNodeValue(*std::next(iter, 2), "(") &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3))) &&
+        is_correct_symbol(*std::next(iter, 3)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 4))) {
       // Pops right paren symbol node
       stack->pop_back();

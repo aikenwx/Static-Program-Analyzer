@@ -1,6 +1,8 @@
 #include "is_symbol_node_value.h"
-#include "util/instance_of.h"
+
 #include <memory>
+
+#include "util/instance_of.h"
 
 namespace parser {
 [[nodiscard]] auto IsSymbolNodeValue(const std::shared_ptr<ast::INode> &node_ref,

@@ -12,13 +12,13 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  auto is_correct_symbol_logical = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-    return IsSymbolNodeValue(symbol_node, "&&") || IsSymbolNodeValue(symbol_node, "||");
+  auto is_correct_symbol_logical = [&](const std::shared_ptr<ast::INode> &node) {
+    return IsSymbolNodeValue(node, "&&") || IsSymbolNodeValue(node, "||");
   };
-  auto is_correct_symbol_comparison = [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-    return IsSymbolNodeValue(symbol_node, "==") || IsSymbolNodeValue(symbol_node, "!=")
-      || IsSymbolNodeValue(symbol_node, "<") || IsSymbolNodeValue(symbol_node, ">")
-      || IsSymbolNodeValue(symbol_node, "<=") || IsSymbolNodeValue(symbol_node, ">=");
+  auto is_correct_symbol_comparison = [&](const std::shared_ptr<ast::INode> &node) {
+    return IsSymbolNodeValue(node, "==") || IsSymbolNodeValue(node, "!=")
+      || IsSymbolNodeValue(node, "<") || IsSymbolNodeValue(node, ">")
+      || IsSymbolNodeValue(node, "<=") || IsSymbolNodeValue(node, ">=");
   };
   auto is_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
     return util::instance_of<ast::ExpressionNode>(node)
@@ -65,7 +65,7 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       && IsSymbolNodeValue(*iter, ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 1))
       && IsSymbolNodeValue(*std::next(iter, 2), "(")
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && is_correct_symbol_logical(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))
+      && is_correct_symbol_logical(*std::next(iter, 3))
       && IsSymbolNodeValue(*std::next(iter, 4), ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 5))
       && IsSymbolNodeValue(*std::next(iter, 6), "(")) {
@@ -107,7 +107,7 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     // rel_expr: rel_factor ['==', '<', '>', '!=', '<=', '>='] rel_factor
     if (stack->size() >= 3
       && is_relational_factor(*iter)
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) && is_correct_symbol_comparison(std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1)))
+      && is_correct_symbol_comparison(*std::next(iter, 1))
       && is_relational_factor(*std::next(iter, 2))) {
       // References relational factor node
       std::shared_ptr<ast::INode> fac1 = get_relational_factor(stack->back());

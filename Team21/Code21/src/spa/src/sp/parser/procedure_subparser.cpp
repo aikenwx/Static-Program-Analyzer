@@ -1,6 +1,7 @@
 #include "sp/ast/astlib.h"
 #include "procedure_subparser.h"
 #include "util/instance_of.h"
+#include "util/is_identifier_node_value.h"
 #include "util/is_symbol_node_value.h"
 
 namespace parser {
@@ -8,13 +9,14 @@ namespace parser {
 auto ProcedureSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  // procedure: 'procedure' proc_name '{' stmtLst '}'
-  if (stack->size() >= 5
+  auto procedure_condition = stack->size() >= 5
     && IsSymbolNodeValue(*iter, "}")
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
     && IsSymbolNodeValue(*std::next(iter, 2), "{")
     && util::instance_of<ast::IdentifierNode>(*std::next(iter, 3))
-    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 4)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 4)))->GetValue() == "procedure") {
+    && IsIdentifierNodeValue(*std::next(iter, 4), "procedure");
+  // procedure: 'procedure' proc_name '{' stmtLst '}'
+  if (procedure_condition) {
     // Pops right brace symbol node
     stack->pop_back();
     // References statement list node

@@ -2,6 +2,7 @@
 #include "if_subparser.h"
 #include "sp/design_extractor/extractor.h"
 #include "util/instance_of.h"
+#include "util/is_identifier_node_value.h"
 #include "util/is_symbol_node_value.h"
 
 namespace parser {
@@ -9,20 +10,21 @@ namespace parser {
 auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
+  auto if_condition = stack->size() >= 12
+      && IsSymbolNodeValue(*iter, "}")
+      && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
+      && IsSymbolNodeValue(*std::next(iter, 2), "{")
+      && IsIdentifierNodeValue(*std::next(iter, 3), "else")
+      && IsSymbolNodeValue(*std::next(iter, 4), "}")
+      && util::instance_of<ast::StatementListNode>(*std::next(iter, 5))
+      && IsSymbolNodeValue(*std::next(iter, 6), "{")
+      && IsIdentifierNodeValue(*std::next(iter, 7), "then")
+      && IsSymbolNodeValue(*std::next(iter, 8), ")")
+      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 9))
+      && IsSymbolNodeValue(*std::next(iter, 10), "(")
+      && IsIdentifierNodeValue(*std::next(iter, 11), "if");
   // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
-  if (stack->size() >= 12
-    && IsSymbolNodeValue(*iter, "}")
-    && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-    && IsSymbolNodeValue(*std::next(iter, 2), "{")
-    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 3)))->GetValue() == "else"
-    && IsSymbolNodeValue(*std::next(iter, 4), "}")
-    && util::instance_of<ast::StatementListNode>(*std::next(iter, 5))
-    && IsSymbolNodeValue(*std::next(iter, 6), "{")
-    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 7)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 7)))->GetValue() == "then"
-    && IsSymbolNodeValue(*std::next(iter, 8), ")")
-    && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 9))
-    && IsSymbolNodeValue(*std::next(iter, 10), "(")
-    && util::instance_of<ast::IdentifierNode>(*std::next(iter, 11)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 11)))->GetValue() == "if") {
+  if (if_condition) {
     // Pops right brace symbol node
     stack->pop_back();
     // References statement list node

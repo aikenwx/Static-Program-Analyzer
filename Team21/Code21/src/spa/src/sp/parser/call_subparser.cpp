@@ -1,6 +1,7 @@
 #include "sp/ast/astlib.h"
 #include "call_subparser.h"
 #include "util/instance_of.h"
+#include "util/is_identifier_node_value.h"
 
 namespace parser {
 auto CallSubparser::Parse(std::shared_ptr<Context> context) -> bool {
@@ -10,7 +11,7 @@ auto CallSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     // call: 'call' iden ';'
     if (stack->size() >= 2
       && util::instance_of<ast::IdentifierNode>(*iter)
-      && util::instance_of<ast::IdentifierNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 1)))->GetValue() == "call") {
+      && IsIdentifierNodeValue(*std::next(iter, 1), "call")) {
       // References name node for procedure name
       std::shared_ptr<ast::IdentifierNode> nam =
           std::static_pointer_cast<ast::IdentifierNode>(stack->back());

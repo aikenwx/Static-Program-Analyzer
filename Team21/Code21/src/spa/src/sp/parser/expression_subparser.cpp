@@ -9,17 +9,15 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto is_correct_symbol =
-      [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return IsSymbolNodeValue(symbol_node, "+") ||
-               IsSymbolNodeValue(symbol_node, "-");
+      [&](const std::shared_ptr<ast::INode> &node) {
+        return IsSymbolNodeValue(node, "+") ||
+               IsSymbolNodeValue(node, "-");
       };
   if (context->IsLookaheadSymbolValueAnyOf(
           {")", ";", "+", "-", "<", ">", "==", "<=", ">=", "!="})) {
     // expr: expr ['+', '-'] term
     if (stack->size() >= 3 && util::instance_of<ast::TermNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 2))) {
       // References term node
       std::shared_ptr<ast::TermNode> ter =

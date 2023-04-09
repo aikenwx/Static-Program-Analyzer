@@ -15,7 +15,7 @@ public:
   SimpleChainParser() noexcept;
 
   auto Parse(std::vector<std::unique_ptr<token::Token>> input)
-      -> std::unique_ptr<ast::AST> override;
+      -> std::pair<bool, std::unique_ptr<ast::AST>> override;
 
 private:
   int statementCounter{};

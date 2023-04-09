@@ -16,7 +16,7 @@ auto ExtractCondVars(std::string_view source)
 
   auto parser = parser::SimpleChainParser();
   auto ast = parser.Parse(std::move(tokens));
-  auto node = ast->GetRoot();
+  auto node = ast.second->GetRoot();
 
   auto extractor = design_extractor::CondVarExtractor<T>();
   node->AcceptVisitor(extractor, 0);

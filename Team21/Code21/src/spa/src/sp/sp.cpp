@@ -474,7 +474,13 @@ auto SP::Process(std::string_view program, PKB* pkb) -> bool {
 
   // parse tokens into AST
   auto parser = parser::SimpleChainParser();
-  auto ast = parser.Parse(std::move(tokens));
+  auto pair = parser.Parse(std::move(tokens));
+
+  if (!pair.first) {
+    throw exceptions::SyntaxError("Invalid program");
+  }
+
+  auto ast = std::move(pair.second);
 
   auto programNode = ToProgramNode(ast->GetRoot());
 

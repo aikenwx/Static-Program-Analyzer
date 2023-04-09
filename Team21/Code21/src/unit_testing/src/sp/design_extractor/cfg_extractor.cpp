@@ -26,7 +26,7 @@ auto ProgramStringToProgramNode(const std::string &program)
 
   auto parser = parser::SimpleChainParser();
   auto ast = parser.Parse(std::move(tokens));
-  std::shared_ptr<ast::INode> root = ast->GetRoot();
+  std::shared_ptr<ast::INode> root = ast.second->GetRoot();
 
   // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   assert(util::instance_of<ast::ProgramNode>(

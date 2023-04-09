@@ -15,7 +15,7 @@ auto ExtractAssignExp(
 
   auto parser = parser::SimpleChainParser();
   auto ast = parser.Parse(std::move(tokens));
-  auto node = ast->GetRoot();
+  auto node = ast.second->GetRoot();
 
   auto extractor = design_extractor::AssignExpExtractor();
   node->AcceptVisitor(extractor, 0);

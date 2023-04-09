@@ -30,7 +30,7 @@ SimpleChainParser::SimpleChainParser() noexcept {
 }
 
 auto SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input)
-    -> std::unique_ptr<ast::AST> {
+    -> std::pair<bool, std::unique_ptr<ast::AST>> {
   // Push end token to mark end of token list
   input.push_back(token::EndToken::CreateToken());
   auto lookahead =
@@ -53,13 +53,14 @@ auto SimpleChainParser::Parse(std::vector<std::unique_ptr<token::Token>> input)
   if (context->GetStack()->empty()) {
     throw exceptions::SyntaxError("Empty program");
   }
+  auto ast = std::make_unique<ast::AST>();
   if (context->GetStack()->size() != 1 ||
       !util::instance_of<ast::ProgramNode>(context->GetStack()->front())) {
-    // Reject condition (guard clause)
+    ast->SetRoot(context->GetStack()->front());
+    return std::make_pair(false, std::move(ast));
   }
-  auto ast = std::make_unique<ast::AST>();
   ast->SetRoot(context->GetStack()->front());
-  return ast;
+  return std::make_pair(true, std::move(ast));;
 }
 
 /*

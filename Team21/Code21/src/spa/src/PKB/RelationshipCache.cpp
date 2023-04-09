@@ -4,8 +4,8 @@
 
 #include "RelationshipCache.h"
 
-CacheResult::CacheResult() : cachedRelatedEntities(nullptr), cachedRelationships(nullptr), areRelationshipsIndividuallyCached(false) {}
-CacheResult::CacheResult(std::vector<Entity *> *entityVector, std::vector<Relationship *> *relationshipVector, bool areResultsIndividuallyCached) : cachedRelatedEntities(entityVector), cachedRelationships(relationshipVector), areRelationshipsIndividuallyCached(areResultsIndividuallyCached) {}
+CacheResult::CacheResult() : first(nullptr), second(nullptr), areRelationshipsIndividuallyCached(false) {}
+CacheResult::CacheResult(std::vector<Entity *> *entityVector, std::vector<Relationship *> *relationshipVector, bool areResultsIndividuallyCached) : first(entityVector), second(relationshipVector), areRelationshipsIndividuallyCached(areResultsIndividuallyCached) {}
 
 RelationshipCache::RelationshipCache(EntityManager *entityManager) : entityManager(entityManager) {}
 
@@ -31,12 +31,16 @@ auto RelationshipCache::getCachedRelationship(RelationshipKey &key)
 
   auto *cachedRelationhip = relationshipMapCache[relationshipTypeKey][leftStatementNumber][rightStatementNumber];
 
+  if (cachedRelationhip == nullptr) {
+      return nullptr;
+  }
+
   const auto *leftEntityType = key.getLeftEntityKey()->entityType;
 
-  bool isCorrectLeftEntityType = *leftEntityType == Statement::getEntityTypeStatic() || cachedRelationhip->getLeftHandEntity()->getEntityType() == *leftEntityType;
+  bool isCorrectLeftEntityType =  leftEntityType != nullptr && (*leftEntityType == Statement::getEntityTypeStatic()  || cachedRelationhip->getLeftHandEntity()->getEntityType() == *leftEntityType);
 
   const auto *rightEntityType = key.getRightEntityKey()->entityType;
-  bool isCorrectRightEntityType = *rightEntityType == Statement::getEntityTypeStatic() || cachedRelationhip->getRightHandEntity()->getEntityType() == *rightEntityType;
+  bool isCorrectRightEntityType = rightEntityType != nullptr && (*rightEntityType == Statement::getEntityTypeStatic() || cachedRelationhip->getRightHandEntity()->getEntityType() == *rightEntityType);
 
   if (!isCorrectLeftEntityType || !isCorrectRightEntityType) {
     return nullptr;

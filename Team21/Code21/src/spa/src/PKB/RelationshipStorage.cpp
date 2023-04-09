@@ -262,7 +262,7 @@ auto RelationshipStorage::getVectorForStoring(
 
   auto emplaceResult = store.try_emplace(key, placeholderEntityVectorPtr);
 
-  if (emplaceResult.cachedRelationships) {
+  if (emplaceResult.second) {
     entityVectorStoreOwner.push_back(std::move(placeholderEntityVector));
 
     placeholderEntityVector = std::make_unique<std::vector<Entity *>>();
@@ -270,7 +270,7 @@ auto RelationshipStorage::getVectorForStoring(
     return placeholderEntityVectorPtr;
   }
 
-  return emplaceResult.cachedRelatedEntities->cachedRelationships;
+  return emplaceResult.first->second;
 }
 
 auto RelationshipStorage::getVectorForDoubleSynonymStoreForStoring(

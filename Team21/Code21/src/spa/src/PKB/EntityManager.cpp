@@ -50,7 +50,7 @@ void EntityManager::storeEntity(std::unique_ptr<Entity> entity) {
   }
 
   else if (!this->entityStore.try_emplace(entity->getEntityKey(), entityPtr)
-                .cachedRelationships) {
+                .second) {
     // early return if entity already exists
     return;
   }
@@ -108,7 +108,7 @@ auto EntityManager::getVectorForEntityTypeStore(const EntityType &entityType)
 
   auto emplaceResult = this->entityTypeToEntityStore.try_emplace(
       entityType, placeholderEntityVectorPtr);
-  if (emplaceResult.cachedRelationships) {
+  if (emplaceResult.second) {
     entityVectorOwner.push_back(std::move(placeholderEntityVector));
 
     // reinitialise fallback vector for next insertion
@@ -116,7 +116,7 @@ auto EntityManager::getVectorForEntityTypeStore(const EntityType &entityType)
 
     return placeholderEntityVectorPtr;
   }
-  return emplaceResult.cachedRelatedEntities->cachedRelationships;
+  return emplaceResult.first->second;
 }
 
 auto EntityManager::getNumberOfStatements() const -> int {

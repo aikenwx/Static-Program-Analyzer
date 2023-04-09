@@ -10,8 +10,8 @@ struct CacheResult {
   CacheResult();
   CacheResult(std::vector<Entity *> *first, std::vector<Relationship *> *second, bool areResultsIndividuallyCached);
 
-  std::vector<Entity *> *cachedRelatedEntities;
-  std::vector<Relationship *> *cachedRelationships;
+  std::vector<Entity *> *first;
+  std::vector<Relationship *> *second;
   bool areRelationshipsIndividuallyCached;
 };
 

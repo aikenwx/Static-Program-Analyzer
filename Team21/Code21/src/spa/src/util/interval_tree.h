@@ -29,8 +29,8 @@ class IntervalTree {
     if (closest == std::nullopt) {
       return std::nullopt;
     }
-    if (closest->cachedRelatedEntities.cachedRelatedEntities <= key && closest->cachedRelatedEntities.cachedRelationships >= key) {
-      return closest->cachedRelationships;
+    if (closest->first.first <= key && closest->first.second >= key) {
+      return closest->second;
     }
     return std::nullopt;
   };
@@ -49,7 +49,7 @@ class IntervalTree {
     }
     // pair: (iterator pointing to newly inserted (k, v) elem, bool indicating success)
     auto ret = intervals_.insert({interval, value});
-    return std::make_pair(true, &ret.first->cachedRelationships);
+    return std::make_pair(true, &ret.first->second);
   }
 
  private:
@@ -58,7 +58,7 @@ class IntervalTree {
   auto SearchClosest(Key key) const -> std::optional<std::pair<std::pair<Key, Key>, Val>> {
     const auto& iter = std::lower_bound(intervals_.begin(), intervals_.end(), key,
                                [](const auto& kvp1, const auto& curKey) {
-                                 return kvp1.cachedRelatedEntities.cachedRelationships < curKey;
+                                 return kvp1.first.second < curKey;
                                });
     if (iter == intervals_.end()) {
       return std::nullopt;
@@ -71,14 +71,14 @@ class IntervalTree {
     if (closest == std::nullopt) {
       return false;
     }
-    if (Overlaps(interval1, closest->cachedRelatedEntities)) {
+    if (Overlaps(interval1, closest->first)) {
       return true;
     }
     closest = SearchClosest(interval1.second);
     if (closest == std::nullopt) {
       return false;
     }
-    if (Overlaps(interval1, closest->cachedRelatedEntities)) {
+    if (Overlaps(interval1, closest->first)) {
       return true;
     }
     return false;

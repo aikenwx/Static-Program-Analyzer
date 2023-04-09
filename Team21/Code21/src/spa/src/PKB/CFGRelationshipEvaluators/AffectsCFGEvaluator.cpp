@@ -117,14 +117,14 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
       nextCFGEvaluator
           .getCachedEntitiesAndRelationships(false, *sourceStatement,
                                              Statement::getEntityTypeStatic())
-          .cachedRelatedEntities;
+          .first;
 
   if (directRelations == nullptr) {
     directRelations =
         nextCFGEvaluator
             .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                 Statement::getEntityTypeStatic(), sourceStatement, false)
-            .cachedRelatedEntities;
+            .first;
   }
 
   for (auto* result : *directRelations) {
@@ -153,14 +153,14 @@ auto AffectsCFGEvaluator::getRelatedStatementsInForwardsEvaluation(Statement* so
         nextCFGEvaluator
             .getCachedEntitiesAndRelationships(false, *nextToVisitStmt,
                                                Statement::getEntityTypeStatic())
-            .cachedRelatedEntities;
+            .first;
 
     if (neighbours == nullptr) {
       neighbours =
           nextCFGEvaluator
               .evaluateAndCacheRelationshipsByGivenEntityTypeAndEntity(
                   Statement::getEntityTypeStatic(), nextToVisitStmt, false)
-              .cachedRelatedEntities;
+              .first;
     }
 
     for (auto* neighbour : *neighbours) {

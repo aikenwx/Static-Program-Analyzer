@@ -17,7 +17,8 @@ class CFGRelationshipEvaluator {
   EntityManager* entityManager;
   RelationshipCache* relationshipCache;
 
-  static CacheResult emptyCacheResult;
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+    static CacheResult emptyCacheResult;
 
  protected:
   virtual auto isValidEntityInput(Entity* entity) -> bool;

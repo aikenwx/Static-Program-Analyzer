@@ -2,23 +2,21 @@
 #include "sp/ast/additive_operation_node.h"
 #include "sp/ast/astlib.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto is_correct_symbol =
-      [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return symbol_node->GetType() == ast::SymbolType::kPlus ||
-               symbol_node->GetType() == ast::SymbolType::kMinus;
+      [&](const std::shared_ptr<ast::INode> &node) {
+        return IsSymbolNodeValueAnyOf(node, {"+", "-"});
       };
   if (context->IsLookaheadSymbolValueAnyOf(
           {")", ";", "+", "-", "<", ">", "==", "<=", ">=", "!="})) {
     // expr: expr ['+', '-'] term
     if (stack->size() >= 3 && util::instance_of<ast::TermNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 2))) {
       // References term node
       std::shared_ptr<ast::TermNode> ter =
@@ -26,7 +24,7 @@ auto ExpressionSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops term node
       stack->pop_back();
       // References additive symbol type
-      ast::SymbolType sym =
+      std::string sym =
           std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
       // Pops additive symbol node
       stack->pop_back();

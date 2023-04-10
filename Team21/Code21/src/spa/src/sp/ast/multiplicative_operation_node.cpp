@@ -5,23 +5,8 @@
 namespace ast {
 
 MultiplicativeOperationNode::MultiplicativeOperationNode(
-    std::shared_ptr<INode> left, std::shared_ptr<INode> right, SymbolType type)
-    : BinaryOperationNode::BinaryOperationNode(std::move(left), std::move(right)) {
-  switch (type) {
-  case SymbolType::kMultiply:
-    operator_ = "*";
-    break;
-  case SymbolType::kDivide:
-    operator_ = "/";
-    break;
-  case SymbolType::kModulo:
-    operator_ = "%";
-    break;
-  default:
-    operator_ = "";
-    break;
-  }
-}
+    std::shared_ptr<INode> left, std::shared_ptr<INode> right, std::string_view type)
+    : BinaryOperationNode::BinaryOperationNode(std::move(left), std::move(right)), operator_(type) {}
 
 auto MultiplicativeOperationNode::GetSymbolType() const -> std::string {
   return operator_;

@@ -5,6 +5,7 @@
 #include "sp/ast/multiplicative_operation_node.h"
 #include "sp/ast/symbol_node.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -12,19 +13,15 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto is_correct_symbol =
-      [&](const std::shared_ptr<ast::SymbolNode> &symbol_node) {
-        return symbol_node->GetType() == ast::SymbolType::kMultiply ||
-               symbol_node->GetType() == ast::SymbolType::kDivide ||
-               symbol_node->GetType() == ast::SymbolType::kModulo;
+      [&](const std::shared_ptr<ast::INode> &node) {
+        return IsSymbolNodeValueAnyOf(node, {"*", "/", "%"});
       };
   if (context->IsLookaheadSymbolValueAnyOf({")", ";", "+", "-", "*", "/", "%",
                                             "<", ">",
                                             "==", "<=", ">=", "!="})) {
     // term: term ['*', '/', '%'] factor
     if (stack->size() >= 3 && util::instance_of<ast::IdentifierNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
       // References identifier node
       std::shared_ptr<ast::IdentifierNode> var =
@@ -32,7 +29,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops identifier node
       stack->pop_back();
       // References multiplicative symbol type
-      ast::SymbolType sym =
+      std::string sym =
           std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
       // Pops multiplicative symbol node
       stack->pop_back();
@@ -53,9 +50,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       return true;
     }
     if (stack->size() >= 3 && util::instance_of<ast::ConstantNode>(*iter) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 1)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 1))) &&
+        is_correct_symbol(*std::next(iter, 1)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 2))) {
       // References constant node
       std::shared_ptr<ast::ConstantNode> con =
@@ -63,7 +58,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops constant node
       stack->pop_back();
       // References multiplicative symbol type
-      ast::SymbolType sym =
+      std::string sym =
           std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
       // Pops multiplicative symbol node
       stack->pop_back();
@@ -83,16 +78,11 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       stack->push_back(ter2);
       return true;
     }
-    if (stack->size() >= 5 && util::instance_of<ast::SymbolNode>(*iter) &&
-        (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() ==
-            ast::SymbolType::kRightParen &&
+    if (stack->size() >= 5 &&
+        IsSymbolNodeValue(*iter, ")") &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 1)) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) &&
-        (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))
-                ->GetType() == ast::SymbolType::kLeftParen &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) &&
-        is_correct_symbol(
-            std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3))) &&
+        IsSymbolNodeValue(*std::next(iter, 2), "(") &&
+        is_correct_symbol(*std::next(iter, 3)) &&
         util::instance_of<ast::TermNode>(*std::next(iter, 4))) {
       // Pops right paren symbol node
       stack->pop_back();
@@ -104,7 +94,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       // Pops left paren symbol node
       stack->pop_back();
       // References multiplicative symbol type
-      ast::SymbolType sym =
+      std::string sym =
           std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
       // Pops multiplicative symbol node
       stack->pop_back();
@@ -149,13 +139,10 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       stack->push_back(ter);
       return true;
     }
-    if (stack->size() >= 3 && util::instance_of<ast::SymbolNode>(*iter) &&
-        (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() ==
-            ast::SymbolType::kRightParen &&
+    if (stack->size() >= 3 &&
+        IsSymbolNodeValue(*iter, ")") &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 1)) &&
-        util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) &&
-        (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))
-                ->GetType() == ast::SymbolType::kLeftParen) {
+        IsSymbolNodeValue(*std::next(iter, 2), "(")) {
       // Pops right paren symbol node
       stack->pop_back();
       // References expression node

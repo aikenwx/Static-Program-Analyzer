@@ -24,28 +24,5 @@ private:
   std::shared_ptr<Subparser> subparsers;
 
   void Shift();
-
-  const std::unordered_map<std::string, ast::SymbolType> kSymbolToSymbolTypeMap{
-      {"&&", ast::SymbolType::kAnd},
-      {"=", ast::SymbolType::kAssign},
-      {"/", ast::SymbolType::kDivide},
-      {"==", ast::SymbolType::kEqual},
-      {">=", ast::SymbolType::kGreaterEqual},
-      {">", ast::SymbolType::kGreater},
-      {"{", ast::SymbolType::kLeftBrace},
-      {"(", ast::SymbolType::kLeftParen},
-      {"<=", ast::SymbolType::kLesserEqual},
-      {"<", ast::SymbolType::kLesser},
-      {"-", ast::SymbolType::kMinus},
-      {"%", ast::SymbolType::kModulo},
-      {"*", ast::SymbolType::kMultiply},
-      {"!=", ast::SymbolType::kNotEqual},
-      {"!", ast::SymbolType::kNot},
-      {"||", ast::SymbolType::kOr},
-      {"+", ast::SymbolType::kPlus},
-      {")", ast::SymbolType::kRightParen},
-      {"}", ast::SymbolType::kRightBrace},
-      {";", ast::SymbolType::kSemicolon},
-  };
 };
 } // namespace parser

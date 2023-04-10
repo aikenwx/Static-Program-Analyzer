@@ -1,0 +1,41 @@
+procedure hello {
+1    read a;
+2    read b;
+3    read c;
+4    read d;
+}
+procedure main {
+5    a = x + y;
+6    b = a + y;
+7    c = 1;
+8    while (x == 1) {
+9        z = b + a;
+10       x = a;
+11       if (x == 2) then {
+12           c = d + a;
+         } else {
+13            d = d + a;
+14            while (x == 1) {
+15                print x;
+16                print y;
+17                while (y == 2) {
+18                    c = a + x;
+19                    if (x == 2) then {
+20                        d = c;
+                      } else {
+21                        a = 2 * a + x;
+22                        b = 2 * b;
+                      }
+                  }
+              }
+23         c = 2 * a;
+24         a = b + a;
+25         x = a;
+        }
+26      call hello;
+27      y = z + x + a;
+    }
+28  c = a;
+29  a = 2 * a;
+30  d = b;
+}

@@ -3,25 +3,25 @@
 
 namespace qps {
 auto AssignEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
-  std::vector<ModifiesRelationship *> modifies_relationships;
-  Ref ref1 = getClause().getArg1();
+  std::vector<Relationship *> modifies_relationships;
+  const auto &ref1 = getClause().getArg1();
 
   auto *all_assignment_variable_pairs =
-      pkb.getModifiesRelationshipsByLeftAndRightEntityTypes(AssignStatement::getEntityTypeStatic(),
-                                                            Variable::getEntityTypeStatic());
+          pkb.getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
+                                      AssignStatement::getEntityTypeStatic(),
+                                      Variable::getEntityTypeStatic());
   for (const auto &row : *all_assignment_variable_pairs) {
     if (std::holds_alternative<QuotedIdentifier>(ref1)
         && *row->getRightHandEntity()->getEntityValue() != std::get<QuotedIdentifier>(ref1).getQuotedId()) {
       continue;
     }
-      modifies_relationships.push_back(row);
-
+    modifies_relationships.push_back(row);
   }
 
-  ExpressionSpec expr = getClause().getArg2();
+  const auto &expr = getClause().getArg2();
   if (std::holds_alternative<Expression>(expr)) {
-    Expression express = std::get<Expression>(expr);
-    std::string expr = express.getExpression();
+    const auto &express = std::get<Expression>(expr);
+    const auto &expr = express.getExpression();
     bool is_partial = express.isExpressionPartial();
     modifies_relationships = checkExpressionContained(modifies_relationships, expr, is_partial);
   }
@@ -34,10 +34,10 @@ auto AssignEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<Product> {
   return res;
 }
 
-auto AssignEvaluator::checkExpressionContained(const std::vector<ModifiesRelationship *> &pkb_res,
+auto AssignEvaluator::checkExpressionContained(const std::vector<Relationship *> &pkb_res,
                                                                               const std::string &postfix,
-                                                                              bool is_partial) -> std::vector<ModifiesRelationship *> {
-  std::vector<ModifiesRelationship *> filtered_relationships;
+                                                                              bool is_partial) -> std::vector<Relationship *> {
+  std::vector<Relationship *> filtered_relationships;
   for (auto *relationship : pkb_res) {
     auto *assignment_stmt = dynamic_cast<AssignStatement *>(relationship->getLeftHandEntity());
     auto post_fix_espression = *assignment_stmt->getPostFixExpression();

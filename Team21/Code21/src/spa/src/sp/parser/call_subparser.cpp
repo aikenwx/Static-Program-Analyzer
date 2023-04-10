@@ -1,20 +1,20 @@
 #include "sp/ast/astlib.h"
 #include "call_subparser.h"
-#include "sp/token/semicolon_token.h"
 #include "util/instance_of.h"
+#include "util/is_identifier_node_value.h"
 
 namespace parser {
 auto CallSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  if (context->IsLookaheadTypeOf<token::SemicolonToken>()) {
-    // call: 'call' proc_name';'
+  if (context->IsLookaheadSymbolValue(";")) {
+    // call: 'call' iden ';'
     if (stack->size() >= 2
-      && util::instance_of<ast::NameNode>(*iter)
-      && util::instance_of<ast::IdentifierNode>(*std::next(iter, 1)) && (std::static_pointer_cast<ast::IdentifierNode>(*std::next(iter, 1)))->GetValue() == "call") {
+      && util::instance_of<ast::IdentifierNode>(*iter)
+      && IsIdentifierNodeValue(*std::next(iter, 1), "call")) {
       // References name node for procedure name
-      std::shared_ptr<ast::NameNode> nam =
-          std::static_pointer_cast<ast::NameNode>(stack->back());
+      std::shared_ptr<ast::IdentifierNode> nam =
+          std::static_pointer_cast<ast::IdentifierNode>(stack->back());
       // Pops name node
       stack->pop_back();
       // Pops 'call' identifier node

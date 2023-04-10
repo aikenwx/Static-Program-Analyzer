@@ -1,0 +1,85 @@
+1 - relationship(literal, literal)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1;
+Select a such that Follows(21, 22)
+6, 7, 9, 11, 12, 14, 15, 17, 19, 23, 24, 26, 28, 29, 30, 31, 32, 33, 36, 37, 38, 39, 40, 41, 43, 46, 47, 48, 51, 53, 54, 58, 60, 64, 71, 73
+5000
+2 - relationship(synonym, literal)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1;
+Select v such that Follows(w, 25)
+clown, mugger, dead, laugh, sleep, ctf, security, hack, secure, flag, found, killerclown, pennywise, ronald, wendy, happy, value, cs2107, bob1, IamBob, helpBOB, sad
+5000
+3 - relationship(wildcard, literal)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select i such that Follows(_, 18)
+5, 25, 27, 35, 42, 45, 55
+5000
+4 - relationship(literal, synonym)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select i such that Follows(46, i)
+none
+5000
+5 - relationship(synonym, synonym)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select w such that Follows(i, w)
+52
+5000
+6 - relationship(wildcard, literal)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select p such that Follows(_, 59)
+3, 4, 10, 21, 49, 57, 61, 63, 65, 66, 67, 68, 69, 72, 74
+5000
+7 - relationship(literal, wildcard)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select s1 such that Follows(66, _)
+none
+5000
+8 - relationship(synonym, wildcard)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select r such that Follows(s, _)
+1, 2, 22, 50, 56, 62, 70
+5000
+9 - relationship(wildcard, wildcard)
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select w such that Follows(_, _)
+13, 16, 18, 20, 44, 52, 59
+5000
+10 - relationship(literal, literal) where we check three levels of while
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(21, 22)
+TRUE
+5000
+11 - relationship(literal, literal) where we check three levels of while, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(22, 23)
+FALSE
+5000
+12 - relationship(literal, literal) where we check three levels of if in the else region
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(40, 41)
+TRUE
+5000
+13 - relationship(literal, literal) where we check three levels of if in the else region, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(34, 40)
+FALSE
+5000
+14 - relationship(literal, literal) where we check three levels of if in the if region
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(36, 37)
+TRUE
+5000
+15 - relationship(literal, literal) where we check three levels of if in the if region, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(35, 36)
+FALSE
+5000
+16 - relationship(literal, literal) where we check in a while, if, while
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(60, 61)
+TRUE
+5000
+17 - relationship(literal, literal) where we check in a while, if, while, separate container levels
+assign a; variable v; while w, w1; stmt s, s1; if i, i1; read r; print p;
+Select BOOLEAN such that Follows(62, 63)
+FALSE
+5000

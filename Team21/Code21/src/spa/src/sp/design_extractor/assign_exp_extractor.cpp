@@ -1,30 +1,24 @@
 #include "assign_exp_extractor.h"
 
+#include <memory>
 #include <queue>
 #include <sstream>
 
 #include "../ast/astlib.h"
 #include "../rel/assign_exp_relationship.h"
 #include "../rel/relationship.h"
+#include "sp/ast/additive_operation_node.h"
+#include "sp/ast/multiplicative_operation_node.h"
 #include "util/instance_of.h"
 
 namespace design_extractor {
 auto BinExpExprNodeToOperator(
     const std::shared_ptr<ast::BinaryOperationNode> &node) -> std::string {
-  if (util::instance_of<ast::PlusNode>(node)) {
-    return "+";
+  if (util::instance_of<ast::AdditiveOperationNode>(node)) {
+    return std::static_pointer_cast<ast::AdditiveOperationNode>(node)->GetSymbolType();
   }
-  if (util::instance_of<ast::MinusNode>(node)) {
-    return "-";
-  }
-  if (util::instance_of<ast::TimesNode>(node)) {
-    return "*";
-  }
-  if (util::instance_of<ast::DivideNode>(node)) {
-    return "/";
-  }
-  if (util::instance_of<ast::ModuloNode>(node)) {
-    return "%";
+  if (util::instance_of<ast::MultiplicativeOperationNode>(node)) {
+    return std::static_pointer_cast<ast::MultiplicativeOperationNode>(node)->GetSymbolType();
   }
   return "";
 }
@@ -38,10 +32,10 @@ auto AssignExpToPostfixExpStack(const std::shared_ptr<ast::INode> &node)
         std::static_pointer_cast<ast::ConstantNode>(node);
     // no std::format before c++20, unfortunate
     postfixExpStack.push('"' + std::to_string(constantNode->GetValue()) + '"');
-  } else if (util::instance_of<ast::VariableNode>(node)) {
-    std::shared_ptr<ast::VariableNode> variableNode =
-        std::static_pointer_cast<ast::VariableNode>(node);
-    postfixExpStack.push('"' + variableNode->GetName() + '"');
+  } else if (util::instance_of<ast::IdentifierNode>(node)) {
+    std::shared_ptr<ast::IdentifierNode> variableNode =
+        std::static_pointer_cast<ast::IdentifierNode>(node);
+    postfixExpStack.push('"' + variableNode->GetValue() + '"');
   } else if (util::instance_of<ast::BinaryOperationNode>(node)) {
     std::shared_ptr<ast::BinaryOperationNode> binaryOperationNode =
         std::static_pointer_cast<ast::BinaryOperationNode>(node);

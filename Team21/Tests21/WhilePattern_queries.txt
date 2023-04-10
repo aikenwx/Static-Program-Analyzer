@@ -1,0 +1,40 @@
+1 - pattern while(_, _)
+while w;
+Select w pattern w(_, _)
+5, 12, 19
+5000
+2 - pattern while(lit, _)
+while w;
+Select w pattern w("wa", _)
+12, 19
+5000
+3 - pattern while(lit, _)
+while w;
+Select w pattern w("wqc", _)
+19
+5000
+4 - pattern while(syn, _)
+while w; variable v;
+Select <w,v> pattern w(v, _)
+5 wc, 5 wd, 12 wx, 12 wa, 12 wp, 19 wa, 19 wb, 19 wc, 19 wp, 19 wyz, 19 wqc, 19 wac, 19 wbc
+5000
+5 - pattern w(num, _)
+while  w;
+Select w pattern w(1, _)
+SyntaxError
+5000
+6 - pattern w(lit, syn)
+while w; variable x;
+Select w pattern w("fy", x)
+SyntaxError
+5000
+7 - pattern while(lit, lit)
+while w;
+Select w pattern w("fy", "x")
+SyntaxError
+5000
+7 - pattern while(non_v_syn, _)
+while w; stmt s;
+Select w pattern f(s, _)
+SemanticError
+5000

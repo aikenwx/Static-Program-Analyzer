@@ -3,9 +3,7 @@
 #include "exceptions/parser_error.h"
 
 namespace ast {
-CallNode::CallNode(const std::shared_ptr<NameNode> &name) {
-  this->name_ = name->GetName();
-}
+CallNode::CallNode(const std::shared_ptr<IdentifierNode> &name) : name_(name->GetValue()) {}
 
 auto CallNode::GetProcedureName() -> std::string { return name_; }
 

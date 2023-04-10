@@ -14,7 +14,6 @@
 class Procedure : public Entity {
    private:
     static const EntityType procedureType;
-    size_t hash{};
 
    public:
     static auto getEntityTypeStatic() -> const EntityType &;

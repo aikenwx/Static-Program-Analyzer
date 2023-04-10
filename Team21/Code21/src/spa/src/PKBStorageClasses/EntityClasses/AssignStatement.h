@@ -7,7 +7,7 @@
 
 class AssignStatement : public Statement {
    private:
-    static const EntityType assignStatementType;
+    static const StatementType assignStatementType;
 
     std::shared_ptr<std::string> postFixExpression;
 

@@ -23,7 +23,7 @@ auto SemanticValidator::validateQuery() -> bool {
 void SemanticValidator::checkForDuplicateDeclarations() {
   //create a hashset and then add to it. If current iterable element is found in hashset, it means duplicate.
   std::unordered_set<std::string> seen;
-  for (Declaration declr : getQuery().getDeclarations()) {
+  for (const Declaration& declr : getQuery().getDeclarations()) {
     std::string syn = declr.getSynonym().getSynonym();
     if (seen.find(syn) == seen.end()) {
       seen.insert(syn);
@@ -80,6 +80,7 @@ void SemanticValidator::checkPatternClauseSynonym() {
   }
 }
 
+//Check Synonym got Declaration
 void SemanticValidator::checkSynonymDeclareHelper(Ref reff, std::vector<Declaration>& declr, const std::string &missing) {
   if (std::holds_alternative<Synonym>(reff)) {
     if (!static_cast<bool>(Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(reff)).has_value())) {
@@ -88,6 +89,7 @@ void SemanticValidator::checkSynonymDeclareHelper(Ref reff, std::vector<Declarat
   }
 }
 
+//Check Synonym in Element got Declaration
 void SemanticValidator::checkElementSynonymDeclareHelper(Element ele, std::vector<Declaration>& declr) {
   if (std::holds_alternative<Synonym>(ele)) {
     if (!Declaration::findDeclarationWithSynonym(declr, std::get<Synonym>(ele)).has_value()) {
@@ -103,6 +105,7 @@ void SemanticValidator::checkElementSynonymDeclareHelper(Element ele, std::vecto
   }
 }
 
+//Check Synonym in WithRef got Declaration
 void SemanticValidator::checkWithRefSynonymDeclareHelper(WithRef reff, std::vector<Declaration>& declr) {
   if (std::holds_alternative<AttrRef>(reff.ref)) {
     if (!Declaration::findDeclarationWithSynonym(declr, std::get<AttrRef>(reff.ref).synonym).has_value()) {
@@ -152,6 +155,7 @@ void SemanticValidator::checkRelationSynonymMatchDesignEntity() {
   }
 }
 
+//Check correct design entity of second synonym in Relationship
 void SemanticValidator::checkSecondSynonymHelper(DesignEntity des2, const std::string &relStr, Relationship rel) {
   if ((rel == Relationship::Calls || rel == Relationship::CallsT)) {
     if (des2 != DesignEntity::PROCEDURE) {
@@ -169,6 +173,7 @@ void SemanticValidator::checkSecondSynonymHelper(DesignEntity des2, const std::s
   }
 }
 
+//Check correct statement design entity
 void SemanticValidator::checkSynonymStatementHelper(DesignEntity des, const std::string &relStr) {
   if (des != DesignEntity::STMT && des != DesignEntity::READ && des != DesignEntity::PRINT && des != DesignEntity::ASSIGN
       && des != DesignEntity::IF && des != DesignEntity::WHILE && des != DesignEntity::CALL) {
@@ -224,7 +229,8 @@ void SemanticValidator::checkAttrRefValidAttrName() {
   }
 }
 
-void SemanticValidator::checkAttrRefValidAttrNameHelper(AttrRef attr, std::vector<Declaration>& declr) {
+//Check Attribute Name is valid with given synonym
+void SemanticValidator::checkAttrRefValidAttrNameHelper(const AttrRef& attr, std::vector<Declaration>& declr) {
   if (Declaration::findDeclarationWithSynonym(declr, attr.synonym).has_value()) {
     Declaration decl = Declaration::findDeclarationWithSynonym(declr, attr.synonym).value();
     std::set<AttrName> validAttrNameSet = getValidAttrNameSet(decl);

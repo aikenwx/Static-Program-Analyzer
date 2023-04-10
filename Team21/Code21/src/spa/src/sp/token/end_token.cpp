@@ -5,11 +5,9 @@
 #include <string>
 
 namespace token {
-auto EndToken::CreateToken(std::string_view str)
-    -> std::unique_ptr<Token> {
-  assert(str == "$"); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+auto EndToken::CreateToken() -> std::unique_ptr<Token> {
   return std::make_unique<EndToken>();
 };
 
-auto EndToken::GetValue() const -> std::string { return "$"; };
-}  // namespace token
+auto EndToken::GetValue() const -> std::string { return "\00"; };
+} // namespace token

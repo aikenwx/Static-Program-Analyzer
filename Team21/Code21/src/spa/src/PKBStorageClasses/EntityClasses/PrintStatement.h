@@ -5,7 +5,7 @@
 
 class PrintStatement : public Statement {
    private:
-    static const EntityType printStatementType;
+    static const StatementType printStatementType;
 
    public:
     explicit PrintStatement(int statementNumber);

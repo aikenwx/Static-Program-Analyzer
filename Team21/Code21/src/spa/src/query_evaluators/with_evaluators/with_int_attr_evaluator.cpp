@@ -1,7 +1,7 @@
 #include "with_int_attr_evaluator.h"
 #include <vector>
 
-#include "query_evaluators/pkb_helpers.h"
+#include "query_evaluators/pkb_qps_type_mapping.h"
 
 namespace qps {
 auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> {
@@ -10,11 +10,11 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
 
   std::vector<Declaration> decl = getDeclarations();
 
-  WithRef ref1 = getClause().getRef1();
-  WithRef ref2 = getClause().getRef2();
+  const auto &ref1 = getClause().getRef1();
+  const auto &ref2 = getClause().getRef2();
 
-  auto* atrVal = std::get_if<AttrRef>(&ref1.ref);
-  auto* numberVal = std::get_if<int>(&ref2.ref);
+  const auto *atrVal = std::get_if<AttrRef>(&ref1.ref);
+  const auto *numberVal = std::get_if<int>(&ref2.ref);
 
   // Swap if ref1 is not an AttrRef since it will be an int, vice versa
   if (atrVal == nullptr) {
@@ -24,7 +24,7 @@ auto WithIntAttrEvaluator::CallPkb(QueryFacade &pkb) -> std::vector<std::vector<
 
   auto declAtrVal = Declaration::findDeclarationWithSynonym(decl, atrVal->synonym);
 
-  EntityType entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
+  const auto &entType = DesignEntityToEntityType(declAtrVal.value().getDesignEntity());
 
   auto *pkb_res = pkb.getEntity(entType, *numberVal);
 

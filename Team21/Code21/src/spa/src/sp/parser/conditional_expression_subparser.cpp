@@ -1,7 +1,9 @@
 #include "sp/ast/astlib.h"
 #include "conditional_expression_subparser.h"
-#include "sp/token/right_paren_token.h"
+#include "sp/ast/conditional_expression_node.h"
+#include "sp/ast/logical_operation_node.h"
 #include "util/instance_of.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 
@@ -10,13 +12,29 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  if (context->IsLookaheadTypeOf<token::RightParenToken>()) {
+  auto is_correct_symbol_logical = [&](const std::shared_ptr<ast::INode> &node) {
+    return IsSymbolNodeValueAnyOf(node, {"&&", "||"});
+  };
+  auto is_correct_symbol_comparison = [&](const std::shared_ptr<ast::INode> &node) {
+    return IsSymbolNodeValueAnyOf(node, {"==", "!=", "<", ">", "<=", ">="});
+  };
+  auto is_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
+    return util::instance_of<ast::ExpressionNode>(node)
+      || util::instance_of<ast::IdentifierNode>(node)
+      || util::instance_of<ast::ConstantNode>(node);
+  };
+  auto get_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
+    if (util::instance_of<ast::ExpressionNode>(node)) {
+      return std::static_pointer_cast<ast::ExpressionNode>(node)->GetOperand();
+    }
+    return node;
+  };
+  if (context->IsLookaheadSymbolValue(")")) {
     // cond_expr: '!' '(' cond_expr ')'
     if (stack->size() >= 4
-      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightParen
+      && IsSymbolNodeValue(*iter, ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kNot) {
+      && IsNextSymbolNodesValues(std::next(iter, 2), {"(", "!"})) {
       // Pops right paren symbol node
       stack->pop_back();
       // References conditional expression node
@@ -39,26 +57,28 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       stack->push_back(exp2);
       return true;
     }
-    // cond_expr: '(' cond_expr ')' '&&' '(' cond_expr ')'
+// cond_expr: '(' cond_expr ')' ['&&', '||] '(' cond_expr ')'
     if (stack->size() >= 7
-      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightParen
+      && IsSymbolNodeValue(*iter, ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kAnd
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 4)))->GetType() == ast::SymbolType::kRightParen
+      && IsSymbolNodeValue(*std::next(iter, 2), "(")
+      && is_correct_symbol_logical(*std::next(iter, 3))
+      && IsSymbolNodeValue(*std::next(iter, 4), ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 5))
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 6)))->GetType() == ast::SymbolType::kLeftParen) {
+      && IsSymbolNodeValue(*std::next(iter, 6), "(")) {
       // Pops right paren symbol node
       stack->pop_back();
       // References conditional expression node
       std::shared_ptr<ast::ConditionalExpressionNode> exp1 =
           std::static_pointer_cast<ast::ConditionalExpressionNode>(
               stack->back());
-      // Pops conditionl expression node
+      // Pops conditional expression node
       stack->pop_back();
       // Pops left paren symbol node
       stack->pop_back();
-      // Pops and symbol node
+      // References logical symbol type
+      std::string sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
+      // Pops logical symbol node
       stack->pop_back();
       // Pops right paren symbol node
       stack->pop_back();
@@ -70,50 +90,9 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       stack->pop_back();
       // Pops left paren symbol node
       stack->pop_back();
-      // Creates and node
-      std::shared_ptr<ast::AndNode> bin =
-          std::make_shared<ast::AndNode>(exp1->GetOperand(), exp2->GetOperand());
-      // Creates conditional expression node
-      std::shared_ptr<ast::ConditionalExpressionNode> exp3 =
-          std::make_shared<ast::ConditionalExpressionNode>(bin);
-      // Pushes conditional expression node to parse stack
-      stack->push_back(exp3);
-      return true;
-    }
-    // cond_expr: '(' cond_expr ')' '||' '(' cond_expr ')'
-    if (stack->size() >= 7
-      && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 1))
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftParen
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kOr
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 4)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 4)))->GetType() == ast::SymbolType::kRightParen
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 5))
-      && util::instance_of<ast::SymbolNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 6)))->GetType() == ast::SymbolType::kLeftParen) {
-      // Pops right paren symbol node
-      stack->pop_back();
-      // References conditional expression node
-      std::shared_ptr<ast::ConditionalExpressionNode> exp1 =
-          std::static_pointer_cast<ast::ConditionalExpressionNode>(
-              stack->back());
-      // Pops conditional expression node
-      stack->pop_back();
-      // Pops left paren symbol node
-      stack->pop_back();
-      // Pops or symbol node
-      stack->pop_back();
-      // Pops right paren symbol node
-      stack->pop_back();
-      // References conditional expression node
-      std::shared_ptr<ast::ConditionalExpressionNode> exp2 =
-          std::static_pointer_cast<ast::ConditionalExpressionNode>(
-              stack->back());
-      // Pops conditional expression node
-      stack->pop_back();
-      // Pops left paren symbol node
-      stack->pop_back();
-      // Creates or node
-      std::shared_ptr<ast::OrNode> bin =
-          std::make_shared<ast::OrNode>(exp1->GetOperand(), exp2->GetOperand());
+      // Creates logical (binary) operation node
+      std::shared_ptr<ast::LogicalOperationNode> bin =
+          std::make_shared<ast::LogicalOperationNode>(exp1->GetOperand(), exp2->GetOperand(), sym);
       // Creates conditional expression node
       std::shared_ptr<ast::ConditionalExpressionNode> exp3 =
           std::make_shared<ast::ConditionalExpressionNode>(bin);
@@ -122,16 +101,29 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
       return true;
     }
     // cond_expr: rel_expr
-    if (util::instance_of<ast::RelationalExpressionNode>(*iter)) {
-      // References relational expression node
-      std::shared_ptr<ast::RelationalExpressionNode> rel =
-          std::static_pointer_cast<ast::RelationalExpressionNode>(
-              stack->back());
-      // Pops relational expression node
+    // rel_expr: rel_factor ['==', '<', '>', '!=', '<=', '>='] rel_factor
+    if (stack->size() >= 3
+      && is_relational_factor(*iter)
+      && is_correct_symbol_comparison(*std::next(iter, 1))
+      && is_relational_factor(*std::next(iter, 2))) {
+      // References relational factor node
+      std::shared_ptr<ast::INode> fac1 = get_relational_factor(stack->back());
+      // Pops relational factor node
       stack->pop_back();
+      // References comparison symbol type
+      std::string sym = std::static_pointer_cast<ast::SymbolNode>(stack->back())->GetType();
+      // Pops comparison symbol node
+      stack->pop_back();
+      // References relational factor node
+      std::shared_ptr<ast::INode> fac2 = get_relational_factor(stack->back());
+      // Pops relational factor node
+      stack->pop_back();
+      // Creates comparison operation node
+      std::shared_ptr<ast::ComparisonOperationNode> bin =
+          std::make_shared<ast::ComparisonOperationNode>(fac2, fac1, sym);
       // Creates conditional expression node
       std::shared_ptr<ast::ConditionalExpressionNode> exp =
-          std::make_shared<ast::ConditionalExpressionNode>(rel->GetOperand());
+          std::make_shared<ast::ConditionalExpressionNode>(bin);
       // Pushes conditional expression node to parse stack
       stack->push_back(exp);
       return true;

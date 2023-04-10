@@ -3,7 +3,7 @@
 #include "exceptions/parser_error.h"
 
 namespace ast {
-// Handles procedures like a stack LIFO
+// Stores procedures as a queue FIFO
 void ProgramNode::AddProcedure(
     const std::shared_ptr<ProcedureNode> &procedure) {
   procedures.push_back(procedure);
@@ -16,7 +16,7 @@ auto ProgramNode::GetProcedures() const
 
 auto ProgramNode::ToString() const -> std::string {
   std::string str = "program:\n{\n";
-  for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
+  for (auto i = procedures.begin(); i < procedures.end(); i++) {
     str += (*i)->ToString();
   }
   str += "}\n";
@@ -24,11 +24,11 @@ auto ProgramNode::ToString() const -> std::string {
 }
 
 auto ProgramNode::GetTotalStatementCount() -> int {
-  return procedures.front()->GetEndStatementNumber();
+  return procedures.back()->GetEndStatementNumber();
 }
 
 auto ProgramNode::ContainsProcedure(const std::string &procedureName) -> bool {
-  for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
+  for (auto i = procedures.begin(); i < procedures.end(); i++) {
     if ((*i)->GetName() == procedureName) {
       return true;
     }
@@ -38,7 +38,7 @@ auto ProgramNode::ContainsProcedure(const std::string &procedureName) -> bool {
 
 auto ProgramNode::GetProcedure(const std::string &procedureName)
     -> std::shared_ptr<ProcedureNode> {
-  for (auto i = procedures.rbegin(); i < procedures.rend(); i++) {
+  for (auto i = procedures.begin(); i < procedures.end(); i++) {
     if ((*i)->GetName() == procedureName) {
       return *i;
     }

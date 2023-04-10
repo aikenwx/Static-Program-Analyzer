@@ -8,14 +8,14 @@ namespace qps {
 
 class AssignEvaluator : public PatternEvaluator {
  public:
-  AssignEvaluator(PatternClause clause, std::vector<Declaration> declarations)
-      : PatternEvaluator(std::move(clause), std::move(declarations)) {}
+  AssignEvaluator(const PatternClause &clause, const std::vector<Declaration> &declarations)
+      : PatternEvaluator(clause, declarations) {}
   auto CallPkb(QueryFacade &pkb) -> std::vector<Product> override;
 
 private:
-  static auto checkExpressionContained(const std::vector<ModifiesRelationship *> &pkb_res,
+  static auto checkExpressionContained(const std::vector<Relationship *> &pkb_res,
                                                                const std::string &postfix,
-                                                               bool is_partial) -> std::vector<ModifiesRelationship *>;
+                                                               bool is_partial) -> std::vector<Relationship *>;
 };
 
 }  // namespace qps

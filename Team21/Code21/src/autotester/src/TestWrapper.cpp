@@ -35,12 +35,13 @@ void TestWrapper::parse(std::string filename) {
   buf << t.rdbuf();
   std::string program = buf.str();
 
-  sp::SP::process(program, pkb_);
+  sp::SP::Process(program, pkb_);
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   qps::QPS::evaluate(query, results, *pkb_->getQueryFacade());
+  pkb_->getQueryFacade()->clearCache();
   // call your evaluator to evaluate the query here
   // ...code to evaluate query...
 

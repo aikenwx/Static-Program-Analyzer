@@ -11,23 +11,23 @@
 #include "PopulateFacade.h"
 #include "QueryFacade.h"
 #include "RelationshipManager.h"
-#include "PatternManager.h"
-#include "CFGManager.h"
 
 class PKB {
-   private:
-    std::shared_ptr<PopulateFacade> populateFacade;
-    std::shared_ptr<QueryFacade> queryFacade;
-    std::shared_ptr<EntityManager> entityManager;
-    std::shared_ptr<RelationshipManager> relationshipManager;
-    std::shared_ptr<PatternManager> patternManager;
-    std::shared_ptr<CFGManager> cfgManager;
+ private:
+  std::shared_ptr<PopulateFacade> populateFacade;
+  std::shared_ptr<QueryFacade> queryFacade;
+  std::shared_ptr<EntityManager> entityManager;
+  std::shared_ptr<RelationshipManager> relationshipManager;
 
-   public:
-    PKB();
+ public:
+  PKB();
 
-    auto getPopulateFacade() -> PopulateFacade*;
-    auto getQueryFacade() -> QueryFacade*;
+  // for testing purposes
+  PKB(const std::shared_ptr<EntityManager> &entityManager,
+      const std::shared_ptr<RelationshipManager> &relationshipManager);
+
+  auto getPopulateFacade() -> PopulateFacade*;
+  auto getQueryFacade() -> QueryFacade*;
 };
 
 #endif  // SPA_PKB_H

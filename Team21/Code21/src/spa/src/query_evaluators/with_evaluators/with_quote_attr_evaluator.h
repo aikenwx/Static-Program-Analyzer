@@ -6,11 +6,11 @@
 
 namespace qps {
 
-  class WithQuoteAttrEvaluator : public WithEvaluator {
-  public:
-    WithQuoteAttrEvaluator(WithClause clause, std::vector<Declaration> declarations)
-      : WithEvaluator(std::move(clause), std::move(declarations)) {}
-    auto CallPkb(QueryFacade& pkb) -> std::vector<std::vector<Entity *>> override;
-  };
+class WithQuoteAttrEvaluator : public WithEvaluator {
+ public:
+  WithQuoteAttrEvaluator(const WithClause &clause, const std::vector<Declaration> &declarations)
+      : WithEvaluator(clause, declarations) {}
+  auto CallPkb(QueryFacade &pkb) -> std::vector<std::vector<Entity *>> override;
+};
 
 } // namespace qps

@@ -1,0 +1,20 @@
+1 - s1 and s2 are separated by one or more print statements
+
+Select BOOLEAN such that Affects(1, 4)
+TRUE
+5000
+2 - s1 and s2 are separated by one or more unrelated read statements
+
+Select BOOLEAN such that Affects(5, 8)
+TRUE
+5000
+3 - s1 and s2 are separated by an unrelated call statement
+
+Select BOOLEAN such that Affects(9, 11)
+TRUE
+5000
+4 - s1 and s2 are separated by a mixture of unrelated call/read/print statements
+
+Select BOOLEAN such that Affects(12, 17)
+TRUE
+5000

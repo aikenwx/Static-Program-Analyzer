@@ -1,9 +1,7 @@
 #include "with_evaluator_factory.h"
-#include "./query/declaration.h"
 #include "query/attr_ref.h"
 #include "query/quoted_identifier.h"
 #include "query/synonym.h"
-#include "query/with_ref.h"
 #include "query_evaluators/with_evaluators/with_double_attr_evaluator.h"
 #include "query_evaluators/with_evaluators/with_double_int_evaluator.h"
 #include "query_evaluators/with_evaluators/with_double_quote_evaluator.h"
@@ -11,8 +9,8 @@
 #include "query_evaluators/with_evaluators/with_quote_attr_evaluator.h"
 
 namespace qps {
-auto WithEvaluatorFactory::Create(WithClause &clause,
-                                    std::vector<Declaration> &decl_lst) -> std::unique_ptr<WithEvaluator> {
+auto WithEvaluatorFactory::Create(const WithClause &clause,
+                                  const std::vector<Declaration> &decl_lst) -> std::unique_ptr<WithEvaluator> {
   auto ref1 = clause.getRef1();
   auto ref2 = clause.getRef2();
   auto *leftQuoted = std::get_if<QuotedIdentifier>(&ref1.ref);

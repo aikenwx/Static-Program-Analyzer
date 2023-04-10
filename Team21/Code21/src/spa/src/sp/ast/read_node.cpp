@@ -3,9 +3,9 @@
 #include <utility>
 
 namespace ast {
-ReadNode::ReadNode(std::shared_ptr<VariableNode> var) : var(std::move(var)) {}
+ReadNode::ReadNode(std::shared_ptr<IdentifierNode> var) : var(std::move(var)) {}
 
-auto ReadNode::GetVariable() -> std::shared_ptr<VariableNode> { return var; }
+auto ReadNode::GetVariable() -> std::shared_ptr<IdentifierNode> { return var; }
 
 auto ReadNode::ToString() const -> std::string {
   return "read:\n{\n" + var->ToString() + "}\n";

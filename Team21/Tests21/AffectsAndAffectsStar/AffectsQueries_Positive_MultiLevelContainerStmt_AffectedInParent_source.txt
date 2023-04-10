@@ -1,0 +1,99 @@
+procedure AffectedInParentLevel {
+    if (1 == v0) then {
+        v2 = v1 * 7;
+        if ((v51 == v17 / 51) || (2 == 1)) then {
+            v3 = 5 + v1;
+        } else {
+            v4 = 6 + v1;
+        }
+        while (((5 == 1) || (5 - 4 == 2)) || ((5 == 3) || (5 == v0))) {
+            v6 = 51 % v1;
+        }
+    } else {
+        if ((7 + 5 == 12) || ((5 * 5 == 5) && (1 == 2))) then {
+            v7 = v1 + 5;
+        } else {
+            v8 = v1 * 7;
+        }
+        v5 = 51 % (v1 * 7);
+        while (2 == 51) {
+            v9 = v1 % v1;
+        }
+    }
+    while (5 == 5) {
+        if (4 == 1) then {
+            v50 = v1 + 89;
+        } else {
+            v51 = 1 * v1;
+        }
+        while (3 == 7) {
+            v52 = 35 * 30 + v1;
+            if (34 == 15) then {
+                v55 = v1 * 5;
+                v56 = 61;
+            } else {
+                v57 = 14 * v1;
+                v58 = 51 - v1;
+            }
+        }
+        v53 = 15 * 51 + v1;
+        v54 = 4 * 1;
+    }
+    v72 = v2;
+    v73 = v3;
+    v74 = v4;
+    v75 = v5;
+    v76 = v6;
+    v77 = v7;
+    v78 = v8;
+    v79 = v9;
+    v80 = v50;
+    v81 = v51;
+    v82 = v52;
+    v83 = v53;
+    v84 = v54;
+    v85 = v55;
+    v86 = v56;
+    v87 = v57;
+    v88 = v58;
+}
+
+procedure DummyProcedure1 {
+    v10 = 5;
+    v11 = 7;
+    if ((v12 >= 5) && (v13 % 5 == 8)) then {
+        while (5 <= v14) {
+            v20 = v21 % v24;
+            if (v15 + v16 == v17) then {
+                read v18;
+                print v19;
+                call DummyProcedure2;
+                v15 = v19;
+            } else {
+                print v0;
+            }
+            v22 = v29 / v26;
+        }
+        v23 = v28 + 5 + v27;
+    } else {
+        v17 = 5 * v17;
+        read v18;
+        if (7 * 5 == 36) then {
+            while (5 * 7 == v0 * 37) {
+                read v18;
+                print v17;
+            }
+        } else {
+            while (1 == 1) {
+                print v3171;
+                v0 = v0;
+            }
+            v0 = 511 % 512;
+        }
+    }
+}
+
+procedure DummyProcedure2 {
+    v30 = 5;
+    v31 = 7;
+}

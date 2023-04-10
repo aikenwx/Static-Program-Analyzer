@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <queue>
+#include <string_view>
 #include <unordered_set>
 
 #include "PKBStorageClasses/EntityClasses/IfStatement.h"
@@ -13,8 +14,8 @@
 #include "sp/design_extractor/assign_exp_extractor.h"
 #include "sp/design_extractor/ast_elem_extractor.h"
 #include "sp/design_extractor/call_validator.h"
-#include "sp/design_extractor/cond_var_extractor.h"
 #include "sp/design_extractor/cfg_extractor.h"
+#include "sp/design_extractor/cond_var_extractor.h"
 #include "sp/design_extractor/follows_extractor.h"
 #include "sp/design_extractor/parent_extractor.h"
 #include "sp/design_extractor/stmt_modifies_extractor.h"
@@ -35,6 +36,7 @@
 #include "sp/tokenizer/simple_tokenizer.h"
 #include "util/instance_of.h"
 #include "util/interval_tree.h"
+#include "util/small_int_key_interval_tree.h"
 
 namespace sp {
 auto ToProgramNode(const std::shared_ptr<ast::INode>& root)
@@ -447,32 +449,36 @@ void PopulateAssignPostfixExpr(
 }
 
 void PopulateCondVarRels(
-    const std::unordered_map<int, std::unordered_set<std::string>>
-        &ifCondVarRels,
-    const std::unordered_map<int, std::unordered_set<std::string>>
-        &whileCondVarRels,
-    PopulateFacade *popFacade) {
-  for (const auto &[stmtNum, varNames] : ifCondVarRels) {
-    for (const auto &varName : varNames) {
-      popFacade->storeIfStatementConditionVariable(stmtNum, varName);
+    const std::unordered_map<int, std::unordered_set<std::string>>& ifCondVarRels,
+    const std::unordered_map<int, std::unordered_set<std::string>>& whileCondVarRels,
+    PopulateFacade* popFacade) {
+  for (const auto& [stmtNum, varNames] : ifCondVarRels) {
+    for (const auto& varName : varNames) {
+      popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 
-  for (const auto &[stmtNum, varNames] : whileCondVarRels) {
-    for (const auto &varName : varNames) {
-      popFacade->storeWhileStatementConditionVariable(stmtNum, varName);
+  for (const auto& [stmtNum, varNames] : whileCondVarRels) {
+    for (const auto& varName : varNames) {
+      popFacade->storeUsesInParentConditionRelationship(stmtNum, varName);
     }
   }
 }
 
-auto SP::process(const std::string& program, PKB* pkb) -> bool {
+auto SP::Process(std::string_view program, PKB* pkb) -> bool {
   // tokenize the string
   auto tokenizer = tokenizer::SimpleTokenizer();
   auto tokens = tokenizer.tokenize(program);
 
   // parse tokens into AST
   auto parser = parser::SimpleChainParser();
-  auto ast = parser.Parse(std::move(tokens));
+  auto pair = parser.Parse(std::move(tokens));
+
+  if (!pair.first) {
+    throw exceptions::SyntaxError("Invalid program");
+  }
+
+  auto ast = std::move(pair.second);
 
   auto programNode = ToProgramNode(ast->GetRoot());
 
@@ -529,7 +535,7 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
   // procedureRels[stmtNum] = procName that stmtNum belongs to
   std::unordered_map<std::string, std::shared_ptr<ast::ProcedureNode>>
       procedureByName;
-  util::IntervalTree<int, std::string> procNameByLine;
+  util::SmallIntKeyIntervalTree<int, std::string> procNameByLine;
   ResolveProcedureInfo(programNode, procedureByName, procNameByLine);
 
   // calls[caller] = std::uset<std::string> of procs called by caller
@@ -556,6 +562,8 @@ auto SP::process(const std::string& program, PKB* pkb) -> bool {
 
   // populate
   PopulateFacade* popFacade = pkb->getPopulateFacade();
+
+  popFacade->storeTotalStatementCount(totalStatementCount);
 
   // put AST entities into PKB
   // and populate procedureByName, procNameByLine, callStmtRels

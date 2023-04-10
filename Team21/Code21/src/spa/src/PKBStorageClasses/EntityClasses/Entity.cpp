@@ -3,6 +3,8 @@
 //
 
 #include "Entity.h"
+#include <stdexcept>
+
 
 EntityType::EntityType() : StorageKey(EntityType::entityTypeKeyCounter++){}
 
@@ -17,15 +19,33 @@ auto std::hash<EntityType>::operator()(const EntityType &entityType) const
 EntityKey::EntityKey(const EntityType *entityType, std::string *entityValue)
     : StorageKey(entityType->getKey() ^ std::hash<std::string>()(*entityValue)),
       entityType(entityType),
-      entityValue(entityValue) {}
+      entityValue(entityValue), entityIntValue(-1) {}
 
 EntityKey::EntityKey(const EntityType *entityType, int entityIntValue)
     : StorageKey(entityType->getKey() ^
                  std::hash<std::string>()(std::to_string(entityIntValue))),
-      entityType(entityType) {
+      entityType(entityType), entityIntValue(entityIntValue) {
+
   this->entityValueStore = std::to_string(entityIntValue);
   this->entityValue = &entityValueStore;
 }
+
+auto EntityKey::getOptionalInt() -> int* {
+    if (entityIntValue == -1) {
+        try {
+            entityIntValue = std::stoi(entityValueStore);
+        } catch (std::invalid_argument) {
+            entityIntValue = 0;
+            return nullptr;
+        }
+    } else if (entityIntValue == 0) {
+        // already evaluated
+        return nullptr;
+    }
+
+    return &entityIntValue;
+}
+
 
 auto EntityKey::operator==(const EntityKey &entityKey) const -> bool {
   return *this->entityType == *entityKey.entityType &&
@@ -45,6 +65,12 @@ Entity::Entity(const EntityType *entityType,
                const std::shared_ptr<std::string> &entityValue)
     : entityKey(EntityKey(entityType, entityValue.get())) {
   this->entityValue = std::shared_ptr<std::string>(entityValue);
+}
+
+Entity::Entity(const EntityType *entityType,
+               const std::shared_ptr<std::string> &entityValue, int entityIntValue)
+        : entityKey(EntityKey(entityType, entityIntValue)) {
+    this->entityValue = std::shared_ptr<std::string>(entityValue);
 }
 
 auto Entity::getEntityKey() -> EntityKey & { return this->entityKey; }

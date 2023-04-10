@@ -1,0 +1,59 @@
+procedure SingleLevelWithOtherStatementsNoContainerStmt {
+    v1 = 5 / v0;
+    print v1;
+    print v2;
+    v2 = v1 * 5 + 3;
+    v3 = v2 / 2;
+    read v5;
+    read v6;
+    v4 = v3;
+    v5 = 15;
+    call DummyProcedure1;
+    v6 = v5 + 7;
+    v7 = 317 % 515;
+    call DummyProcedure2;
+    call DummyProcedure1;
+    read v9;
+    print v5;
+    v8 = v7 + v6 + v5 / 7;
+}
+
+procedure DummyProcedure1 {
+    v10 = 5;
+    v11 = 7;
+    if ((v12 >= 5) && (v13 % 5 == 8)) then {
+        while (5 <= v14) {
+            v20 = v21 % v24;
+            if (v15 + v16 == v17) then {
+                read v18;
+                print v19;
+                call DummyProcedure2;
+                v15 = v19;
+            } else {
+                print v0;
+            }
+            v22 = v29 / v26;
+        }
+        v23 = v28 + 5 + v27;
+    } else {
+        v17 = 5 * v17;
+        read v18;
+        if (7 * 5 == 36) then {
+            while (5 * 7 == v0 * 37) {
+                read v18;
+                print v17;
+            }
+        } else {
+            while (1 == 1) {
+                print v3171;
+                v0 = v0;
+            }
+            v0 = 511 % 512;
+        }
+    }
+}
+
+procedure DummyProcedure2 {
+    v30 = 5;
+    v31 = 7;
+}

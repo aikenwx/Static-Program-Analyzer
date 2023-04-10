@@ -1,0 +1,73 @@
+procedure SingleStatementBetween {
+    v1 = 0;
+    v1 = 352;
+    v2 = 8 / v1;
+
+    v3 = 51;
+    read v3;
+    v4 = 2 * v3 * v3;
+
+    v5 = 95;
+    call ProcedureThatModifiesV5TopLevelAssign;
+    v6 = v5 % v5 % v5 % v5;
+
+    v7 = 61;
+    call ProcedureThatModifiesV7AssignInIfStmt;
+    v8 = v7 * v7 / v7;
+
+    v9 = 11 + v2005;
+    call ProcedureThatModifiesV9AssignInWhileStmt;
+    v10 = v2006 + v2007 + v9;
+
+    v11 = 5161;
+    call ProcedureThatModifiesV11AssignInManyNestedContainerStmt;
+    v12 = v11 - v11;
+}
+
+procedure ProcedureThatModifiesV5TopLevelAssign {
+    v5 = 371;
+}
+
+procedure ProcedureThatModifiesV7AssignInIfStmt {
+    if (x == 3) then {
+        v7 = 5;
+    } else {
+        v7 = 1;
+    }
+}
+
+procedure ProcedureThatModifiesV9AssignInWhileStmt {
+    while (x == 3) {
+        v9 = 5;
+    }
+}
+
+procedure ProcedureThatModifiesV11AssignInManyNestedContainerStmt {
+    if (x == 3) then {
+        v1000 = 5;
+        if (y == 4) then {
+            v11 = 151;
+        } else {
+            v11 = 16;
+        }
+    } else {
+        if (x == 4) then {
+            if (y == 5) then {
+                if (z == 1) then {
+                    v11 = 151;
+                } else {
+                    v11 = 117;
+                }
+            } else {
+                v11 = 612;
+            }
+        } else {
+            if (z == 1611) then {
+                v11 = 66;
+            } else {
+                v11 = 1611;
+            }
+        }
+        v11 = 5;
+    }
+}

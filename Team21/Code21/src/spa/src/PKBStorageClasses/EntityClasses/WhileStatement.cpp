@@ -4,11 +4,11 @@ auto WhileStatement::getEntityType() const -> const EntityType & {
   return WhileStatement::whileStatementType;
 }
 
-WhileStatement::WhileStatement(int statementNumber) : Statement(&WhileStatement::getEntityTypeStatic(), statementNumber) {
+WhileStatement::WhileStatement(int statementNumber) : ParentStatement(&WhileStatement::getEntityTypeStatic(), statementNumber) {
 }
 
 auto WhileStatement::getEntityTypeStatic() -> const EntityType & {
   return WhileStatement::whileStatementType;
 }
 
-const EntityType WhileStatement::whileStatementType = EntityType();
+const StatementType WhileStatement::whileStatementType = StatementType();

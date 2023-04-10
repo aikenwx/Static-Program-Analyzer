@@ -1,21 +1,23 @@
 #include "sp/ast/astlib.h"
 #include "while_subparser.h"
 #include "util/instance_of.h"
+#include "util/is_identifier_node_value.h"
+#include "util/is_symbol_node_value.h"
 
 namespace parser {
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
-  // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
-  if (stack->size() >= 7
-    && util::instance_of<ast::SymbolNode>(*iter) && (std::static_pointer_cast<ast::SymbolNode>(*iter))->GetType() == ast::SymbolType::kRightBrace
+  auto while_condition = stack->size() >= 7
+    && IsSymbolNodeValue(*iter, "}")
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 2)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 2)))->GetType() == ast::SymbolType::kLeftBrace
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 3)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 3)))->GetType() == ast::SymbolType::kRightParen
+    && IsNextSymbolNodesValues(std::next(iter, 2), {"{", ")"})
     && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
-    && util::instance_of<ast::SymbolNode>(*std::next(iter, 5)) && (std::static_pointer_cast<ast::SymbolNode>(*std::next(iter, 5)))->GetType() == ast::SymbolType::kLeftParen
-    && util::instance_of<ast::NameNode>(*std::next(iter, 6)) && (std::static_pointer_cast<ast::NameNode>(*std::next(iter, 6)))->GetName() == "while") {
+    && IsSymbolNodeValue(*std::next(iter, 5), "(")
+    && IsIdentifierNodeValue(*std::next(iter, 6), "while");
+  // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
+  if (while_condition) {
     // Pops right brace symbol node
     stack->pop_back();
     // References statement list node
@@ -34,7 +36,7 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
     stack->pop_back();
     // Pops left paren symbol node
     stack->pop_back();
-    // Pops 'while' name node
+    // Pops 'while' identifier node
     stack->pop_back();
     // Creates while node
     std::shared_ptr<ast::WhileNode> sta =

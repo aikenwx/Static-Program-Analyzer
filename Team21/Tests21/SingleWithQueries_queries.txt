@@ -1,0 +1,205 @@
+1 - integer with(literal, literal)
+call c;
+Select c with 4 = 5
+
+5000
+2 - name with(literal, literal)
+while w; if i; stmt s1, s2;
+Select BOOLEAN with "abc2" = "abc2"
+TRUE
+5000
+3 - integer with(attrRef, literal) with call.stmt#
+call c;
+Select BOOLEAN with c.stmt# = 16
+FALSE
+5000
+4 - integer with(attrRef, literal) with stmt.stmt#
+assign a;
+Select a with a.stmt# = 21
+21
+5000
+5 - integer with(attrRef, literal) with read.stmt#
+read r;
+Select BOOLEAN with r.stmt# = 40
+FALSE
+5000
+6 - integer with(attrRef, literal) with print.stmt#
+print p;
+Select p with p.stmt# = 50
+
+5000
+7 - integer with(attrRef, literal) with while.stmt#
+while w;
+Select BOOLEAN with w.stmt# = 17
+TRUE
+5000
+8 - integer with(attrRef, literal) with if.stmt#
+if i;
+Select i with i.stmt# = 7
+7
+5000
+9 - integer with(attrRef, literal) with assign.stmt#
+assign a;
+Select BOOLEAN with a.stmt# = 40
+FALSE
+5000
+10 - integer with(attrRef, literal) with const.value
+constant c;
+Select BOOLEAN with c.value = 100
+FALSE
+5000
+11 - name with(attrRef, literal) with proc.procName
+procedure p;
+Select p with p.procName = "duc"
+duc
+5000
+12 - name with(attrRef, literal) with proc.procName
+procedure p;
+Select p with p.procName = "duc"
+duc
+5000
+13 - name with(attrRef, literal) with call.procName
+call c;
+Select c with c.procName = "nguyen"
+15, 19
+5000
+14 - name with(attrRef, literal) with var.varName
+variable v;
+Select BOOLEAN with v.varName = "a"
+FALSE
+5000
+15 - name with(attrRef, literal) with read.varName
+read r;
+Select r with r.varName = "z"
+33
+5000
+16 - name with(literal, attrRef) with print.varName
+print p;
+Select BOOLEAN with p.varName = "nguye"
+FALSE
+5000
+17 - integer with(literal, attrRef) with call.stmt#
+call c;
+Select c with 50 = c.stmt#
+
+5000
+18 - integer with(literal, attrRef) with stmt.stmt#
+assign a;
+Select BOOLEAN with 60 = a.stmt#
+FALSE
+5000
+19 - integer with(literal, attrRef) with read.stmt#
+read r;
+Select r.varName with r.stmt# = 34
+nguyen
+5000
+20 - integer with(literal, attrRef) with print.stmt#
+print p;
+Select BOOLEAN with p.stmt# = 36
+TRUE
+5000
+21 - integer with(literal, attrRef) with while.stmt#
+while w;
+Select w with w.stmt# = 70
+
+5000
+22 - integer with(literal, attrRef) with if.stmt#
+if i;
+Select BOOLEAN with i.stmt# = 100
+FALSE
+5000
+23 - integer with(literal, attrRef) with assign.stmt#
+assign a;
+Select a with a.stmt# = 23
+23
+5000
+24 - integer with(literal, attrRef) with const.value
+constant c;
+Select c with c.value = 10
+10
+5000
+25 - name with(literal, attrRef) with proc.procName
+procedure p;
+Select BOOLEAN with p.procName = "ddd"
+FALSE
+5000
+26 - name with(literal, attrRef) with proc.procName
+procedure p;
+Select BOOLEAN with p.procName = "ng"
+FALSE
+5000
+27 - name with(literal, attrRef) with call.procName
+call c;
+Select BOOLEAN with c.procName = "danh"
+FALSE
+5000
+28 - name with(literal, attrRef) with var.varName
+variable v;
+Select v with v.varName = "a"
+
+5000
+29 - name with(literal, attrRef) with read.varName
+read r;
+Select BOOLEAN with r.varName = "k"
+FALSE
+5000
+30 - name with(literal, attrRef) with print.varName
+print p;
+Select p with p.varName = "nguyen"
+36
+5000
+31 - name with(attrRef, attrRef) no 1
+procedure p; call c;
+Select <c,p> with p.procName = c.procName
+13 duc, 15 nguyen, 19 nguyen
+5000
+32 - name with(attrRef, attrRef) no 2
+procedure p; variable v;
+Select p with p.procName = v.varName
+nguyen
+5000
+33 - name with(attrRef, attrRef) no 3
+procedure p; read r;
+Select p with p.procName = r.varName
+nguyen
+5000
+34 - name with(attrRef, attrRef) no 4
+procedure p; print pr;
+Select BOOLEAN with p.procName = pr.varName
+TRUE
+5000
+35 - value with(attrRef, attrRef) no 1
+constant c; stmt s;
+Select s with s.stmt# = c.value
+1, 2, 3, 4, 5, 6, 10, 15, 19
+5000
+36 - value with(attrRef, attrRef) no 2
+constant c; read r;
+Select r with r.stmt# = c.value
+
+5000
+37 - value with(attrRef, attrRef) no 3
+constant c; print p;
+Select BOOLEAN with p.stmt# = c.value
+FALSE
+5000
+38 - value with(attrRef, attrRef) no 4
+stmt s; call c;
+Select c with s.stmt# = c.stmt#
+13, 15, 19
+5000
+39 - value with(attrRef, attrRef) no 5
+stmt s; while w;
+Select s with s.stmt# = w.stmt#
+5, 9, 17
+5000
+40 - value with(attrRef, attrRef) no 6
+constant c; if i;
+Select i with c.value = i.stmt#
+
+5000
+41 - value with(attrRef, attrRef) no 7
+constant c; assign a;
+Select a with c.value = a.stmt#
+1, 2, 3, 4, 6, 10
+5000

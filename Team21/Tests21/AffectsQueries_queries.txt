@@ -1,0 +1,40 @@
+1 - backwards affects evaluation
+assign a; stmt s;
+Select s such that Affects(s,27)
+9, 10, 25
+5000
+2 - backwards affects evaluation
+assign a; stmt s;
+Select a such that Affects(a,27)
+9, 10, 25
+5000
+2 - backwards affects* evaluation
+assign a; stmt s;
+Select s such that Affects*(s,21)
+5, 10, 21
+5000
+2 - backwards affects* evaluation
+assign a; stmt s;
+Select a such that Affects*(a,31)
+9, 21, 22, 24, 27, 28, 29, 5, 6, 10, 25, 30
+5000
+3 - forwards affects evaluation sanity check
+assign a; stmt s;
+Select s such that Affects(9,s)
+31, 27
+5000
+4 - forwards affects evaluation sanity check
+assign a; stmt s;
+Select s such that Affects(10,s)
+18, 21, 27, 31
+5000
+5 - forwards affects evaluation sanity check
+assign a; stmt s;
+Select s such that Affects(25,s)
+31, 27
+5000
+6 - non assign statemt
+assign a; stmt s;
+Select a such that Affects*(a,26)
+
+5000

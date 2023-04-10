@@ -34,8 +34,7 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
     if (stack->size() >= 4
       && IsSymbolNodeValue(*iter, ")")
       && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 1))
-      && IsSymbolNodeValue(*std::next(iter, 2), "(")
-      && IsSymbolNodeValue(*std::next(iter, 3), "!")) {
+      && IsNextSymbolNodesValues(std::next(iter, 2), {"(", "!"})) {
       // Pops right paren symbol node
       stack->pop_back();
       // References conditional expression node

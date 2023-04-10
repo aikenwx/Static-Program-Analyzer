@@ -12,8 +12,7 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto while_condition = stack->size() >= 7
     && IsSymbolNodeValue(*iter, "}")
     && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-    && IsSymbolNodeValue(*std::next(iter, 2), "{")
-    && IsSymbolNodeValue(*std::next(iter, 3), ")")
+    && IsNextSymbolNodesValues(std::next(iter, 2), {"{", ")"})
     && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
     && IsSymbolNodeValue(*std::next(iter, 5), "(")
     && IsIdentifierNodeValue(*std::next(iter, 6), "while");

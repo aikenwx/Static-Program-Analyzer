@@ -1,11 +1,11 @@
 #ifndef SPA_WHILESTATEMENT_H
 #define SPA_WHILESTATEMENT_H
 
-#include "Statement.h"
+#include "ParentStatement.h"
 
-class WhileStatement : public Statement {
+class WhileStatement : public ParentStatement {
    private:
-    static const EntityType whileStatementType;
+    static const StatementType whileStatementType;
 
    public:
     explicit WhileStatement(int statementNumber);

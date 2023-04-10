@@ -9,16 +9,18 @@
 #include "Relationship.h"
 
 class UsesRelationship : public Relationship {
-   private:
-    static const RelationshipType relationshipType;
+ private:
+  static const RelationshipType relationshipType;
 
-   public:
-    static auto getRelationshipTypeStatic() -> const RelationshipType &;
+ public:
+  static auto getRelationshipTypeStatic() -> const RelationshipType &;
 
-    UsesRelationship(Entity *user, Variable *usedVariable);
+  UsesRelationship(Procedure *user, Variable *usedVariable);
 
-    [[nodiscard]] auto getRelationshipType() const
-        -> const RelationshipType & override;
+  UsesRelationship(Statement *user, Variable *usedVariable);
+
+  [[nodiscard]] auto getRelationshipType() const
+      -> const RelationshipType & override;
 };
 
 #endif  // SPA_USESRELATIONSHIP_H

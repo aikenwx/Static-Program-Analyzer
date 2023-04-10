@@ -13,12 +13,12 @@
 
 struct EntityType : public StorageKey {
  private:
-
   // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   static std::size_t entityTypeKeyCounter;
 
  public:
   EntityType();
+  virtual ~EntityType() = default;
 
   auto operator==(const EntityType &entityType) const -> bool;
 };
@@ -29,14 +29,17 @@ struct std::hash<EntityType> {
 };
 
 struct EntityKey : public StorageKey {
- private:
+
   const EntityType *entityType;
   std::string *entityValue;
   std::string entityValueStore;
-
- public:
+ private:
+    int entityIntValue;
+public:
   EntityKey(const EntityType *entityType, std::string *entityValue);
   EntityKey(const EntityType *entityType, int entityIntValue);
+
+  auto getOptionalInt() -> int*;
 
   auto operator==(const EntityKey &entityKey) const -> bool;
 };
@@ -50,8 +53,10 @@ class Entity {
   Entity(const EntityType *entityType,
          const std::shared_ptr<std::string> &entityValue);
 
+    Entity(const EntityType *entityType,
+           const std::shared_ptr<std::string> &entityValue, int entityIntValue);
+
   virtual ~Entity() = default;
-  ;
 
   [[nodiscard]] virtual auto getEntityType() const -> const EntityType & = 0;
 

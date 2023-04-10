@@ -29,39 +29,39 @@ class SuchThatClause {
           Declaration::findDeclarationWithSynonym(declarations, *synonym);
       if (declaration->getDesignEntity() == DesignEntity::PROCEDURE) {
         relationship = (relationship == Relationship::Uses)
-                            ? Relationship::UsesP
-                            : Relationship::ModifiesP;
+                       ? Relationship::UsesP
+                       : Relationship::ModifiesP;
       } else {
         relationship = (relationship == Relationship::Uses)
-                            ? Relationship::UsesS
-                            : Relationship::ModifiesS;
+                       ? Relationship::UsesS
+                       : Relationship::ModifiesS;
       }
     // Handle Quoted Identifier case
     } else if (std::holds_alternative<QuotedIdentifier>(arg1)) {
       relationship = (relationship == Relationship::Uses)
-                          ? Relationship::UsesP
-                          : Relationship::ModifiesP;
+                     ? Relationship::UsesP
+                     : Relationship::ModifiesP;
     // Handle Statement Number case
     } else if (std::holds_alternative<StatementNumber>(arg1)) {
       relationship = (relationship == Relationship::Uses)
-                          ? Relationship::UsesS
-                          : Relationship::ModifiesS;
+                     ? Relationship::UsesS
+                     : Relationship::ModifiesS;
     }
   }
 
  public:
-  auto getRelationship() -> Relationship;
-  auto getArg1() -> Ref;
-  auto getArg2() -> Ref;
+  [[nodiscard]] auto getRelationship() const -> Relationship;
+  [[nodiscard]] auto getArg1() const -> const Ref &;
+  [[nodiscard]] auto getArg2() const -> const Ref &;
   SuchThatClause(Relationship relationship_, Ref arg1_, Ref arg2_,
                   std::vector<Declaration> &declarations);
 
   auto operator==(const SuchThatClause &clause) const -> bool {
     return relationship == clause.relationship && arg1 == clause.arg1 &&
-            arg2 == clause.arg2;
+        arg2 == clause.arg2;
   }
   friend auto operator<<(std::ostream &osstream, SuchThatClause const &clause)
-      -> std::ostream & {
+  -> std::ostream & {
     osstream << getStringFromRelationship(clause.relationship);
     return osstream;
   }

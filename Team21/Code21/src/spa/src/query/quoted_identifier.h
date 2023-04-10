@@ -10,8 +10,8 @@ class QuotedIdentifier {
   std::string id;
 
  public:
-  explicit QuotedIdentifier(const std::string& id_);
-  auto getQuotedId() -> std::string;
+  explicit QuotedIdentifier(const std::string &id_);
+  [[nodiscard]] auto getQuotedId() const -> const std::string &;
 
   static auto isValidId(const std::string& iden) -> bool;
 
@@ -24,5 +24,4 @@ class QuotedIdentifier {
     return osstream;
   }
 };
-
 }  // namespace qps

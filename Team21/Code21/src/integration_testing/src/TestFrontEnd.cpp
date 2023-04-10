@@ -48,8 +48,8 @@ struct RelPair {
 
   friend auto operator<<(std::ostream& ostream, const RelPair& rel) -> std::ostream& {
     ostream << "RelPair{type=" << rel.relType.getKey() << ", left=(" << rel.leftEntity.first.getKey()
-       << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first.getKey()
-       << ", " << rel.rightEntity.second << ")}";
+            << ", " << rel.leftEntity.second << "), right=(" << rel.rightEntity.first.getKey()
+            << ", " << rel.rightEntity.second << ")}";
     return ostream;
   }
 
@@ -122,73 +122,85 @@ SCENARIO("SP can process and store a simple program into PKB") {
       THEN(
           "The PKB should contain the correct information about assign "
           "statements") {
-        std::vector<AssignStatement*> const* assigns =
-            queryFacade->getAllAssignStatements();
+          // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+          auto const* assigns = reinterpret_cast<std::vector<AssignStatement*> const*>(queryFacade->getEntitiesByType(AssignStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(assigns, {1, 5, 7, 11});
       }
 
       THEN(
           "The PKB should contain the correct information about call "
           "statements") {
-        std::vector<CallStatement*> const* calls = queryFacade->getAllCallStatements();
+          // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+          auto const* calls = reinterpret_cast<std::vector<CallStatement*> const*>(queryFacade->getEntitiesByType(CallStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(calls, {4, 6, 9, 10, 13});
       }
 
       THEN(
           "The PKB should contain the correct information about if "
           "statements") {
-        std::vector<IfStatement*> const* ifs = queryFacade->getAllIfStatements();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* ifs = reinterpret_cast<std::vector<IfStatement*> const*>(queryFacade->getEntitiesByType(IfStatement::getEntityTypeStatic()));
+
         RequireStmtNumsMatch(ifs, {8});
       }
 
       THEN(
           "The PKB should contain the correct information about while "
           "statements") {
-        std::vector<WhileStatement*> const* whiles =
-            queryFacade->getAllWhileStatements();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* whiles = reinterpret_cast<std::vector<WhileStatement*> const*>(queryFacade->getEntitiesByType(WhileStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(whiles, {});
       }
 
       THEN(
           "The PKB should contain the correct information about print "
           "statements") {
-        std::vector<PrintStatement*> const* prints =
-            queryFacade->getAllPrintStatements();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* prints = reinterpret_cast<std::vector<PrintStatement*> const*>(queryFacade->getEntitiesByType(PrintStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(prints, {3, 12});
       }
 
       THEN(
           "The PKB should contain the correct information about read "
           "statements") {
-        std::vector<ReadStatement*> const* reads = queryFacade->getAllReadStatements();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* reads = reinterpret_cast<std::vector<ReadStatement*> const*>(queryFacade->getEntitiesByType(
+            ReadStatement::getEntityTypeStatic()));
         RequireStmtNumsMatch(reads, {2});
       }
 
       THEN("The PKB should contain the correct information about procedures") {
-        std::vector<Procedure*> const* procs = queryFacade->getAllProcedures();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* procs = reinterpret_cast<std::vector<Procedure*> const*>(
+            queryFacade->getEntitiesByType(Procedure::getEntityTypeStatic()));
         RequireEntityValuesMatch(procs,
                                  {"main", "foo", "bar", "baz", "qux", "quux"});
       }
 
       THEN("The PKB should contain the correct information about variables") {
-        std::vector<Variable*> const* vars = queryFacade->getAllVariables();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* vars = reinterpret_cast<std::vector<Variable*> const*>(
+            queryFacade->getEntitiesByType(Variable::getEntityTypeStatic()));
         RequireEntityValuesMatch(vars, {"w", "x", "y", "z"});
       }
 
       THEN("The PKB should contain the correct information about constants") {
-        std::vector<Constant*> const* consts = queryFacade->getAllConstants();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* consts = reinterpret_cast<std::vector<Constant*> const*>(
+            queryFacade->getEntitiesByType(Constant::getEntityTypeStatic()));
         RequireEntityValuesMatch(consts, {"1", "2", "4"});
       }
 
       THEN("The PKB should contain the correct information about statements") {
-        std::vector<Statement*> const* stmts = queryFacade->getAllStatements();
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* stmts = reinterpret_cast<std::vector<Statement*> const*>(
+                queryFacade->getEntitiesByType(Statement::getEntityTypeStatic()));
         RequireStmtNumsMatch(stmts,
                              {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
       }
 
       THEN("The PKB should contain all Calls relationships") {
-        std::vector<CallsRelationship*> const* callsRels =
-            queryFacade->getAllCallsRelationships();
+        auto* callsRels = queryFacade->getRelationshipsByTypes(CallsRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsRelationship::getRelationshipTypeStatic(),
@@ -211,8 +223,7 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all Calls* relationships") {
-        std::vector<CallsStarRelationship*> const* callsStarRels =
-            queryFacade->getAllCallsStarRelationships();
+        auto* callsStarRels = (queryFacade->getRelationshipsByTypes(CallsStarRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Procedure::getEntityTypeStatic()));
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{CallsStarRelationship::getRelationshipTypeStatic(),
@@ -262,9 +273,10 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all proc-var Modifies relationships") {
-        std::vector<ModifiesRelationship*> const* modifiesRels =
-            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* modifiesRels = reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
+                queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
+                                                     Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic()));
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
@@ -302,9 +314,10 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all stmt-var Modifies relationships") {
-        std::vector<ModifiesRelationship*> const* modifiesRels =
-            queryFacade->getModifiesRelationshipsByLeftAndRightEntityTypes(
-                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto const* modifiesRels = reinterpret_cast<std::vector<ModifiesRelationship*> const*>(
+                queryFacade->getRelationshipsByTypes(ModifiesRelationship::getRelationshipTypeStatic(),
+                                                     Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic()));
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{ModifiesRelationship::getRelationshipTypeStatic(),
@@ -351,9 +364,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all proc-var Uses relationships") {
-        std::vector<UsesRelationship*> const* usesRels =
-            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        auto* usesRels =
+            queryFacade->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), Procedure::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),
@@ -394,9 +406,8 @@ SCENARIO("SP can process and store a simple program into PKB") {
       }
 
       THEN("The PKB should contain all stmt-var Uses relationships") {
-        std::vector<UsesRelationship*> const* usesRels =
-            queryFacade->getUsesRelationshipsByLeftAndRightEntityTypes(
-                Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
+        auto* usesRels =
+            queryFacade->getRelationshipsByTypes(UsesRelationship::getRelationshipTypeStatic(), Statement::getEntityTypeStatic(), Variable::getEntityTypeStatic());
 
         std::unordered_set<RelPair, RelPair::Hasher> expectedRels = {
             RelPair{UsesRelationship::getRelationshipTypeStatic(),

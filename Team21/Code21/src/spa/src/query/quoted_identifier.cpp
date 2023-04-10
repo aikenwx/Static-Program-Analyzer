@@ -16,7 +16,7 @@ QuotedIdentifier::QuotedIdentifier(const std::string& id_) : id{ id_ } {
   }
 }
 
-auto QuotedIdentifier::getQuotedId() -> std::string {
+auto QuotedIdentifier::getQuotedId() const -> const std::string & {
   return id;
 }
 

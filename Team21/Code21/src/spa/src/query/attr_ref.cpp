@@ -1,6 +1,5 @@
 #include <utility>
 
-
 #include "query/attr_ref.h"
 
 namespace qps {
@@ -51,12 +50,12 @@ auto getAttrNameFromString(const std::string& str) -> AttrName {
 }
 
 // Get list of valid Attribute Name with given synonym (declaration)
-auto getValidAttrNameSet(Declaration declaration) -> std::set<AttrName> {
-	DesignEntity entity = declaration.getDesignEntity();
-	return validAttrNameMap.at(entity);
+auto getValidAttrNameSet(const Declaration &declaration) -> const std::set<AttrName> & {
+  DesignEntity entity = declaration.getDesignEntity();
+  return validAttrNameMap.at(entity);
 }
 
 AttrRef::AttrRef(Synonym synonym_, AttrName attrName_)
-	: synonym{std::move( synonym_ )}, attrName{ attrName_ } {}
+    : synonym{std::move(synonym_)}, attrName{attrName_} {}
 
 }  // namespace qps

@@ -22,26 +22,47 @@
 #include "../PKBStorageClasses/EntityClasses/WhileStatement.h"
 
 class EntityManager {
+ public:
+  static const int MAX_NUMBER_OF_STMTS_WITH_BUFFER = 600;
+
  private:
-  std::unordered_map<EntityKey, std::shared_ptr<Entity>> entityStore;
-  std::unordered_map<EntityType, std::shared_ptr<std::vector<Entity*>>>
-      entityTypeToEntityStore;
+  std::unordered_map<EntityKey, Entity*> entityStore;
+  std::unordered_map<EntityType, std::vector<Entity*>*> entityTypeToEntityStore;
   std::vector<Entity*> emptyEntityVector;
+
+  std::unique_ptr<std::vector<Entity*>> placeholderEntityVector;
+
+  std::vector<std::unique_ptr<Entity>> entitiesOwner;
+  std::vector<std::unique_ptr<std::vector<Entity*>>> entityVectorOwner;
+
+  // we need this because unorderedmap access is way too slow, and since we are
+  // accessing individual stmts often there is quite a lot of overhead
+
+//   type key -> stmtNumber -> entity
+  std::vector<std::vector<Statement*>> fastAccessStmts;
+
+  int numberOfStatements = MAX_NUMBER_OF_STMTS_WITH_BUFFER; // default to 600
 
  public:
   EntityManager();
 
-  void storeEntity(const std::shared_ptr<Entity>& entity);
+  void storeTotalNumberOfStatements(int numberOfStatements);
+
+  void storeEntity(std::unique_ptr<Entity> entity);
 
   auto getEntity(EntityKey& key) -> Entity*;
 
   auto getEntitiesByType(const EntityType& entityType) -> std::vector<Entity*>*;
 
+  auto getNumberOfStatements() const -> int;
+
+  auto getStatementByNumber(int stmtNumber) -> Statement*;
+
  private:
   void storeInEntityTypeStore(Entity* entity);
 
-  void initialiseVectorForEntityTypeStoreIfIndexNotExist(
-      const EntityType& entityType);
+  auto getVectorForEntityTypeStore(const EntityType& entityType)
+      -> std::vector<Entity*>*;
 };
 
 #endif  // SPA_ENTITYMANAGER_H

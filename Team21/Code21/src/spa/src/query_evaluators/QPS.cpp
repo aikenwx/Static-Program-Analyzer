@@ -27,6 +27,9 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
       results.emplace_back("SemanticError");
     }
     return;
+  } catch (std::exception &e) {
+    results.emplace_back("SyntaxError");
+    return;
   }
 }
 }  // namespace qps

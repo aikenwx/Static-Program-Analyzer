@@ -10,13 +10,13 @@ auto WhileSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto while_condition = stack->size() >= 7
-      && IsSymbolNodeValue(*iter, "}")
-      && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-      && IsSymbolNodeValue(*std::next(iter, 2), "{")
-      && IsSymbolNodeValue(*std::next(iter, 3), ")")
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
-      && IsSymbolNodeValue(*std::next(iter, 5), "(")
-      && IsIdentifierNodeValue(*std::next(iter, 6), "while");
+    && IsSymbolNodeValue(*iter, "}")
+    && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
+    && IsSymbolNodeValue(*std::next(iter, 2), "{")
+    && IsSymbolNodeValue(*std::next(iter, 3), ")")
+    && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 4))
+    && IsSymbolNodeValue(*std::next(iter, 5), "(")
+    && IsIdentifierNodeValue(*std::next(iter, 6), "while");
   // while: 'while' '(' cond_expr ')' '{' stmtLst '}'
   if (while_condition) {
     // Pops right brace symbol node

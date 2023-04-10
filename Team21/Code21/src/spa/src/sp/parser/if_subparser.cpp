@@ -11,18 +11,18 @@ auto IfSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto if_condition = stack->size() >= 12
-      && IsSymbolNodeValue(*iter, "}")
-      && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
-      && IsSymbolNodeValue(*std::next(iter, 2), "{")
-      && IsIdentifierNodeValue(*std::next(iter, 3), "else")
-      && IsSymbolNodeValue(*std::next(iter, 4), "}")
-      && util::instance_of<ast::StatementListNode>(*std::next(iter, 5))
-      && IsSymbolNodeValue(*std::next(iter, 6), "{")
-      && IsIdentifierNodeValue(*std::next(iter, 7), "then")
-      && IsSymbolNodeValue(*std::next(iter, 8), ")")
-      && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 9))
-      && IsSymbolNodeValue(*std::next(iter, 10), "(")
-      && IsIdentifierNodeValue(*std::next(iter, 11), "if");
+    && IsSymbolNodeValue(*iter, "}")
+    && util::instance_of<ast::StatementListNode>(*std::next(iter, 1))
+    && IsSymbolNodeValue(*std::next(iter, 2), "{")
+    && IsIdentifierNodeValue(*std::next(iter, 3), "else")
+    && IsSymbolNodeValue(*std::next(iter, 4), "}")
+    && util::instance_of<ast::StatementListNode>(*std::next(iter, 5))
+    && IsSymbolNodeValue(*std::next(iter, 6), "{")
+    && IsIdentifierNodeValue(*std::next(iter, 7), "then")
+    && IsSymbolNodeValue(*std::next(iter, 8), ")")
+    && util::instance_of<ast::ConditionalExpressionNode>(*std::next(iter, 9))
+    && IsSymbolNodeValue(*std::next(iter, 10), "(")
+    && IsIdentifierNodeValue(*std::next(iter, 11), "if");
   // if: 'if' '(' cond_expr ')' 'then' '{' stmtLst '}' 'else' '{' stmtLst '}'
   if (if_condition) {
     // Pops right brace symbol node

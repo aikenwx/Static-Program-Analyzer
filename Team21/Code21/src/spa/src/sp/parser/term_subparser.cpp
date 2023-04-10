@@ -80,7 +80,8 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       stack->push_back(ter2);
       return true;
     }
-    if (IsSymbolNodeValue(*iter, ")") &&
+    if (stack->size() >= 5 &&
+        IsSymbolNodeValue(*iter, ")") &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 1)) &&
         IsSymbolNodeValue(*std::next(iter, 2), "(") &&
         is_correct_symbol(*std::next(iter, 3)) &&
@@ -140,7 +141,8 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
       stack->push_back(ter);
       return true;
     }
-    if (IsSymbolNodeValue(*iter, ")") &&
+    if (stack->size() >= 3 &&
+        IsSymbolNodeValue(*iter, ")") &&
         util::instance_of<ast::ExpressionNode>(*std::next(iter, 1)) &&
         IsSymbolNodeValue(*std::next(iter, 2), "(")) {
       // Pops right paren symbol node

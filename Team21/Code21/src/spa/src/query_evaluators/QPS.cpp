@@ -21,6 +21,7 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     QueryEvaluator evaluator(std::move(query));
     evaluator.EvaluateQuery(pkb, results);
   } catch (qps::QueryException &e) {
+    results.clear();
     if (e.getType() == ErrorType::Syntactic) {
       results.emplace_back("SyntaxError");
     } else {
@@ -28,6 +29,7 @@ void QPS::evaluate(std::string &query_str, std::list<std::string> &results, Quer
     }
     return;
   } catch (std::exception &e) {
+    results.clear();
     results.emplace_back("SyntaxError");
     return;
   }

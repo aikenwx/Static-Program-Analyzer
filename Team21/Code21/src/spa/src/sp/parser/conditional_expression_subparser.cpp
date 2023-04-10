@@ -13,12 +13,10 @@ auto ConditionalExpressionSubparser::Parse(std::shared_ptr<Context> context)
   auto stack = context->GetStack();
   auto iter = stack->rbegin();
   auto is_correct_symbol_logical = [&](const std::shared_ptr<ast::INode> &node) {
-    return IsSymbolNodeValue(node, "&&") || IsSymbolNodeValue(node, "||");
+    return IsSymbolNodeValueAnyOf(node, {"&&", "||"});
   };
   auto is_correct_symbol_comparison = [&](const std::shared_ptr<ast::INode> &node) {
-    return IsSymbolNodeValue(node, "==") || IsSymbolNodeValue(node, "!=")
-      || IsSymbolNodeValue(node, "<") || IsSymbolNodeValue(node, ">")
-      || IsSymbolNodeValue(node, "<=") || IsSymbolNodeValue(node, ">=");
+    return IsSymbolNodeValueAnyOf(node, {"==", "!=", "<", ">", "<=", ">="});
   };
   auto is_relational_factor = [&](const std::shared_ptr<ast::INode> &node) {
     return util::instance_of<ast::ExpressionNode>(node)

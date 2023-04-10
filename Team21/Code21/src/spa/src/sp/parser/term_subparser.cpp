@@ -14,9 +14,7 @@ auto TermSubparser::Parse(std::shared_ptr<Context> context) -> bool {
   auto iter = stack->rbegin();
   auto is_correct_symbol =
       [&](const std::shared_ptr<ast::INode> &node) {
-        return IsSymbolNodeValue(node, "*") ||
-               IsSymbolNodeValue(node, "/") ||
-               IsSymbolNodeValue(node, "%");
+        return IsSymbolNodeValueAnyOf(node, {"*", "/", "%"});
       };
   if (context->IsLookaheadSymbolValueAnyOf({")", ";", "+", "-", "*", "/", "%",
                                             "<", ">",
